@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "938056756759",
+    "project_id": "espitalia-d69b6",
+    "storage_bucket": "espitalia-d69b6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938056756759:android:c0aa1b24a9da05280b3652",
+        "android_client_info": {
+          "package_name": "com.espitalia.patient"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK98f5dxjkDlGILX8xaDxEpv2ylIZEsBE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

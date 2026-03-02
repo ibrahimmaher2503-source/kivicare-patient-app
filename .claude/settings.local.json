@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git fetch:*)",
+      "Bash(ls:*)",
+      "Bash(powershell:*)",
+      "Bash(ssh-keygen:*)",
+      "Bash(keytool:*)",
+      "Bash(flutter pub run:*)",
+      "Bash(./gradlew signingReport:*)",
+      "Bash(gradlew signingReport:*)",
+      "Bash(./gradlew.bat:*)",
+      "Bash(set:*)",
+      "Bash(JAVA_HOME=\"C:\\\\Program Files\\\\Android\\\\Android Studio\\\\jbr\" ./gradlew.bat:*)",
+      "Bash(\"C:\\\\Program Files\\\\Android\\\\Android Studio\\\\jbr\\\\bin\\\\keytool.exe\" -genkey -v -keystore \"C:/Users/berog/StudioProjects/kivicare-laravel-patient-flutter-app-v1.8.1/android/key.jks\" -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias -storepass Ib3106665 -keypass Ib3106665 -dname \"CN=KiviCare, OU=Development, O=KiviCare, L=City, ST=State, C=US\":*)",
+      "Bash(python:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(del \"C:\\\\Users\\\\berog\\\\StudioProjects\\\\kivicare-laravel-patient-flutter-app-v1.8.1\\\\lib\\\\screens\\\\home\\\\components\\\\department_card_widget.dart\")",
+      "Bash(del \"C:\\\\Users\\\\berog\\\\StudioProjects\\\\kivicare-laravel-patient-flutter-app-v1.8.1\\\\lib\\\\screens\\\\home\\\\components\\\\departments_component.dart\")",
+      "Bash(del \"C:\\\\Users\\\\berog\\\\StudioProjects\\\\kivicare-laravel-patient-flutter-app-v1.8.1\\\\assets\\\\icons\\\\ic_department_doctors.png\")",
+      "Bash(del \"C:\\\\Users\\\\berog\\\\StudioProjects\\\\kivicare-laravel-patient-flutter-app-v1.8.1\\\\assets\\\\icons\\\\ic_department_clinics.png\")",
+      "Bash(del \"C:\\\\Users\\\\berog\\\\StudioProjects\\\\kivicare-laravel-patient-flutter-app-v1.8.1\\\\assets\\\\icons\\\\ic_department_radiology.png\")",
+      "Bash(del \"C:\\\\Users\\\\berog\\\\StudioProjects\\\\kivicare-laravel-patient-flutter-app-v1.8.1\\\\assets\\\\icons\\\\ic_department_intensive_care.png\")",
+      "Bash(del \"C:\\\\Users\\\\berog\\\\StudioProjects\\\\kivicare-laravel-patient-flutter-app-v1.8.1\\\\assets\\\\icons\\\\ic_department_nurse_requests.png\")",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
