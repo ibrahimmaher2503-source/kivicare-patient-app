@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/screens/auth/model/common_model.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../api/core_apis.dart';
 import '../../../main.dart';
+import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/constants.dart';
 import '../../booking/appointments_controller.dart';
@@ -30,6 +32,13 @@ class IncidentManagementCard extends StatelessWidget {
   bool get isClosed => incidentData.incidenceTypeName.toLowerCase().toString().contains("close");
   bool get isRejected => incidentData.incidenceTypeName.toLowerCase().toString().contains("reject");
 
+  Color get _statusColor {
+    if (isClosed) return completedStatusColor;
+    if (isRejected) return cancelStatusColor;
+    if (incidentData.incidenceTypeName.toLowerCase() == 'open') return confirmedStatusColor;
+    return pendingStatusColor;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -44,9 +53,16 @@ class IncidentManagementCard extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: boxDecorationDefault(
-          color: context.cardColor,
-          shape: BoxShape.rectangle,
+        decoration: BoxDecoration(
+          color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,46 +72,36 @@ class IncidentManagementCard extends StatelessWidget {
               children: [
                 Text(
                   incidentData.incidentDate.toString().dateInDDMMYYYYFormat,
-                  style: boldTextStyle(size: 12, color: secondaryTextColor),
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.1,
+                    color: secondaryTextColor,
+                  ),
                 ),
                 if (isClosed)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      locale.value.closed,
-                      style: boldTextStyle(color: Colors.white, size: 12),
-                    ),
-                  )
+                  _buildStatusChip(locale.value.closed, completedStatusColor)
                 else if (isRejected)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.deepOrange,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      locale.value.rejected,
-                      style: boldTextStyle(color: Colors.white, size: 12),
-                    ),
-                  )
+                  _buildStatusChip(locale.value.rejected, cancelStatusColor)
                 else
                   DropdownButtonHideUnderline(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: incidentData.incidenceTypeName.toLowerCase() == 'open' ? context.primaryColor : Colors.red,
-                        borderRadius: BorderRadius.circular(10),
+                        gradient: LinearGradient(
+                          colors: [
+                            _statusColor.withValues(alpha: 0.15),
+                            _statusColor.withValues(alpha: 0.08),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: DropdownButton<String>(
                         elevation: 1,
-                        dropdownColor: context.scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(defaultRadius),
+                        dropdownColor: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                        borderRadius: BorderRadius.circular(12),
                         isDense: true,
-                        icon: Icon(Icons.arrow_drop_down, color: Colors.white),
+                        icon: Icon(Icons.arrow_drop_down, color: _statusColor, size: 20),
                         iconSize: 20,
                         value: incidentStatuses
                             .firstWhere(
@@ -141,7 +147,11 @@ class IncidentManagementCard extends StatelessWidget {
                             value: status.slug,
                             child: Text(
                               status.name,
-                              style: primaryTextStyle(size: 13),
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 13,
+                                letterSpacing: 0.1,
+                                color: isDarkMode.value ? Colors.white : primaryTextColor,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           );
@@ -150,7 +160,12 @@ class IncidentManagementCard extends StatelessWidget {
                           return incidentStatuses.map((status) {
                             return Text(
                               status.name,
-                              style: boldTextStyle(color: Colors.white, size: 12),
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.1,
+                                color: _statusColor,
+                              ),
                             );
                           }).toList();
                         },
@@ -162,32 +177,53 @@ class IncidentManagementCard extends StatelessWidget {
             16.height,
             Text(
               incidentData.title,
-              style: boldTextStyle(size: 18),
+              style: GoogleFonts.outfit(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                letterSpacing: -0.3,
+                color: isDarkMode.value ? Colors.white : primaryTextColor,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             8.height,
             Text(
               incidentData.description,
-              style: primaryTextStyle(size: 14, color: secondaryTextColor),
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 14,
+                letterSpacing: 0.1,
+                color: secondaryTextColor,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             8.height,
             if (incidentData.incidentCloseDate.validate().isNotEmpty) ...[
               8.height,
-              Divider(color: context.scaffoldBackgroundColor),
+              Container(
+                height: 1,
+                color: isDarkMode.value ? borderColor.withValues(alpha: 0.08) : borderColor.withValues(alpha: 0.2),
+              ),
               8.height,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     '${locale.value.closedOn} :',
-                    style: boldTextStyle(color: Colors.green, size: 14),
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.1,
+                      color: completedStatusColor,
+                    ),
                   ),
                   Text(
                     incidentData.incidentCloseDate.validate().dateInDDMMYYYYFormat,
-                    style: secondaryTextStyle(),
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 13,
+                      letterSpacing: 0.1,
+                      color: secondaryTextColor,
+                    ),
                   )
                 ],
               ),
@@ -202,9 +238,28 @@ class IncidentManagementCard extends StatelessWidget {
                       isRejected: isRejected,
                     )),
               },
-              child: Text(
-                locale.value.viewDetail,
-                style: boldTextStyle(color: Colors.red, size: 14),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: appColorSecondary.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  locale.value.viewDetail,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.1,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
             if (isClosed) ...[
@@ -213,17 +268,66 @@ class IncidentManagementCard extends StatelessWidget {
               16.height,
               Row(
                 children: [
-                  Text("${locale.value.closedOn}: ", style: secondaryTextStyle()),
+                  Text(
+                    "${locale.value.closedOn}: ",
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 13,
+                      letterSpacing: 0.1,
+                      color: secondaryTextColor,
+                    ),
+                  ),
                   8.width,
                   Text(
                     incidentData.updatedAt.toString().dateInDDMMYYYYFormat,
-                    style: secondaryTextStyle(),
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 13,
+                      letterSpacing: 0.1,
+                      color: secondaryTextColor,
+                    ),
                   ),
                 ],
               ),
             ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildStatusChip(String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          colors: [
+            color.withValues(alpha: 0.15),
+            color.withValues(alpha: 0.08),
+          ],
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color,
+            ),
+          ),
+          6.width,
+          Text(
+            label,
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.1,
+              color: color,
+            ),
+          ),
+        ],
       ),
     );
   }

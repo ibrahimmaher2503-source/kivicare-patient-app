@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../generated/assets.dart';
+import '../../utils/app_common.dart';
 import 'service_list_controller.dart';
 import '../../utils/common_base.dart';
 
@@ -30,7 +32,11 @@ class SearchServiceWidget extends StatelessWidget {
       controller: servicesController.searchCont,
       textFieldType: TextFieldType.OTHER,
       textInputAction: TextInputAction.done,
-      textStyle: primaryTextStyle(decorationColor: appColorPrimary),
+      textStyle: GoogleFonts.plusJakartaSans(
+        fontSize: 14,
+        color: isDarkMode.value ? Colors.white : primaryTextColor,
+        letterSpacing: 0.1,
+      ),
       onTap: onTap,
       onFieldSubmitted: onFieldSubmitted,
       onChanged: (p0) {
@@ -57,7 +63,7 @@ class SearchServiceWidget extends StatelessWidget {
         context,
         hintText: hintText ?? locale.value.searchHere,
         filled: true,
-        fillColor: context.cardColor,
+        fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
         prefixIcon: commonLeadingWid(imgPath: Assets.iconsIcSearch, icon: Icons.search_outlined, size: 18).paddingAll(14),
       ),
     );

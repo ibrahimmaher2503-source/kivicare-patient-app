@@ -22,7 +22,7 @@ class QualificationComponent extends StatelessWidget {
       body: AnimatedListView(
         shrinkWrap: true,
         itemCount: qualificationList.length,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         physics: const AlwaysScrollableScrollPhysics(),
         emptyWidget: NoDataWidget(
           title: locale.value.noQualificationsFound,

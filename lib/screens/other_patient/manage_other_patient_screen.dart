@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/app_dialogue_component.dart';
@@ -7,6 +8,7 @@ import '../../components/app_scaffold.dart';
 import '../../components/loader_widget.dart';
 import '../../generated/assets.dart';
 import '../../main.dart';
+import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import '../../utils/common_base.dart';
 import '../../utils/empty_error_state_widget.dart';
@@ -33,11 +35,18 @@ class ManageOtherPatientScreen extends StatelessWidget {
               if (value == true) managePatientController.onRefresh();
             });
           },
-          child: commonLeadingWid(
-            imgPath: Assets.iconsIcPlusCircle,
-            color: whiteTextColor,
-            size: 25,
-          ).paddingAll(16),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: commonLeadingWid(
+              imgPath: Assets.iconsIcPlusCircle,
+              color: whiteTextColor,
+              size: 22,
+            ),
+          ).paddingAll(12),
         ),
       ],
       body: Column(
@@ -66,7 +75,12 @@ class ManageOtherPatientScreen extends StatelessWidget {
                   onNextPage: managePatientController.onNextPage,
                   emptyWidget: NoDataWidget(
                     title: locale.value.noPatientsFound,
-                    titleTextStyle: primaryTextStyle(),
+                    titleTextStyle: GoogleFonts.outfit(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: -0.3,
+                      color: isDarkMode.value ? Colors.white : appColorPrimary,
+                    ),
                     imageWidget: const EmptyStateWidget(),
                     retryText: locale.value.reload,
                     onRetry: () async {

@@ -8,6 +8,28 @@ import '../utils/colors.dart';
 class AppTheme {
   AppTheme._();
 
+  static TextTheme _buildTextTheme(TextTheme base) {
+    final bodyFont = GoogleFonts.plusJakartaSans();
+    final displayFont = GoogleFonts.outfit();
+    return base.copyWith(
+      displayLarge: displayFont.copyWith(letterSpacing: -0.5),
+      displayMedium: displayFont.copyWith(letterSpacing: -0.5),
+      displaySmall: displayFont.copyWith(letterSpacing: -0.5),
+      headlineLarge: displayFont.copyWith(letterSpacing: -0.5),
+      headlineMedium: displayFont.copyWith(letterSpacing: -0.3),
+      headlineSmall: displayFont.copyWith(letterSpacing: -0.3),
+      titleLarge: displayFont.copyWith(letterSpacing: -0.3),
+      titleMedium: bodyFont.copyWith(letterSpacing: 0.1),
+      titleSmall: bodyFont.copyWith(letterSpacing: 0.1),
+      bodyLarge: bodyFont.copyWith(letterSpacing: 0.1),
+      bodyMedium: bodyFont.copyWith(letterSpacing: 0.1),
+      bodySmall: bodyFont.copyWith(letterSpacing: 0.1),
+      labelLarge: bodyFont.copyWith(letterSpacing: 0.1),
+      labelMedium: bodyFont.copyWith(letterSpacing: 0.1),
+      labelSmall: bodyFont.copyWith(letterSpacing: 0.1),
+    );
+  }
+
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: appScreenBackground,
     primaryColor: appColorPrimary,
@@ -22,7 +44,7 @@ class AppTheme {
     useMaterial3: true,
     hoverColor: Colors.white54,
     dividerColor: const Color(0xFF626E8A),
-    fontFamily: GoogleFonts.interTight().fontFamily,
+    fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
     drawerTheme: const DrawerThemeData(backgroundColor: appScreenBackground),
     appBarTheme: AppBarTheme(
       surfaceTintColor: appLayoutBackground,
@@ -30,7 +52,7 @@ class AppTheme {
       iconTheme: const IconThemeData(color: textPrimaryColor),
       titleTextStyle: TextStyle(
         color: canvasColor,
-        fontFamily: GoogleFonts.interTight().fontFamily,
+        fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
       ),
       systemOverlayStyle: const SystemUiOverlayStyle(statusBarBrightness: Brightness.light, statusBarIconBrightness: Brightness.dark),
     ),
@@ -40,8 +62,7 @@ class AppTheme {
     cardColor: appSectionBackground,
     iconTheme: const IconThemeData(color: textPrimaryColor),
     bottomSheetTheme: const BottomSheetThemeData(backgroundColor: whiteColor),
-    textTheme: GoogleFonts.interTightTextTheme(),
-    //visualDensity: VisualDensity.adaptivePlatformDensity,
+    textTheme: _buildTextTheme(GoogleFonts.plusJakartaSansTextTheme()),
     radioTheme: RadioThemeData(
       fillColor: WidgetStateProperty.all(appColorPrimary),
     ),
@@ -69,7 +90,7 @@ class AppTheme {
     useMaterial3: true,
     hoverColor: Colors.black12,
     dividerColor: canvasColor,
-    fontFamily: GoogleFonts.interTight().fontFamily,
+    fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
     drawerTheme: const DrawerThemeData(backgroundColor: fullDarkCanvasColorDark),
     appBarTheme: AppBarTheme(
       surfaceTintColor: appScreenBackgroundDark,
@@ -77,7 +98,7 @@ class AppTheme {
       iconTheme: const IconThemeData(color: whiteColor),
       titleTextStyle: TextStyle(
         color: whiteTextColor,
-        fontFamily: GoogleFonts.interTight().fontFamily,
+        fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
       ),
       systemOverlayStyle: const SystemUiOverlayStyle(statusBarBrightness: Brightness.light, statusBarIconBrightness: Brightness.light),
     ),
@@ -87,7 +108,7 @@ class AppTheme {
     cardColor: fullDarkCanvasColor,
     iconTheme: const IconThemeData(color: whiteColor),
     bottomSheetTheme: const BottomSheetThemeData(backgroundColor: appBackgroundColorDark),
-    textTheme: GoogleFonts.interTightTextTheme(),
+    textTheme: _buildTextTheme(GoogleFonts.plusJakartaSansTextTheme()),
     radioTheme: RadioThemeData(
       fillColor: WidgetStateProperty.all(appColorPrimary),
     ),

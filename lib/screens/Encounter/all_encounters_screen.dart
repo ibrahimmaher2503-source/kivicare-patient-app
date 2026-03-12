@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
 
 import '../../components/loader_widget.dart';
 import '../../main.dart';
+import '../../utils/app_common.dart';
+import '../../utils/colors.dart';
 import '../../utils/empty_error_state_widget.dart';
 import '../booking/encounter_detail_screen.dart';
 import 'all_encounters_controller.dart';
@@ -49,7 +52,12 @@ class AllEncountersScreen extends StatelessWidget {
                     emptyWidget: NoDataWidget(
                       title: locale.value.noEncountersFound,
                       subTitle: locale.value.looksLikeThereIsNoEncountersWellKeepYouPosted,
-                      titleTextStyle: primaryTextStyle(),
+                      titleTextStyle: GoogleFonts.outfit(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: -0.3,
+                        color: isDarkMode.value ? Colors.white : primaryTextColor,
+                      ),
                       imageWidget: const EmptyStateWidget(),
                       retryText: locale.value.reload,
                       onRetry: () {
@@ -69,6 +77,7 @@ class AllEncountersScreen extends StatelessWidget {
                     },
                     itemBuilder: (context, index) {
                       return InkWell(
+                        borderRadius: BorderRadius.circular(16),
                         onTap: () {
                           Get.to(() => EncounterDetailScreen(), arguments: allEncountersCont.encounterList[index].id);
                         },

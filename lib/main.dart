@@ -45,11 +45,11 @@ void main() async {
 
   await GetStorage.init();
   //
-  fontFamilyPrimaryGlobal = GoogleFonts.interTight(fontWeight: FontWeight.w500).fontFamily;
+  fontFamilyPrimaryGlobal = GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w500).fontFamily;
   textPrimarySizeGlobal = 14;
-  fontFamilySecondaryGlobal = GoogleFonts.interTight(fontWeight: FontWeight.w400).fontFamily;
+  fontFamilySecondaryGlobal = GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w400).fontFamily;
   textSecondarySizeGlobal = 12;
-  fontFamilyBoldGlobal = GoogleFonts.interTight(fontWeight: FontWeight.w600).fontFamily;
+  fontFamilyBoldGlobal = GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600).fontFamily;
   //
   defaultBlurRadius = 0;
   defaultRadius = 12;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/main.dart';
-import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
 
@@ -31,7 +31,11 @@ class FilterScreen extends StatelessWidget {
             },
             child: Text(
               locale.value.reset,
-              style: boldTextStyle(size: 14, color: whiteTextColor),
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: whiteTextColor,
+              ),
             ),
           ),
         )
@@ -65,19 +69,51 @@ class FilterScreen extends StatelessWidget {
               ],
             ).expand(),
             Container(
-              decoration: boxDecorationDefault(borderRadius: radius(0), color: context.cardColor),
+              decoration: BoxDecoration(
+                color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                boxShadow: [
+                  BoxShadow(
+                    color: isDarkMode.value ? softShadowColorDark : softShadowColorMedium,
+                    blurRadius: 16,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
+              ),
               width: Get.width,
               padding: const EdgeInsets.all(16),
-              child: AppButton(
-                width: Get.width,
-                text: locale.value.apply,
-                color: appColorPrimary,
-                textStyle: appButtonTextStyleWhite,
-                onTap: () {
-                  log('--------------------here000000000000000000');
-                  log(filterType);
-                  filterCont.applyFilter(filterType);
-                },
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: appColorSecondary.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: AppButton(
+                  width: Get.width,
+                  text: locale.value.apply,
+                  color: Colors.transparent,
+                  elevation: 0,
+                  textStyle: GoogleFonts.plusJakartaSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                  shapeBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  onTap: () {
+                    log('--------------------here000000000000000000');
+                    log(filterType);
+                    filterCont.applyFilter(filterType);
+                  },
+                ),
               ),
             ),
           ],

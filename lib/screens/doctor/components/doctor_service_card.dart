@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../../utils/app_common.dart';
+import '../../../utils/colors.dart';
 import '../../service/model/service_list_model.dart';
 
 class DoctorServiceCard extends StatelessWidget {
@@ -14,26 +15,50 @@ class DoctorServiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: boxDecorationDefault(color: context.cardColor),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             serviceElement.serviceName,
             overflow: TextOverflow.ellipsis,
-            style: boldTextStyle(size: 16),
+            style: GoogleFonts.outfit(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.3,
+              color: isDarkMode.value ? Colors.white : appColorPrimary,
+            ),
           ),
           16.height,
           Row(
             children: [
               Text(
                 "${serviceElement.totalAppointments}:",
-                style: secondaryTextStyle(size: 14),
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: secondaryTextColor,
+                ),
               ),
-              4.width,
+              8.width,
               Text(
                 "${serviceElement.totalAppointments}",
-                style: primaryTextStyle(),
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: appColorSecondary,
+                ),
               ),
             ],
           ),
@@ -43,12 +68,20 @@ class DoctorServiceCard extends StatelessWidget {
             children: [
               Text(
                 "${serviceElement.clinicName}:",
-                style: secondaryTextStyle(size: 14),
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: secondaryTextColor,
+                ),
               ).flexible(),
-              4.width,
+              8.width,
               Text(
                 serviceElement.clinicName.map((e) => e.validate()).toList().join(', '),
-                style: primaryTextStyle(),
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: isDarkMode.value ? Colors.white : appColorPrimary,
+                ),
               ).flexible(),
             ],
           ),

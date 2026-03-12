@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../components/cached_image_widget.dart';
 import '../../../generated/assets.dart';
 import '../../../main.dart';
+import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/common_base.dart';
 import 'package:flutter/material.dart';
@@ -35,21 +37,48 @@ class ForgetPassword extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Header icon with gradient
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: appColorSecondary.withValues(alpha: 0.2),
+                            blurRadius: 16,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(Icons.mail_outline_rounded, color: Colors.white, size: 28),
+                    ),
+                    24.height,
                     SizedBox(
                       width: Get.width * 0.8,
                       child: Text(
                         locale.value.resetYourPassword,
                         textAlign: TextAlign.center,
-                        style: primaryTextStyle(size: 18),
+                        style: GoogleFonts.outfit(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.5,
+                          color: isDarkMode.value ? Colors.white : primaryTextColor,
+                        ),
                       ),
                     ),
-                    16.height,
+                    12.height,
                     SizedBox(
                       width: Get.width * 0.8,
                       child: Text(
                         locale.value.enterYourEmailAddressToResetYourNewPassword,
                         textAlign: TextAlign.center,
-                        style: secondaryTextStyle(),
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          color: secondaryTextColor,
+                          letterSpacing: 0.1,
+                        ),
                       ),
                     ),
                     32.height,
@@ -60,26 +89,60 @@ class ForgetPassword extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
                     32.height,
-                    AppTextField(
-                      title: locale.value.email,
-                      textStyle: primaryTextStyle(size: 12),
-                      controller: forgetPassController.emailCont,
-                      textFieldType: TextFieldType.EMAIL,
-                      decoration: inputDecoration(context, fillColor: context.cardColor, filled: true, hintText: "${locale.value.eG}  merry_456@gmail.com"),
-                      suffix: commonLeadingWid(imgPath: Assets.iconsIcMail, size: 14).paddingAll(14),
+                    // Email field with refined styling
+                    Container(
+                      decoration: BoxDecoration(
+                        color: isDarkMode.value ? inputFillColorDark : inputFillColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: AppTextField(
+                        title: locale.value.email,
+                        textStyle: GoogleFonts.plusJakartaSans(fontSize: 14, letterSpacing: 0.1),
+                        controller: forgetPassController.emailCont,
+                        textFieldType: TextFieldType.EMAIL,
+                        decoration: inputDecoration(
+                          context,
+                          fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
+                          filled: true,
+                          hintText: "${locale.value.eG}  merry_456@gmail.com",
+                        ),
+                        suffix: commonLeadingWid(imgPath: Assets.iconsIcMail, size: 14).paddingAll(14),
+                      ),
                     ),
-                    64.height,
-                    AppButton(
-                      width: Get.width,
-                      text: locale.value.sendCode,
-                      color: appColorSecondary,
-                      textStyle: appButtonTextStyleWhite,
+                    48.height,
+                    // Gradient CTA button
+                    GestureDetector(
                       onTap: () {
                         if (forgetPassController.forgotPassFormKey.currentState!.validate()) {
                           forgetPassController.forgotPassFormKey.currentState!.save();
                           forgetPassController.saveForm();
                         }
                       },
+                      child: Container(
+                        width: Get.width,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: appColorSecondary.withValues(alpha: 0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          locale.value.sendCode,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            letterSpacing: 0.1,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

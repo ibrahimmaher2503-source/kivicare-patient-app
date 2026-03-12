@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kivicare_patient/api/auth_apis.dart';
@@ -31,46 +32,77 @@ class DashboardScreen extends StatelessWidget {
               () => Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 24),
-                  decoration: BoxDecoration(
-                    color: isDarkMode.value ? fullDarkCanvasColor.withValues(alpha: 0.9) : canvasColor.withValues(alpha: 0.9),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: isDarkMode.value ? transparentColor : canvasColor.withValues(alpha: 0.3),
-                        offset: const Offset(0, 20),
-                        blurRadius: 20,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ...List.generate(
-                        bottomNavItems.length,
-                        (index) {
-                          BottomBarItem navBar = bottomNavItems[index];
-                          return Obx(
-                            () => BtmNavItem(
-                              navBar: navBar,
-                              isFirst: index == 0,
-                              isLast: index == bottomNavItems.length - 1,
-                              press: () {
-                                if (!isLoggedIn.value && index == 1) {
-                                  doIfLoggedIn(() {
-                                    handleChangeTabIndex(index);
-                                  });
-                                } else {
-                                  handleChangeTabIndex(index);
-                                }
-                              },
-                              selectedNav: dashboardController.selectedBottomNav.value,
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          // Glassmorphism: semi-transparent background
+                          color: isDarkMode.value
+                              ? fullDarkCanvasColor.withValues(alpha: 0.82)
+                              : canvasColor.withValues(alpha: 0.85),
+                          borderRadius: const BorderRadius.all(Radius.circular(50)),
+                          // Subtle glass border on top
+                          border: Border(
+                            top: BorderSide(
+                              color: isDarkMode.value ? glassStrokeDark : glassStrokeLight,
+                              width: 0.5,
                             ),
-                          );
-                        },
+                          ),
+                          boxShadow: [
+                            // Primary upward shadow for depth
+                            BoxShadow(
+                              color: isDarkMode.value
+                                  ? softShadowColorDark
+                                  : softShadowColorMedium,
+                              offset: const Offset(0, -4),
+                              blurRadius: 16,
+                              spreadRadius: 0,
+                            ),
+                            // Soft ambient shadow beneath
+                            BoxShadow(
+                              color: isDarkMode.value
+                                  ? Colors.transparent
+                                  : softShadowColor,
+                              offset: const Offset(0, 8),
+                              blurRadius: 24,
+                              spreadRadius: -2,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ...List.generate(
+                              bottomNavItems.length,
+                              (index) {
+                                BottomBarItem navBar = bottomNavItems[index];
+                                return Obx(
+                                  () => BtmNavItem(
+                                    navBar: navBar,
+                                    isFirst: index == 0,
+                                    isLast: index == bottomNavItems.length - 1,
+                                    press: () {
+                                      if (!isLoggedIn.value && index == 1) {
+                                        doIfLoggedIn(() {
+                                          handleChangeTabIndex(index);
+                                        });
+                                      } else {
+                                        handleChangeTabIndex(index);
+                                      }
+                                    },
+                                    selectedNav: dashboardController.selectedBottomNav.value,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ).fit(),
                       ),
-                    ],
-                  ).fit(),
+                    ),
+                  ),
                 ),
               ).paddingSymmetric(vertical: 15),
             )

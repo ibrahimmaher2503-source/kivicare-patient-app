@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/components/cached_image_widget.dart';
 import 'package:kivicare_patient/configs.dart';
 import 'package:kivicare_patient/generated/assets.dart';
@@ -44,12 +45,36 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
     return SingleChildScrollView(
       child: Container(
         width: Get.width,
-        padding: const EdgeInsets.only(top: 12,bottom: 30),
-        decoration: boxDecorationDefault(color: context.scaffoldBackgroundColor),
+        padding: const EdgeInsets.only(top: 8, bottom: 32),
+        decoration: BoxDecoration(
+          color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDarkMode.value ? softShadowColorDark : softShadowColorMedium,
+              blurRadius: 20,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            24.height,
+            /// Handle indicator
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(top: 8, bottom: 16),
+                decoration: BoxDecoration(
+                  color: isDarkMode.value ? Colors.white24 : Colors.black12,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
             const CachedImageWidget(url: Assets.iconsIcConfirmation, height: 50, width: 50, fit: BoxFit.contain),
             16.height,
             Column(
@@ -57,14 +82,22 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
               children: [
                 Text(
                   titleText ?? locale.value.confirmAppointment,
-                  style: boldTextStyle(),
+                  style: GoogleFonts.outfit(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.3,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 16.height,
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(16),
-                  decoration: boxDecorationDefault(color: context.cardColor, borderRadius: radius(defaultRadius)),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: isDarkMode.value ? inputFillColorDark : inputFillColor,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   child: Column(
                     spacing: 8,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,6 +137,7 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
                             price: price,
                             isSemiBoldText: true,
                             size: 12,
+                            color: appColorSecondary,
                           ).expand(flex: 3),
                         ],
                       ),
@@ -111,14 +145,14 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
                   ),
                 ),
                 16.height,
-                if (appConfigs.value.isCancellationChargeEnabled && isQuickBook !=true) ...[
+                if (appConfigs.value.isCancellationChargeEnabled && isQuickBook != true) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     width: double.infinity,
-                    decoration: boxDecorationDefault(
-                      color: appColorSecondary.withValues(alpha: 0.2),
-                      borderRadius: radius(6),
-                      border: Border.all(color: appColorSecondary, width: 1.5),
+                    decoration: BoxDecoration(
+                      color: appColorSecondary.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: appColorSecondary.withValues(alpha: 0.3), width: 1),
                     ),
                     child: Text(
                       locale.value.cancellationChargesWillBeAppliedForCancellationWithin(
@@ -131,7 +165,7 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
                                 : '',
                         appConfigs.value.isCancellationHoursAvailable ? '${appConfigs.value.cancellationChargeHours}' : '',
                       ),
-                      style: boldTextStyle(color: appColorSecondary, size: 12),
+                      style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: appColorSecondary),
                     ),
                   ),
                   16.height,
@@ -140,7 +174,7 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
                   () => CheckboxListTile(
                     checkColor: whiteColor,
                     value: isAgree.value,
-                    activeColor: appColorPrimary,
+                    activeColor: appColorSecondary,
                     onChanged: (val) async {
                       isAgree.value = !isAgree.value;
                     },
@@ -155,7 +189,7 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
                 ),
               ],
             ).paddingSymmetric(horizontal: 16),
-            16.height,
+            24.height,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -163,15 +197,17 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
                 AppButton(
                   text: locale.value.cancel,
                   textColor: isDarkMode.value ? white : blackColor,
-                  color: context.cardColor,
+                  color: isDarkMode.value ? surfaceElevatedDark : surfaceSubtle,
+                  shapeBorder: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(color: isDarkMode.value ? borderColorDark : whiteBorderColor),
+                  ),
                   onTap: () {
                     Get.back();
                   },
                 ).expand(),
-                32.width,
-                AppButton(
-                  color: appColorSecondary,
-                  text: locale.value.continueText,
+                24.width,
+                GestureDetector(
                   onTap: () {
                     if (hideAgree) {
                       onConfirm.call();
@@ -183,9 +219,32 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
                       }
                     }
                   },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: gradientSecondaryStart.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      locale.value.continueText,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white),
+                    ),
+                  ),
                 ).expand(),
               ],
-            ).paddingSymmetric(horizontal: 32),
+            ).paddingSymmetric(horizontal: 24),
           ],
         ),
       ),

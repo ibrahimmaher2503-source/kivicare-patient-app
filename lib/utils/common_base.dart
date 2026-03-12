@@ -30,25 +30,26 @@ Widget get commonDivider => Column(
       children: [
         Divider(
           height: 1,
-          thickness: 1,
-          color: isDarkMode.value ? borderColor.withValues(alpha: 0.1) : borderColor.withValues(alpha: 0.5),
+          thickness: 0.5,
+          color: isDarkMode.value ? borderColor.withValues(alpha: 0.08) : borderColor.withValues(alpha: 0.3),
         ),
       ],
     );
 
 Widget get bottomSheetDivider => Column(
       children: [
-        20.height,
+        24.height,
         Divider(
           indent: 3,
           height: 0,
-          color: isDarkMode.value ? borderColor.withValues(alpha: 0.2) : borderColor.withValues(alpha: 0.5),
+          thickness: 0.5,
+          color: isDarkMode.value ? borderColor.withValues(alpha: 0.1) : borderColor.withValues(alpha: 0.25),
         ),
-        20.height,
+        24.height,
       ],
     );
 
-final fontFamilyWeight700 = GoogleFonts.interTight(fontWeight: FontWeight.w700).fontFamily;
+final fontFamilyWeight700 = GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700).fontFamily;
 
 void handleRate() async {
   if (isAndroid) {
@@ -522,13 +523,13 @@ extension TimeExtension on TimeOfDay {
   }
 }
 
-TextStyle get appButtonTextStyleGray => boldTextStyle(color: appColorSecondary, size: 14);
+TextStyle get appButtonTextStyleGray => boldTextStyle(color: appColorSecondary, size: 14, fontFamily: fontFamilyBoldGlobal);
 
-TextStyle get appButtonTextStyleWhite => boldTextStyle(color: Colors.white, size: 14);
+TextStyle get appButtonTextStyleWhite => boldTextStyle(color: Colors.white, size: 14, fontFamily: fontFamilyBoldGlobal);
 
-TextStyle get appButtonPrimaryColorText => boldTextStyle(color: appColorPrimary);
+TextStyle get appButtonPrimaryColorText => boldTextStyle(color: appColorPrimary, fontFamily: fontFamilyBoldGlobal);
 
-TextStyle get appButtonFontColorText => boldTextStyle(color: Colors.grey, size: 14);
+TextStyle get appButtonFontColorText => boldTextStyle(color: secondaryTextColor, size: 14, fontFamily: fontFamilyBoldGlobal);
 
 InputDecoration inputDecoration(
   BuildContext context, {
@@ -543,86 +544,90 @@ InputDecoration inputDecoration(
   bool? filled,
   Color? fillColor,
 }) {
+  final double r = borderRadius ?? 12;
+  final Color fill = fillColor ?? (isDarkMode.value ? inputFillColorDark : inputFillColor);
   return InputDecoration(
-    contentPadding: contentPadding ?? const EdgeInsets.only(left: 12, bottom: 10, top: 10, right: 10),
+    contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     labelText: labelText,
     hintText: hintText,
-    hintStyle: secondaryTextStyle(size: 12),
-    labelStyle: secondaryTextStyle(size: 12),
+    hintStyle: secondaryTextStyle(size: 13),
+    labelStyle: secondaryTextStyle(size: 13),
     alignLabelWithHint: true,
     prefixIcon: prefixIcon,
     prefixIconConstraints: prefixIconConstraints,
     suffixIcon: suffixIcon,
     suffixIconConstraints: suffixIconConstraints,
     enabledBorder: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius / 2),
-      borderSide: const BorderSide(color: borderColor, width: 0.0),
+      borderRadius: radius(r),
+      borderSide: BorderSide(color: isDarkMode.value ? borderColorDark : borderColor.withValues(alpha: 0.3), width: 1.0),
     ),
     focusedErrorBorder: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius / 2),
-      borderSide: const BorderSide(color: Colors.red, width: 0.0),
+      borderRadius: radius(r),
+      borderSide: const BorderSide(color: Colors.red, width: 1.0),
     ),
     errorBorder: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius / 2),
+      borderRadius: radius(r),
       borderSide: const BorderSide(color: Colors.red, width: 1.0),
     ),
     errorMaxLines: 2,
     border: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius / 2),
-      borderSide: const BorderSide(color: borderColor, width: 0.0),
+      borderRadius: radius(r),
+      borderSide: BorderSide(color: borderColor.withValues(alpha: 0.3), width: 1.0),
     ),
     disabledBorder: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius / 2),
-      borderSide: const BorderSide(color: borderColor, width: 0.0),
+      borderRadius: radius(r),
+      borderSide: BorderSide(color: borderColor.withValues(alpha: 0.15), width: 1.0),
     ),
     errorStyle: primaryTextStyle(color: Colors.red, size: 12),
     focusedBorder: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius / 2),
-      borderSide: const BorderSide(color: appColorPrimary, width: 0.0),
+      borderRadius: radius(r),
+      borderSide: const BorderSide(color: appColorPrimary, width: 1.5),
     ),
-    filled: filled,
-    fillColor: fillColor,
+    filled: filled ?? true,
+    fillColor: fill,
   );
 }
 
 InputDecoration inputDecorationWithOutBorder(BuildContext context, {Widget? prefixIcon, Widget? suffixIcon, String? labelText, String? hintText, double? borderRadius, bool? filled, Color? fillColor}) {
+  final double r = borderRadius ?? 12;
+  final Color fill = fillColor ?? (isDarkMode.value ? inputFillColorDark : inputFillColor);
   return InputDecoration(
-    contentPadding: const EdgeInsets.only(left: 12, bottom: 10, top: 10, right: 10),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     labelText: labelText,
     hintText: hintText,
-    hintStyle: secondaryTextStyle(size: 12),
-    labelStyle: secondaryTextStyle(size: 12),
+    hintStyle: secondaryTextStyle(size: 13),
+    labelStyle: secondaryTextStyle(size: 13),
     alignLabelWithHint: true,
     prefixIcon: prefixIcon,
     suffixIcon: suffixIcon,
     enabledBorder: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius),
+      borderRadius: radius(r),
       borderSide: const BorderSide(color: Colors.transparent, width: 0.0),
     ),
     focusedErrorBorder: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius),
-      borderSide: const BorderSide(color: Colors.red, width: 0.0),
+      borderRadius: radius(r),
+      borderSide: const BorderSide(color: Colors.red, width: 1.0),
     ),
     errorBorder: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius),
+      borderRadius: radius(r),
       borderSide: const BorderSide(color: Colors.red, width: 1.0),
     ),
     errorMaxLines: 2,
     border: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius),
+      borderRadius: radius(r),
       borderSide: const BorderSide(color: Colors.transparent, width: 0.0),
     ),
     disabledBorder: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius),
+      borderRadius: radius(r),
       borderSide: const BorderSide(color: Colors.transparent, width: 0.0),
     ),
     errorStyle: primaryTextStyle(color: Colors.red, size: 12),
     focusedBorder: OutlineInputBorder(
-      borderRadius: radius(borderRadius ?? defaultRadius),
-      borderSide: const BorderSide(color: appColorPrimary, width: 0.0),
+      borderRadius: radius(r),
+      borderSide: const BorderSide(color: appColorPrimary, width: 1.5),
     ),
-    filled: filled,
-    fillColor: fillColor,
+    filled: filled ?? true,
+    fillColor: fill,
   );
 }
 
@@ -680,10 +685,10 @@ extension WidgetExt on Widget {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
+              color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+              spreadRadius: 0,
+              blurRadius: 20,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
@@ -693,7 +698,17 @@ extension WidgetExt on Widget {
   Container circularLightPrimaryBg({double? padding, Color? color}) {
     return Container(
       padding: EdgeInsets.all(padding ?? 12),
-      decoration: boxDecorationDefault(shape: BoxShape.circle, color: color ?? (isDarkMode.value ? Colors.grey.withValues(alpha: 0.1) : extraLightPrimaryColor)),
+      decoration: boxDecorationDefault(
+        shape: BoxShape.circle,
+        color: color ?? (isDarkMode.value ? surfaceElevatedDark : surfaceSubtle),
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: this,
     );
   }

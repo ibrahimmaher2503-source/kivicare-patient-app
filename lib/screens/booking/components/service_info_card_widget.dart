@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../components/cached_image_widget.dart';
 import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
-import '../../../utils/common_base.dart';
 import '../../../utils/price_widget.dart';
 import '../../service/model/service_list_model.dart';
 import '../model/appointments_res_model.dart';
@@ -19,7 +19,24 @@ class ServiceInfoCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return appointmentDet.billingItems.isEmpty
         ? Container(
-            decoration: boxDecorationDefault(color: context.cardColor),
+            decoration: BoxDecoration(
+              color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                  spreadRadius: 0,
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+                BoxShadow(
+                  color: isDarkMode.value ? softShadowColorDark : softShadowColorMedium,
+                  spreadRadius: 0,
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
             child: Column(
               children: [
                 16.height,
@@ -29,11 +46,21 @@ class ServiceInfoCardWidget extends StatelessWidget {
                     Container(
                       width: 82,
                       height: 82,
-                      decoration: boxDecorationDefault(),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      clipBehavior: Clip.antiAlias,
                       child: CachedImageWidget(
                         url: appointmentDet.serviceImage,
                         fit: BoxFit.cover,
-                        radius: 6,
+                        radius: 12,
                       ),
                     ),
                     16.width,
@@ -42,16 +69,20 @@ class ServiceInfoCardWidget extends StatelessWidget {
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 6,
+                            horizontal: 12,
+                            vertical: 5,
                           ),
-                          decoration: boxDecorationDefault(
-                            color: isDarkMode.value ? Colors.grey.withValues(alpha: 0.1) : lightSecondaryColor,
-                            borderRadius: radius(8),
+                          decoration: BoxDecoration(
+                            color: isDarkMode.value ? appColorSecondary.withValues(alpha: 0.1) : lightSecondaryColor,
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             appointmentDet.categoryName,
-                            style: boldTextStyle(size: 10, fontFamily: fontFamilyWeight700, color: appColorSecondary),
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: appColorSecondary,
+                            ),
                           ),
                         ).visible(appointmentDet.categoryName.isNotEmpty),
                         8.height,
@@ -60,7 +91,17 @@ class ServiceInfoCardWidget extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Text(appointmentDet.serviceName, overflow: TextOverflow.ellipsis, maxLines: 2, style: boldTextStyle(size: 16)).expand(),
+                                Text(
+                                  appointmentDet.serviceName,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.3,
+                                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                                  ),
+                                ).expand(),
                               ],
                             ),
                             8.height,
@@ -77,8 +118,8 @@ class ServiceInfoCardWidget extends StatelessWidget {
                                   ),
                                 PriceWidget(
                                   price: appointmentDet.serviceAmount,
-                                  color: dividerColor,
-                                  size: 12,
+                                  color: appColorSecondary,
+                                  size: 14,
                                   isBoldText: true,
                                 ),
                                 if (appointmentDet.isInclusiveTaxesAvailable)
@@ -113,18 +154,38 @@ class ServiceInfoCardWidget extends StatelessWidget {
               return Container(
                 padding: const EdgeInsets.all(16),
                 margin: EdgeInsets.only(bottom: index == appointmentDet.billingItems.length - 1 ? 0 : 16),
-                decoration: boxDecorationDefault(borderRadius: BorderRadius.circular(6)),
+                decoration: BoxDecoration(
+                  color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                      spreadRadius: 0,
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                    BoxShadow(
+                      color: isDarkMode.value ? softShadowColorDark : softShadowColorMedium,
+                      spreadRadius: 0,
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Container(
                       width: 62,
                       height: 62,
-                      decoration: boxDecorationDefault(),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      clipBehavior: Clip.antiAlias,
                       child: CachedImageWidget(
                         url: appointmentDet.billingItems[index].serviceDetail != null ? appointmentDet.billingItems[index].serviceDetail!.serviceImage : "",
                         fit: BoxFit.cover,
-                        radius: 6,
+                        radius: 12,
                       ),
                     ).paddingRight(16).visible(appointmentDet.billingItems[index].serviceDetail != null),
                     Column(
@@ -134,9 +195,20 @@ class ServiceInfoCardWidget extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(appointmentDet.billingItems[index].itemName, maxLines: 2, overflow: TextOverflow.ellipsis, style: boldTextStyle(size: 14)).expand(),
+                            Text(
+                              appointmentDet.billingItems[index].itemName,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.outfit(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.3,
+                                color: Theme.of(context).textTheme.bodyLarge?.color,
+                              ),
+                            ).expand(),
                           ],
                         ),
+                        8.height,
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -144,7 +216,7 @@ class ServiceInfoCardWidget extends StatelessWidget {
                             Text(
                               locale.value.total,
                               overflow: TextOverflow.ellipsis,
-                              style: primaryTextStyle(size: 12, color: dividerColor),
+                              style: secondaryTextStyle(size: 12),
                             ),
                             16.width,
                             Flexible(
@@ -176,11 +248,11 @@ class ServiceInfoCardWidget extends StatelessWidget {
                                           size: 12,
                                           isBoldText: true,
                                         ),
-                                      Text(" x ${appointmentDet.billingItems[index].quantity} = ", style: primaryTextStyle(size: 12, color: dividerColor)),
+                                      Text(" x ${appointmentDet.billingItems[index].quantity} = ", style: secondaryTextStyle(size: 12)),
                                     ],
                                     PriceWidget(
                                       price: appointmentDet.billingItems[index].totalAmount,
-                                      color: appColorPrimary,
+                                      color: appColorSecondary,
                                       size: 14,
                                       isBoldText: true,
                                     ),
@@ -208,5 +280,5 @@ class ServiceInfoCardWidget extends StatelessWidget {
           );
   }
 
-  bool isAppointmentService(index) => appointmentDet.billingItems[index].serviceDetail != null && appointmentDet.billingItems[index].serviceDetail!.id == appointmentDet.serviceId;
+  bool isAppointmentService(int index) => appointmentDet.billingItems[index].serviceDetail != null && appointmentDet.billingItems[index].serviceDetail!.id == appointmentDet.serviceId;
 }

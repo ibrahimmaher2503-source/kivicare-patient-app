@@ -89,13 +89,27 @@ class _SliderComponentState extends State<SliderComponent> {
                   },
                   behavior: HitTestBehavior.translucent,
                   child: Container(
-                    color: Colors.transparent,
-                    width: Get.width,
-                    child: CachedImageWidget(
-                      url: homeScreenController.dashboardData.value.slider[index].sliderImage,
-                      fit: BoxFit.fitWidth,
-                      usePlaceholderIfUrlEmpty: false,
-                      width: Get.width,
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: softShadowColorMedium,
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: CachedImageWidget(
+                        url: homeScreenController.dashboardData.value.slider[index].sliderImage,
+                        fit: BoxFit.cover,
+                        usePlaceholderIfUrlEmpty: false,
+                        width: Get.width,
+                        height: 200,
+                      ),
                     ),
                   ),
                 );
@@ -103,7 +117,7 @@ class _SliderComponentState extends State<SliderComponent> {
             ),
           ),
           Positioned(
-            bottom: -16,
+            bottom: -12,
             left: 0,
             right: 0,
             child: Obx(
@@ -113,6 +127,7 @@ class _SliderComponentState extends State<SliderComponent> {
                 children: List<Widget>.generate(
                   homeScreenController.dashboardData.value.slider.length,
                   (index) {
+                    final bool isActive = homeScreenController.sliderCurrentPage.value == index;
                     return InkWell(
                       onTap: () {
                         homeScreenController.sliderPageController.animateToPage(
@@ -122,14 +137,17 @@ class _SliderComponentState extends State<SliderComponent> {
                         );
                       },
                       child: Obx(
-                        () => Container(
-                          height: 10,
-                          width: homeScreenController.sliderCurrentPage.value == index ? 20 : 10,
-                          margin: const EdgeInsets.all(3),
+                        () => AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          height: isActive ? 8 : 6,
+                          width: homeScreenController.sliderCurrentPage.value == index ? 24 : 6,
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: white),
-                            color: homeScreenController.sliderCurrentPage.value == index ? appColorSecondary : appColorPrimary,
+                            color: homeScreenController.sliderCurrentPage.value == index
+                                ? appColorSecondary
+                                : appColorPrimary.withValues(alpha: 0.3),
                           ),
                         ),
                       ),
@@ -141,6 +159,6 @@ class _SliderComponentState extends State<SliderComponent> {
           ),
         ],
       ),
-    ).paddingTop(30);
+    ).paddingTop(16);
   }
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/components/cached_image_widget.dart';
 
 import '../../../../../components/loader_widget.dart';
 import '../../../../../generated/assets.dart';
 import '../../../../../main.dart';
+import '../../../../../utils/app_common.dart';
 import '../../../../../utils/colors.dart';
 import '../../../../../utils/common_base.dart';
 import '../../../../../utils/empty_error_state_widget.dart';
@@ -74,89 +76,114 @@ class FilterClinicComponent extends StatelessWidget {
                       AnimatedScrollView(
                         children: [
                           AnimatedWrap(
+                            spacing: 0,
+                            runSpacing: 0,
                             children: List.generate(filterCont.clinicList.length, (index) {
                               Clinic clinic = filterCont.clinicList[index];
+                              final bool isSelected = filterCont.selectedClinicData.value.id == clinic.id;
                               return InkWell(
+                                borderRadius: BorderRadius.circular(16),
                                 onTap: () {
-                                  // filterCont.selectedClinicData(clinic);
                                   filterCont.selectedClinicDataFunc(clinic);
                                 },
-
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.all(6),
-                                      decoration: boxDecorationDefault(
-                                        color: context.cardColor,
-                                        borderRadius: BorderRadius.circular(6),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  margin: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? appColorSecondary
+                                          : isDarkMode.value
+                                              ? glassStrokeDark
+                                              : whiteBorderColor,
+                                      width: isSelected ? 1.5 : 1,
+                                    ),
+                                    boxShadow: isSelected
+                                        ? [
+                                            BoxShadow(
+                                              color: appColorSecondary.withValues(alpha: 0.15),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ]
+                                        : [],
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(16),
+                                          bottomLeft: Radius.circular(16),
+                                        ),
+                                        child: CachedImageWidget(
+                                          url: clinic.clinicImage,
+                                          height: 75,
+                                          width: 75,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          CachedImageWidget(
-                                            url: clinic.clinicImage,
-                                            height: 75,
-                                            width: 75,
-                                            fit: BoxFit.cover,
-                                            topLeftRadius: 6,
-                                            bottomLeftRadius: 6,
-                                          ),
-                                          8.width,
-                                          Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              8.height,
-                                              Text(
-                                                clinic.name.toString(),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: primaryTextStyle(
-                                                  size: 12,
-                                                ),
+                                      8.width,
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            8.height,
+                                            Text(
+                                              clinic.name.toString(),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.plusJakartaSans(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                                color: isDarkMode.value ? Colors.white : appColorPrimary,
                                               ),
-                                              6.height,
-                                              Row(
-                                                children: [
-                                                  const CachedImageWidget(url: Assets.iconsIcLocation, color: iconColor, width: 12, height: 12),
-                                                  8.width,
-                                                  Text(
+                                            ),
+                                            4.height,
+                                            Row(
+                                              children: [
+                                                const CachedImageWidget(url: Assets.iconsIcLocation, color: appColorSecondary, width: 12, height: 12),
+                                                6.width,
+                                                Expanded(
+                                                  child: Text(
                                                     clinic.address,
-                                                    style: secondaryTextStyle(),
+                                                    style: GoogleFonts.plusJakartaSans(fontSize: 11, color: secondaryTextColor),
                                                     maxLines: 1,
                                                     overflow: TextOverflow.ellipsis,
-                                                  ).expand(),
-                                                ],
-                                              ),
-                                              6.height,
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                                decoration: boxDecorationDefault(
-                                                  color: getClinicStatusLightColor(clinicStatus: clinic.clinicStatus.toLowerCase()),
-                                                  borderRadius: radius(22),
+                                                  ),
                                                 ),
-                                                child: Text(
-                                                  getClinicStatus(status: clinic.clinicStatus.toLowerCase()),
-                                                  style: boldTextStyle(size: 10, color: Colors.green.shade600),
+                                              ],
+                                            ),
+                                            6.height,
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                              decoration: BoxDecoration(
+                                                color: getClinicStatusLightColor(clinicStatus: clinic.clinicStatus.toLowerCase()),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              child: Text(
+                                                getClinicStatus(status: clinic.clinicStatus.toLowerCase()),
+                                                style: GoogleFonts.plusJakartaSans(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.green.shade600,
                                                 ),
                                               ),
-                                              6.height,
-                                            ],
-                                          ).expand(),
-                                          8.width,
-                                        ],
+                                            ),
+                                            6.height,
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Positioned(
-                                      top: 0,
-                                      right: 0,
-                                      child: commonLeadingWid(
-                                        imgPath: Assets.imagesConfirm,
-                                        color: whiteTextColor,
-                                        size: 8,
-                                      ).circularLightPrimaryBg(color: appColorPrimary, padding: 6),
-                                    ).visible(filterCont.selectedClinicData.value.id == clinic.id),
-                                  ],
+                                      if (isSelected)
+                                        Container(
+                                          margin: const EdgeInsets.only(top: 8, right: 8),
+                                          child: Icon(Icons.check_circle, color: appColorSecondary, size: 20),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               );
                             }),

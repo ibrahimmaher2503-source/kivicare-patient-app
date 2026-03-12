@@ -22,7 +22,18 @@ class PopularClinicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: boxDecorationDefault(color: context.cardColor, borderRadius: radius(8)),
+      decoration: BoxDecoration(
+        color: context.cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+            blurRadius: 20,
+            offset: const Offset(0, 6),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
       width: width ?? Get.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,13 +41,17 @@ class PopularClinicCard extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              CachedImageWidget(
-                url: clinicElement.clinicImage,
-                width: Get.width,
-                fit: BoxFit.cover,
-                topLeftRadius: 8,
-                topRightRadius: 8,
-                height: Get.height * 0.24,
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+                child: CachedImageWidget(
+                  url: clinicElement.clinicImage,
+                  width: Get.width,
+                  fit: BoxFit.cover,
+                  height: Get.height * 0.24,
+                ),
               ).onTap((){
                 currentSelectedClinic(clinicElement);
                 Get.delete<ServiceListController>();
@@ -104,19 +119,30 @@ class PopularClinicCard extends StatelessWidget {
                   ).expand(),
                 ],
               ).paddingTop(8),
-              TextButton(
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   currentSelectedClinic(clinicElement);
                   Get.delete<ServiceListController>();
                   Get.to(() => ClinicDetailScreen(), arguments: clinicElement);
                 },
-                style: const ButtonStyle(
-                  padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                  overlayColor: WidgetStatePropertyAll(lightSecondaryColor),
+                behavior: HitTestBehavior.translucent,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: appColorSecondary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(locale.value.viewDetail, style: boldTextStyle(color: appColorSecondary, size: 12)),
+                      4.width,
+                      Icon(Icons.arrow_forward_ios_rounded, size: 11, color: appColorSecondary),
+                    ],
+                  ),
                 ),
-                child: Text(locale.value.viewDetail, style: boldTextStyle(color: appColorSecondary, size: 12)),
               ),
-              8.height,
+              12.height,
             ],
           ).paddingSymmetric(horizontal: 16),
         ],

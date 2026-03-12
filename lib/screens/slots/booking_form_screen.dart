@@ -1,6 +1,7 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -61,7 +62,17 @@ class BookingFormScreen extends StatelessWidget {
                   Obx(
                     () => Container(
                       padding: const EdgeInsets.all(16),
-                      decoration: boxDecorationDefault(color: context.cardColor),
+                      decoration: BoxDecoration(
+                        color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                            blurRadius: 12,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
                       child: Column(
                         children: [
                           CommonSelectionWid(
@@ -171,15 +182,25 @@ class BookingFormScreen extends StatelessWidget {
                   16.height,
                   ViewAllLabel(label: locale.value.chooseDate, isShowAll: false).paddingOnly(right: 8),
                   Container(
-                    decoration: boxDecorationDefault(color: context.cardColor),
+                    decoration: BoxDecoration(
+                      color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                          blurRadius: 12,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
                     child: DatePicker(
-                      dateTextStyle: boldTextStyle(size: 18),
-                      dayTextStyle: secondaryTextStyle(size: 14),
-                      monthTextStyle: secondaryTextStyle(size: 14),
+                      dateTextStyle: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.w700, color: isDarkMode.value ? Colors.white : appColorPrimary),
+                      dayTextStyle: GoogleFonts.plusJakartaSans(fontSize: 12, color: secondaryTextColor),
+                      monthTextStyle: GoogleFonts.plusJakartaSans(fontSize: 12, color: secondaryTextColor),
                       DateTime.now(),
                       initialSelectedDate: DateTime.now(),
-                      selectionColor: lightPrimaryColor,
-                      selectedTextColor: appColorPrimary,
+                      selectionColor: isDarkMode.value ? appColorSecondary.withValues(alpha: 0.2) : lightSecondaryColor,
+                      selectedTextColor: appColorSecondary,
                       height: 100,
                       onDateChange: (date) {
                         timeSlotsCont.selectedDate(date.formatDateYYYYmmdd());
@@ -220,16 +241,27 @@ class BookingFormScreen extends StatelessWidget {
                                           padding: const EdgeInsets.all(16),
                                           width: Get.width,
                                           alignment: Alignment.center,
-                                          decoration: boxDecorationDefault(color: context.cardColor),
+                                          decoration: BoxDecoration(
+                                            color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                                            borderRadius: BorderRadius.circular(16),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                                                blurRadius: 12,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
                                           child: AnimatedWrap(
-                                            spacing: 12,
-                                            runSpacing: 12,
+                                            spacing: 8,
+                                            runSpacing: 8,
                                             alignment: WrapAlignment.start,
                                             crossAxisAlignment: WrapCrossAlignment.start,
                                             children: List.generate(
                                               timeSlotsCont.slots.length,
                                                   (i) {
                                                 String slot = timeSlotsCont.slots[i];
+                                                final bool isSelected = timeSlotsCont.selectedSlot.value == slot;
                                                 return Obx(
                                                       () =>
                                                       GestureDetector(
@@ -237,19 +269,46 @@ class BookingFormScreen extends StatelessWidget {
                                                           timeSlotsCont.selectedSlot(slot);
                                                           timeSlotsCont.onDateTimeChange();
                                                         },
-                                                        child: Container(
+                                                        child: AnimatedContainer(
+                                                          duration: const Duration(milliseconds: 200),
                                                           width: Get.width / 3 - 32,
                                                           padding: const EdgeInsets.symmetric(vertical: 12),
-                                                          decoration: boxDecorationWithRoundedCorners(
-                                                            backgroundColor: timeSlotsCont.selectedSlot.value == slot ? appColorPrimary : context.scaffoldBackgroundColor,
-                                                            borderRadius: BorderRadius.circular(defaultRadius / 2),
+                                                          decoration: BoxDecoration(
+                                                            color: isSelected
+                                                                ? appColorSecondary
+                                                                : isDarkMode.value
+                                                                    ? surfaceElevatedDark.withValues(alpha: 0.7)
+                                                                    : surfaceSubtle,
+                                                            borderRadius: BorderRadius.circular(16),
+                                                            border: Border.all(
+                                                              color: isSelected
+                                                                  ? appColorSecondary
+                                                                  : isDarkMode.value
+                                                                      ? glassStrokeDark
+                                                                      : whiteBorderColor,
+                                                              width: 1,
+                                                            ),
+                                                            boxShadow: isSelected
+                                                                ? [
+                                                                    BoxShadow(
+                                                                      color: appColorSecondary.withValues(alpha: 0.25),
+                                                                      blurRadius: 8,
+                                                                      offset: const Offset(0, 2),
+                                                                    ),
+                                                                  ]
+                                                                : [],
                                                           ),
                                                           child: Text(
                                                             slot,
                                                             textAlign: TextAlign.center,
-                                                            style: primaryTextStyle(
-                                                              size: 12,
-                                                              color: (timeSlotsCont.selectedSlot.value == slot) ? Colors.white : appColorPrimary,
+                                                            style: GoogleFonts.plusJakartaSans(
+                                                              fontSize: 12,
+                                                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                                              color: isSelected
+                                                                  ? Colors.white
+                                                                  : isDarkMode.value
+                                                                      ? Colors.white70
+                                                                      : appColorPrimary,
                                                             ),
                                                           ),
                                                         ),
@@ -315,8 +374,23 @@ class BookingFormScreen extends StatelessWidget {
                                     duration: const Duration(milliseconds: 500),
                                     child: Container(
                                       width: Get.width / 3 - 24,
-                                      decoration: boxDecorationDefault(
-                                        color: timeSlotsCont.selectedMember.value.id == userData.id ? appColorPrimary : context.cardColor,
+                                      decoration: BoxDecoration(
+                                        color: timeSlotsCont.selectedMember.value.id == userData.id
+                                            ? appColorSecondary
+                                            : isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(
+                                          color: timeSlotsCont.selectedMember.value.id == userData.id
+                                              ? appColorSecondary
+                                              : isDarkMode.value ? glassStrokeDark : whiteBorderColor,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
                                       ),
                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                                       child: Row(
@@ -376,7 +450,17 @@ class BookingFormScreen extends StatelessWidget {
                       return Container(
                         width: Get.width,
                         padding: const EdgeInsets.all(16),
-                        decoration: boxDecorationDefault(color: context.cardColor),
+                        decoration: BoxDecoration(
+                          color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                              blurRadius: 12,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -572,22 +656,48 @@ class BookingFormScreen extends StatelessWidget {
               height: 50,
               child: Obx(
                 () {
-                  return AppButton(
-                    width: Get.width,
-                    color: timeSlotsCont.nextBtnVisible.value ? appColorSecondary : null,
-                    enabled: timeSlotsCont.nextBtnVisible.value ? true : false,
-                    disabledColor: timeSlotsCont.nextBtnVisible.value ? null : appColorSecondary.withValues(alpha: 0.5),
-                    shapeBorder: RoundedRectangleBorder(borderRadius: radius(defaultAppButtonRadius / 2)),
-                    onTap: () {
-                      if (timeSlotsCont.nextBtnVisible.value) {
-                        doIfLoggedIn(() {
-                          timeSlotsCont.handleNextClick(context);
-                        });
-                      }
-                    },
-                    child: Text(
-                      locale.value.next,
-                      style: boldTextStyle(color: timeSlotsCont.nextBtnVisible.value ? Colors.white : Colors.white70, size: 14),
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: timeSlotsCont.nextBtnVisible.value
+                          ? const LinearGradient(
+                              colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            )
+                          : null,
+                      color: timeSlotsCont.nextBtnVisible.value ? null : appColorSecondary.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: timeSlotsCont.nextBtnVisible.value
+                          ? [
+                              BoxShadow(
+                                color: appColorSecondary.withValues(alpha: 0.3),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ]
+                          : [],
+                    ),
+                    child: AppButton(
+                      width: Get.width,
+                      color: Colors.transparent,
+                      elevation: 0,
+                      enabled: timeSlotsCont.nextBtnVisible.value,
+                      shapeBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      onTap: () {
+                        if (timeSlotsCont.nextBtnVisible.value) {
+                          doIfLoggedIn(() {
+                            timeSlotsCont.handleNextClick(context);
+                          });
+                        }
+                      },
+                      child: Text(
+                        locale.value.next,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: timeSlotsCont.nextBtnVisible.value ? Colors.white : Colors.white70,
+                        ),
+                      ),
                     ),
                   );
                 },

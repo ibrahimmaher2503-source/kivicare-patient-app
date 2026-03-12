@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -50,139 +51,198 @@ class DoctorDetailScreen extends StatelessWidget {
                 listAnimationType: ListAnimationType.FadeIn,
                 physics: const AlwaysScrollableScrollPhysics(),
                 children: [
+                  /// Hero image area with gradient overlay
+                  Stack(
+                    children: [
+                      CachedImageWidget(
+                        url: doctorDetailCont.doctorData.value.profileImage,
+                        fit: BoxFit.cover,
+                        width: Get.width,
+                        height: Get.height * 0.35,
+                      ),
+                      // Bottom gradient overlay for smooth transition
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 80,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                (isDarkMode.value ? surfaceElevatedDark : surfaceElevated).withValues(alpha: 0.8),
+                                isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  /// Doctor info card
                   Container(
-                    color: context.cardColor,
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                      boxShadow: [
+                        BoxShadow(
+                          color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
                     child: Column(
                       children: [
-                        CachedImageWidget(
-                          url: doctorDetailCont.doctorData.value.profileImage,
-                          fit: BoxFit.cover,
-                          width: Get.width,
-                          height: Get.height * 0.3,
-                          topLeftRadius: (defaultRadius * 2).toInt(),
-                          topRightRadius: (defaultRadius * 2).toInt(),
-                        ),
-                        Column(
+                        Row(
                           children: [
-                            16.height,
-                            Row(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Row(
+                                  mainAxisAlignment: doctorDetailCont.doctorData.value.fullName.isNotEmpty ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment: doctorDetailCont.doctorData.value.fullName.isNotEmpty ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              doctorDetailCont.doctorData.value.fullName,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: boldTextStyle(size: 18),
-                                            ),
-                                            const CachedImageWidget(url: Assets.iconsIcVerified, width: 14, height: 14).paddingLeft(8),
-                                          ],
-                                        ).paddingRight(16).flexible().visible(doctorDetailCont.doctorData.value.fullName.isNotEmpty),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                          decoration: boxDecorationDefault(color: isDarkMode.value ? extraLightPrimaryColor.withValues(alpha: 0.1) : extraLightPrimaryColor, borderRadius: radius(22)),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const CachedImageWidget(
-                                                url: Assets.iconsIcStarFilled,
-                                                color: checkoutStatusColor,
-                                                height: 12,
-                                              ),
-                                              8.width,
-                                              Text(
-                                                doctorDetailCont.doctorData.value.averageRating.toString(),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: boldTextStyle(size: 12, color: appColorPrimary),
-                                              ).paddingTop(2),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                     Row(
                                       children: [
                                         Text(
-                                          doctorDetailCont.doctorData.value.expert,
+                                          doctorDetailCont.doctorData.value.fullName,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: primaryTextStyle(color: appColorPrimary),
-                                        ).flexible(),
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700,
+                                            letterSpacing: -0.3,
+                                            color: isDarkMode.value ? Colors.white : appColorPrimary,
+                                          ),
+                                        ),
+                                        const CachedImageWidget(url: Assets.iconsIcVerified, width: 14, height: 14).paddingLeft(8),
                                       ],
-                                    ).paddingTop(6).visible(doctorDetailCont.doctorData.value.expert.isNotEmpty),
+                                    ).paddingRight(16).flexible().visible(doctorDetailCont.doctorData.value.fullName.isNotEmpty),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: isDarkMode.value ? appColorAccent.withValues(alpha: 0.12) : lightAccentColor,
+                                        borderRadius: BorderRadius.circular(22),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const CachedImageWidget(
+                                            url: Assets.iconsIcStarFilled,
+                                            color: appColorAccent,
+                                            height: 12,
+                                          ),
+                                          8.width,
+                                          Text(
+                                            doctorDetailCont.doctorData.value.averageRating.toString(),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.plusJakartaSans(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w700,
+                                              color: isDarkMode.value ? Colors.white : appColorPrimary,
+                                            ),
+                                          ).paddingTop(2),
+                                        ],
+                                      ),
+                                    ),
                                   ],
-                                ).flexible(),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  locale.value.socialMedia,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: secondaryTextStyle(size: 12),
                                 ),
-                                12.width,
-                                SocialMediaElement(
-                                  iconPath: Assets.socialMediaIcX,
-                                  onPressed: () {
-                                    commonLaunchUrl(doctorDetailCont.doctorData.value.twitterLink, launchMode: LaunchMode.externalApplication);
-                                  },
-                                ).paddingRight(8).visible(doctorDetailCont.doctorData.value.twitterLink.isNotEmpty),
-                                SocialMediaElement(
-                                  iconPath: Assets.socialMediaIcDribble,
-                                  onPressed: () {
-                                    commonLaunchUrl(doctorDetailCont.doctorData.value.dribbbleLink, launchMode: LaunchMode.externalApplication);
-                                  },
-                                ).paddingRight(8).visible(doctorDetailCont.doctorData.value.dribbbleLink.isNotEmpty),
-                                SocialMediaElement(
-                                  iconPath: Assets.socialMediaIcFb,
-                                  onPressed: () {
-                                    commonLaunchUrl(doctorDetailCont.doctorData.value.facebookLink, launchMode: LaunchMode.externalApplication);
-                                  },
-                                ).paddingRight(8).visible(doctorDetailCont.doctorData.value.facebookLink.isNotEmpty),
-                                SocialMediaElement(
-                                  iconPath: Assets.socialMediaIcInsta,
-                                  onPressed: () {
-                                    commonLaunchUrl(doctorDetailCont.doctorData.value.instagramLink, launchMode: LaunchMode.externalApplication);
-                                  },
-                                ).visible(doctorDetailCont.doctorData.value.instagramLink.isNotEmpty),
+                                Row(
+                                  children: [
+                                    Text(
+                                      doctorDetailCont.doctorData.value.expert,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.plusJakartaSans(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: appColorSecondary,
+                                      ),
+                                    ).flexible(),
+                                  ],
+                                ).paddingTop(8).visible(doctorDetailCont.doctorData.value.expert.isNotEmpty),
                               ],
-                            ).paddingTop(16).visible(
-                                  doctorDetailCont.doctorData.value.twitterLink.isNotEmpty ||
-                                      doctorDetailCont.doctorData.value.dribbbleLink.isNotEmpty ||
-                                      doctorDetailCont.doctorData.value.facebookLink.isNotEmpty ||
-                                      doctorDetailCont.doctorData.value.instagramLink.isNotEmpty,
-                                ),
+                            ).flexible(),
                           ],
-                        ).paddingSymmetric(horizontal: 16),
-                        16.height,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              locale.value.socialMedia,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: secondaryTextColor,
+                              ),
+                            ),
+                            12.width,
+                            SocialMediaElement(
+                              iconPath: Assets.socialMediaIcX,
+                              onPressed: () {
+                                commonLaunchUrl(doctorDetailCont.doctorData.value.twitterLink, launchMode: LaunchMode.externalApplication);
+                              },
+                            ).paddingRight(8).visible(doctorDetailCont.doctorData.value.twitterLink.isNotEmpty),
+                            SocialMediaElement(
+                              iconPath: Assets.socialMediaIcDribble,
+                              onPressed: () {
+                                commonLaunchUrl(doctorDetailCont.doctorData.value.dribbbleLink, launchMode: LaunchMode.externalApplication);
+                              },
+                            ).paddingRight(8).visible(doctorDetailCont.doctorData.value.dribbbleLink.isNotEmpty),
+                            SocialMediaElement(
+                              iconPath: Assets.socialMediaIcFb,
+                              onPressed: () {
+                                commonLaunchUrl(doctorDetailCont.doctorData.value.facebookLink, launchMode: LaunchMode.externalApplication);
+                              },
+                            ).paddingRight(8).visible(doctorDetailCont.doctorData.value.facebookLink.isNotEmpty),
+                            SocialMediaElement(
+                              iconPath: Assets.socialMediaIcInsta,
+                              onPressed: () {
+                                commonLaunchUrl(doctorDetailCont.doctorData.value.instagramLink, launchMode: LaunchMode.externalApplication);
+                              },
+                            ).visible(doctorDetailCont.doctorData.value.instagramLink.isNotEmpty),
+                          ],
+                        ).paddingTop(16).visible(
+                              doctorDetailCont.doctorData.value.twitterLink.isNotEmpty ||
+                                  doctorDetailCont.doctorData.value.dribbbleLink.isNotEmpty ||
+                                  doctorDetailCont.doctorData.value.facebookLink.isNotEmpty ||
+                                  doctorDetailCont.doctorData.value.instagramLink.isNotEmpty,
+                            ),
                       ],
                     ),
                   ),
-                  16.height,
+                  24.height,
+
+                  /// About section
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ReadMoreText(
                         parseHtmlString(doctorDetailCont.doctorData.value.aboutSelf),
                         trimLines: 4,
-                        style: secondaryTextStyle(size: 14, color: secondaryTextColor),
-                        colorClickableText: appColorPrimary,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: secondaryTextColor,
+                          height: 1.6,
+                        ),
+                        colorClickableText: appColorSecondary,
                         trimMode: TrimMode.Line,
                         trimCollapsedText: " ...${locale.value.readMore}",
                         trimExpandedText: locale.value.readLess,
                         locale: Localizations.localeOf(context),
                       ).paddingBottom(16).visible(doctorDetailCont.doctorData.value.aboutSelf.isNotEmpty),
                       DoctorDetailBtmComp(doctorDetailCont: doctorDetailCont),
-                      24.height,
+                      32.height,
                     ],
                   ).paddingSymmetric(horizontal: 16),
                 ],

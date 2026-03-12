@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../configs.dart';
 import '../generated/assets.dart';
+import '../utils/app_common.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
 
@@ -10,19 +11,27 @@ class AppLogoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool dark = isDarkMode.value;
     return Container(
       height: Constants.appLogoSize,
       width: Constants.appLogoSize,
       alignment: Alignment.center,
       padding: const EdgeInsets.all(10),
-      decoration: boxDecorationDefault(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
+        color: dark ? surfaceElevatedDark : surfaceElevated,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.2),
+            color: dark ? softShadowColorDark : softShadowColor,
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+          // Subtle teal glow accent
+          BoxShadow(
+            color: appColorSecondary.withValues(alpha: dark ? 0.08 : 0.06),
+            blurRadius: 24,
             spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -31,9 +40,11 @@ class AppLogoWidget extends StatelessWidget {
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => Text(
           APP_NAME.toUpperCase(),
-          style: boldTextStyle(
+          style: GoogleFonts.outfit(
+            fontWeight: FontWeight.w700,
             color: appColorPrimary,
-            letterSpacing: 10,
+            letterSpacing: -0.5,
+            fontSize: 16,
           ),
         ),
       ),

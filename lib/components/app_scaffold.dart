@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
+import '../utils/app_common.dart';
 import '../utils/colors.dart';
 import '../utils/common_base.dart';
 import 'body_widget.dart';
@@ -146,7 +147,7 @@ class AppScaffoldNew extends StatelessWidget {
                       appBartitleText ?? "",
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
-                      style: primaryTextStyle(size: 18, fontFamily: GoogleFonts.interTight(fontWeight: FontWeight.w600).fontFamily, color: white),
+                      style: primaryTextStyle(size: 18, fontFamily: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600).fontFamily, color: white),
                     ).expand(),
                   ],
                 ).paddingSymmetric(horizontal: Get.width * 0.12),
@@ -184,7 +185,15 @@ class AppScaffoldNew extends StatelessWidget {
           Container(
             width: Get.width,
             height: Get.height,
-            decoration: BoxDecoration(color: topBarBgColor ?? appColorPrimary),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: topBarBgColor != null
+                    ? [topBarBgColor!, topBarBgColor!]
+                    : [gradientStart, gradientEnd],
+              ),
+            ),
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -199,10 +208,17 @@ class AppScaffoldNew extends StatelessWidget {
                   margin: EdgeInsets.only(top: topBarHeight),
                   decoration: boxDecorationDefault(
                     color: scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(defaultRadius * 2),
-                      topRight: Radius.circular(defaultRadius * 2),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isDarkMode.value ? softShadowColorDark : softShadowColorMedium,
+                        blurRadius: 16,
+                        offset: const Offset(0, -4),
+                      ),
+                    ],
                   ),
                   child: body,
                 ),

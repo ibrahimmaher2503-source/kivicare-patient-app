@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/main.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../generated/assets.dart';
+import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/common_base.dart';
 import '../doctor_detail_controller.dart';
@@ -24,63 +26,105 @@ class DoctorDetailBtmComp extends StatelessWidget {
       width: Get.width,
       child: Column(
         children: [
-          SettingItemWidget(
+          _buildSectionItem(
+            context: context,
             title: locale.value.aboutMyself,
-            decoration: boxDecorationDefault(color: context.cardColor),
-            subTitle: locale.value.experienceSpecializationContactInfo,
-            splashColor: transparentColor,
+            subtitle: locale.value.experienceSpecializationContactInfo,
+            iconPath: Assets.iconsIcInfo,
             onTap: () {
               Get.to(() => AboutDoctorComponent(doctorData: doctorDetailCont.doctorData.value));
             },
-            titleTextStyle: boldTextStyle(size: 14),
-            leading: commonLeadingWid(imgPath: Assets.iconsIcInfo, color: appColorSecondary),
-            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: darkGray),
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
           ),
           Obx(
-            () => SettingItemWidget(
+            () => _buildSectionItem(
+              context: context,
               title: locale.value.services,
-              decoration: boxDecorationDefault(color: context.cardColor),
-              subTitle: doctorDetailCont.doctorData.value.totalServices != 0 ? "${locale.value.total} ${doctorDetailCont.doctorData.value.totalServices} ${locale.value.servicesAvailable}" : locale.value.noServicesAvailable,
-              splashColor: transparentColor,
+              subtitle: doctorDetailCont.doctorData.value.totalServices != 0 ? "${locale.value.total} ${doctorDetailCont.doctorData.value.totalServices} ${locale.value.servicesAvailable}" : locale.value.noServicesAvailable,
+              iconPath: Assets.iconsIcServices,
               onTap: () {
                 Get.to(() => DoctorServicesComponent());
               },
-              titleTextStyle: boldTextStyle(size: 14),
-              leading: commonLeadingWid(imgPath: Assets.iconsIcServices, color: appColorSecondary),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: darkGray),
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
             ).paddingTop(16),
           ),
           Obx(
-            () => SettingItemWidget(
+            () => _buildSectionItem(
+              context: context,
               title: locale.value.reviews,
-              decoration: boxDecorationDefault(color: context.cardColor),
-              subTitle: doctorDetailCont.doctorData.value.totalReviews != 0 ? "${locale.value.total} ${doctorDetailCont.doctorData.value.totalReviews} ${locale.value.reviews}" : locale.value.noReviewsAvailable,
-              splashColor: transparentColor,
+              subtitle: doctorDetailCont.doctorData.value.totalReviews != 0 ? "${locale.value.total} ${doctorDetailCont.doctorData.value.totalReviews} ${locale.value.reviews}" : locale.value.noReviewsAvailable,
+              iconPath: Assets.iconsIcStar,
               onTap: () {
                 Get.to(() => DoctorReviewScreen(), arguments: doctorDetailCont.doctorData.value.doctorId);
               },
-              titleTextStyle: boldTextStyle(size: 14),
-              leading: commonLeadingWid(imgPath: Assets.iconsIcStar, color: appColorSecondary),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: darkGray),
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
             ).paddingTop(16),
           ),
-          SettingItemWidget(
+          _buildSectionItem(
+            context: context,
             title: locale.value.qualification,
-            decoration: boxDecorationDefault(color: context.cardColor),
-            subTitle: locale.value.qualificationInDetail,
-            splashColor: transparentColor,
+            subtitle: locale.value.qualificationInDetail,
+            iconPath: Assets.iconsIcQualification,
             onTap: () {
               Get.to(() => QualificationComponent(qualificationList: doctorDetailCont.doctorData.value.qualifications));
             },
-            titleTextStyle: boldTextStyle(size: 14),
-            leading: commonLeadingWid(imgPath: Assets.iconsIcQualification, color: appColorSecondary),
-            trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: darkGray),
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
           ).paddingTop(16),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSectionItem({
+    required BuildContext context,
+    required String title,
+    required String subtitle,
+    required String iconPath,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.translucent,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+          boxShadow: [
+            BoxShadow(
+              color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            commonLeadingWid(imgPath: iconPath, color: appColorSecondary),
+            16.width,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.2,
+                    color: isDarkMode.value ? Colors.white : appColorPrimary,
+                  ),
+                ),
+                4.height,
+                Text(
+                  subtitle,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: secondaryTextColor,
+                  ),
+                ),
+              ],
+            ).expand(),
+            Icon(Icons.arrow_forward_ios_rounded, size: 14, color: secondaryTextColor),
+          ],
+        ),
       ),
     );
   }

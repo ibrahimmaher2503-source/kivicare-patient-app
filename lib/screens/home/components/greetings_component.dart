@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import '../../../../main.dart';
@@ -19,22 +20,47 @@ class GreetingsComponent extends StatelessWidget {
       child: Row(
         children: [
           Obx(
-            () => CachedImageWidget(
-              url: loginUserData.value.profileImage,
-              fit: BoxFit.cover,
-              width: 48,
-              height: 48,
-              circle: true,
-            ).paddingRight(8).visible(loginUserData.value.profileImage.contains("http")),
+            () => Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: appColorAccent.withValues(alpha: 0.6),
+                  width: 2,
+                ),
+              ),
+              child: CachedImageWidget(
+                url: loginUserData.value.profileImage,
+                fit: BoxFit.cover,
+                width: 46,
+                height: 46,
+                circle: true,
+              ),
+            ).paddingRight(12).visible(loginUserData.value.profileImage.contains("http")),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Obx(
-                () => Text(
-                  '👋 ${locale.value.hey}, ${isLoggedIn.value ? loginUserData.value.userName.validate() : locale.value.guest.validate()}',
-                  style: primaryTextStyle(color: white, size: 20),
+                () => RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${locale.value.hey}, ',
+                        style: primaryTextStyle(color: white.withValues(alpha: 0.85), size: 15),
+                      ),
+                      TextSpan(
+                        text: isLoggedIn.value ? loginUserData.value.userName.validate() : locale.value.guest.validate(),
+                        style: GoogleFonts.outfit(
+                          color: white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Obx(
@@ -49,10 +75,10 @@ class GreetingsComponent extends StatelessWidget {
                         height: 14,
                       ),
                       8.width,
-                      Text(loginUserData.value.address, maxLines: 1, overflow: TextOverflow.ellipsis, style: secondaryTextStyle(color: white, size: 14)).flexible(),
+                      Text(loginUserData.value.address, maxLines: 1, overflow: TextOverflow.ellipsis, style: secondaryTextStyle(color: white.withValues(alpha: 0.8), size: 13)).flexible(),
                     ],
                   ),
-                ).paddingTop(4).visible(loginUserData.value.address.isNotEmpty),
+                ).paddingTop(6).visible(loginUserData.value.address.isNotEmpty),
               ),
             ],
           ).expand(),
@@ -67,21 +93,36 @@ class GreetingsComponent extends StatelessWidget {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                const CachedImageWidget(
-                  url: Assets.navigationIcNotifyOutlined,
-                  color: Colors.white,
-                  height: 24,
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const CachedImageWidget(
+                    url: Assets.navigationIcNotifyOutlined,
+                    color: Colors.white,
+                    height: 22,
+                  ),
                 ),
                 Positioned(
-                  top: -8 + -(3 * unreadNotificationCount.value.toString().length).toDouble(),
-                  right: -4 + -(3 * unreadNotificationCount.value.toString().length).toDouble(),
+                  top: 0,
+                  right: 0,
                   child: Obx(
                     () => Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: boxDecorationDefault(color: appColorSecondary, shape: BoxShape.circle),
-                      child: Text(
-                        unreadNotificationCount.value.toString(),
-                        style: secondaryTextStyle(color: white, size: 8),
+                      padding: const EdgeInsets.all(4),
+                      constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                      decoration: BoxDecoration(
+                        color: appColorAccent,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: appColorPrimary, width: 1.5),
+                      ),
+                      child: Center(
+                        child: Text(
+                          unreadNotificationCount.value.toString(),
+                          style: boldTextStyle(color: white, size: 9),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ).visible(unreadNotificationCount.value > 0),
                   ),

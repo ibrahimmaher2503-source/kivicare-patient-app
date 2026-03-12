@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/generated/assets.dart';
 import 'package:kivicare_patient/screens/booking/components/cancellations_booking_charge_dialog.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -39,7 +40,30 @@ class AppointmentCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: boxDecorationDefault(color: context.cardColor, shape: BoxShape.rectangle),
+            decoration: BoxDecoration(
+              color: context.cardColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border(
+                left: BorderSide(
+                  color: getBookingStatusColor(status: appointment.status),
+                  width: 4,
+                ),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                  spreadRadius: 0,
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+                BoxShadow(
+                  color: isDarkMode.value ? softShadowColorDark : softShadowColorMedium,
+                  spreadRadius: 0,
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -56,26 +80,54 @@ class AppointmentCard extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: boxDecorationDefault(
-                      color: isDarkMode.value ? Colors.grey.withValues(alpha: 0.1) : lightSecondaryColor,
-                      borderRadius: radius(22),
+                    decoration: BoxDecoration(
+                      color: getBookingStatusColor(status: appointment.status).withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(22),
+                      border: Border.all(
+                        color: getBookingStatusColor(status: appointment.status).withValues(alpha: 0.15),
+                        width: 0.5,
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        Icon(
+                          Icons.calendar_today_rounded,
+                          size: 13,
+                          color: getBookingStatusColor(status: appointment.status),
+                        ),
+                        6.width,
                         Text(
                           appointment.appointmentDate.dateInDMMMMyyyyFormat,
-                          style: boldTextStyle(size: 12, color: appColorSecondary),
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: getBookingStatusColor(status: appointment.status),
+                          ),
                         ),
-                        6.width,
-                        Text(
-                          "|",
-                          style: boldTextStyle(size: 12, color: appColorSecondary),
+                        8.width,
+                        Container(
+                          width: 4,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: getBookingStatusColor(status: appointment.status).withValues(alpha: 0.4),
+                            shape: BoxShape.circle,
+                          ),
                         ),
-                        6.width,
+                        8.width,
+                        Icon(
+                          Icons.access_time_rounded,
+                          size: 13,
+                          color: getBookingStatusColor(status: appointment.status),
+                        ),
+                        4.width,
                         Text(
                           '${appointment.appointmentTime.format24HourtoAMPM} - ${appointment.endTime.format24HourtoAMPM}',
-                          style: boldTextStyle(size: 12, color: appColorSecondary),
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: getBookingStatusColor(status: appointment.status),
+                          ),
                         ),
                       ],
                     ),
@@ -89,7 +141,12 @@ class AppointmentCard extends StatelessWidget {
                     children: [
                       Text(
                         appointment.serviceName,
-                        style: boldTextStyle(size: 20),
+                        style: GoogleFonts.outfit(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.3,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -146,47 +203,50 @@ class AppointmentCard extends StatelessWidget {
                   ),
                 ),
                 24.height,
-                commonDivider,
+                _buildGradientDivider(),
                 16.height,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    _buildStatusChip(
+                      label: getBookingStatus(status: appointment.status),
+                      color: getBookingStatusColor(status: appointment.status),
+                    ),
+                    8.width,
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Icon(Icons.calendar_today_outlined, color: secondaryTextColor, size: 12),
-                        4.width,
-                        Text("${locale.value.appointment}:", style: secondaryTextStyle()),
-                        4.width,
-                        Text(
-                          getBookingStatus(status: appointment.status),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: primaryTextStyle(size: 12, color: getBookingStatusColor(status: appointment.status)),
-                        ).expand(),
-                      ],
-                    ).flexible(),
-                    Row(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         const CachedImageWidget(url: Assets.iconsIcTotalPayout, height: 15),
                         4.width,
-                        Text("${locale.value.payment}:", style: secondaryTextStyle()).flexible(),
+                        Text("${locale.value.payment}:", style: secondaryTextStyle()),
                         4.width,
-                        Text(
-                          getBookingPaymentStatus(status: appointment.paymentStatus),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          textAlign: TextAlign.end,
-                          style: primaryTextStyle(size: 12, color: getPriceStatusColor(paymentStatus: appointment.paymentStatus)),
-                        ).flexible(),
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: getPriceStatusColor(paymentStatus: appointment.paymentStatus).withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              getBookingPaymentStatus(status: appointment.paymentStatus),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: getPriceStatusColor(paymentStatus: appointment.paymentStatus),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
-                    ).flexible(),
+                    ),
                   ],
                 ),
                 if (appointment.bookForName.isNotEmpty) ...[
                   16.height,
-                  commonDivider,
+                  _buildGradientDivider(),
                   16.height,
                   Row(
                     children: [
@@ -278,7 +338,21 @@ class AppointmentCard extends StatelessWidget {
                 }
               },
               child: Container(
-                decoration: boxDecorationDefault(shape: BoxShape.circle, color: appColorPrimary),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: gradientSecondaryStart.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
                 padding: const EdgeInsets.all(10),
                 child: const CachedImageWidget(
                   url: Assets.imagesVideoCamera,
@@ -289,6 +363,70 @@ class AppointmentCard extends StatelessWidget {
                 ),
               ),
             ).visible(appointment.isVideoConsultancy),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGradientDivider() {
+    final Color dividerTint = isDarkMode.value
+        ? borderColor.withValues(alpha: 0.08)
+        : borderColor.withValues(alpha: 0.25);
+    return Container(
+      height: 1,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.transparent,
+            dividerTint,
+            dividerTint,
+            Colors.transparent,
+          ],
+          stops: const [0.0, 0.2, 0.8, 1.0],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusChip({required String label, required Color color}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            color.withValues(alpha: 0.15),
+            color.withValues(alpha: 0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: color.withValues(alpha: 0.25),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          6.width,
+          Text(
+            label,
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: color,
+              letterSpacing: 0.2,
+            ),
           ),
         ],
       ),

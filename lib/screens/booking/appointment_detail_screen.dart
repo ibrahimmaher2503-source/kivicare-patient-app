@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/components/appointment_detail_applied_tax_list_bottom_sheet.dart';
 import 'package:kivicare_patient/screens/booking/components/cancellations_booking_charge_dialog.dart';
 import 'package:kivicare_patient/screens/booking/components/rescheduling_component.dart';
@@ -69,43 +70,68 @@ class AppointmentDetail extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ViewAllLabel(label: locale.value.appointmentDetail, isShowAll: false).flexible(),
-                      //  ViewAllLabel(label: locale.value.appointmentDetail, isShowAll: false),
                       if (appointmentDetailCont.appointmentDetail.value.status.contains(BookingStatusConst.PENDING))
 
                         ///Reschedule Appointment
-                        SizedBox(
-                          height: 23,
-                          child: AppButton(
-                            text: locale.value.reschedule,
-                            padding: EdgeInsets.zero,
-                            textStyle: secondaryTextStyle(color: Colors.white),
-                            shapeBorder: RoundedRectangleBorder(borderRadius: radius(4)),
-                            onTap: () {
-                              appointmentDetailCont.getTimeSlot();
-                              handleRescheduleClick(
-                                context: context,
-                                isLoading: appointmentDetailCont.isLoading,
-                                appointmentDetail: appointmentDetailCont.appointmentDetail,
-                                appointmentDetailCont: appointmentDetailCont,
-                              );
-                            },
+                        GestureDetector(
+                          onTap: () {
+                            appointmentDetailCont.getTimeSlot();
+                            handleRescheduleClick(
+                              context: context,
+                              isLoading: appointmentDetailCont.isLoading,
+                              appointmentDetail: appointmentDetailCont.appointmentDetail,
+                              appointmentDetailCont: appointmentDetailCont,
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: gradientSecondaryStart.withValues(alpha: 0.25),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              locale.value.reschedule,
+                              style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white),
+                            ),
                           ),
                         )
                       else if (appointmentDetailCont.appointmentDetail.value.status.contains(BookingStatusConst.CHECKOUT))
 
                         ///Invoice Download
-                        SizedBox(
-                          height: 23,
-                          child: AppButton(
-                            padding: EdgeInsets.zero,
-                            textStyle: secondaryTextStyle(color: Colors.white),
-                            shapeBorder: RoundedRectangleBorder(borderRadius: radius(4)),
-                            onTap: () {
-                              appointmentDetailCont.getAppointmentInvoice();
-                            },
+                        GestureDetector(
+                          onTap: () {
+                            appointmentDetailCont.getAppointmentInvoice();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [gradientStart, gradientEnd],
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: gradientStart.withValues(alpha: 0.2),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 const CachedImageWidget(
                                   url: Assets.iconsIcDownload,
@@ -114,7 +140,7 @@ class AppointmentDetail extends StatelessWidget {
                                   color: white,
                                 ),
                                 6.width,
-                                Text(locale.value.invoice, style: primaryTextStyle(size: 12, color: white)),
+                                Text(locale.value.invoice, style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white)),
                               ],
                             ),
                           ),
@@ -124,7 +150,24 @@ class AppointmentDetail extends StatelessWidget {
                   Container(
                     width: Get.width,
                     padding: const EdgeInsets.all(16),
-                    decoration: boxDecorationDefault(color: context.cardColor),
+                    decoration: BoxDecoration(
+                      color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                          spreadRadius: 0,
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                        BoxShadow(
+                          color: isDarkMode.value ? softShadowColorDark : softShadowColorMedium,
+                          spreadRadius: 0,
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
                     child: Column(
                       children: [
                         Row(
@@ -153,7 +196,7 @@ class AppointmentDetail extends StatelessWidget {
                             ).expand(flex: 2).visible(appointmentDetailCont.appointmentDetail.value.serviceName.isNotEmpty),
                           ],
                         ),
-                        commonDivider.paddingSymmetric(vertical: 16),
+                        _buildDetailDivider().paddingSymmetric(vertical: 16),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -178,7 +221,7 @@ class AppointmentDetail extends StatelessWidget {
                           ],
                         ),
                         if (appointmentDetailCont.appointmentDetail.value.bookForName.isNotEmpty) ...[
-                          commonDivider.paddingSymmetric(vertical: 16),
+                          _buildDetailDivider().paddingSymmetric(vertical: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -213,7 +256,7 @@ class AppointmentDetail extends StatelessWidget {
                             ],
                           ),
                         ],
-                        commonDivider.paddingSymmetric(vertical: 16),
+                        _buildDetailDivider().paddingSymmetric(vertical: 16),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -222,13 +265,10 @@ class AppointmentDetail extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text("${locale.value.appointmentStatus}:", style: secondaryTextStyle(size: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
-                                6.height,
-                                Text(
-                                  getBookingStatus(status: appointmentDetailCont.appointmentDetail.value.status),
-                                  style: boldTextStyle(
-                                    size: 12,
-                                    color: getBookingStatusColor(status: appointmentDetailCont.appointmentDetail.value.status),
-                                  ),
+                                8.height,
+                                _buildGradientStatusChip(
+                                  label: getBookingStatus(status: appointmentDetailCont.appointmentDetail.value.status),
+                                  color: getBookingStatusColor(status: appointmentDetailCont.appointmentDetail.value.status),
                                 ),
                               ],
                             ).expand(flex: 3),
@@ -237,13 +277,10 @@ class AppointmentDetail extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text("${locale.value.paymentStatus}:", style: secondaryTextStyle(size: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
-                                6.height,
-                                Text(
-                                  getBookingPaymentStatus(status: appointmentDetailCont.appointmentDetail.value.paymentStatus),
-                                  style: boldTextStyle(
-                                    size: 12,
-                                    color: getPriceStatusColor(paymentStatus: appointmentDetailCont.appointmentDetail.value.paymentStatus),
-                                  ),
+                                8.height,
+                                _buildGradientStatusChip(
+                                  label: getBookingPaymentStatus(status: appointmentDetailCont.appointmentDetail.value.paymentStatus),
+                                  color: getPriceStatusColor(paymentStatus: appointmentDetailCont.appointmentDetail.value.paymentStatus),
                                 ),
                               ],
                             ).expand(flex: 2),
@@ -277,7 +314,15 @@ class AppointmentDetail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       16.height,
-                      Text(locale.value.aboutService, style: boldTextStyle(size: Constants.labelTextSize)),
+                      Text(
+                        locale.value.aboutService,
+                        style: GoogleFonts.outfit(
+                          fontSize: Constants.labelTextSize.toDouble() + 2,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.3,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
+                        ),
+                      ),
                       8.height,
                       ServiceInfoCardWidget(appointmentDet: appointmentDetailCont.appointmentDetail.value),
                     ],
@@ -296,7 +341,17 @@ class AppointmentDetail extends StatelessWidget {
                         Container(
                           width: Get.width,
                           padding: const EdgeInsets.all(16),
-                          decoration: boxDecorationDefault(color: context.cardColor),
+                          decoration: BoxDecoration(
+                            color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
                           child: Column(
                             children: [
                               detailWidget(
@@ -397,7 +452,7 @@ class AppointmentDetail extends StatelessWidget {
                           height: 48,
                           width: Get.width,
                           padding: EdgeInsets.zero,
-                          shapeBorder: RoundedRectangleBorder(borderRadius: radius(defaultAppButtonRadius / 2)),
+                          shapeBorder: RoundedRectangleBorder(borderRadius: radius(12)),
                           onTap: () {
                             Get.bottomSheet(
                               isScrollControlled: true,
@@ -448,11 +503,7 @@ class AppointmentDetail extends StatelessWidget {
           style: secondaryTextStyle(color: appColorSecondary, size: 11, fontStyle: FontStyle.italic),
         ).paddingSymmetric(horizontal: 16).paddingTop(16).visible(appointmentDetailCont.isAdvancePaymentFailed),
         32.height,
-        AppButton(
-          width: Get.width,
-          text: locale.value.payNow,
-          textStyle: appButtonTextStyleWhite,
-          color: completedStatusColor,
+        GestureDetector(
           onTap: () async {
             paymentController = PaymentController(
               isFromBookingDetail: true,
@@ -478,20 +529,39 @@ class AppointmentDetail extends StatelessWidget {
               }
             });
           },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                locale.value.payNow,
-                style: appButtonTextStyleWhite,
+          child: Container(
+            width: Get.width,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [gradientSecondaryStart, gradientSecondaryEnd],
               ),
-              PriceWidget(
-                price: appointmentDetailCont.payNowAmount,
-                color: white,
-                size: 18,
-                isBoldText: true,
-              )
-            ],
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: gradientSecondaryStart.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  locale.value.payNow,
+                  style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white),
+                ),
+                PriceWidget(
+                  price: appointmentDetailCont.payNowAmount,
+                  color: white,
+                  size: 18,
+                  isBoldText: true,
+                ),
+              ],
+            ),
           ),
         ).paddingSymmetric(horizontal: 16),
       ],
@@ -553,7 +623,22 @@ class AppointmentDetail extends StatelessWidget {
         Container(
           width: Get.width,
           padding: const EdgeInsets.all(16),
-          decoration: boxDecorationDefault(color: context.cardColor),
+          decoration: BoxDecoration(
+            color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+              BoxShadow(
+                color: isDarkMode.value ? softShadowColorDark : softShadowColorMedium,
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -896,11 +981,7 @@ class AppointmentDetail extends StatelessWidget {
             ),
           ).paddingSymmetric(horizontal: 16),
           16.height,
-          AppButton(
-            width: Get.width,
-            text: locale.value.submit,
-            color: appColorPrimary,
-            textStyle: const TextStyle(color: whiteTextColor),
+          GestureDetector(
             onTap: () {
               if (appointmentDetailCont.selectedRating.value > 0) {
                 appointmentDetailCont.saveReview();
@@ -908,7 +989,95 @@ class AppointmentDetail extends StatelessWidget {
                 toast(locale.value.pleaseSelectRatings);
               }
             },
+            child: Container(
+              width: Get.width,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: gradientSecondaryStart.withValues(alpha: 0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Text(
+                locale.value.submit,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white),
+              ),
+            ),
           ).paddingSymmetric(horizontal: 16),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailDivider() {
+    final Color dividerTint = isDarkMode.value
+        ? borderColor.withValues(alpha: 0.08)
+        : borderColor.withValues(alpha: 0.25);
+    return Container(
+      height: 1,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.transparent,
+            dividerTint,
+            dividerTint,
+            Colors.transparent,
+          ],
+          stops: const [0.0, 0.2, 0.8, 1.0],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGradientStatusChip({required String label, required Color color}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            color.withValues(alpha: 0.15),
+            color.withValues(alpha: 0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: color.withValues(alpha: 0.25),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          6.width,
+          Text(
+            label,
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: color,
+              letterSpacing: 0.2,
+            ),
+          ),
         ],
       ),
     );

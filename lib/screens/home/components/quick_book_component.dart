@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/components/cached_image_widget.dart';
 import 'package:kivicare_patient/screens/home/components/clinic_list_widget.dart';
 import 'package:kivicare_patient/screens/home/components/quick_book_controller.dart';
@@ -25,16 +26,29 @@ class QuickBookComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() =>
         Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+                spreadRadius: 0,
+              ),
+            ],
+          ),
           child: Column(
             children: [
-              16.height,
               ViewAllLabel(
                 label: locale.value.quicklyBookYourAppointmentNow,
                 isShowAll: false,
               ),
-              8.height,
+              12.height,
               SizedBox(
-                height: 40,
+                height: 48,
                 child: AppTextField(
                   readOnly: true,
                   onTap: () {
@@ -136,14 +150,14 @@ class QuickBookComponent extends StatelessWidget {
                     context,
                     hintText: locale.value.selectService,
                     filled: true,
-                    fillColor: context.cardColor,
+                    fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                   ),
-                  suffix: Icon(Icons.arrow_drop_down_outlined, color: Colors.grey),
+                  suffix: Icon(Icons.keyboard_arrow_down_rounded, color: appColorSecondary, size: 22),
                 ),
               ),
-              16.height,
+              14.height,
               SizedBox(
-                height: 40,
+                height: 48,
                 child: AppTextField(
                   readOnly: true,
                   onTap: () {
@@ -177,14 +191,14 @@ class QuickBookComponent extends StatelessWidget {
                     context,
                     hintText: locale.value.selectClinic,
                     filled: true,
-                    fillColor: context.cardColor,
+                    fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                   ),
-                  suffix: Icon(Icons.arrow_drop_down_outlined, color: Colors.grey),
+                  suffix: Icon(Icons.keyboard_arrow_down_rounded, color: appColorSecondary, size: 22),
                 ),
               ),
-              16.height,
+              14.height,
               SizedBox(
-                height: 40,
+                height: 48,
                 child: AppTextField(
                   readOnly: true,
                   onTap: () async {
@@ -208,18 +222,19 @@ class QuickBookComponent extends StatelessWidget {
                     context,
                     hintText: locale.value.chooseDate,
                     filled: true,
-                    fillColor: context.cardColor,
+                    fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                   ),
                   textFieldType: TextFieldType.NAME,
                   suffix: Icon(
-                    Icons.date_range_rounded,
-                    color: Colors.grey,
+                    Icons.calendar_today_rounded,
+                    color: appColorSecondary,
+                    size: 20,
                   ),
                 ),
               ),
-              16.height,
+              14.height,
               SizedBox(
-                height: 40,
+                height: 48,
                 child: AppTextField(
                   onTap: () {
                     quickBookController.getTimeSlot(showLoader: true);
@@ -231,12 +246,13 @@ class QuickBookComponent extends StatelessWidget {
                     context,
                     hintText: locale.value.chooseTime,
                     filled: true,
-                    fillColor: context.cardColor,
+                    fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                   ),
                   textFieldType: TextFieldType.NAME,
                   suffix: Icon(
-                    Icons.arrow_drop_down_outlined,
-                    color: Colors.grey,
+                    Icons.schedule_rounded,
+                    color: appColorSecondary,
+                    size: 20,
                   ),
                 ),
               ),
@@ -327,25 +343,53 @@ class QuickBookComponent extends StatelessWidget {
                     () =>
                     Column(
                       children: [
-                        16.height,
-                        AppButton(
-                          text: locale.value.bookNow,
-                          color: appColorPrimary,
-                          textStyle: boldTextStyle(color: Colors.white),
-                          onTap: () {
-                            doIfLoggedIn(() {
-                              quickBookController.bookAppointment();
-                            });
-                          },
+                        20.height,
+                        Container(
                           width: Get.width,
-                          shapeBorder: RoundedRectangleBorder(borderRadius: radius(defaultRadius)),
-                        )
+                          height: 50,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: gradientSecondaryStart.withValues(alpha: 0.3),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(12),
+                              onTap: () {
+                                doIfLoggedIn(() {
+                                  quickBookController.bookAppointment();
+                                });
+                              },
+                              child: Center(
+                                child: Text(
+                                  locale.value.bookNow,
+                                  style: GoogleFonts.outfit(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ).visible(quickBookController.selectedSlot.value != ""),
               ),
-              // 16.height,
             ],
-          ).paddingAll(16),
+          ),
         ).visible(homeScreenController.isLoading.value == false));
   }
 }

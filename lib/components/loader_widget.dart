@@ -12,38 +12,33 @@ class LoaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loader = SpinKitFadingCircle(
+      size: 48,
+      itemBuilder: (BuildContext context, int index) {
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: loaderColor ?? appColorSecondary,
+          ),
+        );
+      },
+    );
+
     return isBlurBackground
         ? AbsorbPointer(
             child: SizedBox(
               height: Get.height,
               width: Get.width,
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0, tileMode: TileMode.mirror),
-                child: SpinKitFadingCircle(
-                  size: 50,
-                  itemBuilder: (BuildContext context, int index) {
-                    return DecoratedBox(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: loaderColor ?? appColorSecondary,
-                      ),
-                    );
-                  },
+                filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0, tileMode: TileMode.mirror),
+                child: Container(
+                  color: glassTintDark,
+                  child: Center(child: loader),
                 ),
               ),
             ),
           )
-        : SpinKitFadingCircle(
-            size: 50,
-            itemBuilder: (BuildContext context, int index) {
-              return DecoratedBox(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: loaderColor ?? appColorSecondary,
-                ),
-              );
-            },
-          );
+        : loader;
   }
 }
 

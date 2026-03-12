@@ -2,11 +2,13 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../components/app_scaffold.dart';
 import '../../components/loader_widget.dart';
 import '../../generated/assets.dart';
 import '../../main.dart';
+import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import '../../utils/common_base.dart';
 import 'incident_management_controller.dart';
@@ -34,8 +36,26 @@ class AddIncidentManagement extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         16.height,
+
+                        /// Section Header: Details
+                        Text(
+                          locale.value.incidentManagement,
+                          style: GoogleFonts.outfit(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.3,
+                            color: isDarkMode.value ? Colors.white : primaryTextColor,
+                          ),
+                        ),
+                        16.height,
+
+                        /// Title Field
                         AppTextField(
-                          textStyle: primaryTextStyle(size: 12),
+                          textStyle: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            letterSpacing: 0.1,
+                            color: isDarkMode.value ? Colors.white : primaryTextColor,
+                          ),
                           controller: controller.titleCont,
                           focus: controller.titleFocus,
                           nextFocus: controller.desFocus,
@@ -44,15 +64,21 @@ class AddIncidentManagement extends StatelessWidget {
                           decoration: inputDecoration(
                             context,
                             hintText: locale.value.title,
-                            fillColor: context.cardColor,
+                            fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                             filled: true,
                           ),
                           suffix: commonLeadingWid(imgPath: Assets.iconsIcNotebook, color: secondaryTextColor, size: 12).paddingAll(16),
                         ),
                         16.height,
+
+                        /// Description Field
                         AppTextField(
                           isValidationRequired: true,
-                          textStyle: primaryTextStyle(size: 12),
+                          textStyle: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            letterSpacing: 0.1,
+                            color: isDarkMode.value ? Colors.white : primaryTextColor,
+                          ),
                           textFieldType: TextFieldType.MULTILINE,
                           controller: controller.desCont,
                           maxLength: 500,
@@ -62,17 +88,23 @@ class AddIncidentManagement extends StatelessWidget {
                           decoration: inputDecoration(
                             context,
                             hintText: locale.value.enterYourDetailDescriptionForYourComplaint,
-                            fillColor: context.cardColor,
+                            fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                             filled: true,
                           ),
                         ),
                         16.height,
+
+                        /// Phone Code + Phone Number
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Obx(
                               () => AppTextField(
-                                textStyle: primaryTextStyle(size: 12),
+                                textStyle: GoogleFonts.plusJakartaSans(
+                                  fontSize: 12,
+                                  letterSpacing: 0.1,
+                                  color: isDarkMode.value ? Colors.white : primaryTextColor,
+                                ),
                                 textFieldType: TextFieldType.OTHER,
                                 controller: TextEditingController(text: " +${controller.pickedPhoneCode.value.phoneCode}"),
                                 focus: controller.phoneCodeFocus,
@@ -99,14 +131,18 @@ class AddIncidentManagement extends StatelessWidget {
                                     size: 22,
                                   ).paddingOnly(right: 32),
                                   suffixIconConstraints: BoxConstraints.tight(const Size(24, 24)),
-                                  fillColor: context.cardColor,
+                                  fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                                   filled: true,
                                 ),
                               ),
                             ).expand(flex: 3),
                             16.width,
                             AppTextField(
-                              textStyle: primaryTextStyle(size: 12),
+                              textStyle: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                letterSpacing: 0.1,
+                                color: isDarkMode.value ? Colors.white : primaryTextColor,
+                              ),
                               textFieldType: TextFieldType.PHONE,
                               controller: controller.mobileCont,
                               focus: controller.mobileFocus,
@@ -118,7 +154,7 @@ class AddIncidentManagement extends StatelessWidget {
                               decoration: inputDecoration(
                                 context,
                                 hintText: locale.value.phoneNumber,
-                                fillColor: context.cardColor,
+                                fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                                 filled: true,
                               ),
                               suffix: commonLeadingWid(imgPath: Assets.iconsIcCall, color: secondaryTextColor, size: 12).paddingAll(16),
@@ -126,8 +162,14 @@ class AddIncidentManagement extends StatelessWidget {
                           ],
                         ),
                         16.height,
+
+                        /// Email Field
                         AppTextField(
-                          textStyle: primaryTextStyle(size: 12),
+                          textStyle: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            letterSpacing: 0.1,
+                            color: isDarkMode.value ? Colors.white : primaryTextColor,
+                          ),
                           controller: controller.emailCont,
                           focus: controller.emailFocus,
                           nextFocus: controller.mobileFocus,
@@ -137,15 +179,21 @@ class AddIncidentManagement extends StatelessWidget {
                           decoration: inputDecoration(
                             context,
                             hintText: locale.value.email,
-                            fillColor: context.cardColor,
+                            fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                             filled: true,
                           ),
                           suffix: commonLeadingWid(imgPath: Assets.iconsIcMail, color: secondaryTextColor, size: 12).paddingAll(16),
                         ),
                         16.height,
+
+                        /// Image Picker Field
                         AppTextField(
                           isValidationRequired: true,
-                          textStyle: primaryTextStyle(size: 12),
+                          textStyle: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            letterSpacing: 0.1,
+                            color: isDarkMode.value ? Colors.white : primaryTextColor,
+                          ),
                           textFieldType: TextFieldType.USERNAME,
                           controller: controller.imageTitleCont,
                           focus: controller.imageTitleFocus,
@@ -155,20 +203,28 @@ class AddIncidentManagement extends StatelessWidget {
                           decoration: inputDecoration(
                             suffixIcon: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(bottomRight: Radius.circular(5), topRight: Radius.circular(5)),
-                                color: Colors.grey[300],
+                                borderRadius: const BorderRadius.only(
+                                  bottomRight: Radius.circular(12),
+                                  topRight: Radius.circular(12),
+                                ),
+                                color: isDarkMode.value ? surfaceElevatedDark : inputFillColor,
                               ),
                               width: 75,
                               child: Center(
                                 child: Text(
                                   locale.value.browse,
-                                  style: secondaryTextStyle(),
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.1,
+                                    color: appColorSecondary,
+                                  ),
                                 ),
                               ),
                             ),
                             context,
                             hintText: locale.value.chooseImage,
-                            fillColor: context.cardColor,
+                            fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                             filled: true,
                           ),
                         ),
@@ -178,15 +234,13 @@ class AddIncidentManagement extends StatelessWidget {
                   ),
                 ),
               ),
+
+              /// Submit Button
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: AppButton(
-                    width: Get.width,
-                    color: appColorSecondary,
-                    text: locale.value.submit,
-                    textStyle: appButtonTextStyleWhite,
+                  child: GestureDetector(
                     onTap: () async {
                       if (formKey.currentState!.validate()) {
                         controller
@@ -203,9 +257,34 @@ class AddIncidentManagement extends StatelessWidget {
                             await controller.getIncidents();
                             Get.back();
                           },
-                        ); //image:  controller.imageTitleCont.text,
+                        );
                       }
                     },
+                    child: Container(
+                      width: Get.width,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: appColorSecondary.withValues(alpha: 0.3),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        locale.value.submit,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

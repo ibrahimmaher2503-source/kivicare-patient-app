@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/screens/auth/profile/patient_wallet_history_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
@@ -64,6 +65,8 @@ class NotificationScreen extends StatelessWidget {
                 ).paddingSymmetric(horizontal: 32).paddingBottom(Get.height * 0.1),
                 itemBuilder: (context, index) {
                   NotificationData notification = notificationScreenController.notificationDetail[index];
+                  final bool isUnread = notification.readAt.trim().isEmpty;
+
                   return GestureDetector(
                     onTap: () async {
                       if (notification.data.notificationDetail.type == "wallet_refund") {
@@ -82,63 +85,145 @@ class NotificationScreen extends StatelessWidget {
                     },
                     behavior: HitTestBehavior.translucent,
                     child: Container(
-                      decoration: notification.readAt.trim().isEmpty ? boxDecorationDefault(color: isDarkMode.value ? const Color.fromARGB(40, 78, 112, 247) : lightPrimaryColor) : boxDecorationDefault(color: context.cardColor),
-                      child: Column(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: isUnread
+                            ? (isDarkMode.value
+                                ? appColorSecondary.withValues(alpha: 0.08)
+                                : lightSecondaryColor.withValues(alpha: 0.5))
+                            : (isDarkMode.value ? surfaceElevatedDark : surfaceElevated),
+                        borderRadius: BorderRadius.circular(16),
+                        border: isUnread
+                            ? Border.all(
+                                color: appColorSecondary.withValues(alpha: isDarkMode.value ? 0.15 : 0.12),
+                                width: 1,
+                              )
+                            : null,
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                            blurRadius: 16,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          8.height,
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                          // Icon container with status indicator
+                          Stack(
                             children: [
                               Container(
-                                decoration: boxDecorationDefault(color: isDarkMode.value ? canvasColor : lightPrimaryColor, shape: BoxShape.circle),
-                                padding: const EdgeInsets.all(8),
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: isDarkMode.value
+                                      ? appColorPrimary.withValues(alpha: 0.12)
+                                      : lightPrimaryColor,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                                 alignment: Alignment.center,
                                 child: CachedImageWidget(
                                   url: Assets.assetsAppLogo,
-                                  height: 20,
-                                  width: 20,
+                                  height: 22,
+                                  width: 22,
                                   firstName: "#${notification.data.notificationDetail.id}",
                                   fit: BoxFit.cover,
                                   color: appColorPrimary,
-                                  circle: true,
                                 ),
                               ),
-                              16.width,
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    getAppointmentNotification(notification: notification.data.notificationDetail.type),
-                                    style: secondaryTextStyle(size: 14),
-                                  ).visible(notification.data.notificationDetail.type.isNotEmpty),
-                                  4.height,
-                                  RichText(
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(text: notification.data.notificationDetail.id > 0 ? '#${notification.data.notificationDetail.id} - ' : "", style: primaryTextStyle(color: appColorSecondary, size: 12, decoration: TextDecoration.none)),
-                                        TextSpan(
-                                            text: notification.data.notificationDetail.notificationMsg.trim().isNotEmpty ? notification.data.notificationDetail.notificationMsg : notification.data.notificationDetail.appointmentServicesNames,
-                                            style: primaryTextStyle(size: 12)),
-                                      ],
+                              // Unread dot indicator
+                              if (isUnread)
+                                Positioned(
+                                  top: -2,
+                                  right: -2,
+                                  child: Container(
+                                    width: 10,
+                                    height: 10,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                                      ),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                                        width: 1.5,
+                                      ),
                                     ),
                                   ),
-                                  4.height,
-                                  Text(
-                                    notification.createdAt.dateInyyyyMMddHHmmFormat.timeAgoWithLocalization,
-                                    style: secondaryTextStyle(),
-                                  ),
-                                ],
-                              ).flexible(),
+                                ),
                             ],
                           ),
-                          16.height,
+                          16.width,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Notification type label
+                              if (notification.data.notificationDetail.type.isNotEmpty)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  margin: const EdgeInsets.only(bottom: 6),
+                                  decoration: BoxDecoration(
+                                    color: _getNotificationTypeColor(notification.data.notificationDetail.type)
+                                        .withValues(alpha: isDarkMode.value ? 0.15 : 0.08),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    getAppointmentNotification(notification: notification.data.notificationDetail.type),
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: _getNotificationTypeColor(notification.data.notificationDetail.type),
+                                      letterSpacing: 0.1,
+                                    ),
+                                  ),
+                                ),
+                              // Notification message
+                              RichText(
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: notification.data.notificationDetail.id > 0 ? '#${notification.data.notificationDetail.id} - ' : "",
+                                      style: GoogleFonts.plusJakartaSans(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
+                                        color: appColorSecondary,
+                                        letterSpacing: 0.1,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: notification.data.notificationDetail.notificationMsg.trim().isNotEmpty
+                                          ? notification.data.notificationDetail.notificationMsg
+                                          : notification.data.notificationDetail.appointmentServicesNames,
+                                      style: GoogleFonts.plusJakartaSans(
+                                        fontSize: 13,
+                                        fontWeight: isUnread ? FontWeight.w600 : FontWeight.w400,
+                                        color: isDarkMode.value ? Colors.white : primaryTextColor,
+                                        letterSpacing: 0.1,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              8.height,
+                              // Timestamp
+                              Text(
+                                notification.createdAt.dateInyyyyMMddHHmmFormat.timeAgoWithLocalization,
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 12,
+                                  color: secondaryTextColor,
+                                  letterSpacing: 0.1,
+                                ),
+                              ),
+                            ],
+                          ).flexible(),
                         ],
-                      ).paddingSymmetric(horizontal: 16),
+                      ),
                     ),
-                  ).paddingBottom(16);
+                  );
                 },
                 onNextPage: () async {
                   if (!notificationScreenController.isLastPage.value) {
@@ -160,5 +245,16 @@ class NotificationScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color _getNotificationTypeColor(String type) {
+    final lower = type.toLowerCase();
+    if (lower.contains('cancel')) return cancelStatusColor;
+    if (lower.contains('confirm')) return confirmedStatusColor;
+    if (lower.contains('complete')) return completedStatusColor;
+    if (lower.contains('check_in') || lower.contains('checkin')) return checkInStatusColor;
+    if (lower.contains('pending')) return pendingStatusColor;
+    if (lower.contains('wallet')) return appColorSecondary;
+    return defaultStatusColor;
   }
 }

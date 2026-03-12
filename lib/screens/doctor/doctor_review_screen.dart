@@ -40,7 +40,7 @@ class DoctorReviewScreen extends StatelessWidget {
           onSuccess: (p0) {
             return AnimatedListView(
               shrinkWrap: true,
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
               itemCount: doctorReviewCont.doctorReviewList.length,
               physics: const AlwaysScrollableScrollPhysics(),
               emptyWidget: NoDataWidget(

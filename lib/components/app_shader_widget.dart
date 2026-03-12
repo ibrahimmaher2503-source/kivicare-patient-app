@@ -19,27 +19,30 @@ class AppShaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color shaderColor;
-    if (color == null) {
+    List<Color> shaderColors;
+    if (color != null) {
+      shaderColors = [color ?? white, color ?? white];
+    } else {
       switch (mode) {
         case AppShaderMode.gradient:
-          shaderColor = appColorPrimary;
+          // Use the navy-to-teal gradient for a rich Clinical Luxury effect
+          shaderColors = [gradientStart, gradientSecondaryEnd];
           break;
         case AppShaderMode.secondary:
-          shaderColor = appColorSecondary;
+          // Use the teal gradient for secondary elements
+          shaderColors = [gradientSecondaryStart, gradientSecondaryEnd];
           break;
         default:
-          shaderColor = appColorPrimary;
+          // Primary uses the navy gradient
+          shaderColors = [gradientStart, gradientEnd];
       }
-    } else {
-      shaderColor = color ?? white;
     }
 
     return ShaderMask(
       blendMode: BlendMode.srcIn,
       shaderCallback: (bounds) {
         return LinearGradient(
-          colors: [shaderColor, shaderColor],
+          colors: shaderColors,
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           stops: const [0.0, 1.0],

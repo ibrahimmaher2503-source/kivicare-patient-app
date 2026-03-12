@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/app_scaffold.dart';
 import '../../components/cached_image_widget.dart';
 import '../../components/loader_widget.dart';
 import '../../main.dart';
+import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import '../../utils/empty_error_state_widget.dart';
 import 'appointments_controller.dart';
@@ -47,50 +49,82 @@ class AppointmentsScreen extends StatelessWidget {
                 children: [
                   HorizontalList(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    spacing: 16,
-                    itemCount:filterStatus.length,
+                    spacing: 12,
+                    itemCount: filterStatus.length,
                     itemBuilder: (ctx, index) {
                       AppointmentStatusModel filterStatus1 = filterStatus[index];
                       return Obx(
-                        () => Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            FilterChip(
-                              shape: RoundedRectangleBorder(borderRadius: radius(6), side: const BorderSide(color: Colors.transparent)),
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              label: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                        () {
+                          final bool isActive = appointmentsCont.selectedTab.value.type == filterStatus1.type;
+                          return GestureDetector(
+                            onTap: () {
+                              appointmentsCont.selectedTab(filterStatus[index]);
+                              appointmentsCont.page(1);
+                              appointmentsCont.getAppointmentList(status: appointmentsCont.selectedTab.value.type.toString());
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 250),
+                              curve: Curves.easeOut,
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              decoration: BoxDecoration(
+                                gradient: isActive
+                                    ? const LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                                      )
+                                    : null,
+                                color: isActive ? null : (isDarkMode.value ? surfaceElevatedDark : surfaceElevated),
+                                borderRadius: BorderRadius.circular(12),
+                                border: isActive
+                                    ? null
+                                    : Border.all(
+                                        color: isDarkMode.value ? borderColorDark : whiteBorderColor,
+                                        width: 1,
+                                      ),
+                                boxShadow: isActive
+                                    ? [
+                                        BoxShadow(
+                                          color: gradientSecondaryStart.withValues(alpha: 0.3),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ]
+                                    : [
+                                        BoxShadow(
+                                          color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   CachedImageWidget(
                                     url: filterStatus1.icon,
                                     fit: BoxFit.fitHeight,
                                     height: 14,
-                                    color: appointmentsCont.selectedTab.value.type == filterStatus1.type ? whiteTextColor : secondaryTextColor,
+                                    color: isActive ? whiteTextColor : secondaryTextColor,
                                   ),
-                                  4.width,
+                                  6.width,
                                   Text(
                                     filterStatus1.name!.value,
-                                    style: boldTextStyle(
-                                      size: 14,
-                                      color: appointmentsCont.selectedTab.value.type == filterStatus1.type ? whiteTextColor : secondaryTextColor,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 13,
+                                      fontWeight: isActive ? FontWeight.w700 : FontWeight.w600,
+                                      color: isActive ? whiteTextColor : secondaryTextColor,
                                     ),
                                   ),
                                 ],
                               ),
-                              selected: false,
-                              backgroundColor: appointmentsCont.selectedTab.value.type == filterStatus1.type ? appColorSecondary : context.cardColor,
-                              onSelected: (bool selected) {
-                                appointmentsCont.selectedTab(filterStatus[index]);
-                                appointmentsCont.page(1);
-                                appointmentsCont.getAppointmentList(status: appointmentsCont.selectedTab.value.type.toString());
-                              },
                             ),
-                          ],
-                        ),
+                          );
+                        },
                       );
                     },
                   ),
-                  16.height,
+                  24.height,
                   AnimatedListView(
                     shrinkWrap: true,
                     itemCount: appointmentsCont.appointments.length,

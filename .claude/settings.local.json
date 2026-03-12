@@ -23,7 +23,8 @@
       "Bash(del \"C:\\\\Users\\\\berog\\\\StudioProjects\\\\kivicare-laravel-patient-flutter-app-v1.8.1\\\\assets\\\\icons\\\\ic_department_intensive_care.png\")",
       "Bash(del \"C:\\\\Users\\\\berog\\\\StudioProjects\\\\kivicare-laravel-patient-flutter-app-v1.8.1\\\\assets\\\\icons\\\\ic_department_nurse_requests.png\")",
       "Bash(git checkout:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

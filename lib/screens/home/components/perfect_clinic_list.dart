@@ -22,7 +22,6 @@ class PerfectClinicComponent extends StatelessWidget {
       width: Get.width,
       child: Column(
         children: [
-          16.height,
           ViewAllLabel(
             label: homeController.dashboardData.value.popularClinic.subTitle,
             onTap: () {
@@ -33,7 +32,8 @@ class PerfectClinicComponent extends StatelessWidget {
               );
             },
             trailingText: locale.value.viewAll,
-          ).paddingOnly(left: 16, right: 8),
+          ).paddingOnly(left: 16, right: 16),
+          12.height,
           Obx(
             () => HorizontalList(
               spacing: 16,

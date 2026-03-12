@@ -23,7 +23,7 @@ class DoctorServicesComponent extends StatelessWidget {
       body: Obx(
         () => AnimatedListView(
           shrinkWrap: true,
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 8),
           itemCount: doctorDetailCont.doctorData.value.services.length,
           emptyWidget: NoDataWidget(
             title: locale.value.noServicesFoundAtAMoment,

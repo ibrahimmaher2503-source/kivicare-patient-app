@@ -7,6 +7,7 @@ import 'package:stream_transform/stream_transform.dart';
 
 import '../generated/assets.dart';
 import '../main.dart';
+import '../utils/colors.dart';
 import '../utils/common_base.dart';
 import '../utils/empty_error_state_widget.dart';
 import 'loader_widget.dart';
@@ -97,16 +98,34 @@ class BottomSelectionSheet extends StatelessWidget {
               decoration: BoxDecoration(
                 color: context.scaffoldBackgroundColor,
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0),
+                  topLeft: Radius.circular(24.0),
+                  topRight: Radius.circular(24.0),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: softShadowColorMedium,
+                    blurRadius: 20,
+                    offset: const Offset(0, -4),
+                  ),
+                ],
               ),
               child: Stack(
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      54.height,
+                      8.height,
+                      Center(
+                        child: Container(
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: secondaryTextColor.withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      ),
+                      42.height,
                       bottomSheetDivider,
                       AppTextField(
                         controller: getxBSSCont.searchCont,
@@ -218,8 +237,8 @@ void serviceCommonBottomSheet(BuildContext context, {required Widget child, fina
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(30),
-        topRight: Radius.circular(30),
+        topLeft: Radius.circular(24),
+        topRight: Radius.circular(24),
       ),
     ),
     builder: (context) => child,

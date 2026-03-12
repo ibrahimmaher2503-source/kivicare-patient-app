@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/app_scaffold.dart';
@@ -35,90 +36,109 @@ class ServiceListScreen extends StatelessWidget {
         () => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                SearchServiceWidget(
-                  servicesController: serviceListCont,
-                  onFieldSubmitted: (p0) {
-                    hideKeyboard(context);
-                  },
-                ).expand(),
-                12.width,
-                InkWell(
-                  onTap: () async {
-                    serviceListCont.searchCont.clear();
-                    serviceListCont.page(1);
-                    log('-----------------------1--------------------');
-                    log(
-                      [
-                        serviceListCont.clinicId.value,
-                        serviceListCont.serviceType.value,
-                        serviceListCont.priceMin,
-                        serviceListCont.priceMax,
-                        "category",
-                        serviceListCont.category.value.id,
-                      ],
-                    );
-                    await Get.to(
-                      () => FilterScreen(displayName: 'category'),
-                      arguments: [
-                        serviceListCont.clinicId.value,
-                        serviceListCont.serviceType.value,
-                        serviceListCont.priceMin.value,
-                        serviceListCont.priceMax.value,
-                        "category",
-                        serviceListCont.category.value.id,
-                      ],
-                      binding: BindingsBuilder(
-                        () {
-                          setStatusBarColor(
-                            transparentColor,
-                            statusBarIconBrightness: Brightness.light,
-                            statusBarBrightness: Brightness.light,
-                            systemNavigationBarColor: whiteTextColor,
-                          );
-                        },
-                      ),
-                    )?.then((value) {
-                      if (value is int) {
-                        serviceListCont.selectedFilterCount.value = value;
-                      }
-                    });
-                  },
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 46,
-                        width: 46,
-                        alignment: Alignment.center,
-                        decoration: boxDecorationDefault(color: appColorPrimary, borderRadius: BorderRadius.circular(12)),
-                        child: const CachedImageWidget(
-                          url: Assets.iconsIcFilter,
-                          height: 28,
-                          color: white,
+            // Search bar and filter row
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  SearchServiceWidget(
+                    servicesController: serviceListCont,
+                    onFieldSubmitted: (p0) {
+                      hideKeyboard(context);
+                    },
+                  ).expand(),
+                  12.width,
+                  InkWell(
+                    onTap: () async {
+                      serviceListCont.searchCont.clear();
+                      serviceListCont.page(1);
+                      log('-----------------------1--------------------');
+                      log(
+                        [
+                          serviceListCont.clinicId.value,
+                          serviceListCont.serviceType.value,
+                          serviceListCont.priceMin,
+                          serviceListCont.priceMax,
+                          "category",
+                          serviceListCont.category.value.id,
+                        ],
+                      );
+                      await Get.to(
+                        () => FilterScreen(displayName: 'category'),
+                        arguments: [
+                          serviceListCont.clinicId.value,
+                          serviceListCont.serviceType.value,
+                          serviceListCont.priceMin.value,
+                          serviceListCont.priceMax.value,
+                          "category",
+                          serviceListCont.category.value.id,
+                        ],
+                        binding: BindingsBuilder(
+                          () {
+                            setStatusBarColor(
+                              transparentColor,
+                              statusBarIconBrightness: Brightness.light,
+                              statusBarBrightness: Brightness.light,
+                              systemNavigationBarColor: whiteTextColor,
+                            );
+                          },
                         ),
-                      ),
-                      if (serviceListCont.selectedFilterCount.value > 0)
-                        Positioned(
-                          top: -4,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              '${serviceListCont.selectedFilterCount.value}',
-                              style: const TextStyle(color: Colors.white, fontSize: 10),
-                            ),
+                      )?.then((value) {
+                        if (value is int) {
+                          serviceListCont.selectedFilterCount.value = value;
+                        }
+                      });
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: 46,
+                          width: 46,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(colors: [gradientStart, gradientEnd]),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: appColorPrimary.withValues(alpha: 0.2),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: const CachedImageWidget(
+                            url: Assets.iconsIcFilter,
+                            height: 28,
+                            color: white,
                           ),
                         ),
-                    ],
+                        if (serviceListCont.selectedFilterCount.value > 0)
+                          Positioned(
+                            top: -4,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                '${serviceListCont.selectedFilterCount.value}',
+                                style: GoogleFonts.plusJakartaSans(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ).paddingAll(16),
+                ],
+              ),
+            ),
             SnapHelperWidget(
               future: serviceListCont.serviceListFuture.value,
               errorBuilder: (error) {

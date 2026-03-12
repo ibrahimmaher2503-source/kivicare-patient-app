@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../utils/app_common.dart';
+import '../utils/colors.dart';
 import 'loader_widget.dart';
 
 class Body extends StatelessWidget {
@@ -12,14 +14,15 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: Get.width,
       height: Get.height,
+      color: isDarkMode.value ? appScreenBackgroundDark : appLayoutBackground,
       child: Stack(
         fit: StackFit.expand,
         children: [
           child,
-          Obx(() => const LoaderWidget().center().visible(isLoading.value)),
+          Obx(() => const LoaderWidget(isBlurBackground: true).center().visible(isLoading.value)),
         ],
       ),
     );
