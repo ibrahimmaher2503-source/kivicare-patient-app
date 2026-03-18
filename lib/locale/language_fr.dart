@@ -1521,4 +1521,87 @@ class LanguageFr extends BaseLanguage {
 
   @override
 String get incidenceReportReply => "Réponse au rapport d'incident";
+
+  // Nurse Module
+  @override String get requestNurse => 'Request Nurse';
+  @override String get nurses => 'Nurses';
+  @override String get nurseDetails => 'Nurse Details';
+  @override String get browseNurses => 'Browse Nurses';
+  @override String get myNurseRequests => 'My Nurse Requests';
+  @override String get createNurseRequest => 'Create Nurse Request';
+  @override String get editNurseRequest => 'Edit Nurse Request';
+  @override String get serviceDescription => 'Service Description';
+  @override String get preferredDate => 'Preferred Date';
+  @override String get preferredTime => 'Preferred Time';
+  @override String get durationHours => 'Duration (Hours)';
+  @override String get patientNotes => 'Patient Notes';
+  @override String get selectNurse => 'Select Nurse';
+  @override String get hourlyRate => 'Hourly Rate';
+  @override String get serviceArea => 'Service Area';
+  @override String get availabilityStatus => 'Availability';
+  @override String get nurseAvailable => 'Available';
+  @override String get nurseBusy => 'Busy';
+  @override String get nurseOffDuty => 'Off Duty';
+  @override String get nurseRequestSubmitted => 'Nurse request submitted successfully';
+  @override String get nurseRequestUpdated => 'Nurse request updated successfully';
+  @override String get nurseRequestCancelled => 'Nurse request cancelled successfully';
+  @override String get cancellationReason => 'Cancellation Reason';
+  @override String get totalAmount => 'Total Amount';
+  @override String get addressLine1 => 'Address Line 1';
+  @override String get addressLine2 => 'Address Line 2';
+  @override String get city => 'City';
+  @override String get postalCode => 'Postal Code';
+  @override String get nurseRequestPending => 'Pending';
+  @override String get nurseRequestConfirmed => 'Confirmed';
+  @override String get nurseRequestInProgress => 'In Progress';
+  @override String get nurseRequestCompleted => 'Completed';
+
+  // Lab Test Module
+  @override String get labTests => 'Lab Tests';
+  @override String get labTestCategories => 'Test Categories';
+  @override String get labTestDetails => 'Test Details';
+  @override String get browseLabTests => 'Browse Lab Tests';
+  @override String get myTestOrders => 'My Test Orders';
+  @override String get createTestOrder => 'Create Test Order';
+  @override String get testOrderDetails => 'Order Details';
+  @override String get orderNumber => 'Order Number';
+  @override String get clinicalNotes => 'Clinical Notes';
+  @override String get priority => 'Priority';
+  @override String get priorityRoutine => 'Routine';
+  @override String get priorityUrgent => 'Urgent';
+  @override String get priorityStat => 'STAT';
+  @override String get selectTests => 'Select Tests';
+  @override String get addTest => 'Add Test';
+  @override String get removeTest => 'Remove Test';
+  @override String get sampleType => 'Sample Type';
+  @override String get preparationInstructions => 'Preparation Instructions';
+  @override String get turnaroundTime => 'Turnaround Time';
+  @override String get defaultPrice => 'Price';
+  @override String get department => 'Department';
+  @override String get laboratory => 'Laboratory';
+  @override String get radiology => 'Radiology';
+  @override String get testOrderCreated => 'Test order created successfully';
+  @override String get testOrderCancelled => 'Test order cancelled successfully';
+  @override String get downloadReport => 'Download Report';
+  @override String get reportDownloaded => 'Report downloaded successfully';
+  @override String get orderDate => 'Order Date';
+  @override String get resultValue => 'Result';
+  @override String get resultStatus => 'Result Status';
+  @override String get resultNormal => 'Normal';
+  @override String get resultAbnormal => 'Abnormal';
+  @override String get resultCritical => 'Critical';
+  @override String get sampleCollected => 'Sample Collected';
+  @override String get processing => 'Processing';
+  @override String get delivered => 'Delivered';
+  @override String get referenceRange => 'Reference Range';
+  @override String get testCount => 'Tests';
+
+  // Request Service Module
+  @override String get requestService => 'Request Service';
+  @override String get myServiceRequests => 'My Service Requests';
+  @override String get createServiceRequest => 'Create Service Request';
+  @override String get serviceRequestSubmitted => 'Service request submitted successfully';
+  @override String get serviceStatusPending => 'Pending';
+  @override String get serviceStatusAccepted => 'Accepted';
+  @override String get serviceStatusRejected => 'Rejected';
 }

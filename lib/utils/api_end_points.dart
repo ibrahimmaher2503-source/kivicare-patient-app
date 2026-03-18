@@ -69,4 +69,27 @@ class APIEndPoints {
   static const String incidenceList = 'incidence-list';
   static const String incidenceSave = 'incidence-save';
   static const String updateIncidentStatus = 'update-incident-status';
+
+  //Nurse
+  static const String getNurses = 'v1/nurses';
+  static const String getNurseDetail = 'v1/nurses'; // append /{id}
+  static const String getNurseRequests = 'v1/nurse-requests';
+  static const String createNurseRequest = 'v1/nurse-requests';
+  static const String getNurseRequestDetail = 'v1/nurse-requests'; // append /{id}
+  static const String updateNurseRequest = 'v1/nurse-requests'; // append /{id}
+  static const String cancelNurseRequest = 'v1/nurse-requests'; // append /{id}/cancel
+
+  //Lab Tests
+  static const String getLabTestCategories = 'v1/lab-test-categories';
+  static const String getLabTests = 'v1/lab-tests';
+  static const String getLabTestDetail = 'v1/lab-tests'; // append /{id}
+  static const String getTestOrders = 'v1/test-orders';
+  static const String createTestOrder = 'v1/test-orders';
+  static const String getTestOrderDetail = 'v1/test-orders'; // append /{id}
+  static const String cancelTestOrder = 'v1/test-orders'; // append /{id}/cancel
+  static const String downloadTestReport = 'v1/test-orders'; // append /{id}/report/download
+
+  //Request Service
+  static const String saveRequestService = 'v1/save-request-service';
+  static const String getRequestService = 'v1/get-request-service';
 }

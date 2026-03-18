@@ -115,3 +115,34 @@ const shimmerHighlightDark = Color(0xFF243046); // Shimmer highlight dark mode
 const inputFillColor = Color(0xFFF5F6FA); // Subtle fill for inputs
 const inputFillColorDark = Color(0xFF0F1D32); // Dark mode input fill
 const inputFocusGlow = Color(0x1A08234F); // Focus ring glow
+
+// Nurse Request Status Colors
+const nurseStatusPendingColor = Color(0xFFFF9800);
+const nurseStatusConfirmedColor = Color(0xFF037F7C);
+const nurseStatusInProgressColor = Color(0xFF2196F3);
+const nurseStatusCompletedColor = Color(0xFF13BAAA);
+const nurseStatusCancelledColor = Color(0xFFE53935);
+
+// Lab Test Order Status Colors
+const labStatusPendingColor = Color(0xFFFF9800);
+const labStatusConfirmedColor = Color(0xFF037F7C);
+const labStatusSampleCollectedColor = Color(0xFF7C4DFF);
+const labStatusProcessingColor = Color(0xFF2196F3);
+const labStatusCompletedColor = Color(0xFF13BAAA);
+const labStatusDeliveredColor = Color(0xFF4CAF50);
+const labStatusCancelledColor = Color(0xFFE53935);
+
+// Test Result Status Colors
+const resultNormalColor = Color(0xFF4CAF50);
+const resultAbnormalColor = Color(0xFFFF9800);
+const resultCriticalColor = Color(0xFFE53935);
+
+// Nurse Availability Colors
+const nurseAvailableColor = Color(0xFF4CAF50);
+const nurseBusyColor = Color(0xFFFF9800);
+const nurseOffDutyColor = Color(0xFF9E9E9E);
+
+// Service Request Status Colors
+const serviceStatusPendingColor = Color(0xFFFF9800);
+const serviceStatusAcceptColor = Color(0xFF4CAF50);
+const serviceStatusRejectColor = Color(0xFFE53935);

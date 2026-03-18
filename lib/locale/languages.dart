@@ -1014,4 +1014,87 @@ abstract class BaseLanguage {
   String get rejected;
 
   String get incidenceReportReply;
+
+  // Nurse Module
+  String get requestNurse;
+  String get nurses;
+  String get nurseDetails;
+  String get browseNurses;
+  String get myNurseRequests;
+  String get createNurseRequest;
+  String get editNurseRequest;
+  String get serviceDescription;
+  String get preferredDate;
+  String get preferredTime;
+  String get durationHours;
+  String get patientNotes;
+  String get selectNurse;
+  String get hourlyRate;
+  String get serviceArea;
+  String get availabilityStatus;
+  String get nurseAvailable;
+  String get nurseBusy;
+  String get nurseOffDuty;
+  String get nurseRequestSubmitted;
+  String get nurseRequestUpdated;
+  String get nurseRequestCancelled;
+  String get cancellationReason;
+  String get totalAmount;
+  String get addressLine1;
+  String get addressLine2;
+  String get city;
+  String get postalCode;
+  String get nurseRequestPending;
+  String get nurseRequestConfirmed;
+  String get nurseRequestInProgress;
+  String get nurseRequestCompleted;
+
+  // Lab Test Module
+  String get labTests;
+  String get labTestCategories;
+  String get labTestDetails;
+  String get browseLabTests;
+  String get myTestOrders;
+  String get createTestOrder;
+  String get testOrderDetails;
+  String get orderNumber;
+  String get clinicalNotes;
+  String get priority;
+  String get priorityRoutine;
+  String get priorityUrgent;
+  String get priorityStat;
+  String get selectTests;
+  String get addTest;
+  String get removeTest;
+  String get sampleType;
+  String get preparationInstructions;
+  String get turnaroundTime;
+  String get defaultPrice;
+  String get department;
+  String get laboratory;
+  String get radiology;
+  String get testOrderCreated;
+  String get testOrderCancelled;
+  String get downloadReport;
+  String get reportDownloaded;
+  String get orderDate;
+  String get resultValue;
+  String get resultStatus;
+  String get resultNormal;
+  String get resultAbnormal;
+  String get resultCritical;
+  String get sampleCollected;
+  String get processing;
+  String get delivered;
+  String get referenceRange;
+  String get testCount;
+
+  // Request Service Module
+  String get requestService;
+  String get myServiceRequests;
+  String get createServiceRequest;
+  String get serviceRequestSubmitted;
+  String get serviceStatusPending;
+  String get serviceStatusAccepted;
+  String get serviceStatusRejected;
 }

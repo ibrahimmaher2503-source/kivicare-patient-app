@@ -1520,4 +1520,87 @@ class LanguageAr extends BaseLanguage {
 
   @override
   String get incidenceReportReply => "رد على تقرير الحادث";
+
+  // Nurse Module
+  @override String get requestNurse => 'طلب ممرضة';
+  @override String get nurses => 'الممرضات';
+  @override String get nurseDetails => 'تفاصيل الممرضة';
+  @override String get browseNurses => 'تصفح الممرضات';
+  @override String get myNurseRequests => 'طلبات الممرضات الخاصة بي';
+  @override String get createNurseRequest => 'إنشاء طلب ممرضة';
+  @override String get editNurseRequest => 'تعديل طلب الممرضة';
+  @override String get serviceDescription => 'وصف الخدمة';
+  @override String get preferredDate => 'التاريخ المفضل';
+  @override String get preferredTime => 'الوقت المفضل';
+  @override String get durationHours => 'المدة (ساعات)';
+  @override String get patientNotes => 'ملاحظات المريض';
+  @override String get selectNurse => 'اختيار ممرضة';
+  @override String get hourlyRate => 'السعر بالساعة';
+  @override String get serviceArea => 'منطقة الخدمة';
+  @override String get availabilityStatus => 'الحالة';
+  @override String get nurseAvailable => 'متاحة';
+  @override String get nurseBusy => 'مشغولة';
+  @override String get nurseOffDuty => 'خارج الخدمة';
+  @override String get nurseRequestSubmitted => 'تم تقديم طلب الممرضة بنجاح';
+  @override String get nurseRequestUpdated => 'تم تحديث طلب الممرضة بنجاح';
+  @override String get nurseRequestCancelled => 'تم إلغاء طلب الممرضة بنجاح';
+  @override String get cancellationReason => 'سبب الإلغاء';
+  @override String get totalAmount => 'المبلغ الإجمالي';
+  @override String get addressLine1 => 'العنوان السطر 1';
+  @override String get addressLine2 => 'العنوان السطر 2';
+  @override String get city => 'المدينة';
+  @override String get postalCode => 'الرمز البريدي';
+  @override String get nurseRequestPending => 'قيد الانتظار';
+  @override String get nurseRequestConfirmed => 'مؤكد';
+  @override String get nurseRequestInProgress => 'قيد التنفيذ';
+  @override String get nurseRequestCompleted => 'مكتمل';
+
+  // Lab Test Module
+  @override String get labTests => 'الفحوصات المخبرية';
+  @override String get labTestCategories => 'فئات الفحوصات';
+  @override String get labTestDetails => 'تفاصيل الفحص';
+  @override String get browseLabTests => 'تصفح الفحوصات';
+  @override String get myTestOrders => 'طلبات الفحوصات الخاصة بي';
+  @override String get createTestOrder => 'إنشاء طلب فحص';
+  @override String get testOrderDetails => 'تفاصيل الطلب';
+  @override String get orderNumber => 'رقم الطلب';
+  @override String get clinicalNotes => 'ملاحظات سريرية';
+  @override String get priority => 'الأولوية';
+  @override String get priorityRoutine => 'روتيني';
+  @override String get priorityUrgent => 'عاجل';
+  @override String get priorityStat => 'طارئ';
+  @override String get selectTests => 'اختيار الفحوصات';
+  @override String get addTest => 'إضافة فحص';
+  @override String get removeTest => 'إزالة فحص';
+  @override String get sampleType => 'نوع العينة';
+  @override String get preparationInstructions => 'تعليمات التحضير';
+  @override String get turnaroundTime => 'وقت الإنجاز';
+  @override String get defaultPrice => 'السعر';
+  @override String get department => 'القسم';
+  @override String get laboratory => 'مختبر';
+  @override String get radiology => 'أشعة';
+  @override String get testOrderCreated => 'تم إنشاء طلب الفحص بنجاح';
+  @override String get testOrderCancelled => 'تم إلغاء طلب الفحص بنجاح';
+  @override String get downloadReport => 'تحميل التقرير';
+  @override String get reportDownloaded => 'تم تحميل التقرير بنجاح';
+  @override String get orderDate => 'تاريخ الطلب';
+  @override String get resultValue => 'النتيجة';
+  @override String get resultStatus => 'حالة النتيجة';
+  @override String get resultNormal => 'طبيعي';
+  @override String get resultAbnormal => 'غير طبيعي';
+  @override String get resultCritical => 'حرج';
+  @override String get sampleCollected => 'تم جمع العينة';
+  @override String get processing => 'قيد المعالجة';
+  @override String get delivered => 'تم التسليم';
+  @override String get referenceRange => 'النطاق المرجعي';
+  @override String get testCount => 'الفحوصات';
+
+  // Request Service Module
+  @override String get requestService => 'طلب خدمة';
+  @override String get myServiceRequests => 'طلبات الخدمة الخاصة بي';
+  @override String get createServiceRequest => 'إنشاء طلب خدمة';
+  @override String get serviceRequestSubmitted => 'تم تقديم طلب الخدمة بنجاح';
+  @override String get serviceStatusPending => 'قيد الانتظار';
+  @override String get serviceStatusAccepted => 'مقبول';
+  @override String get serviceStatusRejected => 'مرفوض';
 }

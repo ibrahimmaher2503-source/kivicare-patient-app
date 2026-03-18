@@ -158,6 +158,48 @@ class StatusConst {
   static const accepted = 'accept';
 }
 
+class NurseRequestStatusConst {
+  static const String pending = 'pending';
+  static const String confirmed = 'confirmed';
+  static const String inProgress = 'in_progress';
+  static const String completed = 'completed';
+  static const String cancelled = 'cancelled';
+}
+
+class TestOrderStatusConst {
+  static const String pending = 'pending';
+  static const String confirmed = 'confirmed';
+  static const String sampleCollected = 'sample_collected';
+  static const String processing = 'processing';
+  static const String completed = 'completed';
+  static const String delivered = 'delivered';
+  static const String cancelled = 'cancelled';
+}
+
+class TestOrderPriorityConst {
+  static const String routine = 'routine';
+  static const String urgent = 'urgent';
+  static const String stat = 'stat';
+}
+
+class TestResultStatusConst {
+  static const String normal = 'normal';
+  static const String abnormal = 'abnormal';
+  static const String critical = 'critical';
+}
+
+class ServiceRequestStatusConst {
+  static const String pending = 'pending';
+  static const String accept = 'accept';
+  static const String reject = 'reject';
+}
+
+class NurseAvailabilityConst {
+  static const String available = 'available';
+  static const String busy = 'busy';
+  static const String offDuty = 'off_duty';
+}
+
 //region PaymentStatus
 class PaymentStatus {
   static const PAID = 'paid';
