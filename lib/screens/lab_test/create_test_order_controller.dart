@@ -5,7 +5,6 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../api/core_apis.dart';
 import '../../main.dart';
 import 'model/lab_test_model.dart';
-import 'model/test_order_model.dart';
 
 class CreateTestOrderController extends GetxController {
   // Selected tests (cart)

@@ -11,7 +11,6 @@ import '../../main.dart';
 import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import '../../utils/common_base.dart';
-import '../../utils/constants.dart';
 import 'create_nurse_request_controller.dart';
 import 'model/nurse_model.dart';
 import 'model/nurse_request_model.dart';

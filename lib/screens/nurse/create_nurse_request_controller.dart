@@ -118,7 +118,7 @@ class CreateNurseRequestController extends GetxController {
 
   Future<void> submitRequest() async {
     isLoading(true);
-    hideKeyBoardWithoutContext();
+    FocusManager.instance.primaryFocus?.unfocus();
 
     final body = _buildRequestBody();
 
@@ -136,7 +136,7 @@ class CreateNurseRequestController extends GetxController {
   Future<void> updateRequest() async {
     if (editRequest == null) return;
     isLoading(true);
-    hideKeyBoardWithoutContext();
+    FocusManager.instance.primaryFocus?.unfocus();
 
     final body = _buildRequestBody();
 

@@ -62,7 +62,7 @@ class CreateRequestServiceScreen extends StatelessWidget {
                           errorThisFieldRequired: locale.value.thisFieldIsRequired,
                           decoration: inputDecoration(
                             context,
-                            hintText: locale.value.name,
+                            hintText: locale.value.serviceName,
                             fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                             filled: true,
                           ),
@@ -105,7 +105,7 @@ class CreateRequestServiceScreen extends StatelessWidget {
                           focus: controller.typeFocus,
                           decoration: inputDecoration(
                             context,
-                            hintText: locale.value.type,
+                            hintText: locale.value.serviceType,
                             fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                             filled: true,
                           ),

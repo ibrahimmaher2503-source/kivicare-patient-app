@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:get/get.dart' hide MultipartFile;
+import 'package:get/get.dart' hide MultipartFile, Response;
 import 'package:http/http.dart';
 
 import 'package:kivicare_patient/screens/other_patient/model/other_patient_list_res.dart';

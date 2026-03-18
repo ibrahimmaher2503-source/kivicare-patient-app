@@ -53,7 +53,7 @@ class LabTestListScreen extends StatelessWidget {
                     textFieldType: TextFieldType.OTHER,
                     onChanged: controller.onSearchChanged,
                     decoration: InputDecoration(
-                      hintText: '${locale.value.search}...',
+                      hintText: '${locale.value.searchHere}...',
                       hintStyle: GoogleFonts.plusJakartaSans(
                         fontSize: 14,
                         letterSpacing: 0.1,

@@ -43,7 +43,7 @@ class CreateRequestServiceController extends GetxController {
 
   Future<void> submitRequest() async {
     isLoading(true);
-    hideKeyBoardWithoutContext();
+    FocusManager.instance.primaryFocus?.unfocus();
 
     final body = _buildRequestBody();
 
