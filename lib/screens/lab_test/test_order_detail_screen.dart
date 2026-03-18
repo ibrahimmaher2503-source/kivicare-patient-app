@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../api/core_apis.dart';
 import '../../components/app_scaffold.dart';
@@ -10,10 +14,19 @@ import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import 'model/test_order_model.dart';
 
-class TestOrderDetailScreen extends StatelessWidget {
+class TestOrderDetailScreen extends StatefulWidget {
   final TestOrder orderData;
 
   const TestOrderDetailScreen({super.key, required this.orderData});
+
+  @override
+  State<TestOrderDetailScreen> createState() => _TestOrderDetailScreenState();
+}
+
+class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
+  bool _isDownloading = false;
+
+  TestOrder get orderData => widget.orderData;
 
   Color _statusColor(String status) {
     switch (status.toLowerCase()) {
@@ -422,15 +435,35 @@ class TestOrderDetailScreen extends StatelessWidget {
       children: [
         if (canDownload)
           GestureDetector(
-            onTap: () async {
-              try {
-                await CoreServiceApis.downloadTestReport(orderId: orderData.id);
-                toast(locale.value.reportDownloaded);
-              } catch (e) {
-                log("Download report error: $e");
-                toast(e.toString());
-              }
-            },
+            onTap: _isDownloading
+                ? null
+                : () async {
+                    setState(() => _isDownloading = true);
+                    try {
+                      final response = await CoreServiceApis.downloadTestReport(orderId: orderData.id);
+
+                      if (response.statusCode != 200) {
+                        throw Exception('Failed to download report (status ${response.statusCode})');
+                      }
+
+                      final dir = await getApplicationDocumentsDirectory();
+                      final fileName = 'LAB-REPORT-${orderData.orderNumber}.pdf';
+                      final file = File('${dir.path}/$fileName');
+                      await file.writeAsBytes(response.bodyBytes);
+
+                      toast(locale.value.reportDownloaded);
+
+                      final uri = Uri.file(file.path);
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      }
+                    } catch (e) {
+                      log("Download report error: $e");
+                      toast(e.toString());
+                    } finally {
+                      setState(() => _isDownloading = false);
+                    }
+                  },
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -448,22 +481,31 @@ class TestOrderDetailScreen extends StatelessWidget {
                 ],
               ),
               child: Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.download_outlined, color: Colors.white, size: 20),
-                    8.width,
-                    Text(
-                      locale.value.downloadReport,
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.1,
-                        color: Colors.white,
+                child: _isDownloading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.download_outlined, color: Colors.white, size: 20),
+                          8.width,
+                          Text(
+                            locale.value.downloadReport,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.1,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
               ),
             ),
           ),
