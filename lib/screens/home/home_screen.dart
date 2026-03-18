@@ -10,6 +10,7 @@ import '../../utils/empty_error_state_widget.dart';
 import 'components/choose_category_components.dart';
 import 'components/greetings_component.dart';
 import 'components/quick_book_component.dart';
+import 'components/quick_services_component.dart';
 import 'components/perfect_clinic_list.dart';
 import '../service/components/popular_service_component.dart';
 import 'components/slider_component.dart';
@@ -65,6 +66,8 @@ class HomeScreen extends StatelessWidget {
                     SliderComponent(),
                     const SizedBox(height: 24),
                     QuickBookComponent(),
+                    const SizedBox(height: 24),
+                    const QuickServicesComponent(),
                     const SizedBox(height: 24),
                     UpcomingAppointmentComponents(),
                     const SizedBox(height: 24),

@@ -20,23 +20,26 @@ class GreetingsComponent extends StatelessWidget {
       child: Row(
         children: [
           Obx(
-            () => Container(
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: appColorAccent.withValues(alpha: 0.6),
-                  width: 2,
+            () => Padding(
+              padding: const EdgeInsetsDirectional.only(end: 12),
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: appColorAccent.withValues(alpha: 0.6),
+                    width: 2,
+                  ),
+                ),
+                child: CachedImageWidget(
+                  url: loginUserData.value.profileImage,
+                  fit: BoxFit.cover,
+                  width: 46,
+                  height: 46,
+                  circle: true,
                 ),
               ),
-              child: CachedImageWidget(
-                url: loginUserData.value.profileImage,
-                fit: BoxFit.cover,
-                width: 46,
-                height: 46,
-                circle: true,
-              ),
-            ).paddingRight(12).visible(loginUserData.value.profileImage.contains("http")),
+            ).visible(loginUserData.value.profileImage.contains("http")),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
