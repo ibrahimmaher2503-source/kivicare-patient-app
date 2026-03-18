@@ -12,21 +12,21 @@ class AppTheme {
     final bodyFont = GoogleFonts.plusJakartaSans();
     final displayFont = GoogleFonts.outfit();
     return base.copyWith(
-      displayLarge: displayFont.copyWith(letterSpacing: -0.5),
-      displayMedium: displayFont.copyWith(letterSpacing: -0.5),
-      displaySmall: displayFont.copyWith(letterSpacing: -0.5),
-      headlineLarge: displayFont.copyWith(letterSpacing: -0.5),
-      headlineMedium: displayFont.copyWith(letterSpacing: -0.3),
-      headlineSmall: displayFont.copyWith(letterSpacing: -0.3),
-      titleLarge: displayFont.copyWith(letterSpacing: -0.3),
-      titleMedium: bodyFont.copyWith(letterSpacing: 0.1),
-      titleSmall: bodyFont.copyWith(letterSpacing: 0.1),
-      bodyLarge: bodyFont.copyWith(letterSpacing: 0.1),
-      bodyMedium: bodyFont.copyWith(letterSpacing: 0.1),
-      bodySmall: bodyFont.copyWith(letterSpacing: 0.1),
-      labelLarge: bodyFont.copyWith(letterSpacing: 0.1),
-      labelMedium: bodyFont.copyWith(letterSpacing: 0.1),
-      labelSmall: bodyFont.copyWith(letterSpacing: 0.1),
+      displayLarge: base.displayLarge?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.5),
+      displayMedium: base.displayMedium?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.5),
+      displaySmall: base.displaySmall?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.5),
+      headlineLarge: base.headlineLarge?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.5),
+      headlineMedium: base.headlineMedium?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.3),
+      headlineSmall: base.headlineSmall?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.3),
+      titleLarge: base.titleLarge?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.3),
+      titleMedium: base.titleMedium?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      titleSmall: base.titleSmall?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      bodyLarge: base.bodyLarge?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      bodyMedium: base.bodyMedium?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      bodySmall: base.bodySmall?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      labelLarge: base.labelLarge?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      labelMedium: base.labelMedium?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      labelSmall: base.labelSmall?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
     );
   }
 

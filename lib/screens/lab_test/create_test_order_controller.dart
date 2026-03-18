@@ -26,11 +26,11 @@ class CreateTestOrderController extends GetxController {
 
   @override
   void onInit() {
-    priorityOptions = [
+    priorityOptions.assignAll([
       {'key': 'routine', 'label': locale.value.priorityRoutine},
       {'key': 'urgent', 'label': locale.value.priorityUrgent},
       {'key': 'stat', 'label': locale.value.priorityStat},
-    ].obs;
+    ]);
 
     // Check if a lab test was passed via arguments
     if (Get.arguments is Map && Get.arguments['labTest'] != null) {
@@ -94,7 +94,7 @@ class CreateTestOrderController extends GetxController {
       Get.back(result: true);
     } catch (e) {
       log("submitOrder error: $e");
-      toast(e.toString());
+      toast(locale.value.somethingWentWrong);
     } finally {
       isLoading(false);
     }

@@ -52,17 +52,6 @@ class ServiceListScreen extends StatelessWidget {
                     onTap: () async {
                       serviceListCont.searchCont.clear();
                       serviceListCont.page(1);
-                      log('-----------------------1--------------------');
-                      log(
-                        [
-                          serviceListCont.clinicId.value,
-                          serviceListCont.serviceType.value,
-                          serviceListCont.priceMin,
-                          serviceListCont.priceMax,
-                          "category",
-                          serviceListCont.category.value.id,
-                        ],
-                      );
                       await Get.to(
                         () => FilterScreen(displayName: 'category'),
                         arguments: [
@@ -126,7 +115,7 @@ class ServiceListScreen extends StatelessWidget {
                               child: Text(
                                 '${serviceListCont.selectedFilterCount.value}',
                                 style: GoogleFonts.plusJakartaSans(
-                                  color: Colors.white,
+                                  color: whiteTextColor,
                                   fontSize: 10,
                                   fontWeight: FontWeight.w700,
                                 ),

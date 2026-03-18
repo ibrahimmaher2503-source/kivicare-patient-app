@@ -100,17 +100,15 @@ class FilterScreen extends StatelessWidget {
                 child: AppButton(
                   width: Get.width,
                   text: locale.value.apply,
-                  color: Colors.transparent,
+                  color: appTransparentColor,
                   elevation: 0,
                   textStyle: GoogleFonts.plusJakartaSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    color: whiteTextColor,
                   ),
                   shapeBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   onTap: () {
-                    log('--------------------here000000000000000000');
-                    log(filterType);
                     filterCont.applyFilter(filterType);
                   },
                 ),

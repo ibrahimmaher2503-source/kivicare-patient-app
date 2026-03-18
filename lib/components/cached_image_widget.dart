@@ -162,23 +162,23 @@ class CachedImageWidget extends StatelessWidget {
           width: width,
           color: color ?? grey.withValues(alpha: 0.1),
           alignment: alignment,
-          child: _applyClipping(_buildInitialsPlaceholder()),
+          child: _buildInitialsPlaceholder(),
         ),
       );
     } else if (url.validate().startsWith('http')) {
       return _applyClipping(
         CachedNetworkImage(
           placeholder: (_, __) {
-            return _applyClipping(_buildShimmerPlaceholder()).visible(usePlaceholderIfUrlEmpty);
+            return _buildShimmerPlaceholder().visible(usePlaceholderIfUrlEmpty);
           },
           imageUrl: url,
           height: height,
           width: width,
           fit: fit,
           color: color,
-          alignment: alignment as Alignment? ?? Alignment.center,
+          alignment: alignment is Alignment ? alignment as Alignment : Alignment.center,
           errorWidget: (_, s, d) {
-            return _applyClipping(_buildInitialsPlaceholder());
+            return _buildInitialsPlaceholder();
           },
         ),
       );
@@ -193,7 +193,7 @@ class CachedImageWidget extends StatelessWidget {
             color: color,
             alignment: alignment ?? Alignment.center,
             errorBuilder: (_, s, d) {
-              return _applyClipping(_buildInitialsPlaceholder());
+              return _buildInitialsPlaceholder();
             },
           ),
         );
@@ -206,7 +206,7 @@ class CachedImageWidget extends StatelessWidget {
           color: color,
           alignment: alignment ?? Alignment.center,
           errorBuilder: (_, s, d) {
-            return _applyClipping(_buildInitialsPlaceholder());
+            return _buildInitialsPlaceholder();
           },
         ).cornerRadiusWithClipRRect(radius ?? (circle ? (height.validate() / 2) : 0));
       }

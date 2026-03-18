@@ -515,9 +515,9 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
             onTap: () {
               showConfirmDialogCustom(
                 context,
-                title: locale.value.testOrderCancelled,
+                title: '${locale.value.cancel}?',
                 dialogType: DialogType.CONFIRMATION,
-                positiveText: locale.value.cancelled,
+                positiveText: locale.value.cancel,
                 onAccept: (_) async {
                   try {
                     await CoreServiceApis.cancelTestOrder(
@@ -542,7 +542,7 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
               ),
               child: Center(
                 child: Text(
-                  locale.value.cancelled,
+                  locale.value.cancel,
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,

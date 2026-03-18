@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -47,7 +46,7 @@ class NewUpdateDialog extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                   letterSpacing: -0.3,
-                  color: dark ? Colors.white : primaryTextColor,
+                  color: dark ? whiteTextColor : primaryTextColor,
                 ),
               ),
               8.height,
@@ -75,7 +74,7 @@ class NewUpdateDialog extends StatelessWidget {
                         if (canClose) {
                           Get.back();
                         } else {
-                          exit(0);
+                          if (isAndroid) SystemNavigator.pop();
                         }
                       },
                       child: Container(
@@ -110,7 +109,6 @@ class NewUpdateDialog extends StatelessWidget {
                             String package = '';
                             package = value;
 
-                            log('dfdfdfdf: ${getSocialMediaLink(LinkProvider.PLAY_STORE)}$package}');
                             commonLaunchUrl(
                               '${getSocialMediaLink(LinkProvider.PLAY_STORE)}$package',
                               launchMode: LaunchMode.externalApplication,
@@ -119,7 +117,7 @@ class NewUpdateDialog extends StatelessWidget {
                             if (canClose) {
                               Get.back();
                             } else {
-                              exit(0);
+                              if (isAndroid) SystemNavigator.pop();
                             }
                           } else if (isIOS) {
                             if (appConfigs.value.patientAppUrl.patientAppAppStore.trim().isNotEmpty) {
@@ -130,8 +128,6 @@ class NewUpdateDialog extends StatelessWidget {
 
                             if (canClose) {
                               Get.back();
-                            } else {
-                              exit(0);
                             }
                           }
                         });
@@ -159,7 +155,7 @@ class NewUpdateDialog extends StatelessWidget {
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: whiteTextColor,
                           ),
                         ),
                       ),

@@ -7,6 +7,7 @@ import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/price_widget.dart';
 import '../model/nurse_request_model.dart';
 import '../nurse_request_detail_screen.dart';
 
@@ -59,7 +60,9 @@ class NurseRequestCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         hideKeyboard(context);
-        Get.to(() => NurseRequestDetailScreen(requestData: requestData));
+        Get.to(() => NurseRequestDetailScreen(requestData: requestData))?.then((_) {
+          onUpdateRequest?.call();
+        });
       },
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -145,14 +148,10 @@ class NurseRequestCard extends StatelessWidget {
                     ],
                   ),
                 if (requestData.totalAmount > 0)
-                  Text(
-                    '\$${requestData.totalAmount.toStringAsFixed(2)}',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.1,
-                      color: isDarkMode.value ? Colors.white : primaryTextColor,
-                    ),
+                  PriceWidget(
+                    price: requestData.totalAmount,
+                    size: 14,
+                    color: isDarkMode.value ? Colors.white : primaryTextColor,
                   ),
               ],
             ),
@@ -160,7 +159,9 @@ class NurseRequestCard extends StatelessWidget {
 
             // View Detail Button
             GestureDetector(
-              onTap: () => Get.to(() => NurseRequestDetailScreen(requestData: requestData)),
+              onTap: () => Get.to(() => NurseRequestDetailScreen(requestData: requestData))?.then((_) {
+                onUpdateRequest?.call();
+              }),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(

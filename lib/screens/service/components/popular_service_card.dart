@@ -106,7 +106,7 @@ class PopularServiceCard extends StatelessWidget {
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     letterSpacing: -0.3,
-                    color: isDarkMode.value ? Colors.white : appColorPrimary,
+                    color: isDarkMode.value ? whiteTextColor : appColorPrimary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -157,7 +157,7 @@ class PopularServiceCard extends StatelessWidget {
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: isDarkMode.value ? Colors.white : appColorPrimary,
+                        color: isDarkMode.value ? whiteTextColor : appColorPrimary,
                       ),
                     ),
                   ],

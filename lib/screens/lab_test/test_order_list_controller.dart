@@ -51,6 +51,7 @@ class TestOrderListController extends GetxController {
       log('Test orders fetched: ${value.length}');
     }).catchError((e) {
       log("getTestOrders error $e");
+      toast(locale.value.somethingWentWrong);
     }).whenComplete(() => isLoading(false));
   }
 

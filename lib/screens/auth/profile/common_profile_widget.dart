@@ -124,7 +124,7 @@ class ProfilePicWidget extends StatelessWidget {
                 style: GoogleFonts.outfit(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
-                  color: isDarkMode.value ? Colors.white : primaryTextColor,
+                  color: isDarkMode.value ? whiteTextColor : primaryTextColor,
                   letterSpacing: -0.3,
                 ),
               ),

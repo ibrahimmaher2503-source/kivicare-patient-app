@@ -109,7 +109,7 @@ class AppointmentsScreen extends StatelessWidget {
                                   ),
                                   6.width,
                                   Text(
-                                    filterStatus1.name!.value,
+                                    filterStatus1.name?.value ?? '',
                                     style: GoogleFonts.plusJakartaSans(
                                       fontSize: 13,
                                       fontWeight: isActive ? FontWeight.w700 : FontWeight.w600,

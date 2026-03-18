@@ -17,6 +17,7 @@ class RequestServiceListController extends GetxController {
 
   // Search
   TextEditingController searchCont = TextEditingController();
+  RxString searchQuery = ''.obs;
 
   // Filter
   RxString selectedStatus = ''.obs;
@@ -32,13 +33,13 @@ class RequestServiceListController extends GetxController {
     ].obs;
 
     getServiceRequests();
-    debounce(RxString(''), (_) => getServiceRequests(), time: const Duration(milliseconds: 500));
+    debounce(searchQuery, (_) => getServiceRequests(), time: const Duration(milliseconds: 500));
     super.onInit();
   }
 
   void onSearchChanged(String val) {
     page(1);
-    getServiceRequests();
+    searchQuery.value = val;
   }
 
   @override

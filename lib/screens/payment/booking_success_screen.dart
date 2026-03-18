@@ -83,7 +83,7 @@ class BookingSuccessScreen extends StatelessWidget {
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                       letterSpacing: -0.3,
-                      color: isDarkMode.value ? Colors.white : appColorPrimary,
+                      color: isDarkMode.value ? whiteTextColor : appColorPrimary,
                     ),
                   ),
                   8.height,
@@ -161,7 +161,7 @@ class BookingSuccessScreen extends StatelessWidget {
                   ],
                 ),
                 child: Material(
-                  color: Colors.transparent,
+                  color: appTransparentColor,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
@@ -177,7 +177,7 @@ class BookingSuccessScreen extends StatelessWidget {
                           style: GoogleFonts.outfit(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: whiteTextColor,
                             letterSpacing: -0.3,
                           ),
                         ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 
 class IncidentDescriptionComponent extends StatelessWidget {
@@ -23,7 +22,7 @@ class IncidentDescriptionComponent extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w600,
             letterSpacing: -0.3,
-            color: isDarkMode.value ? Colors.white : primaryTextColor,
+            color: Theme.of(context).brightness == Brightness.dark ? whiteTextColor : primaryTextColor,
           ),
         ),
         8.height,

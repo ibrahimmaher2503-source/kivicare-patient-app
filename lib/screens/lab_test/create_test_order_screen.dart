@@ -11,10 +11,27 @@ import 'create_test_order_controller.dart';
 import 'lab_test_list_screen.dart';
 import 'model/lab_test_model.dart';
 
-class CreateTestOrderScreen extends StatelessWidget {
-  CreateTestOrderScreen({super.key});
+class CreateTestOrderScreen extends StatefulWidget {
+  const CreateTestOrderScreen({super.key});
 
-  final CreateTestOrderController controller = Get.put(CreateTestOrderController());
+  @override
+  State<CreateTestOrderScreen> createState() => _CreateTestOrderScreenState();
+}
+
+class _CreateTestOrderScreenState extends State<CreateTestOrderScreen> {
+  late final CreateTestOrderController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(CreateTestOrderController());
+  }
+
+  @override
+  void dispose() {
+    Get.delete<CreateTestOrderController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -248,7 +265,9 @@ class CreateTestOrderScreen extends StatelessWidget {
 
             // Submit Button
             Obx(() => GestureDetector(
-              onTap: controller.selectedTests.isNotEmpty ? () => controller.submitOrder() : null,
+              onTap: controller.selectedTests.isNotEmpty && !controller.isLoading.value
+                  ? () => controller.submitOrder()
+                  : null,
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 16),

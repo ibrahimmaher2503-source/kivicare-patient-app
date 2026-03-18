@@ -185,7 +185,7 @@ class RequestServiceListScreen extends StatelessWidget {
           ),
           10.height,
           Text(
-            'No service requests available at the moment.',
+            locale.value.noDataFound,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               letterSpacing: 0.1,

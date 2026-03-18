@@ -52,7 +52,7 @@ class PaymentScreen extends StatelessWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     letterSpacing: -0.3,
-                    color: isDarkMode.value ? Colors.white : appColorPrimary,
+                    color: isDarkMode.value ? whiteTextColor : appColorPrimary,
                   ),
                 ),
                 8.height,
@@ -108,7 +108,7 @@ class PaymentScreen extends StatelessWidget {
               ],
             ),
             child: Material(
-              color: Colors.transparent,
+              color: appTransparentColor,
               child: InkWell(
                 borderRadius: BorderRadius.circular(12),
                 onTap: () {
@@ -122,7 +122,7 @@ class PaymentScreen extends StatelessWidget {
                       style: GoogleFonts.outfit(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: whiteTextColor,
                         letterSpacing: -0.3,
                       ),
                     ),
@@ -168,7 +168,7 @@ class PaymentScreen extends StatelessWidget {
     return Obx(
       () => RadioListTile(
         contentPadding: const EdgeInsets.symmetric(vertical: 2),
-        tileColor: Colors.transparent,
+        tileColor: appTransparentColor,
         controlAffinity: ListTileControlAffinity.trailing,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         secondary: secondaryWidget,
@@ -179,7 +179,7 @@ class PaymentScreen extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.1,
-            color: isDarkMode.value ? Colors.white : appColorPrimary,
+            color: isDarkMode.value ? whiteTextColor : appColorPrimary,
           ),
         ),
         value: value,
@@ -244,7 +244,7 @@ class PaymentScreen extends StatelessWidget {
       context: context,
       child: _buildPaymentRadioTile(
         context: context,
-        title: "PaysStack",
+        title: "PayStack",
         value: PaymentMethods.PAYMENT_METHOD_PAYSTACK,
         secondaryWidget: const Image(
           image: AssetImage(Assets.imagesPaystackLogo),
@@ -325,7 +325,7 @@ class PaymentScreen extends StatelessWidget {
       child: Obx(
         () => RadioListTile(
           contentPadding: const EdgeInsets.symmetric(vertical: 2),
-          tileColor: Colors.transparent,
+          tileColor: appTransparentColor,
           controlAffinity: ListTileControlAffinity.trailing,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           secondary: Image(
@@ -341,7 +341,7 @@ class PaymentScreen extends StatelessWidget {
               fontSize: 14,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.1,
-              color: isDarkMode.value ? Colors.white : appColorPrimary,
+              color: isDarkMode.value ? whiteTextColor : appColorPrimary,
             ),
           ),
           value: PaymentMethods.PAYMENT_METHOD_SADAD,
@@ -377,7 +377,7 @@ class PaymentScreen extends StatelessWidget {
         () => RadioListTile(
           dense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: 2),
-          tileColor: Colors.transparent,
+          tileColor: appTransparentColor,
           controlAffinity: ListTileControlAffinity.trailing,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           secondary: Image(
@@ -393,7 +393,7 @@ class PaymentScreen extends StatelessWidget {
               fontSize: 14,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.1,
-              color: isDarkMode.value ? Colors.white : appColorPrimary,
+              color: isDarkMode.value ? whiteTextColor : appColorPrimary,
             ),
           ),
           value: PaymentMethods.PAYMENT_METHOD_CASH,
@@ -413,7 +413,7 @@ class PaymentScreen extends StatelessWidget {
         () => RadioListTile(
           dense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: 2),
-          tileColor: Colors.transparent,
+          tileColor: appTransparentColor,
           controlAffinity: ListTileControlAffinity.trailing,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           secondary: Image(
@@ -431,7 +431,7 @@ class PaymentScreen extends StatelessWidget {
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.1,
-                  color: isDarkMode.value ? Colors.white : appColorPrimary,
+                  color: isDarkMode.value ? whiteTextColor : appColorPrimary,
                 ),
               ),
               8.width,

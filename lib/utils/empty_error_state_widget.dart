@@ -2,20 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import '../generated/assets.dart';
-import 'app_common.dart';
 import 'colors.dart';
 
 class EmptyStateWidget extends StatelessWidget {
-  final double? height;
-  final double? width;
   final String? title;
   final String? subtitle;
 
-  const EmptyStateWidget({super.key, this.height, this.width, this.title, this.subtitle});
+  const EmptyStateWidget({super.key, this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
-    final bool dark = isDarkMode.value;
+    final bool dark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +26,7 @@ class EmptyStateWidget extends StatelessWidget {
               fontSize: 18,
               fontWeight: FontWeight.w600,
               letterSpacing: -0.3,
-              color: dark ? Colors.white : primaryTextColor,
+              color: dark ? whiteTextColor : primaryTextColor,
             ),
             textAlign: TextAlign.center,
           ),
@@ -56,8 +53,6 @@ class EmptyStateWidget extends StatelessWidget {
 }
 
 class ErrorStateWidget extends StatelessWidget {
-  final double? height;
-  final double? width;
   final String? title;
   final String? subtitle;
   final String? retryText;
@@ -65,8 +60,6 @@ class ErrorStateWidget extends StatelessWidget {
 
   const ErrorStateWidget({
     super.key,
-    this.height,
-    this.width,
     this.title,
     this.subtitle,
     this.retryText,
@@ -75,7 +68,7 @@ class ErrorStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool dark = isDarkMode.value;
+    final bool dark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -89,7 +82,7 @@ class ErrorStateWidget extends StatelessWidget {
               fontSize: 18,
               fontWeight: FontWeight.w600,
               letterSpacing: -0.3,
-              color: dark ? Colors.white : primaryTextColor,
+              color: dark ? whiteTextColor : primaryTextColor,
             ),
             textAlign: TextAlign.center,
           ),

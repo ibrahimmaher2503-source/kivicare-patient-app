@@ -17,29 +17,44 @@ import 'model/nurse_model.dart';
 import 'model/nurse_request_model.dart';
 import 'nurse_list_screen.dart';
 
-class CreateNurseRequestScreen extends StatelessWidget {
+class CreateNurseRequestScreen extends StatefulWidget {
   final Nurse? preSelectedNurse;
   final NurseRequest? editRequest;
 
-  CreateNurseRequestScreen({
+  const CreateNurseRequestScreen({
     super.key,
     this.preSelectedNurse,
     this.editRequest,
   });
 
-  final CreateNurseRequestController controller = Get.put(CreateNurseRequestController());
+  @override
+  State<CreateNurseRequestScreen> createState() => _CreateNurseRequestScreenState();
+}
+
+class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
+  late final CreateNurseRequestController controller;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    // Initialize controller
-    if (preSelectedNurse != null) {
-      controller.setNurse(preSelectedNurse!);
+  void initState() {
+    super.initState();
+    controller = Get.put(CreateNurseRequestController());
+    if (widget.preSelectedNurse != null) {
+      controller.setNurse(widget.preSelectedNurse!);
     }
-    if (editRequest != null) {
-      controller.initForEdit(editRequest!);
+    if (widget.editRequest != null) {
+      controller.initForEdit(widget.editRequest!);
     }
+  }
 
+  @override
+  void dispose() {
+    Get.delete<CreateNurseRequestController>();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AppScaffoldNew(
       appBartitleText: controller.isEditMode ? locale.value.editNurseRequest : locale.value.createNurseRequest,
       appBarVerticalSize: Get.mediaQuery.size.height * 0.12,
@@ -319,6 +334,7 @@ class CreateNurseRequestScreen extends StatelessWidget {
                                 nextFocus: controller.countryFocus,
                                 decoration: inputDecoration(
                                   context,
+                                  // TODO: Add locale getter for 'State' when available
                                   hintText: 'State',
                                   fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                                   filled: true,
@@ -346,6 +362,7 @@ class CreateNurseRequestScreen extends StatelessWidget {
                                 nextFocus: controller.postalCodeFocus,
                                 decoration: inputDecoration(
                                   context,
+                                  // TODO: Add locale getter for 'Country' when available
                                   hintText: 'Country',
                                   fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                                   filled: true,
@@ -388,7 +405,7 @@ class CreateNurseRequestScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: GestureDetector(
                     onTap: () async {
-                      if (formKey.currentState!.validate()) {
+                      if (formKey.currentState?.validate() ?? false) {
                         if (controller.selectedNurse.value == null) {
                           toast(locale.value.selectNurse);
                           return;

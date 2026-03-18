@@ -173,7 +173,7 @@ class NurseListScreen extends StatelessWidget {
           ),
           10.height,
           Text(
-            'No nurses available at the moment.',
+            locale.value.noDataFound,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               letterSpacing: 0.1,

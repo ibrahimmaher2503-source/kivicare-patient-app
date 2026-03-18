@@ -23,9 +23,7 @@ class QuickServicesComponent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ViewAllLabel(
-          label: locale.value.requestNurse.split(' ').first == locale.value.requestNurse.split(' ').first
-              ? 'Quick Services'
-              : 'Quick Services',
+          label: 'Quick Services',
           isShowAll: false,
         ).paddingOnly(left: 16, right: 8),
         8.height,

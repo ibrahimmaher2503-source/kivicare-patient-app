@@ -21,7 +21,7 @@ class AppShaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Color> shaderColors;
     if (color != null) {
-      shaderColors = [color ?? white, color ?? white];
+      shaderColors = [color!, color!];
     } else {
       switch (mode) {
         case AppShaderMode.gradient:
