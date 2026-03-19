@@ -1604,4 +1604,7 @@ class LanguageHi extends BaseLanguage {
   @override String get serviceStatusPending => 'लंबित';
   @override String get serviceStatusAccepted => 'स्वीकृत';
   @override String get serviceStatusRejected => 'अस्वीकृत';
+
+  @override String get hours => 'घंटे';
+  @override String get adminNotes => 'व्यवस्थापक नोट्स';
 }

@@ -1604,4 +1604,7 @@ class LanguageEn extends BaseLanguage {
   @override String get serviceStatusPending => 'Pending';
   @override String get serviceStatusAccepted => 'Accepted';
   @override String get serviceStatusRejected => 'Rejected';
+
+  @override String get hours => 'hours';
+  @override String get adminNotes => 'Admin Notes';
 }

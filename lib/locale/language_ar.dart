@@ -1603,4 +1603,7 @@ class LanguageAr extends BaseLanguage {
   @override String get serviceStatusPending => 'قيد الانتظار';
   @override String get serviceStatusAccepted => 'مقبول';
   @override String get serviceStatusRejected => 'مرفوض';
+
+  @override String get hours => 'ساعات';
+  @override String get adminNotes => 'ملاحظات المسؤول';
 }

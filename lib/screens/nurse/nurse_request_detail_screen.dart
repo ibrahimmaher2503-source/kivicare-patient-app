@@ -137,7 +137,7 @@ class NurseRequestDetailScreen extends StatelessWidget {
                         if (requestData.preferredTime.isNotEmpty)
                           _buildInfoRow(locale.value.preferredTime, requestData.preferredTime),
                         if (requestData.durationHours > 0)
-                          _buildInfoRow(locale.value.durationHours, '${requestData.durationHours} ${locale.value.durationHours}'),
+                          _buildInfoRow(locale.value.durationHours, '${requestData.durationHours} ${locale.value.hours}'),
                         if (requestData.contactNumber.isNotEmpty)
                           _buildInfoRow(locale.value.contactNumber, requestData.contactNumber),
                         if (requestData.totalAmount > 0)
@@ -211,8 +211,7 @@ class NurseRequestDetailScreen extends StatelessWidget {
 
                     // Admin Notes
                     if (requestData.adminNotes != null && requestData.adminNotes!.isNotEmpty) ...[
-                      // TODO: Add 'adminNotes' locale key for full i18n support
-                      _buildSectionTitle('Admin Notes'),
+                      _buildSectionTitle(locale.value.adminNotes),
                       12.height,
                       Container(
                         width: double.infinity,

@@ -1097,4 +1097,7 @@ abstract class BaseLanguage {
   String get serviceStatusPending;
   String get serviceStatusAccepted;
   String get serviceStatusRejected;
+
+  String get hours;
+  String get adminNotes;
 }

@@ -1604,4 +1604,7 @@ class LanguageDe extends BaseLanguage {
   @override String get serviceStatusPending => 'Ausstehend';
   @override String get serviceStatusAccepted => 'Akzeptiert';
   @override String get serviceStatusRejected => 'Abgelehnt';
+
+  @override String get hours => 'Stunden';
+  @override String get adminNotes => 'Admin-Notizen';
 }

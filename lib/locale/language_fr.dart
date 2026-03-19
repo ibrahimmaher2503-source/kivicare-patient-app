@@ -1604,4 +1604,7 @@ String get incidenceReportReply => "Réponse au rapport d'incident";
   @override String get serviceStatusPending => 'En attente';
   @override String get serviceStatusAccepted => 'Acceptée';
   @override String get serviceStatusRejected => 'Rejetée';
+
+  @override String get hours => 'heures';
+  @override String get adminNotes => 'Notes administratives';
 }
