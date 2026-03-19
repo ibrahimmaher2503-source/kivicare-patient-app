@@ -50,8 +50,74 @@ class RequestServiceListScreen extends StatelessWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  // Search Bar
+                  // Decorative gradient header section
                   16.height,
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          appColorPrimary.withValues(alpha: isDarkMode.value ? 0.3 : 0.08),
+                          appColorSecondary.withValues(alpha: isDarkMode.value ? 0.15 : 0.04),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isDarkMode.value
+                            ? Colors.white.withValues(alpha: 0.06)
+                            : appColorPrimary.withValues(alpha: 0.06),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: appColorSecondary.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.miscellaneous_services_rounded,
+                            color: appColorSecondary,
+                            size: 24,
+                          ),
+                        ),
+                        16.width,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                locale.value.myServiceRequests,
+                                style: GoogleFonts.outfit(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: -0.3,
+                                  color: isDarkMode.value ? Colors.white : appColorPrimary,
+                                ),
+                              ),
+                              4.height,
+                              Obx(() => Text(
+                                '${controller.services.length} request${controller.services.length != 1 ? 's' : ''}',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: secondaryTextColor,
+                                ),
+                              )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  16.height,
+
+                  // Search Bar
                   AppTextField(
                     textStyle: GoogleFonts.plusJakartaSans(
                       fontSize: 14,
@@ -80,7 +146,7 @@ class RequestServiceListScreen extends StatelessWidget {
                   ),
                   16.height,
 
-                  // Status Filter Chips
+                  // Status Filter Chips with AnimatedScale
                   if (controller.services.isNotEmpty || controller.selectedStatus.value.isNotEmpty)
                     AnimatedWrap(
                       spacing: 12,
@@ -89,36 +155,56 @@ class RequestServiceListScreen extends StatelessWidget {
                         final filter = controller.statusFilters[index];
                         return Obx(() {
                           final isSelected = controller.selectedStatus.value == filter['key'];
-                          return GestureDetector(
-                            onTap: () => controller.onFilterChanged(filter['key']!),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                              decoration: BoxDecoration(
-                                gradient: isSelected
-                                    ? LinearGradient(colors: [gradientStart, gradientEnd])
-                                    : null,
-                                color: isSelected ? null : (isDarkMode.value ? surfaceElevatedDark : surfaceElevated),
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
+                          return TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.85, end: 1.0),
+                            duration: Duration(milliseconds: 300 + (index * 80)),
+                            curve: Curves.easeOutBack,
+                            builder: (context, scaleValue, child) {
+                              return Transform.scale(
+                                scale: scaleValue,
+                                child: child,
+                              );
+                            },
+                            child: GestureDetector(
+                              onTap: () => controller.onFilterChanged(filter['key']!),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 250),
+                                curve: Curves.easeInOut,
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                decoration: BoxDecoration(
+                                  gradient: isSelected
+                                      ? const LinearGradient(colors: [gradientStart, gradientEnd])
+                                      : null,
+                                  color: isSelected ? null : (isDarkMode.value ? surfaceElevatedDark : surfaceElevated),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: isSelected
+                                      ? null
+                                      : Border.all(
+                                          color: isDarkMode.value
+                                              ? Colors.white.withValues(alpha: 0.08)
+                                              : appColorPrimary.withValues(alpha: 0.08),
+                                          width: 1,
+                                        ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: isSelected
+                                          ? appColorPrimary.withValues(alpha: 0.3)
+                                          : (isDarkMode.value ? softShadowColorDark : softShadowColor),
+                                      blurRadius: isSelected ? 12 : 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  filter['label']!,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 14,
+                                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                                    letterSpacing: 0.1,
                                     color: isSelected
-                                        ? appColorPrimary.withValues(alpha: 0.3)
-                                        : (isDarkMode.value ? softShadowColorDark : softShadowColor),
-                                    blurRadius: isSelected ? 12 : 8,
-                                    offset: const Offset(0, 4),
+                                        ? Colors.white
+                                        : (isDarkMode.value ? Colors.white70 : primaryTextColor),
                                   ),
-                                ],
-                              ),
-                              child: Text(
-                                filter['label']!,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.1,
-                                  color: isSelected
-                                      ? Colors.white
-                                      : (isDarkMode.value ? Colors.white70 : primaryTextColor),
                                 ),
                               ),
                             ),
@@ -128,7 +214,7 @@ class RequestServiceListScreen extends StatelessWidget {
                     ),
                   16.height,
 
-                  // Service List
+                  // Service List with staggered entrance
                   Builder(
                     builder: (_) {
                       if (controller.services.isEmpty) {
@@ -136,11 +222,26 @@ class RequestServiceListScreen extends StatelessWidget {
                       }
 
                       return Column(
-                        children: controller.services.map((service) {
-                          return RequestServiceCard(
-                            serviceData: service,
-                          ).paddingBottom(16);
-                        }).toList(),
+                        children: List.generate(controller.services.length, (index) {
+                          final service = controller.services[index];
+                          return TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.0, end: 1.0),
+                            duration: Duration(milliseconds: 400 + (index * 80)),
+                            curve: Curves.easeOutCubic,
+                            builder: (context, value, child) {
+                              return Transform.translate(
+                                offset: Offset(0, 20 * (1 - value)),
+                                child: Opacity(
+                                  opacity: value,
+                                  child: child,
+                                ),
+                              );
+                            },
+                            child: RequestServiceCard(
+                              serviceData: service,
+                            ).paddingBottom(16),
+                          );
+                        }),
                       );
                     },
                   ),
@@ -168,12 +269,41 @@ class RequestServiceListScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.miscellaneous_services_outlined,
-            size: Get.height * 0.1,
-            color: appColorPrimary.withValues(alpha: 0.3),
+          // Floating animated icon
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(milliseconds: 1500),
+            curve: Curves.easeInOut,
+            builder: (context, value, child) {
+              return Transform.translate(
+                offset: Offset(0, -8 * (0.5 + 0.5 * ((2 * value - 1).abs() * 2 - 1).abs() - 0.5)),
+                child: Opacity(
+                  opacity: 0.3 + 0.7 * value,
+                  child: child,
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    appColorPrimary.withValues(alpha: 0.08),
+                    appColorSecondary.withValues(alpha: 0.05),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Icon(
+                Icons.miscellaneous_services_outlined,
+                size: Get.height * 0.08,
+                color: appColorPrimary.withValues(alpha: 0.3),
+              ),
+            ),
           ),
-          30.height,
+          24.height,
           Text(
             locale.value.noDataFound,
             style: GoogleFonts.outfit(

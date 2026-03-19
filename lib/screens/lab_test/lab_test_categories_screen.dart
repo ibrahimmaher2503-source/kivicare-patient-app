@@ -45,22 +45,12 @@ class LabTestCategoriesScreen extends StatelessWidget {
                   return await controller.getCategories();
                 },
                 children: [
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 0.85,
-                    ),
-                    itemCount: controller.categories.length,
-                    itemBuilder: (context, index) {
-                      return LabTestCategoryCard(
-                        categoryData: controller.categories[index],
-                      );
-                    },
-                  ),
+                  // Decorative header with gradient
+                  _buildDecorativeHeader(),
+                  20.height,
+
+                  // Staggered grid: first card full width, rest in 2-column
+                  _buildStaggeredGrid(),
                 ],
               ).paddingOnly(bottom: 10);
             },
@@ -70,15 +60,174 @@ class LabTestCategoriesScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildDecorativeHeader() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDarkMode.value
+              ? [
+                  appColorPrimary.withValues(alpha: 0.4),
+                  appColorSecondary.withValues(alpha: 0.2),
+                ]
+              : [
+                  appColorPrimary.withValues(alpha: 0.08),
+                  appColorSecondary.withValues(alpha: 0.05),
+                ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDarkMode.value
+              ? glassStrokeDark
+              : appColorSecondary.withValues(alpha: 0.1),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [gradientSecondaryStart, gradientSecondaryEnd],
+              ),
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: appColorSecondary.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Icon(Icons.biotech, size: 24, color: Colors.white),
+          ),
+          16.width,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  locale.value.labTestCategories,
+                  style: GoogleFonts.outfit(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.3,
+                    color: isDarkMode.value ? Colors.white : primaryTextColor,
+                  ),
+                ),
+                4.height,
+                Text(
+                  '${controller.categories.length} categories available',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    letterSpacing: 0.1,
+                    color: secondaryTextColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStaggeredGrid() {
+    final categories = controller.categories;
+    if (categories.isEmpty) return const SizedBox.shrink();
+
+    Widget animatedCard(int index) {
+      return TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: Duration(milliseconds: 400 + (index * 100)),
+        builder: (context, value, child) {
+          return Opacity(
+            opacity: value,
+            child: Transform.translate(
+              offset: Offset(0, 20 * (1 - value)),
+              child: child,
+            ),
+          );
+        },
+        child: LabTestCategoryCard(categoryData: categories[index]),
+      );
+    }
+
+    final List<Widget> children = [];
+
+    // First card spans full width
+    if (categories.isNotEmpty) {
+      children.add(SizedBox(height: 170, child: animatedCard(0)));
+      children.add(16.height);
+    }
+
+    // Remaining cards in 2-column grid (indices 1,2 then 3,4 then 5,6 ...)
+    int i = 1;
+    while (i < categories.length) {
+      final hasSecond = (i + 1) < categories.length;
+      children.add(
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: animatedCard(i)),
+              16.width,
+              Expanded(
+                child: hasSecond ? animatedCard(i + 1) : const SizedBox(),
+              ),
+            ],
+          ),
+        ),
+      );
+      children.add(16.height);
+      i += 2;
+    }
+
+    return Column(children: children);
+  }
+
   Widget _buildEmptyState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.category_outlined,
-            size: Get.height * 0.1,
-            color: appColorPrimary.withValues(alpha: 0.3),
+          // Floating animation for empty state icon
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(milliseconds: 800),
+            builder: (context, value, child) {
+              return Transform.translate(
+                offset: Offset(0, -8 * value),
+                child: Opacity(
+                  opacity: value,
+                  child: child,
+                ),
+              );
+            },
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    appColorPrimary.withValues(alpha: 0.1),
+                    appColorSecondary.withValues(alpha: 0.05),
+                  ],
+                ),
+              ),
+              child: Icon(
+                Icons.category_outlined,
+                size: 48,
+                color: appColorPrimary.withValues(alpha: 0.3),
+              ),
+            ),
           ),
           30.height,
           Text(

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,37 +40,101 @@ class NurseListScreen extends StatelessWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  // Search Bar
-                  16.height,
-                  AppTextField(
-                    textStyle: GoogleFonts.plusJakartaSans(
-                      fontSize: 14,
-                      letterSpacing: 0.1,
-                      color: isDarkMode.value ? Colors.white : primaryTextColor,
+                  // Decorative header gradient
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          appColorPrimary.withValues(alpha: isDarkMode.value ? 0.3 : 0.06),
+                          appColorSecondary.withValues(alpha: isDarkMode.value ? 0.2 : 0.04),
+                        ],
+                      ),
                     ),
-                    controller: controller.searchCont,
-                    textFieldType: TextFieldType.OTHER,
-                    onChanged: controller.onSearchChanged,
-                    decoration: InputDecoration(
-                      hintText: '${locale.value.searchHere}...',
-                      hintStyle: GoogleFonts.plusJakartaSans(
-                        fontSize: 14,
-                        letterSpacing: 0.1,
-                        color: secondaryTextColor,
-                      ),
-                      prefixIcon: const Icon(Icons.search, color: secondaryTextColor),
-                      filled: true,
-                      fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          locale.value.browseNurses,
+                          style: GoogleFonts.outfit(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.3,
+                            color: isDarkMode.value ? Colors.white : primaryTextColor,
+                          ),
+                        ),
+                        4.height,
+                        Obx(() => Text(
+                          '${controller.nurses.length} ${locale.value.browseNurses.toLowerCase()}',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13,
+                            letterSpacing: 0.1,
+                            color: secondaryTextColor,
+                          ),
+                        )),
+                      ],
                     ),
                   ),
                   16.height,
 
-                  // Availability Filter Chips
+                  // Premium Search Bar with glass-style border
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: isDarkMode.value ? glassStrokeDark : glassStrokeLight,
+                      ),
+                      boxShadow: [
+                        // Inner shadow effect via darker background
+                        BoxShadow(
+                          color: isDarkMode.value
+                              ? Colors.black.withValues(alpha: 0.15)
+                              : appColorPrimary.withValues(alpha: 0.04),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: AppTextField(
+                      textStyle: GoogleFonts.plusJakartaSans(
+                        fontSize: 14,
+                        letterSpacing: 0.1,
+                        color: isDarkMode.value ? Colors.white : primaryTextColor,
+                      ),
+                      controller: controller.searchCont,
+                      textFieldType: TextFieldType.OTHER,
+                      onChanged: controller.onSearchChanged,
+                      decoration: InputDecoration(
+                        hintText: '${locale.value.searchHere}...',
+                        hintStyle: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          letterSpacing: 0.1,
+                          color: secondaryTextColor,
+                        ),
+                        prefixIcon: ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [appColorSecondary, appColorAccent],
+                          ).createShader(bounds),
+                          child: const Icon(Icons.search, color: Colors.white),
+                        ),
+                        filled: true,
+                        fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      ),
+                    ),
+                  ),
+                  16.height,
+
+                  // Availability Filter Chips with scale animation
                   if (controller.nurses.isNotEmpty || controller.selectedAvailability.value.isNotEmpty)
                     AnimatedWrap(
                       spacing: 12,
@@ -79,34 +145,38 @@ class NurseListScreen extends StatelessWidget {
                           final isSelected = controller.selectedAvailability.value == filter['key'];
                           return GestureDetector(
                             onTap: () => controller.onFilterChanged(filter['key']!),
-                            child: AnimatedContainer(
+                            child: AnimatedScale(
+                              scale: isSelected ? 1.05 : 1.0,
                               duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                              decoration: BoxDecoration(
-                                gradient: isSelected
-                                    ? LinearGradient(colors: [gradientStart, gradientEnd])
-                                    : null,
-                                color: isSelected ? null : (isDarkMode.value ? surfaceElevatedDark : surfaceElevated),
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                decoration: BoxDecoration(
+                                  gradient: isSelected
+                                      ? const LinearGradient(colors: [gradientStart, gradientEnd])
+                                      : null,
+                                  color: isSelected ? null : (isDarkMode.value ? surfaceElevatedDark : surfaceElevated),
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: isSelected
+                                          ? appColorPrimary.withValues(alpha: 0.3)
+                                          : (isDarkMode.value ? softShadowColorDark : softShadowColor),
+                                      blurRadius: isSelected ? 12 : 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  filter['label']!,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.1,
                                     color: isSelected
-                                        ? appColorPrimary.withValues(alpha: 0.3)
-                                        : (isDarkMode.value ? softShadowColorDark : softShadowColor),
-                                    blurRadius: isSelected ? 12 : 8,
-                                    offset: const Offset(0, 4),
+                                        ? Colors.white
+                                        : (isDarkMode.value ? Colors.white70 : primaryTextColor),
                                   ),
-                                ],
-                              ),
-                              child: Text(
-                                filter['label']!,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.1,
-                                  color: isSelected
-                                      ? Colors.white
-                                      : (isDarkMode.value ? Colors.white70 : primaryTextColor),
                                 ),
                               ),
                             ),
@@ -116,7 +186,7 @@ class NurseListScreen extends StatelessWidget {
                     ),
                   16.height,
 
-                  // Nurse List
+                  // Nurse List with stagger animation
                   Builder(
                     builder: (_) {
                       if (controller.nurses.isEmpty) {
@@ -124,11 +194,24 @@ class NurseListScreen extends StatelessWidget {
                       }
 
                       return Column(
-                        children: controller.nurses.map((nurse) {
-                          return NurseCard(
-                            nurseData: nurse,
-                          ).paddingBottom(16);
-                        }).toList(),
+                        children: List.generate(controller.nurses.length, (index) {
+                          return TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0.0, end: 1.0),
+                            duration: Duration(milliseconds: 400 + (index * 80)),
+                            builder: (context, value, child) {
+                              return Opacity(
+                                opacity: value,
+                                child: Transform.translate(
+                                  offset: Offset(0, 20 * (1 - value)),
+                                  child: child,
+                                ),
+                              );
+                            },
+                            child: NurseCard(
+                              nurseData: controller.nurses[index],
+                            ).paddingBottom(16),
+                          );
+                        }),
                       );
                     },
                   ),
@@ -156,11 +239,8 @@ class NurseListScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.medical_services_outlined,
-            size: Get.height * 0.1,
-            color: appColorPrimary.withValues(alpha: 0.3),
-          ),
+          // Animated floating icon with gradient circle
+          _FloatingEmptyIcon(),
           30.height,
           Text(
             locale.value.noDataFound,
@@ -182,6 +262,64 @@ class NurseListScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ).paddingOnly(left: 12, right: 12),
         ],
+      ),
+    );
+  }
+}
+
+class _FloatingEmptyIcon extends StatefulWidget {
+  @override
+  State<_FloatingEmptyIcon> createState() => _FloatingEmptyIconState();
+}
+
+class _FloatingEmptyIconState extends State<_FloatingEmptyIcon> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2500),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        final offset = math.sin(_controller.value * 2 * math.pi) * 8;
+        return Transform.translate(
+          offset: Offset(0, offset),
+          child: child,
+        );
+      },
+      child: Container(
+        width: Get.height * 0.15,
+        height: Get.height * 0.15,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              appColorPrimary.withValues(alpha: 0.12),
+              appColorSecondary.withValues(alpha: 0.08),
+            ],
+          ),
+        ),
+        child: Icon(
+          Icons.medical_services_outlined,
+          size: Get.height * 0.07,
+          color: appColorPrimary.withValues(alpha: 0.3),
+        ),
       ),
     );
   }
