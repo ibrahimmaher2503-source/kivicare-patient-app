@@ -183,7 +183,7 @@ class LabTestListScreen extends StatelessWidget {
           ),
           10.height,
           Text(
-            locale.value.noDataFound,
+            '',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               letterSpacing: 0.1,

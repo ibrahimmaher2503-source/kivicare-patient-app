@@ -18,11 +18,14 @@ class CreateRequestServiceController extends GetxController {
   RxBool isLoading = false.obs;
 
   @override
-  void dispose() {
+  void onClose() {
     nameCont.dispose();
     descriptionCont.dispose();
     typeCont.dispose();
-    super.dispose();
+    nameFocus.dispose();
+    descriptionFocus.dispose();
+    typeFocus.dispose();
+    super.onClose();
   }
 
   Map<String, dynamic> _buildRequestBody() {
@@ -42,6 +45,11 @@ class CreateRequestServiceController extends GetxController {
   }
 
   Future<void> submitRequest() async {
+    if (nameCont.text.trim().isEmpty) {
+      toast(locale.value.serviceName);
+      return;
+    }
+
     isLoading(true);
     FocusManager.instance.primaryFocus?.unfocus();
 

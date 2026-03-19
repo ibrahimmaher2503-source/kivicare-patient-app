@@ -10,6 +10,7 @@ import '../../main.dart';
 import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import '../../utils/constants.dart';
+import '../../utils/price_widget.dart';
 import 'create_nurse_request_screen.dart';
 import 'model/nurse_request_model.dart';
 
@@ -51,7 +52,7 @@ class NurseRequestDetailScreen extends StatelessWidget {
       case NurseRequestStatusConst.completed:
         return locale.value.nurseRequestCompleted;
       case NurseRequestStatusConst.cancelled:
-        return locale.value.cancel;
+        return locale.value.cancelled;
       default:
         return requestData.status;
     }
@@ -136,11 +137,31 @@ class NurseRequestDetailScreen extends StatelessWidget {
                         if (requestData.preferredTime.isNotEmpty)
                           _buildInfoRow(locale.value.preferredTime, requestData.preferredTime),
                         if (requestData.durationHours > 0)
-                          _buildInfoRow(locale.value.durationHours, '${requestData.durationHours} hours'),
+                          _buildInfoRow(locale.value.durationHours, '${requestData.durationHours} ${locale.value.durationHours}'),
                         if (requestData.contactNumber.isNotEmpty)
                           _buildInfoRow(locale.value.contactNumber, requestData.contactNumber),
                         if (requestData.totalAmount > 0)
-                          _buildInfoRow(locale.value.totalAmount, '\$${requestData.totalAmount.toStringAsFixed(2)}'),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 120,
+                                  child: Text(
+                                    locale.value.totalAmount,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 13,
+                                      letterSpacing: 0.1,
+                                      color: secondaryTextColor,
+                                    ),
+                                  ),
+                                ),
+                                8.width,
+                                Expanded(child: PriceWidget(price: requestData.totalAmount)),
+                              ],
+                            ),
+                          ),
                       ],
                     ),
                     16.height,
@@ -190,6 +211,7 @@ class NurseRequestDetailScreen extends StatelessWidget {
 
                     // Admin Notes
                     if (requestData.adminNotes != null && requestData.adminNotes!.isNotEmpty) ...[
+                      // TODO: Add 'adminNotes' locale key for full i18n support
                       _buildSectionTitle('Admin Notes'),
                       12.height,
                       Container(
@@ -284,7 +306,7 @@ class NurseRequestDetailScreen extends StatelessWidget {
                       if (_isCancellable)
                         Expanded(
                           child: GestureDetector(
-                            onTap: () => _showCancelDialog(Get.context!),
+                            onTap: () => _showCancelDialog(context),
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               decoration: BoxDecoration(
@@ -337,7 +359,7 @@ class NurseRequestDetailScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Are you sure you want to cancel this request?',
+                '${locale.value.cancel}?',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   letterSpacing: 0.1,
@@ -392,7 +414,7 @@ class NurseRequestDetailScreen extends StatelessWidget {
           ],
         );
       },
-    );
+    ).then((_) => reasonController.dispose());
   }
 
   Future<void> _cancelRequest(String reason) async {
@@ -405,7 +427,7 @@ class NurseRequestDetailScreen extends StatelessWidget {
       toast(locale.value.nurseRequestCancelled);
       Get.back();
     }).catchError((e) {
-      toast(e.toString());
+      toast(locale.value.somethingWentWrong);
     }).whenComplete(() {
       isLoading(false);
     });

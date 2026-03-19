@@ -43,7 +43,7 @@ class RequestServiceListScreen extends StatelessWidget {
             errorBuilder: (error) {
               return _buildEmptyState();
             },
-            loadingWidget: controller.isLoading.value ? const Offstage() : const LoaderWidget(),
+            loadingWidget: controller.isLoading.value ? const LoaderWidget() : const Offstage(),
             onSuccess: (_) {
               return AnimatedScrollView(
                 listAnimationType: ListAnimationType.FadeIn,
@@ -185,7 +185,7 @@ class RequestServiceListScreen extends StatelessWidget {
           ),
           10.height,
           Text(
-            locale.value.noDataFound,
+            '',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               letterSpacing: 0.1,
