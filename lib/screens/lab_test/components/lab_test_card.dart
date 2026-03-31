@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../../components/location_badge.dart';
 import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/price_widget.dart';
 import '../model/lab_test_model.dart';
 import '../lab_test_detail_screen.dart';
 
@@ -239,35 +241,44 @@ class LabTestCard extends StatelessWidget {
                         ),
                       if (!showSelectButton) const Spacer(),
                       // Price with background pill
-                      if (labTestData.defaultPrice > 0)
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            gradient: LinearGradient(
-                              colors: isDarkMode.value
-                                  ? [
-                                      appColorSecondary.withValues(alpha: 0.2),
-                                      appColorAccent.withValues(alpha: 0.1),
-                                    ]
-                                  : [
-                                      appColorSecondary.withValues(alpha: 0.1),
-                                      appColorAccent.withValues(alpha: 0.05),
-                                    ],
-                            ),
-                          ),
-                          child: Text(
-                            '\$${labTestData.defaultPrice.toStringAsFixed(2)}',
-                            style: GoogleFonts.outfit(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.3,
-                              color: isDarkMode.value ? appColorAccent : appColorSecondary,
-                            ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: LinearGradient(
+                            colors: isDarkMode.value
+                                ? [
+                                    appColorSecondary.withValues(alpha: 0.2),
+                                    appColorAccent.withValues(alpha: 0.1),
+                                  ]
+                                : [
+                                    appColorSecondary.withValues(alpha: 0.1),
+                                    appColorAccent.withValues(alpha: 0.05),
+                                  ],
                           ),
                         ),
+                        child: labTestData.defaultPrice > 0
+                            ? PriceWidget(
+                                price: labTestData.defaultPrice,
+                                size: 18,
+                                color: isDarkMode.value ? appColorAccent : appColorSecondary,
+                              )
+                            : Text(
+                                locale.value.freeLabel,
+                                style: GoogleFonts.outfit(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: -0.3,
+                                  color: isDarkMode.value ? appColorAccent : appColorSecondary,
+                                ),
+                              ),
+                      ),
                     ],
                   ),
+                  if (labTestData.governorate != null) ...[
+                    8.height,
+                    locationBadge(labTestData.governorate, labTestData.city),
+                  ],
                 ],
               ),
             ),

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/app_scaffold.dart';
+import '../../components/governorates_city_picker.dart';
 import '../../components/loader_widget.dart';
 import '../../main.dart';
 import '../../utils/app_common.dart';
@@ -11,13 +12,33 @@ import '../../utils/colors.dart';
 import 'components/lab_test_card.dart';
 import 'lab_test_list_controller.dart';
 
-class LabTestListScreen extends StatelessWidget {
+class LabTestListScreen extends StatefulWidget {
   final bool selectionMode;
   final void Function(dynamic labTest)? onTestSelected;
 
-  LabTestListScreen({super.key, this.selectionMode = false, this.onTestSelected});
+  const LabTestListScreen({super.key, this.selectionMode = false, this.onTestSelected});
 
-  final LabTestListController controller = Get.put(LabTestListController());
+  @override
+  State<LabTestListScreen> createState() => _LabTestListScreenState();
+}
+
+class _LabTestListScreenState extends State<LabTestListScreen> {
+  late final LabTestListController controller;
+
+  bool get selectionMode => widget.selectionMode;
+  void Function(dynamic labTest)? get onTestSelected => widget.onTestSelected;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(LabTestListController());
+  }
+
+  @override
+  void dispose() {
+    Get.delete<LabTestListController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +91,13 @@ class LabTestListScreen extends StatelessWidget {
                     ),
                   ),
                   16.height,
+                  Obx(() => GovernoratesCityPicker(
+                    selectedGovernorateId: controller.selectedGovernorateId.value,
+                    selectedCityId: controller.selectedCityId.value,
+                    onGovernorateChanged: controller.onGovernorateChanged,
+                    onCityChanged: controller.onCityChanged,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  )),
 
                   // Department Filter Chips
                   if (controller.labTests.isNotEmpty || controller.selectedDepartment.value.isNotEmpty)
@@ -181,16 +209,6 @@ class LabTestListScreen extends StatelessWidget {
               color: isDarkMode.value ? Colors.white : primaryTextColor,
             ),
           ),
-          10.height,
-          Text(
-            '',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              letterSpacing: 0.1,
-              color: darkGrayGeneral,
-            ),
-            textAlign: TextAlign.center,
-          ).paddingOnly(left: 12, right: 12),
         ],
       ),
     );
