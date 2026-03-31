@@ -250,6 +250,34 @@ class CoreServiceApis {
     return doctors.obs;
   }
 
+  /// New search method using the new backend doctors/search endpoint.
+  static Future<RxList<Doctor>> searchDoctors({
+    int page = 1,
+    int perPage = 20,
+    required List<Doctor> doctorList,
+    Function(bool)? lastPageCallBack,
+    String name = '',
+    int? governorateId,
+    int? cityId,
+  }) async {
+    String nameParam = name.isNotEmpty ? '&name=${Uri.encodeQueryComponent(name)}' : '';
+    String govParam = governorateId != null ? '&governorate_id=$governorateId' : '';
+    String cityParam = cityId != null ? '&city_id=$cityId' : '';
+
+    final res = DoctorSearchListResponse.fromJson(await handleResponse(
+      await buildHttpResponse(
+        '${APIEndPoints.doctorsSearch}?per_page=$perPage&page=$page$nameParam$govParam$cityParam',
+        method: HttpMethodType.GET,
+      ),
+    ));
+
+    if (page == 1) doctorList.clear();
+    doctorList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+
+    return doctorList.obs;
+  }
+
   static Future<RxList<String>> getTimeSlots({
     required RxList<String> slots,
     required String date,
