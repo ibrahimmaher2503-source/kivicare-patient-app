@@ -1607,4 +1607,156 @@ class LanguageDe extends BaseLanguage {
 
   @override String get hours => 'Stunden';
   @override String get adminNotes => 'Admin-Notizen';
+  @override String get quickServices => 'Schnelldienste';
+  @override String get myRequests => 'Meine Anfragen';
+  @override String get noNurseRequestsYet => 'Sie haben noch keine Pflegeanfragen.';
+  @override String get noTestCategoriesAvailable => 'Derzeit keine Testkategorien verfügbar.';
+  @override String get noTestOrdersFound => 'Keine Testaufträge gefunden.';
+  @override String get fillDetailsBelow => 'Füllen Sie die Details unten aus';
+  @override String get cancelledByPatient => 'Vom Patienten storniert';
+  @override String get categoriesAvailable => 'Kategorien verfügbar';
+  @override String get stateLabel => 'Bundesland';
+  @override String get countryLabel => 'Land';
+  @override String get perHour => '/Std';
+  @override String get estimatedTotal => 'Geschätzte Gesamtkosten';
+  @override String get toBeDetermined => 'Wird noch festgelegt';
+  @override String get freeLabel => 'Kostenlos';
+
+  // ICU Admissions
+  @override String get icuAdmissions => 'Intensivstation-Aufnahmen';
+  @override String get hospitals => 'Krankenhäuser';
+  @override String get hospitalDetails => 'Krankenhausdetails';
+  @override String get icuDepartments => 'Intensivstationen';
+  @override String get browseHospitals => 'Krankenhäuser durchsuchen';
+  @override String get myIcuRequests => 'Meine Intensivstation-Anfragen';
+  @override String get createAdmissionRequest => 'Aufnahmeantrag erstellen';
+  @override String get admissionRequestDetails => 'Aufnahmeantrag-Details';
+  @override String get admissionSubmitted => 'Aufnahmeantrag erfolgreich eingereicht';
+  @override String get admissionCancelled => 'Aufnahmeantrag erfolgreich storniert';
+  @override String get patientInformation => 'Patienteninformationen';
+  @override String get caseDetailsLabel => 'Falldetails';
+  @override String get emergencyContact => 'Notfallkontakt';
+  @override String get paymentInformation => 'Zahlungsinformationen';
+  @override String get medicalReportsLabel => 'Medizinische Berichte';
+  @override String get patientName => 'Patientenname';
+  @override String get patientAge => 'Patientenalter';
+  @override String get patientGender => 'Patientengeschlecht';
+  @override String get nationalId => 'Personalausweisnummer';
+  @override String get insuranceNumberLabel => 'Versicherungsnummer';
+  @override String get medicalCondition => 'Medizinischer Zustand';
+  @override String get diagnosisLabel => 'Diagnose';
+  @override String get caseTypeLabel => 'Falltyp';
+  @override String get urgencyLabel => 'Dringlichkeit';
+  @override String get needsVentilator => 'Beatmungsgerät benötigt';
+  @override String get needsOxygen => 'Sauerstoff benötigt';
+  @override String get currentLocationLabel => 'Aktueller Standort';
+  @override String get needsAmbulance => 'Krankenwagen benötigt';
+  @override String get contactNameLabel => 'Kontaktname';
+  @override String get contactPhoneLabel => 'Kontakttelefon';
+  @override String get relationshipLabel => 'Beziehung zum Patienten';
+  @override String get paymentMethodLabel => 'Zahlungsmethode';
+  @override String get insuranceProviderLabel => 'Versicherungsanbieter';
+  @override String get attachReports => 'Berichte anhängen';
+  @override String get supportedFileFormats => 'PDF, JPG, PNG, DOC (max. 10 MB pro Datei)';
+  @override String get requestNumberLabel => 'Anfragenummer';
+  @override String get totalBedsLabel => 'Gesamtbetten';
+  @override String get availableBedsLabel => 'Verfügbare Betten';
+  @override String get dailyPriceLabel => 'Tagespreis';
+  @override String get equipmentLevelLabel => 'Ausstattungsniveau';
+  @override String get hospitalTypeLabel => 'Krankenhaustyp';
+  @override String get noHospitalsFound => 'Keine Krankenhäuser gefunden';
+  @override String get noIcuRequestsYet => 'Noch keine Intensivstation-Anfragen';
+  @override String get criticalLabel => 'Kritisch';
+  @override String get urgentLabel => 'Dringend';
+  @override String get standardLabel => 'Standard';
+  @override String get acceptedLabel => 'Akzeptiert';
+  @override String get rejectedLabel => 'Abgelehnt';
+  @override String get infoRequestedLabel => 'Info angefordert';
+  @override String get maleLabel => 'Männlich';
+  @override String get femaleLabel => 'Weiblich';
+  @override String get insuranceLabel => 'Versicherung';
+  @override String get cashLabel => 'Bargeld';
+
+  // ICU Case Types
+  @override String get caseTypeStroke => 'Schlaganfall';
+  @override String get caseTypeCardiac => 'Kardial';
+  @override String get caseTypePostOperative => 'Postoperativ';
+  @override String get caseTypeVentilator => 'Beatmung';
+  @override String get caseTypeNeonatal => 'Neonatal';
+  @override String get caseTypePediatric => 'P\u00e4diatrie';
+  @override String get caseTypeBurns => 'Verbrennungen';
+  @override String get caseTypeGeneral => 'Allgemein';
+
+  // ICU Specialties
+  @override String get specialtyCardiac => 'Kardiologie';
+  @override String get specialtyNeurology => 'Neurologie';
+  @override String get specialtyPediatric => 'P\u00e4diatrie';
+  @override String get specialtyNeonatal => 'Neonatologie';
+  @override String get specialtyBurns => 'Verbrennungen';
+  @override String get specialtyChest => 'Thorax';
+  @override String get specialtySurgical => 'Chirurgisch';
+  @override String get specialtyGeneral => 'Allgemein';
+
+  // Call Booking
+  @override String get callBooking => 'Anrufbuchung';
+  @override String get callDoctors => 'Anruf-Ärzte';
+  @override String get browseCallDoctors => 'Anruf-Ärzte durchsuchen';
+  @override String get myCallBookings => 'Meine Anrufbuchungen';
+  @override String get bookCall => 'Anruf buchen';
+  @override String get videoConsultation => 'Videoberatung';
+  @override String get phoneConsultation => 'Telefonberatung';
+  @override String get callServices => 'Anrufdienste';
+  @override String get selectDate => 'Datum auswählen';
+  @override String get selectTimeSlot => 'Zeitfenster auswählen';
+  @override String get availableSlots => 'Verfügbare Zeitfenster';
+  @override String get noSlotsAvailable => 'Keine Zeitfenster verfügbar';
+  @override String get tryAnotherDate => 'Versuchen Sie ein anderes Datum';
+  @override String get bookingConfirmed => 'Buchung bestätigt';
+  @override String get meetingLinkLabel => 'Meeting-Link';
+  @override String get joinCall => 'Anruf beitreten';
+  @override String get callTypeLabel => 'Anruftyp';
+  @override String get videoCallLabel => 'Videoanruf';
+  @override String get phoneCallLabel => 'Telefonanruf';
+  @override String get durationMinLabel => 'Dauer (Min.)';
+  @override String get startingFrom => 'Ab';
+  @override String get originalPriceLabel => 'Originalpreis';
+  @override String get discountLabel => 'Rabatt';
+  @override String get finalPriceLabel => 'Endpreis';
+  @override String get appointmentDateLabel => 'Termindatum';
+  @override String get appointmentTimeLabel => 'Terminzeit';
+  @override String get serviceNameLabel => 'Dienstname';
+  @override String get totalAmountLabel => 'Gesamtbetrag';
+  @override String get noCallDoctorsFound => 'Keine Anruf-Ärzte gefunden';
+  @override String get noCallBookingsYet => 'Noch keine Anrufbuchungen';
+  @override String get selectServiceLabel => 'Dienst auswählen';
+  @override String get confirmBooking => 'Buchung bestätigen';
+  @override String get bookingDetailsLabel => 'Buchungsdetails';
+  @override String get transactionTypeLabel => 'Transaktionstyp';
+
+  // Independent Doctor Booking
+  @override String get independentBooking => 'Unabh\u00e4ngige Buchung';
+  @override String get independentDoctors => 'Unabh\u00e4ngige \u00c4rzte';
+  @override String get browseIndependentDoctors => 'Unabh\u00e4ngige \u00c4rzte durchsuchen';
+  @override String get myIndependentBookings => 'Meine unabh\u00e4ngigen Buchungen';
+  @override String get bookAppointmentLabel => 'Termin buchen';
+  @override String get independentServices => 'Unabh\u00e4ngige Dienste';
+  @override String get inPersonConsultation => 'Pers\u00f6nliche Beratung';
+  @override String get totalAppointmentsLabel => 'Termine gesamt';
+  @override String get totalPatientsLabel => 'Patienten gesamt';
+  @override String get taxIncludedLabel => 'Steuer inbegriffen';
+  @override String get inclusiveTaxLabel => 'Inklusive Steuer';
+  @override String get pricingBreakdownLabel => 'Preis\u00fcbersicht';
+  @override String get noIndependentDoctorsFound => 'Keine unabh\u00e4ngigen \u00c4rzte gefunden';
+  @override String get noIndependentBookingsYet => 'Noch keine unabh\u00e4ngigen Buchungen';
+  @override String get independentBookingConfirmed => 'Unabh\u00e4ngige Buchung best\u00e4tigt';
+  @override String get appointmentDetailsLabel => 'Termindetails';
+  @override String get slotIntervalLabel => 'Zeitfenster-Intervall';
+
+  // Location Filter
+  @override String get governorate => 'Gouvernement';
+  @override String get allGovernorates => 'Alle Gouvernements';
+  @override String get allCities => 'Alle Städte';
+  @override String get selectGovernorate => 'Gouvernement auswählen';
+  @override String get selectCity => 'Stadt auswählen';
+  @override String get locationFilter => 'Standortfilter';
 }

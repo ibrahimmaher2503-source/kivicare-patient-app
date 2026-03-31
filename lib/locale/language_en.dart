@@ -1607,4 +1607,156 @@ class LanguageEn extends BaseLanguage {
 
   @override String get hours => 'hours';
   @override String get adminNotes => 'Admin Notes';
+  @override String get quickServices => 'Quick Services';
+  @override String get myRequests => 'My Requests';
+  @override String get noNurseRequestsYet => 'You have no nurse requests yet.';
+  @override String get noTestCategoriesAvailable => 'No test categories available at the moment.';
+  @override String get noTestOrdersFound => 'No test orders found.';
+  @override String get fillDetailsBelow => 'Fill in the details below';
+  @override String get cancelledByPatient => 'Cancelled by patient';
+  @override String get categoriesAvailable => 'categories available';
+  @override String get stateLabel => 'State';
+  @override String get countryLabel => 'Country';
+  @override String get perHour => '/hr';
+  @override String get estimatedTotal => 'Estimated Total';
+  @override String get toBeDetermined => 'To be determined';
+  @override String get freeLabel => 'Free';
+
+  // ICU Admissions
+  @override String get icuAdmissions => 'ICU Admissions';
+  @override String get hospitals => 'Hospitals';
+  @override String get hospitalDetails => 'Hospital Details';
+  @override String get icuDepartments => 'ICU Departments';
+  @override String get browseHospitals => 'Browse Hospitals';
+  @override String get myIcuRequests => 'My ICU Requests';
+  @override String get createAdmissionRequest => 'Create Admission Request';
+  @override String get admissionRequestDetails => 'Admission Request Details';
+  @override String get admissionSubmitted => 'Admission request submitted successfully';
+  @override String get admissionCancelled => 'Admission request cancelled successfully';
+  @override String get patientInformation => 'Patient Information';
+  @override String get caseDetailsLabel => 'Case Details';
+  @override String get emergencyContact => 'Emergency Contact';
+  @override String get paymentInformation => 'Payment Information';
+  @override String get medicalReportsLabel => 'Medical Reports';
+  @override String get patientName => 'Patient Name';
+  @override String get patientAge => 'Patient Age';
+  @override String get patientGender => 'Patient Gender';
+  @override String get nationalId => 'National ID';
+  @override String get insuranceNumberLabel => 'Insurance Number';
+  @override String get medicalCondition => 'Medical Condition';
+  @override String get diagnosisLabel => 'Diagnosis';
+  @override String get caseTypeLabel => 'Case Type';
+  @override String get urgencyLabel => 'Urgency';
+  @override String get needsVentilator => 'Needs Ventilator';
+  @override String get needsOxygen => 'Needs Oxygen';
+  @override String get currentLocationLabel => 'Current Location';
+  @override String get needsAmbulance => 'Needs Ambulance';
+  @override String get contactNameLabel => 'Contact Name';
+  @override String get contactPhoneLabel => 'Contact Phone';
+  @override String get relationshipLabel => 'Relationship to Patient';
+  @override String get paymentMethodLabel => 'Payment Method';
+  @override String get insuranceProviderLabel => 'Insurance Provider';
+  @override String get attachReports => 'Attach Reports';
+  @override String get supportedFileFormats => 'PDF, JPG, PNG, DOC (max 10MB each)';
+  @override String get requestNumberLabel => 'Request Number';
+  @override String get totalBedsLabel => 'Total Beds';
+  @override String get availableBedsLabel => 'Available Beds';
+  @override String get dailyPriceLabel => 'Daily Price';
+  @override String get equipmentLevelLabel => 'Equipment Level';
+  @override String get hospitalTypeLabel => 'Hospital Type';
+  @override String get noHospitalsFound => 'No hospitals found';
+  @override String get noIcuRequestsYet => 'No ICU requests yet';
+  @override String get criticalLabel => 'Critical';
+  @override String get urgentLabel => 'Urgent';
+  @override String get standardLabel => 'Standard';
+  @override String get acceptedLabel => 'Accepted';
+  @override String get rejectedLabel => 'Rejected';
+  @override String get infoRequestedLabel => 'Info Requested';
+  @override String get maleLabel => 'Male';
+  @override String get femaleLabel => 'Female';
+  @override String get insuranceLabel => 'Insurance';
+  @override String get cashLabel => 'Cash';
+
+  // ICU Case Types
+  @override String get caseTypeStroke => 'Stroke';
+  @override String get caseTypeCardiac => 'Cardiac';
+  @override String get caseTypePostOperative => 'Post Operative';
+  @override String get caseTypeVentilator => 'Ventilator';
+  @override String get caseTypeNeonatal => 'Neonatal';
+  @override String get caseTypePediatric => 'Pediatric';
+  @override String get caseTypeBurns => 'Burns';
+  @override String get caseTypeGeneral => 'General';
+
+  // ICU Specialties
+  @override String get specialtyCardiac => 'Cardiac';
+  @override String get specialtyNeurology => 'Neurology';
+  @override String get specialtyPediatric => 'Pediatric';
+  @override String get specialtyNeonatal => 'Neonatal';
+  @override String get specialtyBurns => 'Burns';
+  @override String get specialtyChest => 'Chest';
+  @override String get specialtySurgical => 'Surgical';
+  @override String get specialtyGeneral => 'General';
+
+  // Call Booking
+  @override String get callBooking => 'Call Booking';
+  @override String get callDoctors => 'Call Doctors';
+  @override String get browseCallDoctors => 'Browse Call Doctors';
+  @override String get myCallBookings => 'My Call Bookings';
+  @override String get bookCall => 'Book Call';
+  @override String get videoConsultation => 'Video Consultation';
+  @override String get phoneConsultation => 'Phone Consultation';
+  @override String get callServices => 'Call Services';
+  @override String get selectDate => 'Select Date';
+  @override String get selectTimeSlot => 'Select Time Slot';
+  @override String get availableSlots => 'Available Slots';
+  @override String get noSlotsAvailable => 'No slots available';
+  @override String get tryAnotherDate => 'Try another date';
+  @override String get bookingConfirmed => 'Booking Confirmed';
+  @override String get meetingLinkLabel => 'Meeting Link';
+  @override String get joinCall => 'Join Call';
+  @override String get callTypeLabel => 'Call Type';
+  @override String get videoCallLabel => 'Video Call';
+  @override String get phoneCallLabel => 'Phone Call';
+  @override String get durationMinLabel => 'Duration (min)';
+  @override String get startingFrom => 'Starting from';
+  @override String get originalPriceLabel => 'Original Price';
+  @override String get discountLabel => 'Discount';
+  @override String get finalPriceLabel => 'Final Price';
+  @override String get appointmentDateLabel => 'Appointment Date';
+  @override String get appointmentTimeLabel => 'Appointment Time';
+  @override String get serviceNameLabel => 'Service Name';
+  @override String get totalAmountLabel => 'Total Amount';
+  @override String get noCallDoctorsFound => 'No call doctors found';
+  @override String get noCallBookingsYet => 'No call bookings yet';
+  @override String get selectServiceLabel => 'Select Service';
+  @override String get confirmBooking => 'Confirm Booking';
+  @override String get bookingDetailsLabel => 'Booking Details';
+  @override String get transactionTypeLabel => 'Transaction Type';
+
+  // Independent Doctor Booking
+  @override String get independentBooking => 'Independent Booking';
+  @override String get independentDoctors => 'Independent Doctors';
+  @override String get browseIndependentDoctors => 'Browse Independent Doctors';
+  @override String get myIndependentBookings => 'My Independent Bookings';
+  @override String get bookAppointmentLabel => 'Book Appointment';
+  @override String get independentServices => 'Independent Services';
+  @override String get inPersonConsultation => 'In-Person Consultation';
+  @override String get totalAppointmentsLabel => 'Total Appointments';
+  @override String get totalPatientsLabel => 'Total Patients';
+  @override String get taxIncludedLabel => 'Tax Included';
+  @override String get inclusiveTaxLabel => 'Inclusive Tax';
+  @override String get pricingBreakdownLabel => 'Pricing Breakdown';
+  @override String get noIndependentDoctorsFound => 'No independent doctors found';
+  @override String get noIndependentBookingsYet => 'No independent bookings yet';
+  @override String get independentBookingConfirmed => 'Independent Booking Confirmed';
+  @override String get appointmentDetailsLabel => 'Appointment Details';
+  @override String get slotIntervalLabel => 'Slot Interval';
+
+  // Location Filter
+  @override String get governorate => 'Governorate';
+  @override String get allGovernorates => 'All Governorates';
+  @override String get allCities => 'All Cities';
+  @override String get selectGovernorate => 'Select Governorate';
+  @override String get selectCity => 'Select City';
+  @override String get locationFilter => 'Location Filter';
 }

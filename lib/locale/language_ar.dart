@@ -1606,4 +1606,156 @@ class LanguageAr extends BaseLanguage {
 
   @override String get hours => 'ساعات';
   @override String get adminNotes => 'ملاحظات المسؤول';
+  @override String get quickServices => 'خدمات سريعة';
+  @override String get myRequests => 'طلباتي';
+  @override String get noNurseRequestsYet => 'ليس لديك طلبات ممرضات بعد.';
+  @override String get noTestCategoriesAvailable => 'لا توجد فئات اختبارات متاحة حالياً.';
+  @override String get noTestOrdersFound => 'لم يتم العثور على طلبات اختبارات.';
+  @override String get fillDetailsBelow => 'املأ التفاصيل أدناه';
+  @override String get cancelledByPatient => 'ألغاه المريض';
+  @override String get categoriesAvailable => 'فئات متاحة';
+  @override String get stateLabel => 'المحافظة';
+  @override String get countryLabel => 'الدولة';
+  @override String get perHour => '/ساعة';
+  @override String get estimatedTotal => 'التكلفة التقديرية';
+  @override String get toBeDetermined => 'سيتم تحديده';
+  @override String get freeLabel => 'مجاني';
+
+  // ICU Admissions
+  @override String get icuAdmissions => 'دخول العناية المركزة';
+  @override String get hospitals => 'المستشفيات';
+  @override String get hospitalDetails => 'تفاصيل المستشفى';
+  @override String get icuDepartments => 'أقسام العناية المركزة';
+  @override String get browseHospitals => 'تصفح المستشفيات';
+  @override String get myIcuRequests => 'طلبات العناية المركزة';
+  @override String get createAdmissionRequest => 'إنشاء طلب دخول';
+  @override String get admissionRequestDetails => 'تفاصيل طلب الدخول';
+  @override String get admissionSubmitted => 'تم تقديم طلب الدخول بنجاح';
+  @override String get admissionCancelled => 'تم إلغاء طلب الدخول بنجاح';
+  @override String get patientInformation => 'معلومات المريض';
+  @override String get caseDetailsLabel => 'تفاصيل الحالة';
+  @override String get emergencyContact => 'جهة اتصال الطوارئ';
+  @override String get paymentInformation => 'معلومات الدفع';
+  @override String get medicalReportsLabel => 'التقارير الطبية';
+  @override String get patientName => 'اسم المريض';
+  @override String get patientAge => 'عمر المريض';
+  @override String get patientGender => 'جنس المريض';
+  @override String get nationalId => 'الرقم الوطني';
+  @override String get insuranceNumberLabel => 'رقم التأمين';
+  @override String get medicalCondition => 'الحالة الطبية';
+  @override String get diagnosisLabel => 'التشخيص';
+  @override String get caseTypeLabel => 'نوع الحالة';
+  @override String get urgencyLabel => 'الاستعجال';
+  @override String get needsVentilator => 'يحتاج جهاز تنفس';
+  @override String get needsOxygen => 'يحتاج أكسجين';
+  @override String get currentLocationLabel => 'الموقع الحالي';
+  @override String get needsAmbulance => 'يحتاج سيارة إسعاف';
+  @override String get contactNameLabel => 'اسم جهة الاتصال';
+  @override String get contactPhoneLabel => 'هاتف جهة الاتصال';
+  @override String get relationshipLabel => 'العلاقة بالمريض';
+  @override String get paymentMethodLabel => 'طريقة الدفع';
+  @override String get insuranceProviderLabel => 'مزود التأمين';
+  @override String get attachReports => 'إرفاق التقارير';
+  @override String get supportedFileFormats => 'PDF, JPG, PNG, DOC (بحد أقصى 10 ميجابايت لكل ملف)';
+  @override String get requestNumberLabel => 'رقم الطلب';
+  @override String get totalBedsLabel => 'إجمالي الأسرة';
+  @override String get availableBedsLabel => 'الأسرة المتاحة';
+  @override String get dailyPriceLabel => 'السعر اليومي';
+  @override String get equipmentLevelLabel => 'مستوى التجهيزات';
+  @override String get hospitalTypeLabel => 'نوع المستشفى';
+  @override String get noHospitalsFound => 'لم يتم العثور على مستشفيات';
+  @override String get noIcuRequestsYet => 'لا توجد طلبات عناية مركزة بعد';
+  @override String get criticalLabel => 'حرج';
+  @override String get urgentLabel => 'عاجل';
+  @override String get standardLabel => 'عادي';
+  @override String get acceptedLabel => 'مقبول';
+  @override String get rejectedLabel => 'مرفوض';
+  @override String get infoRequestedLabel => 'طلب معلومات';
+  @override String get maleLabel => 'ذكر';
+  @override String get femaleLabel => 'أنثى';
+  @override String get insuranceLabel => 'تأمين';
+  @override String get cashLabel => 'نقدي';
+
+  // ICU Case Types
+  @override String get caseTypeStroke => 'سكتة دماغية';
+  @override String get caseTypeCardiac => 'قلبي';
+  @override String get caseTypePostOperative => 'ما بعد العملية';
+  @override String get caseTypeVentilator => 'جهاز تنفس';
+  @override String get caseTypeNeonatal => 'حديثي الولادة';
+  @override String get caseTypePediatric => 'أطفال';
+  @override String get caseTypeBurns => 'حروق';
+  @override String get caseTypeGeneral => 'عام';
+
+  // ICU Specialties
+  @override String get specialtyCardiac => 'قلبي';
+  @override String get specialtyNeurology => 'أعصاب';
+  @override String get specialtyPediatric => 'أطفال';
+  @override String get specialtyNeonatal => 'حديثي الولادة';
+  @override String get specialtyBurns => 'حروق';
+  @override String get specialtyChest => 'صدرية';
+  @override String get specialtySurgical => 'جراحي';
+  @override String get specialtyGeneral => 'عام';
+
+  // Call Booking
+  @override String get callBooking => 'حجز مكالمة';
+  @override String get callDoctors => 'أطباء المكالمات';
+  @override String get browseCallDoctors => 'تصفح أطباء المكالمات';
+  @override String get myCallBookings => 'حجوزات مكالماتي';
+  @override String get bookCall => 'حجز مكالمة';
+  @override String get videoConsultation => 'استشارة فيديو';
+  @override String get phoneConsultation => 'استشارة هاتفية';
+  @override String get callServices => 'خدمات المكالمات';
+  @override String get selectDate => 'اختر التاريخ';
+  @override String get selectTimeSlot => 'اختر الفترة الزمنية';
+  @override String get availableSlots => 'الفترات المتاحة';
+  @override String get noSlotsAvailable => 'لا توجد فترات متاحة';
+  @override String get tryAnotherDate => 'جرب تاريخاً آخر';
+  @override String get bookingConfirmed => 'تم تأكيد الحجز';
+  @override String get meetingLinkLabel => 'رابط الاجتماع';
+  @override String get joinCall => 'انضم للمكالمة';
+  @override String get callTypeLabel => 'نوع المكالمة';
+  @override String get videoCallLabel => 'مكالمة فيديو';
+  @override String get phoneCallLabel => 'مكالمة هاتفية';
+  @override String get durationMinLabel => 'المدة (دقيقة)';
+  @override String get startingFrom => 'ابتداءً من';
+  @override String get originalPriceLabel => 'السعر الأصلي';
+  @override String get discountLabel => 'الخصم';
+  @override String get finalPriceLabel => 'السعر النهائي';
+  @override String get appointmentDateLabel => 'تاريخ الموعد';
+  @override String get appointmentTimeLabel => 'وقت الموعد';
+  @override String get serviceNameLabel => 'اسم الخدمة';
+  @override String get totalAmountLabel => 'المبلغ الإجمالي';
+  @override String get noCallDoctorsFound => 'لم يتم العثور على أطباء مكالمات';
+  @override String get noCallBookingsYet => 'لا توجد حجوزات مكالمات بعد';
+  @override String get selectServiceLabel => 'اختر الخدمة';
+  @override String get confirmBooking => 'تأكيد الحجز';
+  @override String get bookingDetailsLabel => 'تفاصيل الحجز';
+  @override String get transactionTypeLabel => 'نوع المعاملة';
+
+  // Independent Doctor Booking
+  @override String get independentBooking => 'حجز مستقل';
+  @override String get independentDoctors => 'أطباء مستقلون';
+  @override String get browseIndependentDoctors => 'تصفح الأطباء المستقلين';
+  @override String get myIndependentBookings => 'حجوزاتي المستقلة';
+  @override String get bookAppointmentLabel => 'حجز موعد';
+  @override String get independentServices => 'خدمات مستقلة';
+  @override String get inPersonConsultation => 'استشارة شخصية';
+  @override String get totalAppointmentsLabel => 'إجمالي المواعيد';
+  @override String get totalPatientsLabel => 'إجمالي المرضى';
+  @override String get taxIncludedLabel => 'شامل الضريبة';
+  @override String get inclusiveTaxLabel => 'ضريبة شاملة';
+  @override String get pricingBreakdownLabel => 'تفصيل الأسعار';
+  @override String get noIndependentDoctorsFound => 'لم يتم العثور على أطباء مستقلين';
+  @override String get noIndependentBookingsYet => 'لا توجد حجوزات مستقلة بعد';
+  @override String get independentBookingConfirmed => 'تم تأكيد الحجز المستقل';
+  @override String get appointmentDetailsLabel => 'تفاصيل الموعد';
+  @override String get slotIntervalLabel => 'فترة الفتحة الزمنية';
+
+  // Location Filter
+  @override String get governorate => 'المحافظة';
+  @override String get allGovernorates => 'كل المحافظات';
+  @override String get allCities => 'كل المدن';
+  @override String get selectGovernorate => 'اختر المحافظة';
+  @override String get selectCity => 'اختر المدينة';
+  @override String get locationFilter => 'تصفية الموقع';
 }

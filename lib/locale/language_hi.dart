@@ -1607,4 +1607,156 @@ class LanguageHi extends BaseLanguage {
 
   @override String get hours => 'घंटे';
   @override String get adminNotes => 'व्यवस्थापक नोट्स';
+  @override String get quickServices => 'त्वरित सेवाएं';
+  @override String get myRequests => 'मेरे अनुरोध';
+  @override String get noNurseRequestsYet => 'आपके पास अभी तक कोई नर्स अनुरोध नहीं है।';
+  @override String get noTestCategoriesAvailable => 'इस समय कोई परीक्षण श्रेणियां उपलब्ध नहीं हैं।';
+  @override String get noTestOrdersFound => 'कोई परीक्षण आदेश नहीं मिला।';
+  @override String get fillDetailsBelow => 'नीचे विवरण भरें';
+  @override String get cancelledByPatient => 'मरीज द्वारा रद्द';
+  @override String get categoriesAvailable => 'श्रेणियां उपलब्ध';
+  @override String get stateLabel => 'राज्य';
+  @override String get countryLabel => 'देश';
+  @override String get perHour => '/घंटा';
+  @override String get estimatedTotal => 'अनुमानित कुल';
+  @override String get toBeDetermined => 'निर्धारित किया जाएगा';
+  @override String get freeLabel => 'निःशुल्क';
+
+  // ICU Admissions
+  @override String get icuAdmissions => 'आईसीयू प्रवेश';
+  @override String get hospitals => 'अस्पताल';
+  @override String get hospitalDetails => 'अस्पताल विवरण';
+  @override String get icuDepartments => 'आईसीयू विभाग';
+  @override String get browseHospitals => 'अस्पताल खोजें';
+  @override String get myIcuRequests => 'मेरे आईसीयू अनुरोध';
+  @override String get createAdmissionRequest => 'प्रवेश अनुरोध बनाएं';
+  @override String get admissionRequestDetails => 'प्रवेश अनुरोध विवरण';
+  @override String get admissionSubmitted => 'प्रवेश अनुरोध सफलतापूर्वक सबमिट किया गया';
+  @override String get admissionCancelled => 'प्रवेश अनुरोध सफलतापूर्वक रद्द किया गया';
+  @override String get patientInformation => 'रोगी की जानकारी';
+  @override String get caseDetailsLabel => 'केस विवरण';
+  @override String get emergencyContact => 'आपातकालीन संपर्क';
+  @override String get paymentInformation => 'भुगतान जानकारी';
+  @override String get medicalReportsLabel => 'चिकित्सा रिपोर्ट';
+  @override String get patientName => 'रोगी का नाम';
+  @override String get patientAge => 'रोगी की आयु';
+  @override String get patientGender => 'रोगी का लिंग';
+  @override String get nationalId => 'राष्ट्रीय पहचान संख्या';
+  @override String get insuranceNumberLabel => 'बीमा संख्या';
+  @override String get medicalCondition => 'चिकित्सा स्थिति';
+  @override String get diagnosisLabel => 'निदान';
+  @override String get caseTypeLabel => 'केस का प्रकार';
+  @override String get urgencyLabel => 'तात्कालिकता';
+  @override String get needsVentilator => 'वेंटिलेटर की आवश्यकता';
+  @override String get needsOxygen => 'ऑक्सीजन की आवश्यकता';
+  @override String get currentLocationLabel => 'वर्तमान स्थान';
+  @override String get needsAmbulance => 'एम्बुलेंस की आवश्यकता';
+  @override String get contactNameLabel => 'संपर्क नाम';
+  @override String get contactPhoneLabel => 'संपर्क फोन';
+  @override String get relationshipLabel => 'रोगी से संबंध';
+  @override String get paymentMethodLabel => 'भुगतान विधि';
+  @override String get insuranceProviderLabel => 'बीमा प्रदाता';
+  @override String get attachReports => 'रिपोर्ट संलग्न करें';
+  @override String get supportedFileFormats => 'PDF, JPG, PNG, DOC (प्रत्येक अधिकतम 10MB)';
+  @override String get requestNumberLabel => 'अनुरोध संख्या';
+  @override String get totalBedsLabel => 'कुल बिस्तर';
+  @override String get availableBedsLabel => 'उपलब्ध बिस्तर';
+  @override String get dailyPriceLabel => 'दैनिक मूल्य';
+  @override String get equipmentLevelLabel => 'उपकरण स्तर';
+  @override String get hospitalTypeLabel => 'अस्पताल का प्रकार';
+  @override String get noHospitalsFound => 'कोई अस्पताल नहीं मिला';
+  @override String get noIcuRequestsYet => 'अभी तक कोई आईसीयू अनुरोध नहीं';
+  @override String get criticalLabel => 'गंभीर';
+  @override String get urgentLabel => 'अत्यावश्यक';
+  @override String get standardLabel => 'सामान्य';
+  @override String get acceptedLabel => 'स्वीकृत';
+  @override String get rejectedLabel => 'अस्वीकृत';
+  @override String get infoRequestedLabel => 'जानकारी अनुरोधित';
+  @override String get maleLabel => 'पुरुष';
+  @override String get femaleLabel => 'महिला';
+  @override String get insuranceLabel => 'बीमा';
+  @override String get cashLabel => 'नकद';
+
+  // ICU Case Types
+  @override String get caseTypeStroke => 'स्ट्रोक';
+  @override String get caseTypeCardiac => 'हृदय संबंधी';
+  @override String get caseTypePostOperative => 'ऑपरेशन के बाद';
+  @override String get caseTypeVentilator => 'वेंटिलेटर';
+  @override String get caseTypeNeonatal => 'नवजात';
+  @override String get caseTypePediatric => 'बाल रोग';
+  @override String get caseTypeBurns => 'जलन';
+  @override String get caseTypeGeneral => 'सामान्य';
+
+  // ICU Specialties
+  @override String get specialtyCardiac => 'हृदय रोग';
+  @override String get specialtyNeurology => 'तंत्रिका विज्ञान';
+  @override String get specialtyPediatric => 'बाल रोग';
+  @override String get specialtyNeonatal => 'नवजात विज्ञान';
+  @override String get specialtyBurns => 'जलन';
+  @override String get specialtyChest => 'छाती';
+  @override String get specialtySurgical => 'शल्य चिकित्सा';
+  @override String get specialtyGeneral => 'सामान्य';
+
+  // Call Booking
+  @override String get callBooking => 'कॉल बुकिंग';
+  @override String get callDoctors => 'कॉल डॉक्टर';
+  @override String get browseCallDoctors => 'कॉल डॉक्टर खोजें';
+  @override String get myCallBookings => 'मेरी कॉल बुकिंग';
+  @override String get bookCall => 'कॉल बुक करें';
+  @override String get videoConsultation => 'वीडियो परामर्श';
+  @override String get phoneConsultation => 'फोन परामर्श';
+  @override String get callServices => 'कॉल सेवाएं';
+  @override String get selectDate => 'तारीख चुनें';
+  @override String get selectTimeSlot => 'समय स्लॉट चुनें';
+  @override String get availableSlots => 'उपलब्ध स्लॉट';
+  @override String get noSlotsAvailable => 'कोई स्लॉट उपलब्ध नहीं';
+  @override String get tryAnotherDate => 'कोई अन्य तारीख आज़माएं';
+  @override String get bookingConfirmed => 'बुकिंग की पुष्टि हो गई';
+  @override String get meetingLinkLabel => 'मीटिंग लिंक';
+  @override String get joinCall => 'कॉल में शामिल हों';
+  @override String get callTypeLabel => 'कॉल प्रकार';
+  @override String get videoCallLabel => 'वीडियो कॉल';
+  @override String get phoneCallLabel => 'फोन कॉल';
+  @override String get durationMinLabel => 'अवधि (मिनट)';
+  @override String get startingFrom => 'से शुरू';
+  @override String get originalPriceLabel => 'मूल मूल्य';
+  @override String get discountLabel => 'छूट';
+  @override String get finalPriceLabel => 'अंतिम मूल्य';
+  @override String get appointmentDateLabel => 'अपॉइंटमेंट तारीख';
+  @override String get appointmentTimeLabel => 'अपॉइंटमेंट समय';
+  @override String get serviceNameLabel => 'सेवा का नाम';
+  @override String get totalAmountLabel => 'कुल राशि';
+  @override String get noCallDoctorsFound => 'कोई कॉल डॉक्टर नहीं मिला';
+  @override String get noCallBookingsYet => 'अभी तक कोई कॉल बुकिंग नहीं';
+  @override String get selectServiceLabel => 'सेवा चुनें';
+  @override String get confirmBooking => 'बुकिंग की पुष्टि करें';
+  @override String get bookingDetailsLabel => 'बुकिंग विवरण';
+  @override String get transactionTypeLabel => 'लेनदेन प्रकार';
+
+  // Independent Doctor Booking
+  @override String get independentBooking => 'स्वतंत्र बुकिंग';
+  @override String get independentDoctors => 'स्वतंत्र डॉक्टर';
+  @override String get browseIndependentDoctors => 'स्वतंत्र डॉक्टर खोजें';
+  @override String get myIndependentBookings => 'मेरी स्वतंत्र बुकिंग';
+  @override String get bookAppointmentLabel => 'अपॉइंटमेंट बुक करें';
+  @override String get independentServices => 'स्वतंत्र सेवाएं';
+  @override String get inPersonConsultation => 'व्यक्तिगत परामर्श';
+  @override String get totalAppointmentsLabel => 'कुल अपॉइंटमेंट';
+  @override String get totalPatientsLabel => 'कुल मरीज';
+  @override String get taxIncludedLabel => 'कर शामिल';
+  @override String get inclusiveTaxLabel => 'समावेशी कर';
+  @override String get pricingBreakdownLabel => 'मूल्य विवरण';
+  @override String get noIndependentDoctorsFound => 'कोई स्वतंत्र डॉक्टर नहीं मिला';
+  @override String get noIndependentBookingsYet => 'अभी तक कोई स्वतंत्र बुकिंग नहीं';
+  @override String get independentBookingConfirmed => 'स्वतंत्र बुकिंग की पुष्टि हो गई';
+  @override String get appointmentDetailsLabel => 'अपॉइंटमेंट विवरण';
+  @override String get slotIntervalLabel => 'स्लॉट अंतराल';
+
+  // Location Filter
+  @override String get governorate => 'गवर्नरेट';
+  @override String get allGovernorates => 'सभी गवर्नरेट';
+  @override String get allCities => 'सभी शहर';
+  @override String get selectGovernorate => 'गवर्नरेट चुनें';
+  @override String get selectCity => 'शहर चुनें';
+  @override String get locationFilter => 'स्थान फ़िल्टर';
 }
