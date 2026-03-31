@@ -6,17 +6,42 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/app_scaffold.dart';
+import '../../components/governorates_city_picker.dart';
 import '../../components/loader_widget.dart';
 import '../../main.dart';
 import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import 'components/nurse_card.dart';
+import 'model/nurse_model.dart';
 import 'nurse_list_controller.dart';
 
-class NurseListScreen extends StatelessWidget {
-  NurseListScreen({super.key});
+class NurseListScreen extends StatefulWidget {
+  final bool selectionMode;
+  final void Function(Nurse nurse)? onNurseSelected;
 
-  final NurseListController controller = Get.put(NurseListController());
+  const NurseListScreen({super.key, this.selectionMode = false, this.onNurseSelected});
+
+  @override
+  State<NurseListScreen> createState() => _NurseListScreenState();
+}
+
+class _NurseListScreenState extends State<NurseListScreen> {
+  late final NurseListController controller;
+
+  bool get selectionMode => widget.selectionMode;
+  void Function(Nurse nurse)? get onNurseSelected => widget.onNurseSelected;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(NurseListController());
+  }
+
+  @override
+  void dispose() {
+    Get.delete<NurseListController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +95,7 @@ class NurseListScreen extends StatelessWidget {
                         ),
                         4.height,
                         Obx(() => Text(
-                          '${controller.nurses.length} ${locale.value.browseNurses.toLowerCase()}',
+                          '${controller.nurses.length} ${locale.value.nurses}',
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 13,
                             letterSpacing: 0.1,
@@ -85,7 +110,7 @@ class NurseListScreen extends StatelessWidget {
                   // Premium Search Bar with glass-style border
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isDarkMode.value ? glassStrokeDark : glassStrokeLight,
                       ),
@@ -125,7 +150,7 @@ class NurseListScreen extends StatelessWidget {
                         filled: true,
                         fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -133,6 +158,15 @@ class NurseListScreen extends StatelessWidget {
                     ),
                   ),
                   16.height,
+
+                  // Governorate / City filter
+                  Obx(() => GovernoratesCityPicker(
+                    selectedGovernorateId: controller.selectedGovernorateId.value,
+                    selectedCityId: controller.selectedCityId.value,
+                    onGovernorateChanged: controller.onGovernorateChanged,
+                    onCityChanged: controller.onCityChanged,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  )),
 
                   // Availability Filter Chips with scale animation
                   if (controller.nurses.isNotEmpty || controller.selectedAvailability.value.isNotEmpty)
@@ -197,7 +231,7 @@ class NurseListScreen extends StatelessWidget {
                         children: List.generate(controller.nurses.length, (index) {
                           return TweenAnimationBuilder<double>(
                             tween: Tween(begin: 0.0, end: 1.0),
-                            duration: Duration(milliseconds: 400 + (index * 80)),
+                            duration: Duration(milliseconds: 400 + (index.clamp(0, 10) * 80)),
                             builder: (context, value, child) {
                               return Opacity(
                                 opacity: value,
@@ -209,6 +243,12 @@ class NurseListScreen extends StatelessWidget {
                             },
                             child: NurseCard(
                               nurseData: controller.nurses[index],
+                              onTap: selectionMode
+                                  ? () {
+                                      onNurseSelected?.call(controller.nurses[index]);
+                                      Get.back();
+                                    }
+                                  : null,
                             ).paddingBottom(16),
                           );
                         }),
@@ -251,16 +291,6 @@ class NurseListScreen extends StatelessWidget {
               color: isDarkMode.value ? Colors.white : primaryTextColor,
             ),
           ),
-          10.height,
-          Text(
-            '',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              letterSpacing: 0.1,
-              color: darkGrayGeneral,
-            ),
-            textAlign: TextAlign.center,
-          ).paddingOnly(left: 12, right: 12),
         ],
       ),
     );
