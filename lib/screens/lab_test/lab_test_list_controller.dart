@@ -4,6 +4,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../api/core_apis.dart';
 import '../../main.dart';
+import '../../utils/constants.dart';
 import 'model/lab_test_model.dart';
 
 class LabTestListController extends GetxController {
@@ -16,10 +17,13 @@ class LabTestListController extends GetxController {
 
   // Search
   TextEditingController searchCont = TextEditingController();
+  RxString searchQuery = ''.obs;
 
   // Filters
   int? categoryId;
   RxString selectedDepartment = ''.obs;
+  RxnInt selectedGovernorateId = RxnInt();
+  RxnInt selectedCityId = RxnInt();
   RxList<Map<String, String>> departmentFilters = RxList();
 
   @override
@@ -36,18 +40,21 @@ class LabTestListController extends GetxController {
     ].obs;
 
     getLabTests();
+    debounce(searchQuery, (_) {
+      page(1);
+      getLabTests();
+    }, time: const Duration(milliseconds: 500));
     super.onInit();
   }
 
   void onSearchChanged(String val) {
-    page(1);
-    getLabTests();
+    searchQuery.value = val;
   }
 
   @override
-  void dispose() {
+  void onClose() {
     searchCont.dispose();
-    super.dispose();
+    super.onClose();
   }
 
   Future<void> getLabTests({bool showLoader = true}) async {
@@ -56,24 +63,40 @@ class LabTestListController extends GetxController {
     }
 
     await labTestFuture(
-      CoreServiceApis.getLabTestList(
+      CoreServiceApis.searchLabs(
         page: page.value,
-        perPage: 15,
+        perPage: Constants.perPageItem,
         labTestList: labTests,
-        search: searchCont.text.trim(),
-        categoryId: categoryId,
+        testName: searchCont.text.trim(),
         department: selectedDepartment.value,
+        categoryId: categoryId,
+        governorateId: selectedGovernorateId.value,
+        cityId: selectedCityId.value,
         lastPageCallBack: (isLast) => isLastPage(isLast),
       ),
     ).then((value) {
       log('Lab tests fetched: ${value.length}');
     }).catchError((e) {
       log("getLabTests error $e");
+      toast(locale.value.somethingWentWrong);
     }).whenComplete(() => isLoading(false));
   }
 
   void onFilterChanged(String department) {
     selectedDepartment(department);
+    page(1);
+    getLabTests();
+  }
+
+  void onGovernorateChanged(int? id) {
+    selectedGovernorateId.value = id;
+    selectedCityId.value = null;
+    page(1);
+    getLabTests();
+  }
+
+  void onCityChanged(int? id) {
+    selectedCityId.value = id;
     page(1);
     getLabTests();
   }
