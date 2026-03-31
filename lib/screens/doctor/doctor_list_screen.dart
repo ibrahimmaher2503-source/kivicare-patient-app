@@ -5,6 +5,7 @@ import 'package:kivicare_patient/screens/doctor/components/doctor_card.dart';
 import 'package:kivicare_patient/screens/doctor/search_doctor_widget.dart';
 
 import '../../../components/app_scaffold.dart';
+import '../../components/governorates_city_picker.dart';
 import '../../components/loader_widget.dart';
 import '../../main.dart';
 import '../../utils/colors.dart';
@@ -34,6 +35,13 @@ class DoctorsListScreen extends StatelessWidget {
               hideKeyboard(context);
             },
           ).paddingOnly(left: 16, right: 16, top: 16, bottom: 8),
+          Obx(() => GovernoratesCityPicker(
+            selectedGovernorateId: doctorsListCont.selectedGovernorateId.value,
+            selectedCityId: doctorsListCont.selectedCityId.value,
+            onGovernorateChanged: doctorsListCont.onGovernorateChanged,
+            onCityChanged: doctorsListCont.onCityChanged,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          )),
           Obx(
             () => SnapHelperWidget(
               future: doctorsListCont.doctorsFuture.value,
