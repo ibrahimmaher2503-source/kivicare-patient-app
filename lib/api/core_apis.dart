@@ -519,6 +519,41 @@ class CoreServiceApis {
     return nurseList.obs;
   }
 
+  /// New search method using the new backend search endpoint.
+  /// Keep getNurseList() for backward compatibility.
+  static Future<RxList<Nurse>> searchNurses({
+    int page = 1,
+    int perPage = 20,
+    required List<Nurse> nurseList,
+    Function(bool)? lastPageCallBack,
+    String search = '',
+    int? governorateId,
+    int? cityId,
+    String specialty = '',
+    String gender = '',
+    String availability = '',
+  }) async {
+    String searchParam = search.isNotEmpty ? '&search=${Uri.encodeQueryComponent(search)}' : '';
+    String govParam = governorateId != null ? '&governorate_id=$governorateId' : '';
+    String cityParam = cityId != null ? '&city_id=$cityId' : '';
+    String specParam = specialty.isNotEmpty ? '&specialty=${Uri.encodeQueryComponent(specialty)}' : '';
+    String genderParam = gender.isNotEmpty ? '&gender=${Uri.encodeQueryComponent(gender)}' : '';
+    String availParam = availability.isNotEmpty ? '&availability=${Uri.encodeQueryComponent(availability)}' : '';
+
+    final res = NurseListResponse.fromJson(await handleResponse(
+      await buildHttpResponse(
+        '${APIEndPoints.nursesSearch}?per_page=$perPage&page=$page$searchParam$govParam$cityParam$specParam$genderParam$availParam',
+        method: HttpMethodType.GET,
+      ),
+    ));
+
+    if (page == 1) nurseList.clear();
+    nurseList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+
+    return nurseList.obs;
+  }
+
   static Future<Nurse> getNurseDetail({required int nurseId}) async {
     final json = await handleResponse(await buildHttpResponse('${APIEndPoints.getNurseDetail}/$nurseId', method: HttpMethodType.GET));
     return Nurse.fromJson(json["data"] is Map<String, dynamic> ? json["data"] : json);
