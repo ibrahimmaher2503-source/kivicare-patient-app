@@ -79,6 +79,27 @@ class APIEndPoints {
   static const String updateNurseRequest = 'v1/nurse-requests'; // append /{id}
   static const String cancelNurseRequest = 'v1/nurse-requests'; // append /{id}/cancel
 
+  //Location
+  static const String governorates = 'governorates';
+  static const String cities = 'cities'; // ?governorate_id=
+
+  // New search endpoints (additive — existing endpoints remain)
+  static const String doctorsSearch = 'doctors/search';
+  static const String clinicsSearch = 'clinics/search';
+  static const String nursesSearch = 'nurses/search';
+  static const String labsSearch = 'labs/search';
+
+  // Home Healthcare
+  static const String homeHealthcareSearch = 'home-healthcare/search';
+  static const String homeHealthcareDetail = 'home-healthcare';    // append /{id}
+  static const String homeHealthcareRequests = 'v1/home-healthcare-requests';
+  static const String homeHealthcareRequestDetail = 'v1/home-healthcare-requests'; // append /{id}
+  static const String homeHealthcareRequestCancel = 'v1/home-healthcare-requests'; // append /{id}/cancel
+
+  // Radiology
+  static const String radiologySearch = 'radiology/search';
+  static const String radiologyDetail = 'radiology'; // append /{id}
+
   //Lab Tests
   static const String getLabTestCategories = 'v1/lab-test-categories';
   static const String getLabTests = 'v1/lab-tests';
@@ -92,4 +113,27 @@ class APIEndPoints {
   //Request Service
   static const String saveRequestService = 'v1/save-request-service';
   static const String getRequestService = 'v1/get-request-service';
+
+  //ICU Admissions
+  static const String getHospitals = 'v1/hospitals';
+  static const String getHospitalDetail = 'v1/hospitals'; // append /{id}
+  static const String getIcuDepartments = 'v1/icu-departments';
+  static const String getIcuAdmissionRequests = 'v1/icu-admission-requests';
+  static const String createIcuAdmissionRequest = 'v1/icu-admission-requests';
+  static const String getIcuAdmissionRequestDetail = 'v1/icu-admission-requests'; // append /{id}
+  static const String cancelIcuAdmissionRequest = 'v1/icu-admission-requests'; // append /{id}/cancel
+
+  //Call Booking
+  static const String getCallDoctors = 'v1/call-doctors';
+  static const String getCallDoctorServices = 'v1/call-doctors'; // append /{id}/services
+  static const String getCallSlots = 'v1/call-doctors'; // append /{id}/slots
+  static const String createCallBooking = 'v1/call-booking';
+  static const String getCallBookings = 'v1/call-booking';
+
+  //Independent Doctor Booking
+  static const String getIndependentDoctors = 'v1/independent-doctors';
+  static const String getIndependentDoctorServices = 'v1/independent-doctors'; // append /{id}/services
+  static const String getIndependentSlots = 'v1/independent-doctors'; // append /{id}/slots
+  static const String createIndependentBooking = 'v1/independent-booking';
+  static const String getIndependentBookings = 'v1/independent-booking';
 }
