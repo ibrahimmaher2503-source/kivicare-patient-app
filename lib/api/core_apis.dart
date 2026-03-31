@@ -629,6 +629,38 @@ class CoreServiceApis {
     return labTestList.obs;
   }
 
+  /// New search method using the new backend labs/search endpoint.
+  static Future<RxList<LabTest>> searchLabs({
+    int page = 1,
+    int perPage = 20,
+    required List<LabTest> labTestList,
+    Function(bool)? lastPageCallBack,
+    String testName = '',
+    int? governorateId,
+    int? cityId,
+    String department = '',
+    int? categoryId,
+  }) async {
+    String nameParam = testName.isNotEmpty ? '&test_name=${Uri.encodeQueryComponent(testName)}' : '';
+    String govParam = governorateId != null ? '&governorate_id=$governorateId' : '';
+    String cityParam = cityId != null ? '&city_id=$cityId' : '';
+    String deptParam = department.isNotEmpty ? '&department=${Uri.encodeQueryComponent(department)}' : '';
+    String catParam = categoryId != null ? '&category_id=$categoryId' : '';
+
+    final res = LabTestListResponse.fromJson(await handleResponse(
+      await buildHttpResponse(
+        '${APIEndPoints.labsSearch}?per_page=$perPage&page=$page$nameParam$govParam$cityParam$deptParam$catParam',
+        method: HttpMethodType.GET,
+      ),
+    ));
+
+    if (page == 1) labTestList.clear();
+    labTestList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+
+    return labTestList.obs;
+  }
+
   static Future<LabTest> getLabTestDetail({required int testId}) async {
     final json = await handleResponse(await buildHttpResponse('${APIEndPoints.getLabTestDetail}/$testId', method: HttpMethodType.GET));
     return LabTest.fromJson(json["data"] is Map<String, dynamic> ? json["data"] : json);
