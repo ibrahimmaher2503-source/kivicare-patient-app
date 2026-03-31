@@ -38,6 +38,15 @@ import '../screens/lab_test/model/lab_test_category_model.dart';
 import '../screens/lab_test/model/lab_test_model.dart';
 import '../screens/lab_test/model/test_order_model.dart';
 import '../screens/request_service/model/request_service_model.dart';
+import '../screens/icu/model/hospital_model.dart';
+import '../screens/icu/model/icu_admission_model.dart';
+import '../screens/call_booking/model/call_doctor_model.dart';
+import '../screens/call_booking/model/call_booking_model.dart';
+import '../screens/call_booking/model/time_slot_model.dart';
+import '../screens/independent_booking/model/independent_doctor_model.dart';
+import '../screens/independent_booking/model/independent_booking_model.dart';
+import '../models/governorate_model.dart';
+import '../models/city_model.dart';
 import '../utils/api_end_points.dart';
 import '../utils/app_common.dart';
 import '../utils/constants.dart';
@@ -146,6 +155,25 @@ class CoreServiceApis {
 
   static Future<ServiceDetailModel> getServiceDetail({required int serviceId}) async {
     return ServiceDetailModel.fromJson(await handleResponse(await buildHttpResponse('${APIEndPoints.getServiceDetails}?service_id=$serviceId', method: HttpMethodType.GET)));
+  }
+
+  /// Fetch all governorates (no pagination — 27 items max)
+  static Future<List<Governorate>> getGovernorates() async {
+    final res = GovernorateListResponse.fromJson(await handleResponse(
+      await buildHttpResponse(APIEndPoints.governorates, method: HttpMethodType.GET),
+    ));
+    return res.data;
+  }
+
+  /// Fetch cities for a governorate (no pagination — ~50 items max)
+  static Future<List<City>> getCities({required int governorateId}) async {
+    final res = CityListResponse.fromJson(await handleResponse(
+      await buildHttpResponse(
+        '${APIEndPoints.cities}?governorate_id=$governorateId',
+        method: HttpMethodType.GET,
+      ),
+    ));
+    return res.data;
   }
 
   static Future<ClinicDetailModel> getClinicDetails({required int clinicId}) async {
@@ -469,7 +497,7 @@ class CoreServiceApis {
 
   static Future<RxList<Nurse>> getNurseList({
     int page = 1,
-    int perPage = 15,
+    int perPage = 20,
     required List<Nurse> nurseList,
     Function(bool)? lastPageCallBack,
     String search = "",
@@ -477,17 +505,17 @@ class CoreServiceApis {
     String serviceArea = "",
     String specialization = "",
   }) async {
-    String searchParam = search.isNotEmpty ? '&search=$search' : '';
-    String statusParam = availabilityStatus.isNotEmpty ? '&availability_status=$availabilityStatus' : '';
-    String areaParam = serviceArea.isNotEmpty ? '&service_area=$serviceArea' : '';
-    String specParam = specialization.isNotEmpty ? '&specialization=$specialization' : '';
+    String searchParam = search.isNotEmpty ? '&search=${Uri.encodeQueryComponent(search)}' : '';
+    String statusParam = availabilityStatus.isNotEmpty ? '&availability_status=${Uri.encodeQueryComponent(availabilityStatus)}' : '';
+    String areaParam = serviceArea.isNotEmpty ? '&service_area=${Uri.encodeQueryComponent(serviceArea)}' : '';
+    String specParam = specialization.isNotEmpty ? '&specialization=${Uri.encodeQueryComponent(specialization)}' : '';
 
     final res = NurseListResponse.fromJson(await handleResponse(
       await buildHttpResponse("${APIEndPoints.getNurses}?per_page=$perPage&page=$page$searchParam$statusParam$areaParam$specParam", method: HttpMethodType.GET),
     ));
     if (page == 1) nurseList.clear();
     nurseList.addAll(res.data);
-    lastPageCallBack?.call(res.data.length != perPage);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
     return nurseList.obs;
   }
 
@@ -498,21 +526,21 @@ class CoreServiceApis {
 
   static Future<RxList<NurseRequest>> getNurseRequestList({
     int page = 1,
-    int perPage = 15,
+    int perPage = 20,
     required List<NurseRequest> requestList,
     Function(bool)? lastPageCallBack,
     String status = "",
     String search = "",
   }) async {
-    String statusParam = status.isNotEmpty ? '&status=$status' : '';
-    String searchParam = search.isNotEmpty ? '&search=$search' : '';
+    String statusParam = status.isNotEmpty ? '&status=${Uri.encodeQueryComponent(status)}' : '';
+    String searchParam = search.isNotEmpty ? '&search=${Uri.encodeQueryComponent(search)}' : '';
 
     final res = NurseRequestListResponse.fromJson(await handleResponse(
       await buildHttpResponse("${APIEndPoints.getNurseRequests}?per_page=$perPage&page=$page$statusParam$searchParam", method: HttpMethodType.GET),
     ));
     if (page == 1) requestList.clear();
     requestList.addAll(res.data);
-    lastPageCallBack?.call(res.data.length != perPage);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
     return requestList.obs;
   }
 
@@ -546,7 +574,7 @@ class CoreServiceApis {
 
   static Future<RxList<LabTest>> getLabTestList({
     int page = 1,
-    int perPage = 15,
+    int perPage = 20,
     required List<LabTest> labTestList,
     Function(bool)? lastPageCallBack,
     int? categoryId,
@@ -554,15 +582,15 @@ class CoreServiceApis {
     String search = "",
   }) async {
     String catParam = (categoryId != null && categoryId != -1) ? '&category_id=$categoryId' : '';
-    String deptParam = department.isNotEmpty ? '&department=$department' : '';
-    String searchParam = search.isNotEmpty ? '&search=$search' : '';
+    String deptParam = department.isNotEmpty ? '&department=${Uri.encodeQueryComponent(department)}' : '';
+    String searchParam = search.isNotEmpty ? '&search=${Uri.encodeQueryComponent(search)}' : '';
 
     final res = LabTestListResponse.fromJson(await handleResponse(
       await buildHttpResponse("${APIEndPoints.getLabTests}?per_page=$perPage&page=$page$catParam$deptParam$searchParam", method: HttpMethodType.GET),
     ));
     if (page == 1) labTestList.clear();
     labTestList.addAll(res.data);
-    lastPageCallBack?.call(res.data.length != perPage);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
     return labTestList.obs;
   }
 
@@ -573,19 +601,19 @@ class CoreServiceApis {
 
   static Future<RxList<TestOrder>> getTestOrderList({
     int page = 1,
-    int perPage = 15,
+    int perPage = 20,
     required List<TestOrder> orderList,
     Function(bool)? lastPageCallBack,
     String status = "",
   }) async {
-    String statusParam = status.isNotEmpty ? '&status=$status' : '';
+    String statusParam = status.isNotEmpty ? '&status=${Uri.encodeQueryComponent(status)}' : '';
 
     final res = TestOrderListResponse.fromJson(await handleResponse(
       await buildHttpResponse("${APIEndPoints.getTestOrders}?per_page=$perPage&page=$page$statusParam", method: HttpMethodType.GET),
     ));
     if (page == 1) orderList.clear();
     orderList.addAll(res.data);
-    lastPageCallBack?.call(res.data.length != perPage);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
     return orderList.obs;
   }
 
@@ -616,21 +644,271 @@ class CoreServiceApis {
 
   static Future<RxList<RequestService>> getRequestServiceList({
     int page = 1,
-    int perPage = 10,
+    int perPage = 20,
     required List<RequestService> serviceList,
     Function(bool)? lastPageCallBack,
     String isStatus = "",
     String search = "",
   }) async {
-    String statusParam = isStatus.isNotEmpty ? '&is_status=$isStatus' : '';
-    String searchParam = search.isNotEmpty ? '&search=$search' : '';
+    String statusParam = isStatus.isNotEmpty ? '&is_status=${Uri.encodeQueryComponent(isStatus)}' : '';
+    String searchParam = search.isNotEmpty ? '&search=${Uri.encodeQueryComponent(search)}' : '';
 
     final res = RequestServiceListResponse.fromJson(await handleResponse(
       await buildHttpResponse("${APIEndPoints.getRequestService}?per_page=$perPage&page=$page$statusParam$searchParam", method: HttpMethodType.GET),
     ));
     if (page == 1) serviceList.clear();
     serviceList.addAll(res.data);
-    lastPageCallBack?.call(res.data.length != perPage);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
     return serviceList.obs;
+  }
+
+  // ===== ICU ADMISSIONS MODULE =====
+
+  static Future<RxList<Hospital>> getHospitalList({
+    int page = 1,
+    int perPage = 20,
+    required List<Hospital> hospitalList,
+    Function(bool)? lastPageCallBack,
+    String city = "",
+    String specialty = "",
+    String ventilator = "",
+    String insurance = "",
+    String search = "",
+  }) async {
+    String cityParam = city.isNotEmpty ? '&city=${Uri.encodeQueryComponent(city)}' : '';
+    String specParam = specialty.isNotEmpty ? '&specialty=${Uri.encodeQueryComponent(specialty)}' : '';
+    String ventParam = ventilator.isNotEmpty ? '&ventilator=${Uri.encodeQueryComponent(ventilator)}' : '';
+    String insParam = insurance.isNotEmpty ? '&insurance=${Uri.encodeQueryComponent(insurance)}' : '';
+    String searchParam = search.isNotEmpty ? '&search=${Uri.encodeQueryComponent(search)}' : '';
+
+    final res = HospitalListResponse.fromJson(await handleResponse(
+      await buildHttpResponse("${APIEndPoints.getHospitals}?per_page=$perPage&page=$page$cityParam$specParam$ventParam$insParam$searchParam", method: HttpMethodType.GET),
+    ));
+    if (page == 1) hospitalList.clear();
+    hospitalList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+    return hospitalList.obs;
+  }
+
+  static Future<Hospital> getHospitalDetail({required int hospitalId}) async {
+    final json = await handleResponse(await buildHttpResponse('${APIEndPoints.getHospitalDetail}/$hospitalId', method: HttpMethodType.GET));
+    return Hospital.fromJson(json["data"] is Map<String, dynamic> ? json["data"] : json);
+  }
+
+  static Future<RxList<IcuDepartment>> getIcuDepartmentList({
+    int page = 1,
+    int perPage = 20,
+    required List<IcuDepartment> departmentList,
+    Function(bool)? lastPageCallBack,
+    int? hospitalId,
+    String specialty = "",
+    String available = "",
+    String ventilator = "",
+  }) async {
+    String hospParam = (hospitalId != null && hospitalId != -1) ? '&hospital_id=$hospitalId' : '';
+    String specParam = specialty.isNotEmpty ? '&specialty=${Uri.encodeQueryComponent(specialty)}' : '';
+    String availParam = available.isNotEmpty ? '&available=${Uri.encodeQueryComponent(available)}' : '';
+    String ventParam = ventilator.isNotEmpty ? '&ventilator=${Uri.encodeQueryComponent(ventilator)}' : '';
+
+    final res = IcuDepartmentListResponse.fromJson(await handleResponse(
+      await buildHttpResponse("${APIEndPoints.getIcuDepartments}?per_page=$perPage&page=$page$hospParam$specParam$availParam$ventParam", method: HttpMethodType.GET),
+    ));
+    if (page == 1) departmentList.clear();
+    departmentList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+    return departmentList.obs;
+  }
+
+  static Future<RxList<IcuAdmissionRequest>> getIcuAdmissionList({
+    int page = 1,
+    int perPage = 20,
+    required List<IcuAdmissionRequest> admissionList,
+    Function(bool)? lastPageCallBack,
+    String status = "",
+  }) async {
+    String statusParam = status.isNotEmpty ? '&status=${Uri.encodeQueryComponent(status)}' : '';
+
+    final res = IcuAdmissionListResponse.fromJson(await handleResponse(
+      await buildHttpResponse("${APIEndPoints.getIcuAdmissionRequests}?per_page=$perPage&page=$page$statusParam", method: HttpMethodType.GET),
+    ));
+    if (page == 1) admissionList.clear();
+    admissionList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+    return admissionList.obs;
+  }
+
+  static Future<IcuAdmissionRequest> createIcuAdmission({
+    required Map<String, dynamic> request,
+    List<File>? medicalReports,
+  }) async {
+    var multiPartRequest = await getMultiPartRequest(APIEndPoints.createIcuAdmissionRequest);
+    multiPartRequest.headers.addAll(buildHeaderTokens());
+    multiPartRequest.fields.addAll(await getMultipartFields(val: request));
+
+    if (medicalReports != null && medicalReports.isNotEmpty) {
+      for (int i = 0; i < medicalReports.length; i++) {
+        if (medicalReports[i].path.isNotEmpty) {
+          multiPartRequest.files.add(await MultipartFile.fromPath('medical_reports[$i]', medicalReports[i].path));
+        }
+      }
+    }
+
+    Response response = await Response.fromStream(await multiPartRequest.send());
+
+    apiPrint(
+      url: multiPartRequest.url.toString(),
+      headers: jsonEncode(multiPartRequest.headers),
+      request: jsonEncode(multiPartRequest.fields),
+      hasRequest: true,
+      statusCode: response.statusCode,
+      responseBody: response.body,
+      methodtype: "MultiPart",
+    );
+
+    final json = await handleResponse(response);
+    return IcuAdmissionRequest.fromJson(json["data"] is Map<String, dynamic> ? json["data"] : json);
+  }
+
+  static Future<IcuAdmissionRequest> getIcuAdmissionDetail({required int admissionId}) async {
+    final json = await handleResponse(await buildHttpResponse('${APIEndPoints.getIcuAdmissionRequestDetail}/$admissionId', method: HttpMethodType.GET));
+    return IcuAdmissionRequest.fromJson(json["data"] is Map<String, dynamic> ? json["data"] : json);
+  }
+
+  static Future<BaseResponseModel> cancelIcuAdmission({required int admissionId, required Map<String, dynamic> request}) async {
+    return BaseResponseModel.fromJson(await handleResponse(await buildHttpResponse('${APIEndPoints.cancelIcuAdmissionRequest}/$admissionId/cancel', method: HttpMethodType.POST, request: request)));
+  }
+
+  // ===== CALL BOOKING MODULE =====
+
+  static Future<RxList<CallDoctor>> getCallDoctorList({
+    int page = 1,
+    int perPage = 20,
+    required List<CallDoctor> doctorList,
+    Function(bool)? lastPageCallBack,
+    String search = "",
+  }) async {
+    String searchParam = search.isNotEmpty ? '&search=${Uri.encodeQueryComponent(search)}' : '';
+
+    final res = CallDoctorListResponse.fromJson(await handleResponse(
+      await buildHttpResponse("${APIEndPoints.getCallDoctors}?per_page=$perPage&page=$page$searchParam", method: HttpMethodType.GET),
+    ));
+    if (page == 1) doctorList.clear();
+    doctorList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+    return doctorList.obs;
+  }
+
+  static Future<List<CallService>> getCallDoctorServices({required int doctorId}) async {
+    final json = await handleResponse(await buildHttpResponse('${APIEndPoints.getCallDoctorServices}/$doctorId/services', method: HttpMethodType.GET));
+    if (json["data"] is List) {
+      return List<CallService>.from(json["data"].map((x) => CallService.fromJson(x)));
+    }
+    return [];
+  }
+
+  static Future<List<TimeSlot>> getCallSlots({required int doctorId, required Map<String, dynamic> request}) async {
+    final json = await handleResponse(await buildHttpResponse('${APIEndPoints.getCallSlots}/$doctorId/slots', method: HttpMethodType.POST, request: request));
+    if (json["data"] is List) {
+      return List<TimeSlot>.from(json["data"].map((x) => TimeSlot.fromJson(x)));
+    }
+    return [];
+  }
+
+  static Future<CallBooking> createCallBooking({required Map<String, dynamic> request}) async {
+    final json = await handleResponse(await buildHttpResponse(APIEndPoints.createCallBooking, method: HttpMethodType.POST, request: request));
+    final bookingData = json["data"] is Map<String, dynamic> ? Map<String, dynamic>.from(json["data"]) : <String, dynamic>{};
+
+    // Extract root-level fields into booking data if present
+    if (json["meeting_link"] is String) bookingData["meeting_link"] = json["meeting_link"];
+    if (json["call_type"] is String) bookingData["call_type"] = json["call_type"];
+    if (json["service_name"] is String) bookingData["service_name"] = json["service_name"];
+    if (json["duration"] is int) bookingData["duration"] = json["duration"];
+    if (json["total_amount"] is num) bookingData["total_amount"] = json["total_amount"];
+
+    return CallBooking.fromJson(bookingData.isNotEmpty ? bookingData : json);
+  }
+
+  static Future<RxList<CallBooking>> getCallBookingList({
+    int page = 1,
+    int perPage = 20,
+    required List<CallBooking> bookingList,
+    Function(bool)? lastPageCallBack,
+    String status = "",
+  }) async {
+    String statusParam = status.isNotEmpty ? '&status=${Uri.encodeQueryComponent(status)}' : '';
+
+    final res = CallBookingListResponse.fromJson(await handleResponse(
+      await buildHttpResponse("${APIEndPoints.getCallBookings}?per_page=$perPage&page=$page$statusParam", method: HttpMethodType.GET),
+    ));
+    if (page == 1) bookingList.clear();
+    bookingList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+    return bookingList.obs;
+  }
+
+  // ===== INDEPENDENT DOCTOR BOOKING MODULE =====
+
+  static Future<RxList<IndependentDoctor>> getIndependentDoctorList({
+    int page = 1,
+    int perPage = 20,
+    required List<IndependentDoctor> doctorList,
+    Function(bool)? lastPageCallBack,
+    String search = "",
+  }) async {
+    String searchParam = search.isNotEmpty ? '&search=${Uri.encodeQueryComponent(search)}' : '';
+
+    final res = IndependentDoctorListResponse.fromJson(await handleResponse(
+      await buildHttpResponse("${APIEndPoints.getIndependentDoctors}?per_page=$perPage&page=$page$searchParam", method: HttpMethodType.GET),
+    ));
+    if (page == 1) doctorList.clear();
+    doctorList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+    return doctorList.obs;
+  }
+
+  static Future<List<IndependentService>> getIndependentDoctorServices({required int doctorId}) async {
+    final json = await handleResponse(await buildHttpResponse('${APIEndPoints.getIndependentDoctorServices}/$doctorId/services', method: HttpMethodType.GET));
+    if (json["data"] is List) {
+      return List<IndependentService>.from(json["data"].map((x) => IndependentService.fromJson(x)));
+    }
+    return [];
+  }
+
+  static Future<List<TimeSlot>> getIndependentSlots({required int doctorId, required Map<String, dynamic> request}) async {
+    final json = await handleResponse(await buildHttpResponse('${APIEndPoints.getIndependentSlots}/$doctorId/slots', method: HttpMethodType.POST, request: request));
+    if (json["data"] is List) {
+      return List<TimeSlot>.from(json["data"].map((x) => TimeSlot.fromJson(x)));
+    }
+    return [];
+  }
+
+  static Future<IndependentBooking> createIndependentBooking({required Map<String, dynamic> request}) async {
+    final json = await handleResponse(await buildHttpResponse(APIEndPoints.createIndependentBooking, method: HttpMethodType.POST, request: request));
+    final bookingData = json["data"] is Map<String, dynamic> ? Map<String, dynamic>.from(json["data"]) : <String, dynamic>{};
+
+    // Extract root-level fields into booking data if present
+    if (json["service_name"] is String) bookingData["service_name"] = json["service_name"];
+    if (json["duration"] is int) bookingData["duration"] = json["duration"];
+    if (json["total_amount"] is num) bookingData["total_amount"] = json["total_amount"];
+
+    return IndependentBooking.fromJson(bookingData.isNotEmpty ? bookingData : json);
+  }
+
+  static Future<RxList<IndependentBooking>> getIndependentBookingList({
+    int page = 1,
+    int perPage = 20,
+    required List<IndependentBooking> bookingList,
+    Function(bool)? lastPageCallBack,
+    String status = "",
+  }) async {
+    String statusParam = status.isNotEmpty ? '&status=${Uri.encodeQueryComponent(status)}' : '';
+
+    final res = IndependentBookingListResponse.fromJson(await handleResponse(
+      await buildHttpResponse("${APIEndPoints.getIndependentBookings}?per_page=$perPage&page=$page$statusParam", method: HttpMethodType.GET),
+    ));
+    if (page == 1) bookingList.clear();
+    bookingList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+    return bookingList.obs;
   }
 }
