@@ -209,6 +209,34 @@ class CoreServiceApis {
     return clinics.obs;
   }
 
+  /// New search method using the new backend clinics/search endpoint.
+  static Future<RxList<Clinic>> searchClinics({
+    int page = 1,
+    int perPage = 20,
+    required List<Clinic> clinicList,
+    Function(bool)? lastPageCallBack,
+    String name = '',
+    int? governorateId,
+    int? cityId,
+  }) async {
+    String nameParam = name.isNotEmpty ? '&name=${Uri.encodeQueryComponent(name)}' : '';
+    String govParam = governorateId != null ? '&governorate_id=$governorateId' : '';
+    String cityParam = cityId != null ? '&city_id=$cityId' : '';
+
+    final res = ClinicSearchListResponse.fromJson(await handleResponse(
+      await buildHttpResponse(
+        '${APIEndPoints.clinicsSearch}?per_page=$perPage&page=$page$nameParam$govParam$cityParam',
+        method: HttpMethodType.GET,
+      ),
+    ));
+
+    if (page == 1) clinicList.clear();
+    clinicList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+
+    return clinicList.obs;
+  }
+
   static Future<RxList<GalleryData>> getClinicGalleryList({
     int page = 1,
     int perPage = 10,
