@@ -5,6 +5,7 @@ import 'package:kivicare_patient/screens/clinic/search_clinic_widget.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 
 import '../../components/app_scaffold.dart';
+import '../../components/governorates_city_picker.dart';
 import '../../components/loader_widget.dart';
 import '../../main.dart';
 import '../../utils/empty_error_state_widget.dart';
@@ -43,6 +44,13 @@ class ClinicListScreen extends StatelessWidget {
             textOverflow: TextOverflow.ellipsis,
           ).paddingSymmetric(horizontal: 16),
           8.height,
+          Obx(() => GovernoratesCityPicker(
+            selectedGovernorateId: clinicListCont.selectedGovernorateId.value,
+            selectedCityId: clinicListCont.selectedCityId.value,
+            onGovernorateChanged: clinicListCont.onGovernorateChanged,
+            onCityChanged: clinicListCont.onCityChanged,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          )),
           Obx(
             () => SnapHelperWidget(
               future: clinicListCont.clinicsFuture.value,
