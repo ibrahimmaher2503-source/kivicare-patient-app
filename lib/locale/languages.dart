@@ -1252,4 +1252,21 @@ abstract class BaseLanguage {
   String get selectGovernorate;
   String get selectCity;
   String get locationFilter;
+
+  // Radiology
+  String get browseRadiology;
+  String get radiologyCenters;
+  String get scanType;
+  String get availableScans;
+  String get mriScan;
+  String get ctScan;
+  String get xRay;
+  String get ultrasound;
+  String get mammogram;
+  String get dexaScan;
+  String get noRadiologyCentersFound;
+  String get radiologyCenterDetail;
+  String get contactCenter;
+  String get operatingHours;
+  String get pricing;
 }

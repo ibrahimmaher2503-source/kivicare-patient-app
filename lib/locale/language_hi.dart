@@ -1759,4 +1759,21 @@ class LanguageHi extends BaseLanguage {
   @override String get selectGovernorate => 'गवर्नरेट चुनें';
   @override String get selectCity => 'शहर चुनें';
   @override String get locationFilter => 'स्थान फ़िल्टर';
+
+  // Radiology
+  @override String get browseRadiology => 'रेडियोलॉजी केंद्र';
+  @override String get radiologyCenters => 'रेडियोलॉजी केंद्र';
+  @override String get scanType => 'स्कैन प्रकार';
+  @override String get availableScans => 'उपलब्ध स्कैन';
+  @override String get mriScan => 'एमआरआई';
+  @override String get ctScan => 'सीटी स्कैन';
+  @override String get xRay => 'एक्स-रे';
+  @override String get ultrasound => 'अल्ट्रासाउंड';
+  @override String get mammogram => 'मैमोग्राम';
+  @override String get dexaScan => 'डेक्सा स्कैन';
+  @override String get noRadiologyCentersFound => 'कोई रेडियोलॉजी केंद्र नहीं मिला';
+  @override String get radiologyCenterDetail => 'केंद्र विवरण';
+  @override String get contactCenter => 'केंद्र से संपर्क करें';
+  @override String get operatingHours => 'परिचालन घंटे';
+  @override String get pricing => 'मूल्य निर्धारण';
 }

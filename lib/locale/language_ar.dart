@@ -1758,4 +1758,21 @@ class LanguageAr extends BaseLanguage {
   @override String get selectGovernorate => 'اختر المحافظة';
   @override String get selectCity => 'اختر المدينة';
   @override String get locationFilter => 'تصفية الموقع';
+
+  // Radiology
+  @override String get browseRadiology => 'مراكز الأشعة';
+  @override String get radiologyCenters => 'مراكز الأشعة';
+  @override String get scanType => 'نوع الفحص';
+  @override String get availableScans => 'الفحوصات المتاحة';
+  @override String get mriScan => 'رنين مغناطيسي';
+  @override String get ctScan => 'أشعة مقطعية';
+  @override String get xRay => 'أشعة سينية';
+  @override String get ultrasound => 'الموجات فوق الصوتية';
+  @override String get mammogram => 'ماموجرام';
+  @override String get dexaScan => 'فحص كثافة العظام';
+  @override String get noRadiologyCentersFound => 'لا توجد مراكز أشعة';
+  @override String get radiologyCenterDetail => 'تفاصيل المركز';
+  @override String get contactCenter => 'تواصل مع المركز';
+  @override String get operatingHours => 'ساعات العمل';
+  @override String get pricing => 'التسعير';
 }

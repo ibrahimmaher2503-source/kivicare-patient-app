@@ -1759,4 +1759,21 @@ String get incidenceReportReply => "Réponse au rapport d'incident";
   @override String get selectGovernorate => 'Sélectionner le Gouvernorat';
   @override String get selectCity => 'Sélectionner la Ville';
   @override String get locationFilter => 'Filtre de Localisation';
+
+  // Radiology
+  @override String get browseRadiology => 'Centres de radiologie';
+  @override String get radiologyCenters => 'Centres de radiologie';
+  @override String get scanType => 'Type d\'examen';
+  @override String get availableScans => 'Examens disponibles';
+  @override String get mriScan => 'IRM';
+  @override String get ctScan => 'Scanner';
+  @override String get xRay => 'Radiographie';
+  @override String get ultrasound => 'Échographie';
+  @override String get mammogram => 'Mammographie';
+  @override String get dexaScan => 'Ostéodensitométrie';
+  @override String get noRadiologyCentersFound => 'Aucun centre de radiologie trouvé';
+  @override String get radiologyCenterDetail => 'Détails du centre';
+  @override String get contactCenter => 'Contacter le centre';
+  @override String get operatingHours => 'Heures d\'ouverture';
+  @override String get pricing => 'Tarification';
 }

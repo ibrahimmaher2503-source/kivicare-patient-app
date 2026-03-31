@@ -1759,4 +1759,21 @@ class LanguageDe extends BaseLanguage {
   @override String get selectGovernorate => 'Gouvernement auswählen';
   @override String get selectCity => 'Stadt auswählen';
   @override String get locationFilter => 'Standortfilter';
+
+  // Radiology
+  @override String get browseRadiology => 'Radiologiezentren';
+  @override String get radiologyCenters => 'Radiologiezentren';
+  @override String get scanType => 'Untersuchungsart';
+  @override String get availableScans => 'Verfügbare Untersuchungen';
+  @override String get mriScan => 'MRT';
+  @override String get ctScan => 'CT-Scan';
+  @override String get xRay => 'Röntgen';
+  @override String get ultrasound => 'Ultraschall';
+  @override String get mammogram => 'Mammographie';
+  @override String get dexaScan => 'DEXA-Scan';
+  @override String get noRadiologyCentersFound => 'Keine Radiologiezentren gefunden';
+  @override String get radiologyCenterDetail => 'Zentrumdetails';
+  @override String get contactCenter => 'Zentrum kontaktieren';
+  @override String get operatingHours => 'Öffnungszeiten';
+  @override String get pricing => 'Preisgestaltung';
 }

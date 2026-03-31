@@ -1759,4 +1759,21 @@ class LanguageEn extends BaseLanguage {
   @override String get selectGovernorate => 'Select Governorate';
   @override String get selectCity => 'Select City';
   @override String get locationFilter => 'Location Filter';
+
+  // Radiology
+  @override String get browseRadiology => 'Radiology Centers';
+  @override String get radiologyCenters => 'Radiology Centers';
+  @override String get scanType => 'Scan Type';
+  @override String get availableScans => 'Available Scans';
+  @override String get mriScan => 'MRI';
+  @override String get ctScan => 'CT Scan';
+  @override String get xRay => 'X-Ray';
+  @override String get ultrasound => 'Ultrasound';
+  @override String get mammogram => 'Mammogram';
+  @override String get dexaScan => 'DEXA Scan';
+  @override String get noRadiologyCentersFound => 'No radiology centers found';
+  @override String get radiologyCenterDetail => 'Center Details';
+  @override String get contactCenter => 'Contact Center';
+  @override String get operatingHours => 'Operating Hours';
+  @override String get pricing => 'Pricing';
 }
