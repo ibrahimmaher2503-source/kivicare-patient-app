@@ -20,7 +20,7 @@ class BookingStatusBadge extends StatelessWidget {
       case 'completed':
         return green.withOpacity(0.2);
       case 'cancelled':
-        return red.withOpacity(0.2);
+        return cancelStatusColor.withOpacity(0.2);
       case 'no_show':
         return gray300.withOpacity(0.5);
       default:
@@ -37,7 +37,7 @@ class BookingStatusBadge extends StatelessWidget {
       case 'completed':
         return green;
       case 'cancelled':
-        return red;
+        return cancelStatusColor;
       case 'no_show':
         return gray600;
       default:

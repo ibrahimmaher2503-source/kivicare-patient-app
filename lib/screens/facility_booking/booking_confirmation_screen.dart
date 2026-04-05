@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kivicare_patient/models/facility_booking_model.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:kivicare_patient/utils/constants.dart';
@@ -16,7 +17,7 @@ class BookingConfirmationScreen extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        backgroundColor: isDarkMode.value ? scaffoldDarkColor : Colors.white,
+        backgroundColor: isDarkMode.value ? appBackgroundColorDark : Colors.white,
         body: SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.all(24.w),
@@ -30,14 +31,14 @@ class BookingConfirmationScreen extends StatelessWidget {
                   width: 80.w,
                   height: 80.w,
                   decoration: BoxDecoration(
-                    color: green.withOpacity(0.2),
+                    color: completedStatusColor.withOpacity(0.2),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
                     child: Icon(
                       Icons.check_circle,
                       size: 48.w,
-                      color: green,
+                      color: completedStatusColor,
                     ),
                   ),
                 ),
@@ -61,8 +62,8 @@ class BookingConfirmationScreen extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(20.w),
                   decoration: BoxDecoration(
-                    color: isDarkMode.value ? cardDarkColor : gray50,
-                    border: Border.all(color: isDarkMode.value ? gray700 : gray200),
+                    color: isDarkMode.value ? cardBackgroundBlackDark : Colors.grey.shade50,
+                    border: Border.all(color: isDarkMode.value ? Colors.grey.shade700 : Colors.grey.shade200),
                     borderRadius: BorderRadius.circular(16.w),
                   ),
                   child: Column(
@@ -74,7 +75,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                         isBold: true,
                       ),
                       SizedBox(height: 16.w),
-                      Divider(color: isDarkMode.value ? gray700 : gray200),
+                      Divider(color: isDarkMode.value ? Colors.grey.shade700 : Colors.grey.shade200),
                       SizedBox(height: 16.w),
 
                       // Facility Name
@@ -122,7 +123,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                         ),
                       ],
                       SizedBox(height: 16.w),
-                      Divider(color: isDarkMode.value ? gray700 : gray200),
+                      Divider(color: isDarkMode.value ? Colors.grey.shade700 : Colors.grey.shade200),
                       SizedBox(height: 16.w),
 
                       // Booking Status
@@ -183,8 +184,8 @@ class BookingConfirmationScreen extends StatelessWidget {
         bottomNavigationBar: Container(
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
-            color: isDarkMode.value ? cardDarkColor : Colors.white,
-            border: Border(top: BorderSide(color: isDarkMode.value ? gray800 : gray100)),
+            color: isDarkMode.value ? cardBackgroundBlackDark : Colors.white,
+            border: Border(top: BorderSide(color: isDarkMode.value ? Colors.grey.shade800 : Colors.grey.shade100)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -192,7 +193,7 @@ class BookingConfirmationScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () => Get.offAllNamed('/bookings'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
+                  backgroundColor: appColorPrimary,
                   minimumSize: Size(double.infinity, 56.w),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.w)),
                 ),
@@ -205,13 +206,13 @@ class BookingConfirmationScreen extends StatelessWidget {
               OutlinedButton(
                 onPressed: () => Get.offAllNamed('/home'),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: primaryColor),
+                  side: BorderSide(color: appColorPrimary),
                   minimumSize: Size(double.infinity, 56.w),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.w)),
                 ),
                 child: Text(
                   locale.value.backToHome,
-                  style: boldTextStyle(color: primaryColor),
+                  style: boldTextStyle(color: appColorPrimary),
                 ),
               ),
             ],
@@ -246,7 +247,7 @@ class _DetailRow extends StatelessWidget {
             value,
             textAlign: TextAlign.end,
             style: isBold
-                ? boldTextStyle(size: 14, color: primaryColor)
+                ? boldTextStyle(size: 14, color: appColorPrimary)
                 : primaryTextStyle(size: 13),
           ),
         ),

@@ -85,18 +85,18 @@ class _FacilityTypeButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? primaryColor.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? appColorPrimary.withOpacity(0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? primaryColor : Colors.grey.shade300,
+            color: isSelected ? appColorPrimary : Colors.grey.shade300,
             width: isSelected ? 2 : 1,
           ),
         ),
         child: Column(
           children: [
-            Icon(icon, size: 32, color: isSelected ? primaryColor : Colors.grey),
+            Icon(icon, size: 32, color: isSelected ? appColorPrimary : Colors.grey),
             const SizedBox(height: 8),
-            Text(label, style: boldTextStyle(size: 12, color: isSelected ? primaryColor : Colors.grey)),
+            Text(label, style: boldTextStyle(size: 12, color: isSelected ? appColorPrimary : Colors.grey)),
           ],
         ),
       ),

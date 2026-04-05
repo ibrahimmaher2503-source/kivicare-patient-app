@@ -55,12 +55,12 @@ class RadiologyServiceCard extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
                   decoration: BoxDecoration(
-                    color: primaryColor.withOpacity(0.1),
+                    color: appColorPrimary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8.w),
                   ),
                   child: Text(
                     '${currencySymbol}${test.defaultPrice.toStringAsFixed(0)}',
-                    style: boldTextStyle(size: 13, color: primaryColor),
+                    style: boldTextStyle(size: 13, color: appColorPrimary),
                   ),
                 ),
               ],
@@ -133,7 +133,7 @@ class _DetailItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 16.w, color: primaryColor),
+        Icon(icon, size: 16.w, color: appColorPrimary),
         SizedBox(width: 8.w),
         Text(label, style: secondaryTextStyle(size: 11)),
         SizedBox(width: 4.w),

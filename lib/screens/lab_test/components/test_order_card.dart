@@ -71,7 +71,7 @@ class TestOrderCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.05),
+                color: appColorPrimary.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
@@ -98,7 +98,7 @@ class TestOrderCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     PriceWidget(
                       price: order.finalAmount,
-                      textStyle: boldTextStyle(size: 13, color: primaryColor),
+                      textStyle: boldTextStyle(size: 13, color: appColorPrimary),
                     ),
                   ],
                 ),

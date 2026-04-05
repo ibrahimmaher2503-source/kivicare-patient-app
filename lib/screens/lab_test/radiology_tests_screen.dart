@@ -84,9 +84,9 @@ class RadiologyTestsScreen extends StatelessWidget {
                               }
                             },
                             backgroundColor: isDarkMode.value ? cardDarkColor : gray100,
-                            selectedColor: primaryColor,
+                            selectedColor: appColorPrimary,
                             side: BorderSide(
-                              color: isSelected ? primaryColor : (isDarkMode.value ? gray700 : gray200),
+                              color: isSelected ? appColorPrimary : (isDarkMode.value ? gray700 : gray200),
                             ),
                           );
                         }).toList(),
@@ -132,7 +132,7 @@ class RadiologyTestsScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () => controller.loadMoreTests(),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
+                          backgroundColor: appColorPrimary,
                           padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 12.w),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.w),

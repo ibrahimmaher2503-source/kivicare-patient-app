@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 /// Utility class for RBAC (Role-Based Access Control) handling

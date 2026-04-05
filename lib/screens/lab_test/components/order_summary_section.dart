@@ -74,12 +74,12 @@ class OrderSummarySection extends StatelessWidget {
                     const SizedBox(width: 8),
                     PriceWidget(
                       price: test.defaultPrice,
-                      textStyle: boldTextStyle(size: 12, color: primaryColor),
+                      textStyle: boldTextStyle(size: 12, color: appColorPrimary),
                     ),
                     const SizedBox(width: 8),
                     GestureDetector(
                       onTap: () => onRemoveTest(test.id),
-                      child: Icon(Icons.close, size: 20, color: Colors.red.shade400),
+                      child: Icon(Icons.close, size: 20, color: Colors.cancelStatusColor.shade400),
                     ),
                   ],
                 ),
@@ -116,7 +116,7 @@ class OrderSummarySection extends StatelessWidget {
                     label: 'Total Amount',
                     amount: finalAmount,
                     isBold: true,
-                    color: primaryColor,
+                    color: appColorPrimary,
                   ),
                 ),
               ],

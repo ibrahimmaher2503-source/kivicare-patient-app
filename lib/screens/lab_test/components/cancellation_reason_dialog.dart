@@ -103,7 +103,7 @@ class _CancellationReasonDialogState extends State<CancellationReasonDialog> {
                 }
               : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: primaryColor,
+            backgroundColor: appColorPrimary,
             disabledBackgroundColor: gray300,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.w)),
           ),

@@ -671,7 +671,7 @@ class CoreServiceApis {
 
   static Future<List<LabTestCategory>> getLabTestCategories() async {
     final res = LabTestCategoryListResponse.fromJson(await handleResponse(
-      await buildHttpResponse(APIEndPoints.getLabTestCategories, method: HttpMethodType.GET),
+      await buildHttpResponse(APIEndPoints.labTestCategories, method: HttpMethodType.GET),
     ));
     return res.data;
   }
@@ -690,7 +690,7 @@ class CoreServiceApis {
     String searchParam = search.isNotEmpty ? '&search=${Uri.encodeQueryComponent(search)}' : '';
 
     final res = LabTestListResponse.fromJson(await handleResponse(
-      await buildHttpResponse("${APIEndPoints.getLabTests}?per_page=$perPage&page=$page$catParam$deptParam$searchParam", method: HttpMethodType.GET),
+      await buildHttpResponse("${APIEndPoints.labTests}?per_page=$perPage&page=$page$catParam$deptParam$searchParam", method: HttpMethodType.GET),
     ));
     if (page == 1) labTestList.clear();
     labTestList.addAll(res.data);
@@ -731,7 +731,7 @@ class CoreServiceApis {
   }
 
   static Future<LabTest> getLabTestDetail({required int testId}) async {
-    final json = await handleResponse(await buildHttpResponse('${APIEndPoints.getLabTestDetail}/$testId', method: HttpMethodType.GET));
+    final json = await handleResponse(await buildHttpResponse(APIEndPoints.labTestDetail(testId), method: HttpMethodType.GET));
     return LabTest.fromJson(json["data"] is Map<String, dynamic> ? json["data"] : json);
   }
 
@@ -745,7 +745,7 @@ class CoreServiceApis {
     String statusParam = status.isNotEmpty ? '&status=${Uri.encodeQueryComponent(status)}' : '';
 
     final res = TestOrderListResponse.fromJson(await handleResponse(
-      await buildHttpResponse("${APIEndPoints.getTestOrders}?per_page=$perPage&page=$page$statusParam", method: HttpMethodType.GET),
+      await buildHttpResponse("${APIEndPoints.testOrders}?per_page=$perPage&page=$page$statusParam", method: HttpMethodType.GET),
     ));
     if (page == 1) orderList.clear();
     orderList.addAll(res.data);
@@ -754,21 +754,21 @@ class CoreServiceApis {
   }
 
   static Future<TestOrder> createTestOrder({required Map<String, dynamic> request}) async {
-    final json = await handleResponse(await buildHttpResponse(APIEndPoints.createTestOrder, method: HttpMethodType.POST, request: request));
+    final json = await handleResponse(await buildHttpResponse(APIEndPoints.testOrders, method: HttpMethodType.POST, request: request));
     return TestOrder.fromJson(json["data"] is Map<String, dynamic> ? json["data"] : json);
   }
 
   static Future<TestOrder> getTestOrderDetail({required int orderId}) async {
-    final json = await handleResponse(await buildHttpResponse('${APIEndPoints.getTestOrderDetail}/$orderId', method: HttpMethodType.GET));
+    final json = await handleResponse(await buildHttpResponse(APIEndPoints.testOrderDetail(orderId), method: HttpMethodType.GET));
     return TestOrder.fromJson(json["data"] is Map<String, dynamic> ? json["data"] : json);
   }
 
   static Future<BaseResponseModel> cancelTestOrder({required int orderId, required Map<String, dynamic> request}) async {
-    return BaseResponseModel.fromJson(await handleResponse(await buildHttpResponse('${APIEndPoints.cancelTestOrder}/$orderId/cancel', method: HttpMethodType.POST, request: request)));
+    return BaseResponseModel.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.testOrderCancel(orderId), method: HttpMethodType.POST, request: request)));
   }
 
   static Future<Response> downloadTestReport({required int orderId}) async {
-    return await buildHttpResponse('${APIEndPoints.downloadTestReport}/$orderId/report/download', method: HttpMethodType.GET);
+    return await buildHttpResponse(APIEndPoints.testOrderReportDownload(orderId), method: HttpMethodType.GET);
   }
 
   // ===== LABS BROWSE =====

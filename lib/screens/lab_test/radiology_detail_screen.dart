@@ -118,7 +118,7 @@ class RadiologyDetailScreen extends StatelessWidget {
                                   style: boldTextStyle(color: Colors.white, size: 16),
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: primaryColor,
+                                  backgroundColor: appColorPrimary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12.w),
                                   ),
@@ -154,7 +154,7 @@ class _HeaderSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: primaryColor.withOpacity(0.1),
+        color: appColorPrimary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12.w),
       ),
       child: Column(
@@ -176,7 +176,7 @@ class _HeaderSection extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
                 decoration: BoxDecoration(
-                  color: primaryColor,
+                  color: appColorPrimary,
                   borderRadius: BorderRadius.circular(8.w),
                 ),
                 child: Text(
@@ -240,7 +240,7 @@ class _InfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 20.w, color: primaryColor),
+        Icon(icon, size: 20.w, color: appColorPrimary),
         SizedBox(width: 12.w),
         Text(label, style: secondaryTextStyle()),
         Spacer(),

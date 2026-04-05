@@ -51,13 +51,13 @@ class SlotTimeGrid extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               color: isSelected
-                  ? primaryColor
+                  ? appColorPrimary
                   : isAvailable
                       ? (isDarkMode.value ? cardDarkColor : Colors.white)
                       : (isDarkMode.value ? gray800 : gray100),
               border: Border.all(
                 color: isSelected
-                    ? primaryColor
+                    ? appColorPrimary
                     : isAvailable
                         ? (isDarkMode.value ? gray700 : gray200)
                         : (isDarkMode.value ? gray600 : gray100),

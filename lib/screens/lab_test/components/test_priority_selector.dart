@@ -62,7 +62,7 @@ class TestPrioritySelector extends StatelessWidget {
                     label: 'STAT',
                     value: Priority.stat.value,
                     isSelected: selectedPriority == Priority.stat.value,
-                    color: Colors.red,
+                    color: Colors.cancelStatusColor,
                     onTap: () => onPriorityChanged(Priority.stat.value),
                     description: 'Immediate',
                   ),

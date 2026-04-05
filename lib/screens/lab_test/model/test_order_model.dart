@@ -172,4 +172,10 @@ class TestOrder {
     "total_amount": totalAmount, "discount_amount": discountAmount,
     "final_amount": finalAmount, "reports": reports, "created_at": createdAt,
   };
+
+  /// Convenience getter for patient ID
+  int get patientId => patient?.id ?? -1;
+
+  /// Convenience getter for doctor ID
+  int get doctorId => doctor?.id ?? -1;
 }

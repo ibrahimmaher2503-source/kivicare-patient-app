@@ -181,7 +181,7 @@ class BookingDetailScreen extends StatelessWidget {
             ),
             child: Icon(
               booking.type == 'lab' ? Icons.local_hospital : Icons.medical_services,
-              color: primaryColor,
+              color: appColorPrimary,
               size: 20.w,
             ),
           ),
@@ -295,7 +295,7 @@ class BookingDetailScreen extends StatelessWidget {
       children: [
         Icon(
           icon,
-          color: primaryColor,
+          color: appColorPrimary,
           size: 18.w,
         ),
         SizedBox(width: 12.w),

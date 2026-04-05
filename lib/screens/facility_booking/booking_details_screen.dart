@@ -202,7 +202,7 @@ class BookingDetailsScreen extends StatelessWidget {
                             }
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
+                      backgroundColor: appColorPrimary,
                       disabledBackgroundColor: gray300,
                       minimumSize: Size(double.infinity, 56.w),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.w)),

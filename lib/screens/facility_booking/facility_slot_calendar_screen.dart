@@ -99,16 +99,16 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
                       formatButtonVisible: false,
                       titleCentered: true,
                       titleTextStyle: boldTextStyle(size: 16),
-                      leftChevronIcon: Icon(Icons.chevron_left, color: primaryColor),
-                      rightChevronIcon: Icon(Icons.chevron_right, color: primaryColor),
+                      leftChevronIcon: Icon(Icons.chevron_left, color: appColorPrimary),
+                      rightChevronIcon: Icon(Icons.chevron_right, color: appColorPrimary),
                     ),
                     calendarStyle: CalendarStyle(
-                      selectedDecoration: BoxDecoration(color: primaryColor, shape: BoxShape.circle),
+                      selectedDecoration: BoxDecoration(color: appColorPrimary, shape: BoxShape.circle),
                       selectedTextStyle: boldTextStyle(color: Colors.white),
-                      todayDecoration: BoxDecoration(color: primaryColor.withOpacity(0.3), shape: BoxShape.circle),
-                      todayTextStyle: boldTextStyle(color: primaryColor),
+                      todayDecoration: BoxDecoration(color: appColorPrimary.withOpacity(0.3), shape: BoxShape.circle),
+                      todayTextStyle: boldTextStyle(color: appColorPrimary),
                       defaultTextStyle: primaryTextStyle(),
-                      weekendTextStyle: primaryTextStyle(color: red),
+                      weekendTextStyle: primaryTextStyle(color: cancelStatusColor),
                       outsideTextStyle: primaryTextStyle(color: gray400),
                     ),
                   ),
@@ -151,13 +151,13 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? primaryColor
+                                      ? appColorPrimary
                                       : isAvailable
                                           ? (isDarkMode.value ? cardDarkColor : Colors.white)
                                           : (isDarkMode.value ? gray800 : gray100),
                                   border: Border.all(
                                     color: isSelected
-                                        ? primaryColor
+                                        ? appColorPrimary
                                         : isAvailable
                                             ? (isDarkMode.value ? gray700 : gray200)
                                             : (isDarkMode.value ? gray600 : gray100),
@@ -259,7 +259,7 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
                               )
                           : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isEnabled ? primaryColor : gray300,
+                        backgroundColor: isEnabled ? appColorPrimary : gray300,
                         disabledBackgroundColor: gray300,
                         minimumSize: Size(double.infinity, 56.w),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.w)),

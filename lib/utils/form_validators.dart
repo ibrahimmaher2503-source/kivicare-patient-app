@@ -87,7 +87,7 @@ class FormValidators {
     }
 
     // Allow letters, spaces, hyphens, and apostrophes
-    final nameRegex = RegExp(r'^[a-zA-Z\s\-\']+$');
+    final nameRegex = RegExp(r"^[a-zA-Z\s\-']+$");
     if (!nameRegex.hasMatch(trimmed)) {
       return 'Patient name can only contain letters, spaces, hyphens, and apostrophes';
     }

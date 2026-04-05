@@ -55,16 +55,16 @@ class _CreateTestOrderScreenState extends State<CreateTestOrderScreen> {
                             child: Container(
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
-                                color: primaryColor.withOpacity(0.05),
+                                color: appColorPrimary.withOpacity(0.05),
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: primaryColor.withOpacity(0.3)),
+                                border: Border.all(color: appColorPrimary.withOpacity(0.3)),
                               ),
                               child: Center(
                                 child: Column(
                                   children: [
-                                    Icon(Icons.add_circle, size: 40, color: primaryColor),
+                                    Icon(Icons.add_circle, size: 40, color: appColorPrimary),
                                     const SizedBox(height: 8),
-                                    Text('Add Tests to Order', style: boldTextStyle(size: 14, color: primaryColor)),
+                                    Text('Add Tests to Order', style: boldTextStyle(size: 14, color: appColorPrimary)),
                                   ],
                                 ),
                               ),
@@ -103,16 +103,16 @@ class _CreateTestOrderScreenState extends State<CreateTestOrderScreen> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.1),
+                                color: Colors.cancelStatusColor.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.red.withOpacity(0.3)),
+                                border: Border.all(color: Colors.cancelStatusColor.withOpacity(0.3)),
                               ),
-                              child: Text(controller.errorMessage.value ?? 'Error', style: primaryTextStyle(size: 12, color: Colors.red)),
+                              child: Text(controller.errorMessage.value ?? 'Error', style: primaryTextStyle(size: 12, color: Colors.cancelStatusColor)),
                             ),
                           if (controller.hasError) const SizedBox(height: 16),
                           SizedBox(
                             width: double.infinity,
-                            child: AppButton(text: 'Create Order', onTap: controller.createOrder, color: primaryColor),
+                            child: AppButton(text: 'Create Order', onTap: controller.createOrder, color: appColorPrimary),
                           ),
                           const SizedBox(height: 12),
                           SizedBox(
@@ -120,8 +120,8 @@ class _CreateTestOrderScreenState extends State<CreateTestOrderScreen> {
                             child: AppButton(
                               text: 'Add More Tests',
                               onTap: () => Get.to(() => const LabTestListScreen()),
-                              color: primaryColor.withOpacity(0.1),
-                              textColor: primaryColor,
+                              color: appColorPrimary.withOpacity(0.1),
+                              textColor: appColorPrimary,
                             ),
                           ),
                         ],

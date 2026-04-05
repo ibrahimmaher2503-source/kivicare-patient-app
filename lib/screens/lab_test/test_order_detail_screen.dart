@@ -5,6 +5,7 @@ import 'package:kivicare_patient/components/empty_error_state_widget.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
 import 'package:kivicare_patient/screens/lab_test/test_order_detail_controller.dart';
 import 'package:kivicare_patient/utils/colors.dart';
+import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:kivicare_patient/utils/price_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -35,13 +36,13 @@ class _OrderContent extends StatelessWidget {
     final order = controller.order.value;
     if (order == null) return const SizedBox.shrink();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: primaryColor.withOpacity(0.05), borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(order.orderNumber, style: boldTextStyle(size: 18)), Text(order.status, style: boldTextStyle(size: 12, color: Colors.orange))]), const SizedBox(height: 12), PriceWidget(price: order.finalAmount, textStyle: boldTextStyle(size: 16, color: primaryColor))])),
+      Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: appColorPrimary.withOpacity(0.05), borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(order.orderNumber, style: boldTextStyle(size: 18)), Text(order.status, style: boldTextStyle(size: 12, color: Colors.orange))]), const SizedBox(height: 12), PriceWidget(price: order.finalAmount, size: 16, color: appColorPrimary, isBoldText: true)])),
       const SizedBox(height: 20),
       Text('Tests', style: boldTextStyle(size: 14)),
       const SizedBox(height: 12),
-      ListView.builder(shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), itemCount: order.items.length, itemBuilder: (c, i) { final it = order.items[i]; return Container(margin: const EdgeInsets.only(bottom: 8), padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: appStore.isDarkMode ? cardDarkColor : Colors.grey.shade50, borderRadius: BorderRadius.circular(8)), child: Row(children: [Expanded(child: Text(it.labTest?.name ?? 'Test', style: boldTextStyle(size: 12))), PriceWidget(price: it.price, textStyle: boldTextStyle(size: 12))])); }),
+      ListView.builder(shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), itemCount: order.items.length, itemBuilder: (c, i) { final it = order.items[i]; return Container(margin: const EdgeInsets.only(bottom: 8), padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: appStore.isDarkMode ? cardDarkColor : Colors.grey.shade50, borderRadius: BorderRadius.circular(8)), child: Row(children: [Expanded(child: Text(it.labTest?.name ?? 'Test', style: boldTextStyle(size: 12))), PriceWidget(price: it.price, size: 12, isBoldText: true)])); }),
       const SizedBox(height: 20),
-      SizedBox(width: double.infinity, child: AppButton(text: 'Back', onTap: () => Get.back(), color: primaryColor.withOpacity(0.1), textColor: primaryColor)),
+      SizedBox(width: double.infinity, child: AppButton(text: 'Back', onTap: () => Get.back(), color: appColorPrimary.withOpacity(0.1), textColor: appColorPrimary)),
     ]);
   }
 }

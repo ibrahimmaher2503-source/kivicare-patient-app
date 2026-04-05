@@ -67,14 +67,14 @@ class LabTestCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
-                    color: primaryColor.withOpacity(0.1),
+                    color: appColorPrimary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: PriceWidget(
                     price: test.defaultPrice,
                     textStyle: boldTextStyle(
                       size: 13,
-                      color: primaryColor,
+                      color: appColorPrimary,
                     ),
                   ),
                 ),
@@ -88,14 +88,14 @@ class LabTestCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: primaryColor.withOpacity(0.1),
+                    color: appColorPrimary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     test.sampleType,
                     style: primaryTextStyle(
                       size: 11,
-                      color: primaryColor,
+                      color: appColorPrimary,
                     ),
                   ),
                 ),

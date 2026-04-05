@@ -10,6 +10,7 @@ import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import 'components/test_order_card.dart';
 import 'create_test_order_screen.dart';
+import 'test_order_detail_screen.dart';
 import 'test_order_list_controller.dart';
 
 class TestOrderListScreen extends StatefulWidget {
@@ -127,7 +128,10 @@ class _TestOrderListScreenState extends State<TestOrderListScreen> {
                       return Column(
                         children: controller.orders.map((order) {
                           return TestOrderCard(
-                            orderData: order,
+                            order: order,
+                            onTap: () {
+                              Get.to(() => TestOrderDetailScreen(orderId: order.id));
+                            },
                           ).paddingBottom(16);
                         }).toList(),
                       );

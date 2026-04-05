@@ -29,10 +29,10 @@ class FacilityCard extends StatelessWidget {
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
           color: isSelected
-              ? primaryColor.withOpacity(0.1)
+              ? appColorPrimary.withOpacity(0.1)
               : (isDarkMode.value ? cardDarkColor : Colors.white),
           border: Border.all(
-            color: isSelected ? primaryColor : (isDarkMode.value ? gray700 : gray200),
+            color: isSelected ? appColorPrimary : (isDarkMode.value ? gray700 : gray200),
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(12.w),
@@ -44,14 +44,14 @@ class FacilityCard extends StatelessWidget {
               width: 48.w,
               height: 48.w,
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
+                color: appColorPrimary.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: Icon(
                   Icons.local_hospital,
                   size: 24.w,
-                  color: primaryColor,
+                  color: appColorPrimary,
                 ),
               ),
             ),
@@ -96,7 +96,7 @@ class FacilityCard extends StatelessWidget {
               Icon(
                 Icons.check_circle,
                 size: 24.w,
-                color: primaryColor,
+                color: appColorPrimary,
               )
             else
               Icon(

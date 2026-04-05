@@ -62,9 +62,9 @@ class _DetailContent extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: primaryColor.withOpacity(0.05),
+            color: appColorPrimary.withOpacity(0.05),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: primaryColor.withOpacity(0.2)),
+            border: Border.all(color: appColorPrimary.withOpacity(0.2)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +75,7 @@ class _DetailContent extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Code: ${test.code}', style: secondaryTextStyle(size: 12)),
-                  PriceWidget(price: test.defaultPrice, textStyle: boldTextStyle(size: 16, color: primaryColor)),
+                  PriceWidget(price: test.defaultPrice, textStyle: boldTextStyle(size: 16, color: appColorPrimary)),
                 ],
               ),
             ],
@@ -103,7 +103,7 @@ class _DetailContent extends StatelessWidget {
         const SizedBox(height: 16),
         if (test.referenceRange.isNotEmpty) _SectionTitle(title: 'Reference Range'),
         if (test.referenceRange.isNotEmpty) _SectionContent(content: test.referenceRange),
-        Row(children: [Expanded(child: AppButton(text: 'Book Now', onTap: controller.navigateToOrder, color: primaryColor))]),
+        Row(children: [Expanded(child: AppButton(text: 'Book Now', onTap: controller.navigateToOrder, color: appColorPrimary))]),
       ],
     );
   }

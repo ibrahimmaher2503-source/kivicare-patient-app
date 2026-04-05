@@ -106,8 +106,8 @@ class FacilityBookingCard extends StatelessWidget {
                   icon: Icon(Icons.close, size: 16.w),
                   label: Text('Cancel', style: boldTextStyle(size: 12)),
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: red),
-                    foregroundColor: red,
+                    side: BorderSide(color: cancelStatusColor),
+                    foregroundColor: cancelStatusColor,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.w)),
                   ),
                 ),

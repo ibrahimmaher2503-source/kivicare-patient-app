@@ -45,12 +45,12 @@ class LabTestCategoryCard extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.1),
+                  color: appColorPrimary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.science,
-                  color: primaryColor,
+                  color: appColorPrimary,
                   size: 32,
                 ),
               ),
@@ -70,14 +70,14 @@ class LabTestCategoryCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.1),
+                  color: appColorPrimary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   '${category.testCount} tests',
                   style: primaryTextStyle(
                     size: 12,
-                    color: primaryColor,
+                    color: appColorPrimary,
                   ),
                 ),
               ),

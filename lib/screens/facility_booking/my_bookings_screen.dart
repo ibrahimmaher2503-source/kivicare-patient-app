@@ -141,7 +141,7 @@ class MyBookingsScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () => controller.loadMoreBookings(),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
+                          backgroundColor: appColorPrimary,
                           padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 12.w),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.w),
@@ -183,9 +183,9 @@ class _FilterChip extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
         decoration: BoxDecoration(
-          color: selected ? primaryColor : (isDarkMode.value ? cardDarkColor : gray100),
+          color: selected ? appColorPrimary : (isDarkMode.value ? cardDarkColor : gray100),
           border: Border.all(
-            color: selected ? primaryColor : (isDarkMode.value ? gray700 : gray200),
+            color: selected ? appColorPrimary : (isDarkMode.value ? gray700 : gray200),
           ),
           borderRadius: BorderRadius.circular(20.w),
         ),
