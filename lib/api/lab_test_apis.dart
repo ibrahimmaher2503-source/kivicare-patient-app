@@ -3,23 +3,26 @@ import 'package:kivicare_patient/utils/api_end_points.dart';
 
 class LabTestAPIs {
   /// Get all available lab test categories (public endpoint)
+  /// Throws: Exception if API call fails
   static Future<ResponseModel> getLabTestCategories() async {
-    return await buildHttpResponse(
-      APIEndPoints.labTestCategories,
-      method: HttpMethodType.GET,
-    ).then((response) {
+    try {
+      final response = await buildHttpResponse(
+        APIEndPoints.labTestCategories,
+        method: HttpMethodType.GET,
+      );
       return ResponseModel.fromJson(handleResponse(response));
-    }).catchError((e) {
-      throw e;
-    });
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Get paginated list of lab tests with optional filters (public endpoint)
   /// Supports filtering by: category_id, department (laboratory|radiology), search text
+  /// Throws: Exception if API call fails
   static Future<ResponseModel> getLabTests({
-    required String? categoryId,
-    required String? department,
-    required String? search,
+    int? categoryId,
+    String? department,
+    String? search,
     required int page,
   }) async {
     Map<String, dynamic> queryParams = {};
@@ -29,106 +32,119 @@ class LabTestAPIs {
     queryParams['page'] = page;
     queryParams['per_page'] = 15;
 
-    return await buildHttpResponse(
-      APIEndPoints.labTests,
-      method: HttpMethodType.GET,
-      queryParameters: queryParams,
-    ).then((response) {
+    try {
+      final response = await buildHttpResponse(
+        APIEndPoints.labTests,
+        method: HttpMethodType.GET,
+        queryParameters: queryParams,
+      );
       return ResponseModel.fromJson(handleResponse(response));
-    }).catchError((e) {
-      throw e;
-    });
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Get single lab test details (public endpoint)
+  /// Throws: Exception if API call fails
   static Future<ResponseModel> getLabTestDetail({required int testId}) async {
-    return await buildHttpResponse(
-      APIEndPoints.labTestDetail(testId),
-      method: HttpMethodType.GET,
-    ).then((response) {
+    try {
+      final response = await buildHttpResponse(
+        APIEndPoints.labTestDetail(testId),
+        method: HttpMethodType.GET,
+      );
       return ResponseModel.fromJson(handleResponse(response));
-    }).catchError((e) {
-      throw e;
-    });
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Create a new test order (authenticated endpoint)
+  /// Throws: Exception if API call fails or validation error (422)
   static Future<ResponseModel> createTestOrder({
-    required Map request,
+    required Map<String, dynamic> request,
   }) async {
-    return await buildHttpResponse(
-      APIEndPoints.testOrders,
-      method: HttpMethodType.POST,
-      request: request,
-    ).then((response) {
+    try {
+      final response = await buildHttpResponse(
+        APIEndPoints.testOrders,
+        method: HttpMethodType.POST,
+        request: request,
+      );
       return ResponseModel.fromJson(handleResponse(response));
-    }).catchError((e) {
-      throw e;
-    });
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Get authenticated user's test orders with optional filtering
+  /// Throws: Exception if API call fails
   static Future<ResponseModel> getTestOrders({
-    required String? status,
+    String? status,
     required int page,
   }) async {
-    Map<String, dynamic> queryParams = {};
+    final queryParams = <String, dynamic>{};
     if (status != null) queryParams['status'] = status;
     queryParams['page'] = page;
     queryParams['per_page'] = 15;
 
-    return await buildHttpResponse(
-      APIEndPoints.testOrders,
-      method: HttpMethodType.GET,
-      queryParameters: queryParams,
-    ).then((response) {
+    try {
+      final response = await buildHttpResponse(
+        APIEndPoints.testOrders,
+        method: HttpMethodType.GET,
+        queryParameters: queryParams,
+      );
       return ResponseModel.fromJson(handleResponse(response));
-    }).catchError((e) {
-      throw e;
-    });
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Get single test order details (authenticated endpoint)
+  /// Throws: Exception if API call fails or order not found (404)
   static Future<ResponseModel> getTestOrderDetail({required int orderId}) async {
-    return await buildHttpResponse(
-      APIEndPoints.testOrderDetail(orderId),
-      method: HttpMethodType.GET,
-    ).then((response) {
+    try {
+      final response = await buildHttpResponse(
+        APIEndPoints.testOrderDetail(orderId),
+        method: HttpMethodType.GET,
+      );
       return ResponseModel.fromJson(handleResponse(response));
-    }).catchError((e) {
-      throw e;
-    });
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Cancel a test order (authenticated endpoint)
+  /// Throws: Exception if API call fails, order not found (404), or invalid state (422)
   static Future<ResponseModel> cancelTestOrder({
     required int orderId,
     required String cancellationReason,
   }) async {
-    Map<String, dynamic> request = {
-      'cancellation_reason': cancellationReason,
-    };
+    try {
+      final request = <String, dynamic>{
+        'cancellation_reason': cancellationReason,
+      };
 
-    return await buildHttpResponse(
-      APIEndPoints.testOrderCancel(orderId),
-      method: HttpMethodType.POST,
-      request: request,
-    ).then((response) {
+      final response = await buildHttpResponse(
+        APIEndPoints.testOrderCancel(orderId),
+        method: HttpMethodType.POST,
+        request: request,
+      );
       return ResponseModel.fromJson(handleResponse(response));
-    }).catchError((e) {
-      throw e;
-    });
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Download test report as PDF (authenticated endpoint)
+  /// Throws: Exception if API call fails or order not found (404)
   static Future<ResponseModel> downloadTestReport({required int orderId}) async {
-    return await buildHttpResponse(
-      APIEndPoints.testOrderReportDownload(orderId),
-      method: HttpMethodType.GET,
-    ).then((response) {
+    try {
+      final response = await buildHttpResponse(
+        APIEndPoints.testOrderReportDownload(orderId),
+        method: HttpMethodType.GET,
+      );
       return ResponseModel.fromJson(handleResponse(response));
-    }).catchError((e) {
-      throw e;
-    });
+    } catch (e) {
+      rethrow;
+    }
   }
 }

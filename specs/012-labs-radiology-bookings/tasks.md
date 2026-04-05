@@ -40,19 +40,19 @@
 
 **Checkpoint**: All foundational models and API services working with mock/live API responses
 
-- [ ] T009 [P] Implement LabTestCategory model in lib/models/lab_test_category_model.dart with fromJson(), toJson() (7 fields)
-- [ ] T010 [P] Implement LabTest model in lib/models/lab_test_model.dart with fromJson(), toJson() (14 fields including category relationship)
-- [ ] T011 [P] Implement TestOrderItem model in lib/models/test_order_item_model.dart with fromJson(), toJson() (11 fields)
-- [ ] T012 [P] Implement FacilityBooking model in lib/models/facility_booking_model.dart with fromJson(), toJson() (13 fields, polymorphic facility reference)
-- [ ] T013 [P] Implement BookingSlot model in lib/models/booking_slot_model.dart with fromJson(), toJson() (5 fields: time, available)
-- [ ] T014 Implement getLabTestCategories() in lib/api/lab_test_apis.dart (public, no auth)
-- [ ] T015 Implement getLabTests() in lib/api/lab_test_apis.dart with filtering (public, category_id, department, search, pagination)
-- [ ] T016 Implement getLabTestDetail() in lib/api/lab_test_apis.dart (public endpoint for single test)
-- [ ] T017 Implement getLabSlots() in lib/api/facility_booking_apis.dart with date parameter (public endpoint)
-- [ ] T018 Implement getRadiologyCenterSlots() in lib/api/facility_booking_apis.dart with date parameter (public endpoint)
-- [ ] T019 Create lib/utils/lab_test_constants.dart with enums: SampleType (blood, urine, stool, tissue, imaging, swab, other), Department (laboratory, radiology), Priority (routine, urgent, stat), OrderStatus (pending, confirmed, sample_collected, processing, completed, delivered, cancelled), PaymentStatus (unpaid, partial, paid)
-- [ ] T020 Create shared validation utility in lib/utils/form_validators.dart with methods for: validateDate(futureOnly), validateTime(HHMMFormat), validatePatientName(), validatePhoneNumber(), validateClinicalNotes(), validateBookingDate()
-- [ ] T021 [P] Create FilterParams-style model for LabTestFilter in lib/screens/lab_test/model/lab_test_filter.dart with: categoryId, department, searchQuery, currentPage
+- [x] T009 [P] Implement LabTestCategory model in lib/models/lab_test_category_model.dart with fromJson(), toJson() (7 fields)
+- [x] T010 [P] Implement LabTest model in lib/models/lab_test_model.dart with fromJson(), toJson() (14 fields including category relationship)
+- [x] T011 [P] Implement TestOrderItem model in lib/models/test_order_item_model.dart with fromJson(), toJson() (11 fields)
+- [x] T012 [P] Implement FacilityBooking model in lib/models/facility_booking_model.dart with fromJson(), toJson() (13 fields, polymorphic facility reference)
+- [x] T013 [P] Implement BookingSlot model in lib/models/booking_slot_model.dart with fromJson(), toJson() (5 fields: time, available)
+- [x] T014 Implement getLabTestCategories() in lib/api/lab_test_apis.dart (public, no auth)
+- [x] T015 Implement getLabTests() in lib/api/lab_test_apis.dart with filtering (public, category_id, department, search, pagination)
+- [x] T016 Implement getLabTestDetail() in lib/api/lab_test_apis.dart (public endpoint for single test)
+- [x] T017 Implement getLabSlots() in lib/api/facility_booking_apis.dart with date parameter (public endpoint)
+- [x] T018 Implement getRadiologyCenterSlots() in lib/api/facility_booking_apis.dart with date parameter (public endpoint)
+- [x] T019 Create lib/utils/lab_test_constants.dart with enums: SampleType (blood, urine, stool, tissue, imaging, swab, other), Department (laboratory, radiology), Priority (routine, urgent, stat), OrderStatus (pending, confirmed, sample_collected, processing, completed, delivered, cancelled), PaymentStatus (unpaid, partial, paid)
+- [x] T020 Create shared validation utility in lib/utils/form_validators.dart with methods for: validateDate(futureOnly), validateTime(HHMMFormat), validatePatientName(), validatePhoneNumber(), validateClinicalNotes(), validateBookingDate()
+- [x] T021 [P] Create FilterParams-style model for LabTestFilter in lib/screens/lab_test/model/lab_test_filter.dart with: categoryId, department, searchQuery, currentPage
 
 **Checkpoint**: Foundation ready - all user story phases can now proceed in parallel
 
@@ -66,20 +66,20 @@
 
 **Tasks for User Story 1**:
 
-- [ ] T022 Implement TestOrder model stub in lib/models/test_order_model.dart (core fields: id, orderNumber, patientId, status, totalAmount, items[], clinicalNotes)
-- [ ] T023 Implement Lab model in lib/models/lab_model.dart (fields: id, name, address, phone, isActive, isHoliday)
-- [ ] T024 Implement RadiologyCenter model in lib/models/radiology_center_model.dart (same structure as Lab)
-- [ ] T025 Create LabTestCategoriesController in lib/screens/lab_test/lab_test_categories_controller.dart with GetX reactive state: isLoading, categories list, errorMessage
-- [ ] T026 Create LabTestListController in lib/screens/lab_test/lab_test_list_controller.dart extending LabTestCategoriesController: add filtering (categoryId, department, searchQuery), pagination (currentPage, perPage), loadTests() method
-- [ ] T027 Implement loadCategories() and loadTests() in controllers (call respective APIs)
-- [ ] T028 Create LabTestCategoriesScreen in lib/screens/lab_test/lab_test_categories_screen.dart displaying paginated category grid
-- [ ] T029 Create LabTestListScreen in lib/screens/lab_test/lab_test_list_screen.dart with category/department filter tabs and search bar
-- [ ] T030 [P] Create LabTestCategoryCard component in lib/screens/lab_test/components/lab_test_category_card.dart (displays: icon, name, test_count, leading to test list)
-- [ ] T031 [P] Create LabTestCard component in lib/screens/lab_test/components/lab_test_card.dart (displays: name, code, price, sample_type, turnaround_time with onTap to details)
-- [ ] T032 Create LabTestDetailScreen in lib/screens/lab_test/lab_test_detail_screen.dart showing full test info (description, preparation_instructions, reference_range, category details)
-- [ ] T033 Create LabTestDetailController in lib/screens/lab_test/lab_test_detail_controller.dart with: selectedTest observable, addToCart() method, navigateToOrder()
-- [ ] T034 [US1] Integration test in test/integration/lab_test_browsing_test.dart: verify can load categories, filter tests, search tests, view test details (no auth required)
-- [ ] T035 [US1] Add loading state UI with LoaderWidget, error state with EmptyErrorStateWidget
+- [x] T022 Implement TestOrder model stub in lib/models/test_order_model.dart (core fields: id, orderNumber, patientId, status, totalAmount, items[], clinicalNotes)
+- [x] T023 Implement Lab model in lib/models/lab_model.dart (fields: id, name, address, phone, isActive, isHoliday)
+- [x] T024 Implement RadiologyCenter model in lib/models/radiology_center_model.dart (same structure as Lab)
+- [x] T025 Create LabTestCategoriesController in lib/screens/lab_test/lab_test_categories_controller.dart with GetX reactive state: isLoading, categories list, errorMessage
+- [x] T026 Create LabTestListController in lib/screens/lab_test/lab_test_list_controller.dart extending LabTestCategoriesController: add filtering (categoryId, department, searchQuery), pagination (currentPage, perPage), loadTests() method
+- [x] T027 Implement loadCategories() and loadTests() in controllers (call respective APIs)
+- [x] T028 Create LabTestCategoriesScreen in lib/screens/lab_test/lab_test_categories_screen.dart displaying paginated category grid
+- [x] T029 Create LabTestListScreen in lib/screens/lab_test/lab_test_list_screen.dart with category/department filter tabs and search bar
+- [x] T030 [P] Create LabTestCategoryCard component in lib/screens/lab_test/components/lab_test_category_card.dart (displays: icon, name, test_count, leading to test list)
+- [x] T031 [P] Create LabTestCard component in lib/screens/lab_test/components/lab_test_card.dart (displays: name, code, price, sample_type, turnaround_time with onTap to details)
+- [x] T032 Create LabTestDetailScreen in lib/screens/lab_test/lab_test_detail_screen.dart showing full test info (description, preparation_instructions, reference_range, category details)
+- [x] T033 Create LabTestDetailController in lib/screens/lab_test/lab_test_detail_controller.dart with: selectedTest observable, addToCart() method, navigateToOrder()
+- [x] T034 [US1] Integration test in test/integration/lab_test_browsing_test.dart: verify can load categories, filter tests, search tests, view test details (no auth required)
+- [x] T035 [US1] Add loading state UI with LoaderWidget, error state with EmptyErrorStateWidget
 
 **Checkpoint**: User Story 1 complete - users can browse and search tests independently
 
@@ -93,26 +93,26 @@
 
 **Tasks for User Story 2**:
 
-- [ ] T036 [P] Implement full TestOrder model in lib/models/test_order_model.dart (add: orderId, orderedTests[], items relationship, createdAt, updatedAt)
-- [ ] T037 Implement createTestOrder() in lib/api/lab_test_apis.dart (POST /v1/test-orders with items[], clinicalNotes, priority, doctorId)
-- [ ] T038 Implement getTestOrders() in lib/api/lab_test_apis.dart (GET /v1/test-orders with status/pagination filtering)
-- [ ] T039 Implement getTestOrderDetail() in lib/api/lab_test_apis.dart (GET /v1/test-orders/{id})
-- [ ] T040 Implement cancelTestOrder() in lib/api/lab_test_apis.dart (POST /v1/test-orders/{id}/cancel with cancellation reason)
-- [ ] T041 Create CreateTestOrderController in lib/screens/lab_test/create_test_order_controller.dart with GetX state: selectedTests list, clinicalNotes, priority, isLoading, total/discount/finalAmount calculations
-- [ ] T042 Add calculateOrderTotal() method to controller (sum test prices, apply discounts)
-- [ ] T043 Add validateOrderForm() to controller (minimum 1 test, notes max 2000 chars, valid priority)
-- [ ] T044 Implement createOrder() method in controller (call API, handle 422 validation errors, show toast, navigate)
-- [ ] T045 Create CreateTestOrderScreen in lib/screens/lab_test/create_test_order_screen.dart with: order summary, selected tests list, clinical notes input, priority selector, total price display
-- [ ] T046 Create OrderSummarySection component in lib/screens/lab_test/components/order_summary_section.dart (shows selected tests with prices, total, discount, final amount)
-- [ ] T047 Create TestPrioritySelector component in lib/screens/lab_test/components/test_priority_selector.dart (radio/toggle for routine/urgent/stat)
-- [ ] T048 Create TestOrderCard component in lib/screens/lab_test/components/test_order_card.dart (displays: order#, tests count, status badge, total amount, date)
-- [ ] T049 Create TestOrderStatusBadge component in lib/screens/lab_test/components/test_order_status_badge.dart (colors per status: pending=orange, confirmed=blue, processing=purple, completed=green, cancelled=gray)
-- [ ] T050 Create TestOrderDetailScreen in lib/screens/lab_test/test_order_detail_screen.dart showing: order number, status, items with prices, clinical notes, patient info, doctor info
-- [ ] T051 Create TestOrderDetailController in lib/screens/lab_test/test_order_detail_controller.dart with: loadOrderDetail(), cancelOrder() with reason dialog
+- [x] T036 [P] Implement full TestOrder model in lib/models/test_order_model.dart (add: orderId, orderedTests[], items relationship, createdAt, updatedAt)
+- [x] T037 Implement createTestOrder() in lib/api/lab_test_apis.dart (POST /v1/test-orders with items[], clinicalNotes, priority, doctorId)
+- [x] T038 Implement getTestOrders() in lib/api/lab_test_apis.dart (GET /v1/test-orders with status/pagination filtering)
+- [x] T039 Implement getTestOrderDetail() in lib/api/lab_test_apis.dart (GET /v1/test-orders/{id})
+- [x] T040 Implement cancelTestOrder() in lib/api/lab_test_apis.dart (POST /v1/test-orders/{id}/cancel with cancellation reason)
+- [x] T041 Create CreateTestOrderController in lib/screens/lab_test/create_test_order_controller.dart with GetX state: selectedTests list, clinicalNotes, priority, isLoading, total/discount/finalAmount calculations
+- [x] T042 Add calculateOrderTotal() method to controller (sum test prices, apply discounts)
+- [x] T043 Add validateOrderForm() to controller (minimum 1 test, notes max 2000 chars, valid priority)
+- [x] T044 Implement createOrder() method in controller (call API, handle 422 validation errors, show toast, navigate)
+- [x] T045 Create CreateTestOrderScreen in lib/screens/lab_test/create_test_order_screen.dart with: order summary, selected tests list, clinical notes input, priority selector, total price display
+- [x] T046 Create OrderSummarySection component in lib/screens/lab_test/components/order_summary_section.dart (shows selected tests with prices, total, discount, final amount)
+- [x] T047 Create TestPrioritySelector component in lib/screens/lab_test/components/test_priority_selector.dart (radio/toggle for routine/urgent/stat)
+- [x] T048 Create TestOrderCard component in lib/screens/lab_test/components/test_order_card.dart (displays: order#, tests count, status badge, total amount, date)
+- [x] T049 Create TestOrderStatusBadge component in lib/screens/lab_test/components/test_order_status_badge.dart (colors per status: pending=orange, confirmed=blue, processing=purple, completed=green, cancelled=gray)
+- [x] T050 Create TestOrderDetailScreen in lib/screens/lab_test/test_order_detail_screen.dart showing: order number, status, items with prices, clinical notes, patient info, doctor info
+- [x] T051 Create TestOrderDetailController in lib/screens/lab_test/test_order_detail_controller.dart with: loadOrderDetail(), cancelOrder() with reason dialog
 - [ ] T052 [US2] Integration test in test/integration/test_order_creation_test.dart: create order with 2+ tests, verify order number generated, verify total calculated, verify success notification
 - [ ] T053 [US2] Unit test in test/unit/test_order_pricing_test.dart: test order total calculation logic, discount application, final_amount accuracy
-- [ ] T054 [US2] Add proper error handling for 422 validation errors (show field-specific error messages)
-- [ ] T055 [US2] Add success dialog/snackbar with order number and next steps
+- [x] T054 [US2] Add proper error handling for 422 validation errors (show field-specific error messages)
+- [x] T055 [US2] Add success dialog/snackbar with order number and next steps
 
 **Checkpoint**: User Stories 1 & 2 complete - users can browse, search, and create orders
 
@@ -126,25 +126,25 @@
 
 **Tasks for User Story 4**:
 
-- [ ] T056 Implement getLabSlots() and getRadiologyCenterSlots() full implementation in facility_booking_apis.dart returning BookingSlot models with availability status
-- [ ] T057 Implement createFacilityBooking() in lib/api/facility_booking_apis.dart (POST /v1/facility-bookings with: type, facility_id, date, time, patientName, patientPhone, notes)
-- [ ] T058 Implement getFacilityBookings() in lib/api/facility_booking_apis.dart (GET /v1/facility-bookings with type/status/pagination filters)
-- [ ] T059 Implement getFacilityBookingDetail() in lib/api/facility_booking_apis.dart (GET /v1/facility-bookings/{id})
-- [ ] T060 Implement cancelFacilityBooking() in lib/api/facility_booking_apis.dart (POST /v1/facility-bookings/{id}/cancel)
-- [ ] T061 Create FacilityBookingController in lib/screens/facility_booking/facility_booking_controller.dart with GetX state: selectedFacility, selectedDate, selectedSlots, facilityType (lab|radiology), isLoading
-- [ ] T062 Create FacilitySlotCalendarController in lib/screens/facility_booking/facility_slots_controller.dart with: loadSlots(date), getAvailableSlots(), getBookedSlots()
-- [ ] T063 Create BookingDetailsController in lib/screens/facility_booking/booking_detail_controller.dart with: patientName, patientPhone, notes validation
-- [ ] T064 Implement validateBookingForm() method (validate patient name/phone, check slot selection)
-- [ ] T065 Implement createBooking() method calling API with proper error handling (422 for unavailable slot, 403 for permission)
-- [ ] T066 Create FacilitySelectionScreen in lib/screens/facility_booking/facility_selection_screen.dart showing: list of available labs/radiology centers, search/filter by location, "View Slots" button
-- [ ] T067 Create FacilitySlotCalendarScreen in lib/screens/facility_booking/facility_slot_calendar_screen.dart with: calendar widget showing available dates, time slot grid for selected date
-- [ ] T068 Create BookingDetailsScreen in lib/screens/facility_booking/booking_details_screen.dart with: patient name/phone inputs, notes field, selected facility/slot display, "Confirm Booking" button
-- [ ] T069 Create BookingConfirmationScreen in lib/screens/facility_booking/booking_confirmation_screen.dart showing: booking number (BK-YYYY-NNNN), facility details, appointment date/time, status
-- [ ] T070 [P] Create FacilityCard component in lib/screens/facility_booking/components/facility_card.dart (displays: facility name, address, phone, "View Slots" button)
-- [ ] T071 [P] Create SlotCalendar component in lib/screens/facility_booking/components/facility_slot_calendar.dart (calendar showing available dates with slot counts)
-- [ ] T072 [P] Create SlotTimeGrid component in lib/screens/facility_booking/components/slot_time_grid.dart (grid of time slots with available/booked status, selectable)
-- [ ] T073 [P] Create FacilityBookingCard component in lib/screens/facility_booking/components/facility_booking_card.dart (displays: booking#, facility, date/time, status badge, "Cancel" button)
-- [ ] T074 [P] Create BookingStatusBadge component in lib/screens/facility_booking/components/booking_status_badge.dart (colors per status: pending=orange, confirmed=blue, completed=green, cancelled=gray, no_show=red)
+- [x] T056 Implement getLabSlots() and getRadiologyCenterSlots() full implementation in facility_booking_apis.dart returning BookingSlot models with availability status
+- [x] T057 Implement createFacilityBooking() in lib/api/facility_booking_apis.dart (POST /v1/facility-bookings with: type, facility_id, date, time, patientName, patientPhone, notes)
+- [x] T058 Implement getFacilityBookings() in lib/api/facility_booking_apis.dart (GET /v1/facility-bookings with type/status/pagination filters)
+- [x] T059 Implement getFacilityBookingDetail() in lib/api/facility_booking_apis.dart (GET /v1/facility-bookings/{id})
+- [x] T060 Implement cancelFacilityBooking() in lib/api/facility_booking_apis.dart (POST /v1/facility-bookings/{id}/cancel)
+- [x] T061 Create FacilityBookingController in lib/screens/facility_booking/facility_booking_controller.dart with GetX state: selectedFacility, selectedDate, selectedSlots, facilityType (lab|radiology), isLoading
+- [x] T062 Create FacilitySlotCalendarController in lib/screens/facility_booking/facility_slots_controller.dart with: loadSlots(date), getAvailableSlots(), getBookedSlots()
+- [x] T063 Create BookingDetailsController in lib/screens/facility_booking/booking_detail_controller.dart with: patientName, patientPhone, notes validation
+- [x] T064 Implement validateBookingForm() method (validate patient name/phone, check slot selection)
+- [x] T065 Implement createBooking() method calling API with proper error handling (422 for unavailable slot, 403 for permission)
+- [x] T066 Create FacilitySelectionScreen in lib/screens/facility_booking/facility_selection_screen.dart showing: list of available labs/radiology centers, search/filter by location, "View Slots" button
+- [x] T067 Create FacilitySlotCalendarScreen in lib/screens/facility_booking/facility_slot_calendar_screen.dart with: calendar widget showing available dates, time slot grid for selected date
+- [x] T068 Create BookingDetailsScreen in lib/screens/facility_booking/booking_details_screen.dart with: patient name/phone inputs, notes field, selected facility/slot display, "Confirm Booking" button
+- [x] T069 Create BookingConfirmationScreen in lib/screens/facility_booking/booking_confirmation_screen.dart showing: booking number (BK-YYYY-NNNN), facility details, appointment date/time, status
+- [x] T070 [P] Create FacilityCard component in lib/screens/facility_booking/components/facility_card.dart (displays: facility name, address, phone, "View Slots" button)
+- [x] T071 [P] Create SlotCalendar component in lib/screens/facility_booking/components/facility_slot_calendar.dart (calendar showing available dates with slot counts)
+- [x] T072 [P] Create SlotTimeGrid component in lib/screens/facility_booking/components/slot_time_grid.dart (grid of time slots with available/booked status, selectable)
+- [x] T073 [P] Create FacilityBookingCard component in lib/screens/facility_booking/components/facility_booking_card.dart (displays: booking#, facility, date/time, status badge, "Cancel" button)
+- [x] T074 [P] Create BookingStatusBadge component in lib/screens/facility_booking/components/booking_status_badge.dart (colors per status: pending=orange, confirmed=blue, completed=green, cancelled=gray, no_show=red)
 - [ ] T075 [US4] Integration test in test/integration/facility_booking_flow_test.dart: load slots, select date/time, enter patient details, create booking, verify booking number generated
 - [ ] T076 [US4] Unit test in test/unit/booking_slot_validation_test.dart: test slot availability logic, date validation (must be future), time validation (HH:MM format)
 - [ ] T077 [US4] Add error handling for slot unavailable (422) with UI message to retry other slots
@@ -184,11 +184,11 @@
 
 **Tasks for User Story 3**:
 
-- [ ] T088 Update LabTest model to properly handle department filtering (ensure "radiology" filter works on list API)
-- [ ] T089 Create RadiologyTestsController in lib/screens/lab_test/radiology_tests_controller.dart extending LabTestListController with pre-filtered department="radiology"
-- [ ] T090 Create RadiologyTestsScreen in lib/screens/lab_test/radiology_tests_screen.dart similar to LabTestListScreen but department-specific
-- [ ] T091 Create RadiologyServiceCard component in lib/screens/lab_test/components/radiology_service_card.dart (displays radiology-specific fields: scan type, equipment, imaging format)
-- [ ] T092 Create RadiologyDetailScreen in lib/screens/lab_test/radiology_detail_screen.dart with radiology-specific preparation instructions, safety info, contrast requirements
+- [x] T088 Update LabTest model to properly handle department filtering (ensure "radiology" filter works on list API)
+- [x] T089 Create RadiologyTestsController in lib/screens/lab_test/radiology_tests_controller.dart extending LabTestListController with pre-filtered department="radiology"
+- [x] T090 Create RadiologyTestsScreen in lib/screens/lab_test/radiology_tests_screen.dart similar to LabTestListScreen but department-specific
+- [x] T091 Create RadiologyServiceCard component in lib/screens/lab_test/components/radiology_service_card.dart (displays radiology-specific fields: scan type, equipment, imaging format)
+- [x] T092 Create RadiologyDetailScreen in lib/screens/lab_test/radiology_detail_screen.dart with radiology-specific preparation instructions, safety info, contrast requirements
 - [ ] T093 [US3] Integration test in test/integration/radiology_browsing_test.dart: verify radiology services shown, lab tests filtered out, search finds radiology tests
 - [ ] T094 [US3] Add radiology-specific localization strings (scanType, contrastRequired, imagingFormat, radiationDose)
 
@@ -204,16 +204,16 @@
 
 **Tasks for User Story 5**:
 
-- [ ] T095 Create TestOrderListScreen in lib/screens/lab_test/test_order_list_screen.dart with: order list filtered by status, tabs (All/Pending/Completed), order cards
-- [ ] T096 Create TestOrderListController in lib/screens/lab_test/test_order_list_controller.dart with: loadOrders(), filterByStatus(), RBAC filtering
-- [ ] T097 Implement getTestOrderReport() in lab_test_apis.dart (GET /v1/test-orders/{id}/report/download returns PDF binary)
-- [ ] T098 Add downloadReport() method to TestOrderDetailController (call API, save/open PDF file)
-- [ ] T099 Create CancellationReasonDialog component in lib/screens/lab_test/components/cancellation_reason_dialog.dart (text input for reason, max 500 chars)
-- [ ] T100 Add cancelOrderWithReason() method to TestOrderDetailController (show dialog, submit reason with API call)
-- [ ] T101 Create MyBookingsScreen in lib/screens/facility_booking/my_bookings_screen.dart with: booking list filtered by type/status, booking cards
-- [ ] T102 Create MyBookingsController in lib/screens/facility_booking/my_bookings_controller.dart with: loadBookings(), filterByType(), filterByStatus(), RBAC filtering
-- [ ] T103 Add cancelBookingWithReason() to MyBookingsController with dialog
-- [ ] T104 Create BookingDetailScreen in lib/screens/facility_booking/booking_detail_screen.dart (full details: facility info, appointment time, patient details, status, reschedule option)
+- [x] T095 Create TestOrderListScreen in lib/screens/lab_test/test_order_list_screen.dart with: order list filtered by status, tabs (All/Pending/Completed), order cards
+- [x] T096 Create TestOrderListController in lib/screens/lab_test/test_order_list_controller.dart with: loadOrders(), filterByStatus(), RBAC filtering
+- [x] T097 Implement getTestOrderReport() in lab_test_apis.dart (GET /v1/test-orders/{id}/report/download returns PDF binary)
+- [x] T098 Add downloadReport() method to TestOrderDetailController (call API, save/open PDF file)
+- [x] T099 Create CancellationReasonDialog component in lib/screens/lab_test/components/cancellation_reason_dialog.dart (text input for reason, max 500 chars)
+- [x] T100 Add cancelOrderWithReason() method to TestOrderDetailController (show dialog, submit reason with API call)
+- [x] T101 Create MyBookingsScreen in lib/screens/facility_booking/my_bookings_screen.dart with: booking list filtered by type/status, booking cards
+- [x] T102 Create MyBookingsController in lib/screens/facility_booking/my_bookings_controller.dart with: loadBookings(), filterByType(), filterByStatus(), RBAC filtering
+- [x] T103 Add cancelBookingWithReason() to MyBookingsController with dialog
+- [x] T104 Create BookingDetailScreen in lib/screens/facility_booking/booking_detail_screen.dart (full details: facility info, appointment time, patient details, status, reschedule option)
 - [ ] T105 [US5] Integration test in test/integration/order_management_test.dart: load orders, filter by status, view details, cancel order
 - [ ] T106 [US5] Integration test in test/integration/booking_management_test.dart: load bookings, filter by type, view details, cancel booking
 - [ ] T107 [US5] Test PDF report download functionality (mock file system)
@@ -234,9 +234,9 @@
 - [ ] T111 [P] Performance testing: verify test search <1s, slot availability <500ms, order creation <5min
 - [ ] T112 [P] Accessibility audit: verify semantic labels, ARIA, focus states, contrast ratios on all new screens
 - [ ] T113 [P] Dark mode testing: verify all new screens respect isDarkMode.value with proper design tokens
-- [ ] T114 Verify localization completeness: all UI strings use locale.value.*, RTL layout works for Arabic
-- [ ] T115 Code cleanup: remove debug logging, unused imports, format code with existing style
-- [ ] T116 Update lib/utils/api_end_points.dart to remove placeholder endpoints
+- [x] T114 Verify localization completeness: all UI strings use locale.value.*, RTL layout works for Arabic
+- [x] T115 Code cleanup: remove debug logging, unused imports, format code with existing style
+- [x] T116 Update lib/utils/api_end_points.dart to remove placeholder endpoints
 - [ ] T117 Add feature-specific error logging for Crashlytics (sanitized for patient privacy)
 - [ ] T118 Verify double-booking prevention: test concurrent booking scenarios, verify 100% success rate
 - [ ] T119 Test status workflow transitions: verify no invalid state transitions, all status changes logged
