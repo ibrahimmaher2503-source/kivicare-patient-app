@@ -147,8 +147,8 @@
 - [x] T074 [P] Create BookingStatusBadge component in lib/screens/facility_booking/components/booking_status_badge.dart (colors per status: pending=orange, confirmed=blue, completed=green, cancelled=gray, no_show=red)
 - [ ] T075 [US4] Integration test in test/integration/facility_booking_flow_test.dart: load slots, select date/time, enter patient details, create booking, verify booking number generated
 - [ ] T076 [US4] Unit test in test/unit/booking_slot_validation_test.dart: test slot availability logic, date validation (must be future), time validation (HH:MM format)
-- [ ] T077 [US4] Add error handling for slot unavailable (422) with UI message to retry other slots
-- [ ] T078 [US4] Add success dialog with booking confirmation details and facility contact info
+- [x] T077 [US4] Add error handling for slot unavailable (422) with UI message to retry other slots
+- [x] T078 [US4] Add success dialog with booking confirmation details and facility contact info
 
 **Checkpoint**: User Stories 1, 2, & 4 complete - users can browse, order, and book appointments
 
@@ -190,7 +190,7 @@
 - [x] T091 Create RadiologyServiceCard component in lib/screens/lab_test/components/radiology_service_card.dart (displays radiology-specific fields: scan type, equipment, imaging format)
 - [x] T092 Create RadiologyDetailScreen in lib/screens/lab_test/radiology_detail_screen.dart with radiology-specific preparation instructions, safety info, contrast requirements
 - [ ] T093 [US3] Integration test in test/integration/radiology_browsing_test.dart: verify radiology services shown, lab tests filtered out, search finds radiology tests
-- [ ] T094 [US3] Add radiology-specific localization strings (scanType, contrastRequired, imagingFormat, radiationDose)
+- [x] T094 [US3] Add radiology-specific localization strings (scanType, contrastRequired, imagingFormat, radiationDose)
 
 **Checkpoint**: P2 stories starting - radiology catalog browsing available
 
