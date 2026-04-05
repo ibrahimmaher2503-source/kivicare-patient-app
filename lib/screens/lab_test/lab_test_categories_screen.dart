@@ -11,10 +11,27 @@ import '../../utils/colors.dart';
 import 'components/lab_test_category_card.dart';
 import 'lab_test_categories_controller.dart';
 
-class LabTestCategoriesScreen extends StatelessWidget {
-  LabTestCategoriesScreen({super.key});
+class LabTestCategoriesScreen extends StatefulWidget {
+  const LabTestCategoriesScreen({super.key});
 
-  final LabTestCategoriesController controller = Get.put(LabTestCategoriesController());
+  @override
+  State<LabTestCategoriesScreen> createState() => _LabTestCategoriesScreenState();
+}
+
+class _LabTestCategoriesScreenState extends State<LabTestCategoriesScreen> {
+  late final LabTestCategoriesController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(LabTestCategoriesController());
+  }
+
+  @override
+  void dispose() {
+    Get.delete<LabTestCategoriesController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +57,7 @@ class LabTestCategoriesScreen extends StatelessWidget {
               return AnimatedScrollView(
                 listAnimationType: ListAnimationType.FadeIn,
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(24),
                 onSwipeRefresh: () async {
                   return await controller.getCategories();
                 },
@@ -78,7 +95,7 @@ class LabTestCategoriesScreen extends StatelessWidget {
                   appColorSecondary.withValues(alpha: 0.05),
                 ],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDarkMode.value
               ? glassStrokeDark
@@ -121,7 +138,7 @@ class LabTestCategoriesScreen extends StatelessWidget {
                 ),
                 4.height,
                 Text(
-                  '${controller.categories.length} categories available',
+                  '${controller.categories.length} ${locale.value.categoriesAvailable}',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     letterSpacing: 0.1,
@@ -241,7 +258,7 @@ class LabTestCategoriesScreen extends StatelessWidget {
           ),
           10.height,
           Text(
-            'No test categories available at the moment.',
+            locale.value.noTestCategoriesAvailable,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               letterSpacing: 0.1,

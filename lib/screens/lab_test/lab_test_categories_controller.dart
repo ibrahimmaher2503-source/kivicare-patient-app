@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../api/core_apis.dart';
+import '../../main.dart';
 import 'model/lab_test_category_model.dart';
 
 class LabTestCategoriesController extends GetxController {
@@ -25,6 +26,7 @@ class LabTestCategoriesController extends GetxController {
       log('Lab test categories fetched: ${value.length}');
     }).catchError((e) {
       log("getCategories error $e");
+      toast(locale.value.somethingWentWrong);
     }).whenComplete(() => isLoading(false));
   }
 }

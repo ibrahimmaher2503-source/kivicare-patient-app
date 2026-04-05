@@ -1,5 +1,3 @@
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-
 class TestOrderListResponse {
   bool status;
   List<TestOrder> data;
@@ -10,7 +8,7 @@ class TestOrderListResponse {
 
   TestOrderListResponse({
     this.status = false, this.data = const [],
-    this.currentPage = 1, this.lastPage = 1, this.perPage = 15, this.total = 0,
+    this.currentPage = 1, this.lastPage = 1, this.perPage = 20, this.total = 0,
   });
 
   factory TestOrderListResponse.fromJson(Map<String, dynamic> json) {
@@ -19,7 +17,7 @@ class TestOrderListResponse {
       data: json["data"] is List ? List<TestOrder>.from(json["data"].map((x) => TestOrder.fromJson(x))) : [],
       currentPage: json["meta"] is Map ? (json["meta"]["current_page"] ?? 1) : 1,
       lastPage: json["meta"] is Map ? (json["meta"]["last_page"] ?? 1) : 1,
-      perPage: json["meta"] is Map ? (json["meta"]["per_page"] ?? 15) : 15,
+      perPage: json["meta"] is Map ? (json["meta"]["per_page"] ?? 20) : 20,
       total: json["meta"] is Map ? (json["meta"]["total"] ?? 0) : 0,
     );
   }
@@ -174,10 +172,4 @@ class TestOrder {
     "total_amount": totalAmount, "discount_amount": discountAmount,
     "final_amount": finalAmount, "reports": reports, "created_at": createdAt,
   };
-}
-
-class TestOrderListResult {
-  final RxList<TestOrder> orders;
-
-  TestOrderListResult({required this.orders});
 }

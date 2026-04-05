@@ -1,5 +1,3 @@
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-
 class NurseRequestListResponse {
   bool status;
   List<NurseRequest> data;
@@ -13,7 +11,7 @@ class NurseRequestListResponse {
     this.data = const [],
     this.currentPage = 1,
     this.lastPage = 1,
-    this.perPage = 15,
+    this.perPage = 20,
     this.total = 0,
   });
 
@@ -23,7 +21,7 @@ class NurseRequestListResponse {
       data: json["data"] is List ? List<NurseRequest>.from(json["data"].map((x) => NurseRequest.fromJson(x))) : [],
       currentPage: json["meta"] is Map ? (json["meta"]["current_page"] ?? 1) : 1,
       lastPage: json["meta"] is Map ? (json["meta"]["last_page"] ?? 1) : 1,
-      perPage: json["meta"] is Map ? (json["meta"]["per_page"] ?? 15) : 15,
+      perPage: json["meta"] is Map ? (json["meta"]["per_page"] ?? 20) : 20,
       total: json["meta"] is Map ? (json["meta"]["total"] ?? 0) : 0,
     );
   }
@@ -205,10 +203,4 @@ class NurseRequest {
     "created_at": createdAt,
     "updated_at": updatedAt,
   };
-}
-
-class NurseRequestListResult {
-  final RxList<NurseRequest> requests;
-
-  NurseRequestListResult({required this.requests});
 }

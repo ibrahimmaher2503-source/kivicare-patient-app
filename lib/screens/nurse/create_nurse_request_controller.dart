@@ -34,6 +34,7 @@ class CreateNurseRequestController extends GetxController {
   FocusNode postalCodeFocus = FocusNode();
 
   Rx<Nurse?> selectedNurse = Rx<Nurse?>(null);
+  RxInt durationHoursValue = 0.obs;
   RxBool isLoading = false.obs;
 
   // Edit mode
@@ -46,8 +47,18 @@ class CreateNurseRequestController extends GetxController {
     preferredDateCont.text = request.preferredDate;
     preferredTimeCont.text = request.preferredTime;
     durationHoursCont.text = request.durationHours > 0 ? request.durationHours.toString() : '';
+    durationHoursValue(request.durationHours);
     contactNumberCont.text = request.contactNumber;
     patientNotesCont.text = request.patientNotes;
+
+    // Restore selected nurse from request data
+    if (request.nurse != null) {
+      selectedNurse(Nurse(
+        id: request.nurse!.id,
+        name: request.nurse!.name,
+        specialization: request.nurse!.specialization,
+      ));
+    }
 
     if (request.address != null) {
       addressLine1Cont.text = request.address!.addressLine1;
@@ -63,8 +74,12 @@ class CreateNurseRequestController extends GetxController {
     selectedNurse(nurse);
   }
 
+  void onDurationChanged(String val) {
+    durationHoursValue(int.tryParse(val) ?? 0);
+  }
+
   @override
-  void dispose() {
+  void onClose() {
     serviceDescriptionCont.dispose();
     preferredDateCont.dispose();
     preferredTimeCont.dispose();
@@ -77,7 +92,17 @@ class CreateNurseRequestController extends GetxController {
     stateCont.dispose();
     countryCont.dispose();
     postalCodeCont.dispose();
-    super.dispose();
+    serviceDescriptionFocus.dispose();
+    durationHoursFocus.dispose();
+    contactNumberFocus.dispose();
+    patientNotesFocus.dispose();
+    addressLine1Focus.dispose();
+    addressLine2Focus.dispose();
+    cityFocus.dispose();
+    stateFocus.dispose();
+    countryFocus.dispose();
+    postalCodeFocus.dispose();
+    super.onClose();
   }
 
   Map<String, dynamic> _buildRequestBody() {
@@ -117,6 +142,7 @@ class CreateNurseRequestController extends GetxController {
   }
 
   Future<void> submitRequest() async {
+    if (isLoading.value) return;
     isLoading(true);
     FocusManager.instance.primaryFocus?.unfocus();
 
@@ -135,6 +161,7 @@ class CreateNurseRequestController extends GetxController {
 
   Future<void> updateRequest() async {
     if (editRequest == null) return;
+    if (isLoading.value) return;
     isLoading(true);
     FocusManager.instance.primaryFocus?.unfocus();
 

@@ -7,6 +7,7 @@ import '../../components/app_scaffold.dart';
 import '../../main.dart';
 import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
+import '../../utils/price_widget.dart';
 import 'create_test_order_controller.dart';
 import 'lab_test_list_screen.dart';
 import 'model/lab_test_model.dart';
@@ -44,7 +45,7 @@ class _CreateTestOrderScreenState extends State<CreateTestOrderScreen> {
         body: AnimatedScrollView(
           listAnimationType: ListAnimationType.FadeIn,
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(24),
           children: [
             16.height,
 
@@ -149,6 +150,7 @@ class _CreateTestOrderScreenState extends State<CreateTestOrderScreen> {
                 controller: controller.clinicalNotesCont,
                 textFieldType: TextFieldType.OTHER,
                 maxLines: 4,
+                maxLength: 2000,
                 decoration: InputDecoration(
                   hintText: '${locale.value.clinicalNotes}...',
                   hintStyle: GoogleFonts.plusJakartaSans(
@@ -247,13 +249,10 @@ class _CreateTestOrderScreenState extends State<CreateTestOrderScreen> {
                             color: secondaryTextColor,
                           ),
                         ),
-                        Text(
-                          '\$${controller.totalAmount.value.toStringAsFixed(2)}',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: isDarkMode.value ? Colors.white : primaryTextColor,
-                          ),
+                        PriceWidget(
+                          price: controller.totalAmount.value,
+                          size: 20,
+                          color: isDarkMode.value ? Colors.white : primaryTextColor,
                         ),
                       ],
                     ),
@@ -343,13 +342,10 @@ class _CreateTestOrderScreenState extends State<CreateTestOrderScreen> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 4.height,
-                Text(
-                  '\$${test.defaultPrice.toStringAsFixed(2)}',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: appColorSecondary,
-                  ),
+                PriceWidget(
+                  price: test.defaultPrice,
+                  size: 13,
+                  color: appColorSecondary,
                 ),
               ],
             ),

@@ -1814,4 +1814,44 @@ class LanguageEn extends BaseLanguage {
   @override String get videoConsult => 'Video Consult';
   @override String get myDoctorAppointments => 'My Doctor Appointments';
   @override String get myVideoConsults => 'My Video Consults';
+
+  // Lab Tests & Radiology Booking
+  @override String get labTests => 'Lab Tests';
+  @override String get labTestCategories => 'Test Categories';
+  @override String get createOrder => 'Create Order';
+  @override String get myOrders => 'My Orders';
+  @override String get orderNumber => 'Order Number';
+  @override String get testName => 'Test Name';
+  @override String get sampleType => 'Sample Type';
+  @override String get price => 'Price';
+  @override String get turnaroundTime => 'Turnaround Time';
+  @override String get clinicalNotes => 'Clinical Notes';
+  @override String get priority => 'Priority';
+  @override String get orderStatus => 'Order Status';
+  @override String get facilityBooking => 'Facility Booking';
+  @override String get bookingNumber => 'Booking Number';
+  @override String get selectFacility => 'Select Facility';
+  @override String get selectDate => 'Select Date';
+  @override String get selectTime => 'Select Time';
+  @override String get patientName => 'Patient Name';
+  @override String get patientPhone => 'Patient Phone';
+  @override String get bookingStatus => 'Booking Status';
+  @override String get availableSlots => 'Available Slots';
+  @override String get bookedSlot => 'Booked';
+  @override String get routinePriority => 'Routine';
+  @override String get urgentPriority => 'Urgent';
+  @override String get statPriority => 'STAT';
+  @override String get preparationInstructions => 'Preparation Instructions';
+  @override String get referenceRange => 'Reference Range';
+  @override String get laboratory => 'Laboratory';
+  @override String get radiology => 'Radiology';
+  @override String get cancelOrder => 'Cancel Order';
+  @override String get cancelBooking => 'Cancel Booking';
+  @override String get downloadReport => 'Download Report';
+  @override String get myBookings => 'My Bookings';
+  @override String get viewDetails => 'View Details';
+  @override String get confirmBooking => 'Confirm Booking';
+  @override String get bookingConfirmed => 'Booking Confirmed';
+  @override String get orderCreated => 'Order Created';
+  @override String get cancellationReason => 'Cancellation Reason';
 }

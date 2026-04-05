@@ -101,14 +101,20 @@ class APIEndPoints {
   static const String radiologyDetail = 'radiology'; // append /{id}
 
   //Lab Tests
-  static const String getLabTestCategories = 'v1/lab-test-categories';
-  static const String getLabTests = 'v1/lab-tests';
-  static const String getLabTestDetail = 'v1/lab-tests'; // append /{id}
-  static const String getTestOrders = 'v1/test-orders';
-  static const String createTestOrder = 'v1/test-orders';
-  static const String getTestOrderDetail = 'v1/test-orders'; // append /{id}
-  static const String cancelTestOrder = 'v1/test-orders'; // append /{id}/cancel
-  static const String downloadTestReport = 'v1/test-orders'; // append /{id}/report/download
+  static const String labTestCategories = 'v1/lab-test-categories';
+  static const String labTests = 'v1/lab-tests';
+  static String labTestDetail(int id) => '$labTests/$id';
+  static const String testOrders = 'v1/test-orders';
+  static String testOrderDetail(int id) => '$testOrders/$id';
+  static String testOrderCancel(int id) => '$testOrders/$id/cancel';
+  static String testOrderReportDownload(int id) => '$testOrders/$id/report/download';
+
+  // Facility Bookings
+  static const String facilityBookings = 'v1/facility-bookings';
+  static String facilityBookingDetail(int id) => '$facilityBookings/$id';
+  static String facilityBookingCancel(int id) => '$facilityBookings/$id/cancel';
+  static String labSlots(int labId) => '$facilityBookings/labs/$labId/slots';
+  static String radiologyCenterSlots(int centerId) => '$facilityBookings/radiology-centers/$centerId/slots';
 
   //Request Service
   static const String saveRequestService = 'v1/save-request-service';

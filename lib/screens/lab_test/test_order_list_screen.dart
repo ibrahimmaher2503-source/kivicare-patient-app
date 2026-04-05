@@ -12,10 +12,27 @@ import 'components/test_order_card.dart';
 import 'create_test_order_screen.dart';
 import 'test_order_list_controller.dart';
 
-class TestOrderListScreen extends StatelessWidget {
-  TestOrderListScreen({super.key});
+class TestOrderListScreen extends StatefulWidget {
+  const TestOrderListScreen({super.key});
 
-  final TestOrderListController controller = Get.put(TestOrderListController());
+  @override
+  State<TestOrderListScreen> createState() => _TestOrderListScreenState();
+}
+
+class _TestOrderListScreenState extends State<TestOrderListScreen> {
+  late final TestOrderListController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(TestOrderListController());
+  }
+
+  @override
+  void dispose() {
+    Get.delete<TestOrderListController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +174,7 @@ class TestOrderListScreen extends StatelessWidget {
           ),
           10.height,
           Text(
-            'No test orders found.',
+            locale.value.noTestOrdersFound,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               letterSpacing: 0.1,

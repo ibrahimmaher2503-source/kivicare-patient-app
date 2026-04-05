@@ -9,6 +9,8 @@ import '../../main.dart';
 import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import '../../utils/constants.dart';
+import '../../utils/common_base.dart';
+import '../../utils/price_widget.dart';
 import 'create_nurse_request_screen.dart';
 import 'model/nurse_model.dart';
 
@@ -40,7 +42,7 @@ class NurseDetailScreen extends StatefulWidget {
   State<NurseDetailScreen> createState() => _NurseDetailScreenState();
 }
 
-class _NurseDetailScreenState extends State<NurseDetailScreen> with TickerProviderStateMixin {
+class _NurseDetailScreenState extends State<NurseDetailScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _pulseController;
 
   Nurse get nurseData => widget.nurseData;
@@ -74,6 +76,7 @@ class _NurseDetailScreenState extends State<NurseDetailScreen> with TickerProvid
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1800),
@@ -81,7 +84,17 @@ class _NurseDetailScreenState extends State<NurseDetailScreen> with TickerProvid
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _pulseController.stop();
+    } else if (state == AppLifecycleState.resumed) {
+      _pulseController.repeat(reverse: true);
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _pulseController.dispose();
     super.dispose();
   }
@@ -111,7 +124,7 @@ class _NurseDetailScreenState extends State<NurseDetailScreen> with TickerProvid
       infoCards.add(_InfoCardData(
         icon: Icons.payments_outlined,
         title: locale.value.hourlyRate,
-        value: '\$${nurseData.hourlyRate.toStringAsFixed(2)} / hour',
+        value: '${leftCurrencyFormat()}${nurseData.hourlyRate.toStringAsFixed(2)}${rightCurrencyFormat()} ${locale.value.perHour}',
         index: cardIndex++,
       ));
     }
@@ -120,6 +133,22 @@ class _NurseDetailScreenState extends State<NurseDetailScreen> with TickerProvid
         icon: Icons.location_on_outlined,
         title: locale.value.serviceArea,
         value: nurseData.serviceArea,
+        index: cardIndex++,
+      ));
+    }
+    if (nurseData.email.isNotEmpty) {
+      infoCards.add(_InfoCardData(
+        icon: Icons.email_outlined,
+        title: locale.value.email,
+        value: nurseData.email,
+        index: cardIndex++,
+      ));
+    }
+    if (nurseData.mobile.isNotEmpty) {
+      infoCards.add(_InfoCardData(
+        icon: Icons.phone_outlined,
+        title: locale.value.contactNumber,
+        value: nurseData.mobile,
         index: cardIndex++,
       ));
     }
@@ -349,7 +378,9 @@ class _NurseDetailScreenState extends State<NurseDetailScreen> with TickerProvid
                 final glowSpread = 4.0 + (_pulseController.value * 4.0);
                 return GestureDetector(
                   onTap: () {
-                    Get.to(() => CreateNurseRequestScreen(preSelectedNurse: nurseData));
+                    doIfLoggedIn(() {
+                      Get.to(() => CreateNurseRequestScreen(preSelectedNurse: nurseData));
+                    });
                   },
                   child: Container(
                     width: Get.width,

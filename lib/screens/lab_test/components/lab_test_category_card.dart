@@ -7,6 +7,7 @@ import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../model/lab_test_category_model.dart';
 import '../lab_test_list_screen.dart';
+import '../radiology_centers_screen.dart';
 
 class LabTestCategoryCard extends StatefulWidget {
   final LabTestCategory categoryData;
@@ -81,7 +82,11 @@ class _LabTestCategoryCardState extends State<LabTestCategoryCard>
         setState(() => _scale = 1.0);
         final tap = widget.onTap ?? () {
           hideKeyboard(context);
-          Get.to(() => LabTestListScreen(), arguments: {'categoryId': widget.categoryData.id});
+          if (widget.categoryData.slug.contains('radiology')) {
+            Get.to(() => const RadiologyCentersScreen());
+          } else {
+            Get.to(() => LabTestListScreen(), arguments: {'categoryId': widget.categoryData.id});
+          }
         };
         tap();
       },

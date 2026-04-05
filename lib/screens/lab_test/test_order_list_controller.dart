@@ -3,6 +3,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../api/core_apis.dart';
 import '../../main.dart';
+import '../../utils/constants.dart';
 import 'model/test_order_model.dart';
 
 class TestOrderListController extends GetxController {
@@ -42,7 +43,7 @@ class TestOrderListController extends GetxController {
     await orderFuture(
       CoreServiceApis.getTestOrderList(
         page: page.value,
-        perPage: 15,
+        perPage: Constants.perPageItem,
         orderList: orders,
         status: selectedStatus.value,
         lastPageCallBack: (isLast) => isLastPage(isLast),

@@ -1305,4 +1305,44 @@ abstract class BaseLanguage {
   String get videoConsult;
   String get myDoctorAppointments;
   String get myVideoConsults;
+
+  // Lab Tests & Radiology Booking
+  String get labTests;
+  String get labTestCategories;
+  String get createOrder;
+  String get myOrders;
+  String get orderNumber;
+  String get testName;
+  String get sampleType;
+  String get price;
+  String get turnaroundTime;
+  String get clinicalNotes;
+  String get priority;
+  String get orderStatus;
+  String get facilityBooking;
+  String get bookingNumber;
+  String get selectFacility;
+  String get selectDate;
+  String get selectTime;
+  String get patientName;
+  String get patientPhone;
+  String get bookingStatus;
+  String get availableSlots;
+  String get bookedSlot;
+  String get routinePriority;
+  String get urgentPriority;
+  String get statPriority;
+  String get preparationInstructions;
+  String get referenceRange;
+  String get laboratory;
+  String get radiology;
+  String get cancelOrder;
+  String get cancelBooking;
+  String get downloadReport;
+  String get myBookings;
+  String get viewDetails;
+  String get confirmBooking;
+  String get bookingConfirmed;
+  String get orderCreated;
+  String get cancellationReason;
 }

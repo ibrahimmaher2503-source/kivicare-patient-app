@@ -12,6 +12,7 @@ import '../../components/app_scaffold.dart';
 import '../../main.dart';
 import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
+import '../../utils/price_widget.dart';
 import 'model/test_order_model.dart';
 
 class TestOrderDetailScreen extends StatefulWidget {
@@ -24,7 +25,7 @@ class TestOrderDetailScreen extends StatefulWidget {
 }
 
 class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
-  bool _isDownloading = false;
+  final RxBool _isDownloading = false.obs;
 
   TestOrder get orderData => widget.orderData;
 
@@ -118,13 +119,17 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
       body: AnimatedScrollView(
         listAnimationType: ListAnimationType.FadeIn,
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         children: [
           16.height,
 
           // Order Header
           _buildOrderHeader(),
           20.height,
+
+          // Order Info (patient, doctor, lab technician, clinical notes, created_at)
+          _buildOrderInfoCard(),
+          16.height,
 
           // Items List
           _buildSectionTitle(locale.value.labTests),
@@ -227,6 +232,111 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
     );
   }
 
+  Widget _buildOrderInfoCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (orderData.patient != null && orderData.patient!.name.isNotEmpty)
+            _buildInfoRow(
+              icon: Icons.person_outlined,
+              label: locale.value.otherPatient,
+              value: orderData.patient!.name,
+            ),
+          if (orderData.doctor != null && orderData.doctor!.name.isNotEmpty)
+            _buildInfoRow(
+              icon: Icons.medical_services_outlined,
+              label: locale.value.doctor,
+              value: orderData.doctor!.name,
+            ),
+          if (orderData.labTechnician != null && orderData.labTechnician.toString().isNotEmpty)
+            _buildInfoRow(
+              icon: Icons.biotech_outlined,
+              label: locale.value.department,
+              value: orderData.labTechnician.toString(),
+            ),
+          if (orderData.clinicalNotes.isNotEmpty)
+            _buildInfoRow(
+              icon: Icons.notes_outlined,
+              label: locale.value.clinicalNotes,
+              value: orderData.clinicalNotes,
+            ),
+          if (orderData.createdAt.isNotEmpty)
+            _buildInfoRow(
+              icon: Icons.access_time_outlined,
+              label: locale.value.date,
+              value: orderData.createdAt,
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: isDarkMode.value
+                  ? appColorSecondary.withValues(alpha: 0.15)
+                  : appColorSecondary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 16, color: appColorSecondary),
+          ),
+          12.width,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 11,
+                    letterSpacing: 0.1,
+                    color: secondaryTextColor,
+                  ),
+                ),
+                2.height,
+                Text(
+                  value,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.1,
+                    color: isDarkMode.value ? Colors.white : primaryTextColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildItemCard(TestOrderItem item) {
     final hasResult = item.resultValue != null && item.resultValue!.isNotEmpty;
     final resultColor = _resultStatusColor(item.resultStatus);
@@ -286,14 +396,21 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
           8.height,
 
           // Price
-          Text(
-            '\$${item.price.toStringAsFixed(2)}',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: secondaryTextColor,
-            ),
-          ),
+          item.price > 0
+              ? PriceWidget(
+                  price: item.price,
+                  size: 13,
+                  color: secondaryTextColor,
+                )
+              : Text(
+                  locale.value.freeLabel,
+                  style: GoogleFonts.outfit(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.3,
+                    color: secondaryTextColor,
+                  ),
+                ),
 
           // Result Display
           if (hasResult) ...[
@@ -348,6 +465,26 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
                       ),
                     ),
                   ],
+                  if (item.resultNotes != null && item.resultNotes!.isNotEmpty) ...[
+                    6.height,
+                    Text(
+                      '${locale.value.notes}: ${item.resultNotes}',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        color: secondaryTextColor,
+                      ),
+                    ),
+                  ],
+                  if (item.resultDate != null && item.resultDate!.isNotEmpty) ...[
+                    6.height,
+                    Text(
+                      '${locale.value.date}: ${item.resultDate}',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        color: secondaryTextColor,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -377,17 +514,17 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
         children: [
           _buildSectionTitle(locale.value.totalAmount),
           16.height,
-          _buildFinancialRow(locale.value.totalAmount, '\$${orderData.totalAmount.toStringAsFixed(2)}'),
+          _buildFinancialRowWidget(locale.value.totalAmount, PriceWidget(price: orderData.totalAmount, size: 14)),
           if (orderData.discountAmount > 0) ...[
             8.height,
-            _buildFinancialRow(locale.value.discount, '-\$${orderData.discountAmount.toStringAsFixed(2)}', valueColor: resultNormalColor),
+            _buildFinancialRowWidget(locale.value.discount, PriceWidget(price: orderData.discountAmount, size: 14, color: resultNormalColor), prefix: '-'),
           ],
           8.height,
           const Divider(),
           8.height,
-          _buildFinancialRow(
+          _buildFinancialRowWidget(
             locale.value.price,
-            '\$${orderData.finalAmount.toStringAsFixed(2)}',
+            PriceWidget(price: orderData.finalAmount, size: 16, color: isDarkMode.value ? Colors.white : primaryTextColor),
             isBold: true,
           ),
           12.height,
@@ -398,6 +535,29 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFinancialRowWidget(String label, Widget valueWidget, {bool isBold = false, String prefix = ''}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: isBold ? 15 : 13,
+            fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
+            color: isDarkMode.value ? Colors.white70 : secondaryTextColor,
+          ),
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (prefix.isNotEmpty) Text(prefix, style: GoogleFonts.plusJakartaSans(fontSize: isBold ? 16 : 14, fontWeight: isBold ? FontWeight.w700 : FontWeight.w600, color: isDarkMode.value ? Colors.white70 : secondaryTextColor)),
+            valueWidget,
+          ],
+        ),
+      ],
     );
   }
 
@@ -434,16 +594,16 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
     return Column(
       children: [
         if (canDownload)
-          GestureDetector(
-            onTap: _isDownloading
+          Obx(() => GestureDetector(
+            onTap: _isDownloading.value
                 ? null
                 : () async {
-                    setState(() => _isDownloading = true);
+                    _isDownloading(true);
                     try {
                       final response = await CoreServiceApis.downloadTestReport(orderId: orderData.id);
 
                       if (response.statusCode != 200) {
-                        throw Exception('Failed to download report (status ${response.statusCode})');
+                        throw Exception('${locale.value.somethingWentWrong} (${response.statusCode})');
                       }
 
                       final dir = await getApplicationDocumentsDirectory();
@@ -453,15 +613,20 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
 
                       toast(locale.value.reportDownloaded);
 
-                      final uri = Uri.file(file.path);
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
+                      // Try to open the file; silently ignore if platform doesn't support file:// URIs
+                      try {
+                        final uri = Uri.file(file.path);
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri);
+                        }
+                      } catch (_) {
+                        // File saved successfully but could not be opened directly
                       }
                     } catch (e) {
                       log("Download report error: $e");
-                      toast(e.toString());
+                      toast(locale.value.somethingWentWrong);
                     } finally {
-                      setState(() => _isDownloading = false);
+                      _isDownloading(false);
                     }
                   },
             child: Container(
@@ -481,7 +646,7 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
                 ],
               ),
               child: Center(
-                child: _isDownloading
+                child: _isDownloading.value
                     ? const SizedBox(
                         height: 20,
                         width: 20,
@@ -508,31 +673,11 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
                       ),
               ),
             ),
-          ),
+          )),
         if (canCancel) ...[
           if (canDownload) 12.height,
           GestureDetector(
-            onTap: () {
-              showConfirmDialogCustom(
-                context,
-                title: '${locale.value.cancel}?',
-                dialogType: DialogType.CONFIRMATION,
-                positiveText: locale.value.cancel,
-                onAccept: (_) async {
-                  try {
-                    await CoreServiceApis.cancelTestOrder(
-                      orderId: orderData.id,
-                      request: {'reason': 'Cancelled by patient'},
-                    );
-                    toast(locale.value.testOrderCancelled);
-                    Get.back(result: true);
-                  } catch (e) {
-                    log("Cancel order error: $e");
-                    toast(e.toString());
-                  }
-                },
-              );
-            },
+            onTap: () => _showCancelDialog(context),
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -556,6 +701,114 @@ class _TestOrderDetailScreenState extends State<TestOrderDetailScreen> {
         ],
       ],
     );
+  }
+
+  void _showCancelDialog(BuildContext context) {
+    final reasonController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          backgroundColor: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(
+            '${locale.value.cancel}?',
+            style: GoogleFonts.outfit(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: isDarkMode.value ? Colors.white : primaryTextColor,
+            ),
+          ),
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  locale.value.cancellationReason,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 14,
+                    letterSpacing: 0.1,
+                    color: secondaryTextColor,
+                  ),
+                ),
+                16.height,
+                TextFormField(
+                  controller: reasonController,
+                  maxLines: 3,
+                  maxLength: 500,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    letterSpacing: 0.1,
+                    color: isDarkMode.value ? Colors.white : primaryTextColor,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: locale.value.cancellationReason,
+                    hintStyle: GoogleFonts.plusJakartaSans(
+                      fontSize: 12,
+                      letterSpacing: 0.1,
+                      color: secondaryTextColor,
+                    ),
+                    filled: true,
+                    fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return locale.value.thisFieldIsRequired;
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                locale.value.cancel,
+                style: GoogleFonts.plusJakartaSans(color: secondaryTextColor),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  Navigator.pop(ctx);
+                  _cancelOrder(reasonController.text.trim());
+                }
+              },
+              child: Text(
+                locale.value.submit,
+                style: GoogleFonts.plusJakartaSans(
+                  color: labStatusCancelledColor,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    ).then((_) => reasonController.dispose());
+  }
+
+  Future<void> _cancelOrder(String reason) async {
+    try {
+      await CoreServiceApis.cancelTestOrder(
+        orderId: orderData.id,
+        request: {'cancellation_reason': reason},
+      );
+      toast(locale.value.testOrderCancelled);
+      Get.back(result: true);
+    } catch (e) {
+      log("Cancel order error: $e");
+      toast(locale.value.somethingWentWrong);
+    }
   }
 
   Widget _buildSectionTitle(String title) {

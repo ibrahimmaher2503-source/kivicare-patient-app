@@ -1,5 +1,3 @@
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-
 class RequestServiceListResponse {
   bool status;
   List<RequestService> data;
@@ -10,7 +8,7 @@ class RequestServiceListResponse {
 
   RequestServiceListResponse({
     this.status = false, this.data = const [],
-    this.currentPage = 1, this.lastPage = 1, this.perPage = 10, this.total = 0,
+    this.currentPage = 1, this.lastPage = 1, this.perPage = 20, this.total = 0,
   });
 
   factory RequestServiceListResponse.fromJson(Map<String, dynamic> json) {
@@ -19,7 +17,7 @@ class RequestServiceListResponse {
       data: json["data"] is List ? List<RequestService>.from(json["data"].map((x) => RequestService.fromJson(x))) : [],
       currentPage: json["meta"] is Map ? (json["meta"]["current_page"] ?? 1) : 1,
       lastPage: json["meta"] is Map ? (json["meta"]["last_page"] ?? 1) : 1,
-      perPage: json["meta"] is Map ? (json["meta"]["per_page"] ?? 10) : 10,
+      perPage: json["meta"] is Map ? (json["meta"]["per_page"] ?? 20) : 20,
       total: json["meta"] is Map ? (json["meta"]["total"] ?? 0) : 0,
     );
   }
@@ -68,10 +66,4 @@ class RequestService {
     "updated_by": updatedBy, "deleted_by": deletedBy,
     "created_at": createdAt, "updated_at": updatedAt, "deleted_at": deletedAt,
   };
-}
-
-class RequestServiceListResult {
-  final RxList<RequestService> services;
-
-  RequestServiceListResult({required this.services});
 }

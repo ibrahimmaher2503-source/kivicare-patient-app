@@ -11,11 +11,28 @@ import '../../utils/colors.dart';
 import '../../utils/common_base.dart';
 import 'create_request_service_controller.dart';
 
-class CreateRequestServiceScreen extends StatelessWidget {
-  CreateRequestServiceScreen({super.key});
+class CreateRequestServiceScreen extends StatefulWidget {
+  const CreateRequestServiceScreen({super.key});
 
-  final CreateRequestServiceController controller = Get.put(CreateRequestServiceController());
+  @override
+  State<CreateRequestServiceScreen> createState() => _CreateRequestServiceScreenState();
+}
+
+class _CreateRequestServiceScreenState extends State<CreateRequestServiceScreen> {
+  late final CreateRequestServiceController controller;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(CreateRequestServiceController());
+  }
+
+  @override
+  void dispose() {
+    Get.delete<CreateRequestServiceController>();
+    super.dispose();
+  }
 
   Widget _buildSectionLabel(String text, IconData icon) {
     return Row(
@@ -132,7 +149,7 @@ class CreateRequestServiceScreen extends StatelessWidget {
                                     ),
                                     4.height,
                                     Text(
-                                      'Fill in the details below',
+                                      locale.value.fillDetailsBelow,
                                       style: GoogleFonts.plusJakartaSans(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
@@ -266,7 +283,7 @@ class CreateRequestServiceScreen extends StatelessWidget {
                         16.height,
 
                         // Section: Service Type
-                        _buildSectionLabel('Service Type', Icons.category_outlined),
+                        _buildSectionLabel(locale.value.serviceType, Icons.category_outlined),
                         16.height,
 
                         // Type (optional)
@@ -341,7 +358,7 @@ class CreateRequestServiceScreen extends StatelessWidget {
                     },
                     child: GestureDetector(
                       onTap: () async {
-                        if (formKey.currentState!.validate()) {
+                        if (formKey.currentState?.validate() ?? false) {
                           await controller.submitRequest();
                         }
                       },

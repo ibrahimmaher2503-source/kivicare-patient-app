@@ -33,8 +33,22 @@ class PaymentScreen extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 80),
           physics: const AlwaysScrollableScrollPhysics(),
           child: Obx(
-            () => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            () => RadioGroup<String>(
+              groupValue: paymentController.paymentOption.value,
+              onChanged: (String? value) {
+                if (value == null) return;
+                if (value == PaymentMethods.PAYMENT_METHOD_WALLET) {
+                  if (userWalletData.value.walletAmount.toStringAsFixed(appCurrency.value.noOfDecimal).toDouble() >= paymentController.payAmount.toStringAsFixed(appCurrency.value.noOfDecimal).toDouble()) {
+                    paymentController.paymentOption(value);
+                  } else {
+                    toast(locale.value.youDontHaveEnoughBalanceToCompleteThePaymentU);
+                  }
+                } else {
+                  paymentController.paymentOption(value);
+                }
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "* ${locale.value.noteForCashPaymentPurposesDontUseThePayNowBut}",
@@ -87,6 +101,7 @@ class PaymentScreen extends StatelessWidget {
                 ).visible(!isQuickBook)
               ],
             ).paddingSymmetric(horizontal: 16),
+            ),
           ),
         ).makeRefreshable,
       ),
@@ -183,10 +198,6 @@ class PaymentScreen extends StatelessWidget {
           ),
         ),
         value: value,
-        groupValue: paymentController.paymentOption.value,
-        onChanged: (val) {
-          paymentController.paymentOption(val.toString());
-        },
       ),
     );
   }
@@ -345,10 +356,6 @@ class PaymentScreen extends StatelessWidget {
             ),
           ),
           value: PaymentMethods.PAYMENT_METHOD_SADAD,
-          groupValue: paymentController.paymentOption.value,
-          onChanged: (value) {
-            paymentController.paymentOption(value.toString());
-          },
         ),
       ),
     );
@@ -397,10 +404,6 @@ class PaymentScreen extends StatelessWidget {
             ),
           ),
           value: PaymentMethods.PAYMENT_METHOD_CASH,
-          groupValue: paymentController.paymentOption.value,
-          onChanged: (value) {
-            paymentController.paymentOption(value.toString());
-          },
         ),
       ),
     );
@@ -460,14 +463,6 @@ class PaymentScreen extends StatelessWidget {
             ],
           ),
           value: PaymentMethods.PAYMENT_METHOD_WALLET,
-          groupValue: paymentController.paymentOption.value,
-          onChanged: (value) {
-            if (userWalletData.value.walletAmount.toStringAsFixed(appCurrency.value.noOfDecimal).toDouble() >= paymentController.payAmount.toStringAsFixed(appCurrency.value.noOfDecimal).toDouble()) {
-              paymentController.paymentOption(value.toString());
-            } else {
-              toast(locale.value.youDontHaveEnoughBalanceToCompleteThePaymentU);
-            }
-          },
         ),
       ),
     );

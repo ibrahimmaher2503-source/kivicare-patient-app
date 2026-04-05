@@ -7,6 +7,8 @@ import '../../components/app_scaffold.dart';
 import '../../main.dart';
 import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
+import '../../utils/common_base.dart';
+import '../../utils/price_widget.dart';
 import 'model/lab_test_model.dart';
 import 'create_test_order_screen.dart';
 
@@ -46,7 +48,7 @@ class LabTestDetailScreen extends StatelessWidget {
       body: AnimatedScrollView(
         listAnimationType: ListAnimationType.FadeIn,
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         children: [
           16.height,
 
@@ -58,10 +60,10 @@ class LabTestDetailScreen extends StatelessWidget {
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [gradientStart, Color(0xFF0A3060), gradientEnd],
+                colors: [gradientStart, appColorPrimary, gradientEnd],
                 stops: [0.0, 0.5, 1.0],
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
                   color: appColorPrimary.withValues(alpha: 0.35),
@@ -168,73 +170,77 @@ class LabTestDetailScreen extends StatelessWidget {
           ]),
 
           // Price section - standout section with gradient background
-          if (labTestData.defaultPrice > 0) ...[
-            16.height,
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: isDarkMode.value
-                      ? [
-                          appColorSecondary.withValues(alpha: 0.2),
-                          appColorAccent.withValues(alpha: 0.1),
-                        ]
-                      : [
-                          appColorSecondary.withValues(alpha: 0.08),
-                          appColorAccent.withValues(alpha: 0.04),
-                        ],
-                ),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isDarkMode.value
-                      ? appColorSecondary.withValues(alpha: 0.2)
-                      : appColorSecondary.withValues(alpha: 0.15),
-                ),
+          16.height,
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: isDarkMode.value
+                    ? [
+                        appColorSecondary.withValues(alpha: 0.2),
+                        appColorAccent.withValues(alpha: 0.1),
+                      ]
+                    : [
+                        appColorSecondary.withValues(alpha: 0.08),
+                        appColorAccent.withValues(alpha: 0.04),
+                      ],
               ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [gradientSecondaryStart, gradientSecondaryEnd],
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.payments_outlined, size: 22, color: Colors.white),
-                  ),
-                  16.width,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        locale.value.defaultPrice,
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 12,
-                          letterSpacing: 0.1,
-                          color: secondaryTextColor,
-                        ),
-                      ),
-                      4.height,
-                      Text(
-                        '\$${labTestData.defaultPrice.toStringAsFixed(2)}',
-                        style: GoogleFonts.outfit(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.5,
-                          color: isDarkMode.value ? appColorAccent : appColorSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isDarkMode.value
+                    ? appColorSecondary.withValues(alpha: 0.2)
+                    : appColorSecondary.withValues(alpha: 0.15),
               ),
             ),
-          ],
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.payments_outlined, size: 22, color: Colors.white),
+                ),
+                16.width,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      locale.value.defaultPrice,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        letterSpacing: 0.1,
+                        color: secondaryTextColor,
+                      ),
+                    ),
+                    4.height,
+                    labTestData.defaultPrice > 0
+                        ? PriceWidget(
+                            price: labTestData.defaultPrice,
+                            size: 28,
+                            color: isDarkMode.value ? appColorAccent : appColorSecondary,
+                          )
+                        : Text(
+                            locale.value.freeLabel,
+                            style: GoogleFonts.outfit(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: -0.3,
+                              color: isDarkMode.value ? appColorAccent : appColorSecondary,
+                            ),
+                          ),
+                  ],
+                ),
+              ],
+            ),
+          ),
 
           // Description
           if (labTestData.description.isNotEmpty) ...[
@@ -335,7 +341,9 @@ class LabTestDetailScreen extends StatelessWidget {
           // Add to Order Button - gradient with pulsing glow
           _AddToOrderButton(
             onTap: () {
-              Get.to(() => CreateTestOrderScreen(), arguments: {'labTest': labTestData});
+              doIfLoggedIn(() {
+                Get.to(() => CreateTestOrderScreen(), arguments: {'labTest': labTestData});
+              });
             },
           ),
           16.height,

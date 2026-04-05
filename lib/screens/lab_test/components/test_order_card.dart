@@ -6,6 +6,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/price_widget.dart';
 import '../model/test_order_model.dart';
 import '../test_order_detail_screen.dart';
 
@@ -277,14 +278,10 @@ class TestOrderCard extends StatelessWidget {
                               : _buildPriorityBadge(),
                         if (orderData.priority.isEmpty) const Spacer(),
                         // Right-aligned amount with currency formatting
-                        Text(
-                          '\$${orderData.finalAmount.toStringAsFixed(2)}',
-                          style: GoogleFonts.outfit(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: -0.3,
-                            color: isDarkMode.value ? Colors.white : primaryTextColor,
-                          ),
+                        PriceWidget(
+                          price: orderData.finalAmount,
+                          size: 20,
+                          color: isDarkMode.value ? Colors.white : primaryTextColor,
                         ),
                       ],
                     ),

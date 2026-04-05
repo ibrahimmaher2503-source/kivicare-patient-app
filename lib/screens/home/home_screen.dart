@@ -9,7 +9,7 @@ import '../../utils/empty_error_state_widget.dart';
 
 import 'components/choose_category_components.dart';
 import 'components/greetings_component.dart';
-import 'components/quick_book_component.dart';
+import 'components/doctor_quick_book_component.dart';
 import 'components/quick_services_component.dart';
 import 'components/perfect_clinic_list.dart';
 import '../service/components/popular_service_component.dart';
@@ -18,12 +18,28 @@ import '../doctor/components/popular_doctor_component.dart';
 import 'components/upcoming_appointment_components.dart';
 import 'home_controller.dart';
 import 'model/dashboard_res_model.dart';
-import 'package:kivicare_patient/screens/home/components/quick_book_controller.dart';
+import 'components/doctor_quick_book_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final HomeController homeScreenController = Get.find();
+
+  /// Staggered fade-in + slide-up for each home section
+  Widget _staggeredSection({required Widget child, required int index}) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 450 + (index * 100)),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) {
+        return Transform.translate(
+          offset: Offset(0, 16 * (1 - value)),
+          child: Opacity(opacity: value, child: child),
+        );
+      },
+      child: child,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +51,9 @@ class HomeScreen extends StatelessWidget {
       appBarChild: const GreetingsComponent(),
       body: RefreshIndicator(
         onRefresh: () async {
-          Get.find<QuickBookController>().resetFields();
+          if (Get.isRegistered<DoctorQuickBookController>()) {
+            Get.find<DoctorQuickBookController>().reset();
+          }
           return await homeScreenController.getDashboardDetail(isFromSwipeRefresh: true);
         },
         child: Obx(
@@ -61,22 +79,21 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ChooseCategoryComponents(),
+                    _staggeredSection(index: 0, child: ChooseCategoryComponents()),
                     const SizedBox(height: 8),
-                    SliderComponent(),
+                    _staggeredSection(index: 1, child: SliderComponent()),
                     const SizedBox(height: 24),
-                    QuickBookComponent(),
+                    _staggeredSection(index: 2, child: DoctorQuickBookComponent()),
                     const SizedBox(height: 24),
-                    const QuickServicesComponent(),
+                    _staggeredSection(index: 3, child: const QuickServicesComponent()),
                     const SizedBox(height: 24),
-                    UpcomingAppointmentComponents(),
+                    _staggeredSection(index: 4, child: UpcomingAppointmentComponents()),
                     const SizedBox(height: 24),
-                    // FeaturedServiceComponent(),
-                    PopularServiceComponent(),
+                    _staggeredSection(index: 5, child: PopularDoctorComponent()),
                     const SizedBox(height: 24),
-                    PerfectClinicComponent(),
+                    _staggeredSection(index: 6, child: PopularServiceComponent()),
                     const SizedBox(height: 24),
-                    PopularDoctorComponent(),
+                    _staggeredSection(index: 7, child: PerfectClinicComponent()),
                   ],
                 ),
               );

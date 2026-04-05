@@ -17,6 +17,8 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool darkMode = isDarkMode.value;
+
     return GestureDetector(
       onTap: () {
         if (appConfigs.value.isMultiVendor) {
@@ -30,11 +32,15 @@ class CategoryCard extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         decoration: BoxDecoration(
-          color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+          color: darkMode ? surfaceElevatedDark : surfaceElevated,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: darkMode ? glassStrokeDark : glassStrokeLight,
+            width: 0.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+              color: darkMode ? softShadowColorDark : softShadowColor,
               blurRadius: 16,
               offset: const Offset(0, 4),
               spreadRadius: 0,
@@ -45,36 +51,50 @@ class CategoryCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            /// Category avatar with subtle border and shadow
+            /// Category avatar with gradient ring
             Hero(
               tag: category.categoryImage + category.id.toString(),
               child: Container(
+                padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: isDarkMode.value ? glassStrokeDark : appColorSecondary.withValues(alpha: 0.12),
-                    width: 1.5,
+                  gradient: LinearGradient(
+                    colors: [
+                      appColorSecondary.withValues(alpha: 0.6),
+                      appColorAccent.withValues(alpha: 0.4),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDarkMode.value ? softShadowColorDark : appColorSecondary.withValues(alpha: 0.08),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                      color: darkMode
+                          ? softShadowColorDark
+                          : appColorSecondary.withValues(alpha: 0.12),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
-                child: CachedImageWidget(
-                  url: category.categoryImage,
-                  fit: BoxFit.fitHeight,
-                  circle: true,
-                  height: 72,
-                  width: 72,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: darkMode ? surfaceElevatedDark : surfaceElevated,
+                  ),
+                  padding: const EdgeInsets.all(2),
+                  child: CachedImageWidget(
+                    url: category.categoryImage,
+                    fit: BoxFit.fitHeight,
+                    circle: true,
+                    height: 68,
+                    width: 68,
+                  ),
                 ),
               ),
             ),
             12.height,
 
-            /// Category name with refined typography
+            /// Category name
             Hero(
               tag: category.name + category.id.toString(),
               child: Text(
@@ -86,7 +106,7 @@ class CategoryCard extends StatelessWidget {
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   letterSpacing: -0.1,
-                  color: isDarkMode.value ? Colors.white : primaryTextColor,
+                  color: darkMode ? Colors.white : primaryTextColor,
                   decoration: TextDecoration.none,
                 ),
               ),

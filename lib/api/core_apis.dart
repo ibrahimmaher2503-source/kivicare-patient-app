@@ -45,6 +45,9 @@ import '../screens/call_booking/model/call_booking_model.dart';
 import '../screens/call_booking/model/time_slot_model.dart';
 import '../screens/independent_booking/model/independent_doctor_model.dart';
 import '../screens/independent_booking/model/independent_booking_model.dart';
+import '../screens/radiology/model/radiology_center_model.dart';
+import '../models/home_healthcare_provider_model.dart';
+import '../screens/lab_test/model/lab_model.dart';
 import '../models/governorate_model.dart';
 import '../models/city_model.dart';
 import '../utils/api_end_points.dart';
@@ -218,14 +221,16 @@ class CoreServiceApis {
     String name = '',
     int? governorateId,
     int? cityId,
+    int? specialtyId,
   }) async {
     String nameParam = name.isNotEmpty ? '&name=${Uri.encodeQueryComponent(name)}' : '';
     String govParam = governorateId != null ? '&governorate_id=$governorateId' : '';
     String cityParam = cityId != null ? '&city_id=$cityId' : '';
+    String specParam = specialtyId != null ? '&specialty_id=$specialtyId' : '';
 
     final res = ClinicSearchListResponse.fromJson(await handleResponse(
       await buildHttpResponse(
-        '${APIEndPoints.clinicsSearch}?per_page=$perPage&page=$page$nameParam$govParam$cityParam',
+        '${APIEndPoints.clinicsSearch}?per_page=$perPage&page=$page$nameParam$govParam$cityParam$specParam',
         method: HttpMethodType.GET,
       ),
     ));
@@ -287,14 +292,22 @@ class CoreServiceApis {
     String name = '',
     int? governorateId,
     int? cityId,
+    int? specialtyId,
+    String gender = '',
+    double? minPrice,
+    double? maxPrice,
   }) async {
     String nameParam = name.isNotEmpty ? '&name=${Uri.encodeQueryComponent(name)}' : '';
     String govParam = governorateId != null ? '&governorate_id=$governorateId' : '';
     String cityParam = cityId != null ? '&city_id=$cityId' : '';
+    String specParam = specialtyId != null ? '&specialty_id=$specialtyId' : '';
+    String genderParam = gender.isNotEmpty ? '&gender=${Uri.encodeQueryComponent(gender)}' : '';
+    String minPriceParam = minPrice != null ? '&min_price=$minPrice' : '';
+    String maxPriceParam = maxPrice != null ? '&max_price=$maxPrice' : '';
 
     final res = DoctorSearchListResponse.fromJson(await handleResponse(
       await buildHttpResponse(
-        '${APIEndPoints.doctorsSearch}?per_page=$perPage&page=$page$nameParam$govParam$cityParam',
+        '${APIEndPoints.doctorsSearch}?per_page=$perPage&page=$page$nameParam$govParam$cityParam$specParam$genderParam$minPriceParam$maxPriceParam',
         method: HttpMethodType.GET,
       ),
     ));
@@ -758,6 +771,64 @@ class CoreServiceApis {
     return await buildHttpResponse('${APIEndPoints.downloadTestReport}/$orderId/report/download', method: HttpMethodType.GET);
   }
 
+  // ===== LABS BROWSE =====
+
+  static Future<RxList<Lab>> searchLabFacilities({
+    int page = 1,
+    int perPage = 15,
+    required List<Lab> labList,
+    Function(bool)? lastPageCallBack,
+    String testName = '',
+    int? governorateId,
+    int? cityId,
+  }) async {
+    String nameParam = testName.isNotEmpty ? '&test_name=${Uri.encodeQueryComponent(testName)}' : '';
+    String govParam = governorateId != null ? '&governorate_id=$governorateId' : '';
+    String cityParam = cityId != null ? '&city_id=$cityId' : '';
+
+    final res = LabListResponse.fromJson(await handleResponse(
+      await buildHttpResponse(
+        '${APIEndPoints.labsSearch}?per_page=$perPage&page=$page$nameParam$govParam$cityParam',
+        method: HttpMethodType.GET,
+      ),
+    ));
+
+    if (page == 1) labList.clear();
+    labList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+
+    return labList.obs;
+  }
+
+  // ===== RADIOLOGY CENTERS BROWSE =====
+
+  static Future<RxList<RadiologyCenter>> searchRadiologyCenters({
+    int page = 1,
+    int perPage = 15,
+    required List<RadiologyCenter> centerList,
+    Function(bool)? lastPageCallBack,
+    String scanType = '',
+    int? governorateId,
+    int? cityId,
+  }) async {
+    String scanParam = scanType.isNotEmpty ? '&scan_type=${Uri.encodeQueryComponent(scanType)}' : '';
+    String govParam = governorateId != null ? '&governorate_id=$governorateId' : '';
+    String cityParam = cityId != null ? '&city_id=$cityId' : '';
+
+    final res = RadiologyCenterListResponse.fromJson(await handleResponse(
+      await buildHttpResponse(
+        '${APIEndPoints.radiologySearch}?per_page=$perPage&page=$page$scanParam$govParam$cityParam',
+        method: HttpMethodType.GET,
+      ),
+    ));
+
+    if (page == 1) centerList.clear();
+    centerList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+
+    return centerList.obs;
+  }
+
   // ===== REQUEST SERVICE MODULE =====
 
   static Future<RequestService> saveRequestService({required Map<String, dynamic> request}) async {
@@ -1033,5 +1104,34 @@ class CoreServiceApis {
     bookingList.addAll(res.data);
     lastPageCallBack?.call(res.currentPage >= res.lastPage);
     return bookingList.obs;
+  }
+
+  // ===== HOME HEALTHCARE MODULE =====
+
+  static Future<RxList<HomeHealthcareProvider>> searchHomeHealthcare({
+    int page = 1,
+    int perPage = 15,
+    required List<HomeHealthcareProvider> providerList,
+    Function(bool)? lastPageCallBack,
+    int? governorateId,
+    int? cityId,
+    String serviceType = '',
+  }) async {
+    String govParam = governorateId != null ? '&governorate_id=$governorateId' : '';
+    String cityParam = cityId != null ? '&city_id=$cityId' : '';
+    String typeParam = serviceType.isNotEmpty ? '&service_type=${Uri.encodeQueryComponent(serviceType)}' : '';
+
+    final res = HomeHealthcareListResponse.fromJson(await handleResponse(
+      await buildHttpResponse(
+        '${APIEndPoints.homeHealthcareSearch}?per_page=$perPage&page=$page$govParam$cityParam$typeParam',
+        method: HttpMethodType.GET,
+      ),
+    ));
+
+    if (page == 1) providerList.clear();
+    providerList.addAll(res.data);
+    lastPageCallBack?.call(res.currentPage >= res.lastPage);
+
+    return providerList.obs;
   }
 }

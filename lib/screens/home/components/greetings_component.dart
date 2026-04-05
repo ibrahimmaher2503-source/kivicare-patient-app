@@ -19,28 +19,49 @@ class GreetingsComponent extends StatelessWidget {
       width: Get.width,
       child: Row(
         children: [
+          // Profile avatar with gradient ring
           Obx(
             () => Padding(
-              padding: const EdgeInsetsDirectional.only(end: 12),
+              padding: const EdgeInsetsDirectional.only(end: 14),
               child: Container(
-                padding: const EdgeInsets.all(2),
+                padding: const EdgeInsets.all(2.5),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: appColorAccent.withValues(alpha: 0.6),
-                    width: 2,
+                  gradient: LinearGradient(
+                    colors: [
+                      appColorAccent.withValues(alpha: 0.8),
+                      appColorSecondary.withValues(alpha: 0.6),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: appColorAccent.withValues(alpha: 0.2),
+                      blurRadius: 12,
+                      spreadRadius: 1,
+                    ),
+                  ],
                 ),
-                child: CachedImageWidget(
-                  url: loginUserData.value.profileImage,
-                  fit: BoxFit.cover,
-                  width: 46,
-                  height: 46,
-                  circle: true,
+                child: Container(
+                  padding: const EdgeInsets.all(1.5),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white12,
+                  ),
+                  child: CachedImageWidget(
+                    url: loginUserData.value.profileImage,
+                    fit: BoxFit.cover,
+                    width: 46,
+                    height: 46,
+                    circle: true,
+                  ),
                 ),
               ),
             ).visible(loginUserData.value.profileImage.contains("http")),
           ),
+
+          // Greeting text
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +72,12 @@ class GreetingsComponent extends StatelessWidget {
                     children: [
                       TextSpan(
                         text: '${locale.value.hey}, ',
-                        style: primaryTextStyle(color: white.withValues(alpha: 0.85), size: 15),
+                        style: GoogleFonts.plusJakartaSans(
+                          color: white.withValues(alpha: 0.8),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          letterSpacing: 0.1,
+                        ),
                       ),
                       TextSpan(
                         text: isLoggedIn.value ? loginUserData.value.userName.validate() : locale.value.guest.validate(),
@@ -78,7 +104,16 @@ class GreetingsComponent extends StatelessWidget {
                         height: 14,
                       ),
                       8.width,
-                      Text(loginUserData.value.address, maxLines: 1, overflow: TextOverflow.ellipsis, style: secondaryTextStyle(color: white.withValues(alpha: 0.8), size: 13)).flexible(),
+                      Text(
+                        loginUserData.value.address,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.plusJakartaSans(
+                          color: white.withValues(alpha: 0.75),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ).flexible(),
                     ],
                   ),
                 ).paddingTop(6).visible(loginUserData.value.address.isNotEmpty),
@@ -86,6 +121,8 @@ class GreetingsComponent extends StatelessWidget {
             ],
           ).expand(),
           16.width,
+
+          // Notification bell with glass effect
           GestureDetector(
             onTap: () {
               doIfLoggedIn(() {
@@ -97,10 +134,21 @@ class GreetingsComponent extends StatelessWidget {
               clipBehavior: Clip.none,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(11),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.12),
+                    color: glassTintLight,
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: glassStrokeLight,
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withValues(alpha: 0.06),
+                        blurRadius: 8,
+                        spreadRadius: 1,
+                      ),
+                    ],
                   ),
                   child: const CachedImageWidget(
                     url: Assets.navigationIcNotifyOutlined,
@@ -109,21 +157,36 @@ class GreetingsComponent extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 0,
-                  right: 0,
+                  top: -2,
+                  right: -2,
                   child: Obx(
                     () => Container(
                       padding: const EdgeInsets.all(4),
-                      constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                      constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
                       decoration: BoxDecoration(
-                        color: appColorAccent,
+                        gradient: const LinearGradient(
+                          colors: [appColorAccent, Color(0xFFF57C00)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                         shape: BoxShape.circle,
-                        border: Border.all(color: appColorPrimary, width: 1.5),
+                        border: Border.all(color: appColorPrimary, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: appColorAccent.withValues(alpha: 0.4),
+                            blurRadius: 6,
+                            spreadRadius: 1,
+                          ),
+                        ],
                       ),
                       child: Center(
                         child: Text(
                           unreadNotificationCount.value.toString(),
-                          style: boldTextStyle(color: white, size: 9),
+                          style: GoogleFonts.plusJakartaSans(
+                            color: white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),

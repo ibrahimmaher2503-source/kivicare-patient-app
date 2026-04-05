@@ -11,8 +11,17 @@ import '../../../utils/view_all_label_component.dart';
 import '../../nurse/nurse_list_screen.dart';
 import '../../nurse/nurse_request_list_screen.dart';
 import '../../lab_test/lab_test_categories_screen.dart';
+import '../../lab_test/labs_list_screen.dart';
+import '../../lab_test/radiology_centers_screen.dart';
 import '../../lab_test/test_order_list_screen.dart';
 import '../../request_service/request_service_list_screen.dart';
+import '../../icu/hospital_list_screen.dart';
+import '../../icu/admission_list_screen.dart';
+import '../../call_booking/call_doctor_list_screen.dart';
+import '../../call_booking/call_booking_list_screen.dart';
+import '../../independent_booking/independent_doctor_list_screen.dart';
+import '../../independent_booking/independent_booking_list_screen.dart';
+import '../../search/search_hub_screen.dart';
 
 /// Custom painter for decorative geometric shapes on service cards
 class _CardDecorationPainter extends CustomPainter {
@@ -77,7 +86,7 @@ class QuickServicesComponent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ViewAllLabel(
-          label: 'Quick Services',
+          label: locale.value.quickServices,
           isShowAll: false,
         ).paddingOnly(left: 16, right: 8),
         8.height,
@@ -91,6 +100,66 @@ class QuickServicesComponent extends StatelessWidget {
               children: [
                 _buildServiceCard(
                   context,
+                  icon: Icons.search_rounded,
+                  label: locale.value.searchProviders,
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFF1565C0),
+                      const Color(0xFF1976D2).withValues(alpha: 0.85),
+                      const Color(0xFF42A5F5).withValues(alpha: 0.65),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  delayIndex: 0,
+                  onTap: () {
+                    Get.to(() => const SearchHubScreen());
+                  },
+                ),
+                16.width,
+                _buildServiceCard(
+                  context,
+                  icon: Icons.person_pin_rounded,
+                  label: locale.value.bookADoctor,
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFF00695C),
+                      const Color(0xFF00897B).withValues(alpha: 0.85),
+                      const Color(0xFF26A69A).withValues(alpha: 0.65),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  delayIndex: 1,
+                  onTap: () {
+                    Get.to(() => const IndependentDoctorListScreen());
+                  },
+                ),
+                16.width,
+                _buildServiceCard(
+                  context,
+                  icon: Icons.video_call_rounded,
+                  label: locale.value.videoConsult,
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFF3949AB),
+                      const Color(0xFF5C6BC0).withValues(alpha: 0.85),
+                      const Color(0xFF7E57C2).withValues(alpha: 0.65),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  delayIndex: 2,
+                  onTap: () {
+                    Get.to(() => const CallDoctorListScreen());
+                  },
+                ),
+                16.width,
+                _buildServiceCard(
+                  context,
                   icon: Icons.medical_services_rounded,
                   label: locale.value.requestNurse,
                   gradient: const LinearGradient(
@@ -99,11 +168,9 @@ class QuickServicesComponent extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  delayIndex: 0,
+                  delayIndex: 3,
                   onTap: () {
-                    doIfLoggedIn(() {
-                      Get.to(() => NurseListScreen());
-                    });
+                    Get.to(() => NurseListScreen());
                   },
                 ),
                 16.width,
@@ -117,11 +184,49 @@ class QuickServicesComponent extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  delayIndex: 1,
+                  delayIndex: 4,
                   onTap: () {
-                    doIfLoggedIn(() {
-                      Get.to(() => LabTestCategoriesScreen());
-                    });
+                    Get.to(() => LabTestCategoriesScreen());
+                  },
+                ),
+                16.width,
+                _buildServiceCard(
+                  context,
+                  icon: Icons.science_outlined,
+                  label: locale.value.labs,
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFF1565C0),
+                      const Color(0xFF2196F3).withValues(alpha: 0.85),
+                      const Color(0xFF42A5F5).withValues(alpha: 0.65),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  delayIndex: 5,
+                  onTap: () {
+                    Get.to(() => const LabsListScreen());
+                  },
+                ),
+                16.width,
+                _buildServiceCard(
+                  context,
+                  icon: Icons.medical_information_outlined,
+                  label: locale.value.radiologyCenters,
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFF5E35B1),
+                      const Color(0xFF7C4DFF).withValues(alpha: 0.85),
+                      const Color(0xFF9C7CFF).withValues(alpha: 0.65),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  delayIndex: 6,
+                  onTap: () {
+                    Get.to(() => const RadiologyCentersScreen());
                   },
                 ),
                 16.width,
@@ -139,11 +244,29 @@ class QuickServicesComponent extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  delayIndex: 2,
+                  delayIndex: 7,
                   onTap: () {
-                    doIfLoggedIn(() {
-                      Get.to(() => RequestServiceListScreen());
-                    });
+                    Get.to(() => RequestServiceListScreen());
+                  },
+                ),
+                16.width,
+                _buildServiceCard(
+                  context,
+                  icon: Icons.local_hospital_rounded,
+                  label: locale.value.icuAdmissions,
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFFC62828),
+                      const Color(0xFFE53935).withValues(alpha: 0.85),
+                      const Color(0xFFEF5350).withValues(alpha: 0.65),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  delayIndex: 8,
+                  onTap: () {
+                    Get.to(() => HospitalListScreen());
                   },
                 ),
               ],
@@ -154,7 +277,7 @@ class QuickServicesComponent extends StatelessWidget {
 
         /// My Requests section
         ViewAllLabel(
-          label: 'My Requests',
+          label: locale.value.myRequests,
           isShowAll: false,
         ).paddingOnly(left: 16, right: 8),
         8.height,
@@ -198,6 +321,45 @@ class QuickServicesComponent extends StatelessWidget {
                   onTap: () {
                     doIfLoggedIn(() {
                       Get.to(() => RequestServiceListScreen());
+                    });
+                  },
+                ),
+                12.height,
+                _buildRequestTile(
+                  context,
+                  icon: Icons.local_hospital_outlined,
+                  label: locale.value.myIcuRequests,
+                  accentColor: urgencyCriticalColor,
+                  delayIndex: 3,
+                  onTap: () {
+                    doIfLoggedIn(() {
+                      Get.to(() => AdmissionListScreen());
+                    });
+                  },
+                ),
+                12.height,
+                _buildRequestTile(
+                  context,
+                  icon: Icons.video_call_outlined,
+                  label: locale.value.myVideoConsults,
+                  accentColor: callTypeVideoColor,
+                  delayIndex: 4,
+                  onTap: () {
+                    doIfLoggedIn(() {
+                      Get.to(() => const CallBookingListScreen());
+                    });
+                  },
+                ),
+                12.height,
+                _buildRequestTile(
+                  context,
+                  icon: Icons.person_pin_outlined,
+                  label: locale.value.myDoctorAppointments,
+                  accentColor: const Color(0xFF00897B),
+                  delayIndex: 5,
+                  onTap: () {
+                    doIfLoggedIn(() {
+                      Get.to(() => const IndependentBookingListScreen());
                     });
                   },
                 ),

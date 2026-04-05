@@ -1812,4 +1812,44 @@ class LanguageAr extends BaseLanguage {
   @override String get videoConsult => 'Video Consult'; // TODO: translate
   @override String get myDoctorAppointments => 'My Doctor Appointments'; // TODO: translate
   @override String get myVideoConsults => 'My Video Consults'; // TODO: translate
+
+  // Lab Tests & Radiology Booking
+  @override String get labTests => 'الاختبارات المخبرية';
+  @override String get labTestCategories => 'فئات الاختبار';
+  @override String get createOrder => 'إنشاء طلب';
+  @override String get myOrders => 'طلباتي';
+  @override String get orderNumber => 'رقم الطلب';
+  @override String get testName => 'اسم الاختبار';
+  @override String get sampleType => 'نوع العينة';
+  @override String get price => 'السعر';
+  @override String get turnaroundTime => 'وقت التسليم';
+  @override String get clinicalNotes => 'الملاحظات السريرية';
+  @override String get priority => 'الأولوية';
+  @override String get orderStatus => 'حالة الطلب';
+  @override String get facilityBooking => 'حجز المركز';
+  @override String get bookingNumber => 'رقم الحجز';
+  @override String get selectFacility => 'اختر المركز';
+  @override String get selectDate => 'اختر التاريخ';
+  @override String get selectTime => 'اختر الوقت';
+  @override String get patientName => 'اسم المريض';
+  @override String get patientPhone => 'رقم هاتف المريض';
+  @override String get bookingStatus => 'حالة الحجز';
+  @override String get availableSlots => 'الفترات المتاحة';
+  @override String get bookedSlot => 'محجوز';
+  @override String get routinePriority => 'روتيني';
+  @override String get urgentPriority => 'عاجل';
+  @override String get statPriority => 'فوري';
+  @override String get preparationInstructions => 'تعليمات التحضير';
+  @override String get referenceRange => 'النطاق المرجعي';
+  @override String get laboratory => 'المختبر';
+  @override String get radiology => 'الأشعات';
+  @override String get cancelOrder => 'إلغاء الطلب';
+  @override String get cancelBooking => 'إلغاء الحجز';
+  @override String get downloadReport => 'تنزيل التقرير';
+  @override String get myBookings => 'حجوزاتي';
+  @override String get viewDetails => 'عرض التفاصيل';
+  @override String get confirmBooking => 'تأكيد الحجز';
+  @override String get bookingConfirmed => 'تم تأكيد الحجز';
+  @override String get orderCreated => 'تم إنشاء الطلب';
+  @override String get cancellationReason => 'سبب الإلغاء';
 }

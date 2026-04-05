@@ -40,9 +40,9 @@ class CreateTestOrderController extends GetxController {
   }
 
   @override
-  void dispose() {
+  void onClose() {
     clinicalNotesCont.dispose();
-    super.dispose();
+    super.onClose();
   }
 
   void addTest(LabTest test) {

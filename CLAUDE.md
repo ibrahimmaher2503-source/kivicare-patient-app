@@ -233,6 +233,7 @@ assets/
 ## Key Features
 
 - **Appointments**: Book, view, reschedule appointments with doctors
+- **Lab Tests & Radiology**: Browse test catalog, create orders, book facility appointments
 - **Encounters**: View medical encounter records
 - **Incident Management**: Track and report healthcare incidents
 - **Multi-Patient Support**: Manage family members / other patients
