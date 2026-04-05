@@ -64,11 +64,12 @@ lib/                                  # 261 Dart files, 59 directories
 │   ├── auth_apis.dart               # Authentication endpoints
 │   ├── core_apis.dart               # Core app endpoints
 │   └── home_apis.dart               # Home/dashboard endpoints
-├── components/                       # Reusable UI components (20 files)
+├── components/                       # Reusable UI components (21 files)
 │   ├── app_scaffold.dart            # Base scaffold wrapper
 │   ├── cached_image_widget.dart     # Cached network images
 │   ├── loader_widget.dart           # Loading indicators
 │   ├── new_update_dialog.dart       # App update prompts
+│   ├── filter_count_badge.dart      # Filter count badge (unified across modules)
 │   └── ...                          # ~16 more shared widgets
 ├── generated/                        # Auto-generated code
 │   └── assets.dart                  # Asset path constants
@@ -120,7 +121,11 @@ lib/                                  # 261 Dart files, 59 directories
 │   ├── booking/                     # Appointment booking
 │   │   ├── components/
 │   │   ├── model/
-│   │   └── filter/                 # Clinic, price, service type filters
+│   │   └── filter/                 # Typed filtering system (FilterParams, location)
+│   │       ├── components/         # FilterLocationComponent (governorate/city picker)
+│   │       ├── model/              # FilterParams (typed filter data structure)
+│   │       ├── filter_controller.dart
+│   │       └── filter_screen.dart
 │   ├── slots/                       # Appointment slot selection
 │   ├── doctor/                      # Doctor listings & profiles
 │   ├── clinic/                      # Clinic information
@@ -311,6 +316,84 @@ Modified files: `colors.dart`, `app_theme.dart`, `main.dart`, `common_base.dart`
 
 ### Phases 2–6 — PENDING (Screens and remaining components)
 
+## Enhanced Filter System (Complete)
+
+Comprehensive redesign of filtering across doctor, clinic, service, and category modules. Implements typed FilterParams, consolidated filter logic, and location-based filtering.
+
+### FilterParams Model
+Type-safe replacement for positional `Get.arguments` lists. Located in `lib/screens/booking/filter/model/filter_params.dart`.
+
+```dart
+class FilterParams {
+  final int clinicId;
+  final String serviceType;
+  final String priceMin;
+  final String priceMax;
+  final String moduleType;      // "doctor", "clinic", "service", "category"
+  final int categoryId;
+  final int? governorateId;     // Location filters
+  final int? cityId;
+  final int? specialtyId;        // Advanced filters
+  final String gender;
+  final String ratingMin;
+  final String ratingMax;
+}
+```
+
+**Usage Pattern:**
+```dart
+// In list screen, construct FilterParams with current filter state
+final params = FilterParams(
+  moduleType: "doctor",
+  clinicId: doctorListCont.clinicId.value,
+  serviceType: doctorListCont.serviceType.value,
+  governorateId: doctorListCont.selectedGovernorateId.value,
+  cityId: doctorListCont.selectedCityId.value,
+  // ... other fields
+);
+
+// Pass via arguments to FilterScreen
+Get.to(() => FilterScreen(...), arguments: params);
+```
+
+### FilterCountBadge Component
+Unified badge widget showing active filter count across all modules.
+- **Location**: `lib/components/filter_count_badge.dart`
+- **Features**: Small gradient circle (gradientSecondaryStart/End), positioned overlay, auto-hide when count = 0
+- **Used in**: Doctor list, clinic list, service list, category list screens
+
+```dart
+Stack(
+  children: [
+    FilterButton(...),
+    FilterCountBadge(count: filterController.activeFilterCount),
+  ],
+)
+```
+
+### FilterLocationComponent
+Wraps GovernoratesCityPicker with design token styling.
+- **Location**: `lib/screens/booking/filter/components/filter_location_component.dart`
+- **Features**: surfaceElevated background, glass border, 16px radius, soft navy shadow
+- **State**: Reads from `FilterController.selectedGovernorateId` and `selectedCityId`
+- **Behavior**: Automatically resets city when governorate changes
+
+### FilterController Features
+- **activeFilterCount getter**: Single computed property replacing 9 scattered counter variables
+- **Location support**: `selectedGovernorateId`, `selectedCityId` reactive variables
+- **Advanced filters**: `selectedSpecialtyId`, `selectedGender`
+- **Callbacks**: `onGovernorateChanged(id)`, `onCityChanged(id)` for cascading logic
+- **Backwards compatible**: Still accepts legacy List-based Get.arguments if needed
+
+### Applied Modules
+All four list screens use the new filter system:
+1. **Doctor List**: `lib/screens/home/components/doctor_list_screen.dart`
+2. **Clinic List**: `lib/screens/home/components/clinic_list_screen.dart`
+3. **Service List**: `lib/screens/home/components/popular_service_list.dart`
+4. **Category List**: `lib/screens/service/services_list_screen.dart`
+
+Each module constructs FilterParams with its specific filters and passes to FilterScreen.
+
 ## Common Patterns
 
 ### API Call Pattern
@@ -353,4 +436,39 @@ await apiMethod().then((value) {
 Get.to(() => NextScreen());                    // Push
 Get.back();                                    // Pop
 Get.offAll(() => DashboardScreen());          // Replace all
+```
+
+### Filter Navigation Pattern
+```dart
+// Build FilterParams with current state
+final params = FilterParams(
+  moduleType: "doctor",
+  clinicId: doctorListCont.clinicId.value,
+  serviceType: doctorListCont.serviceType.value,
+  priceMin: doctorListCont.minimumPrice.toString(),
+  priceMax: doctorListCont.maximumPrice.toString(),
+  governorateId: doctorListCont.selectedGovernorateId.value,
+  cityId: doctorListCont.selectedCityId.value,
+  ratingMin: doctorListCont.minimumRating.toString(),
+  ratingMax: doctorListCont.maximumRating.toString(),
+  // ... other fields
+);
+
+// Navigate with typed arguments
+Get.to(() => FilterScreen(displayName: 'Doctor'), arguments: params);
+
+// In FilterScreen.onInit(), read FilterParams:
+if (Get.arguments is FilterParams) {
+  var params = Get.arguments as FilterParams;
+  // Use params.clinicId, params.governorateId, etc.
+}
+```
+
+### Accessing Active Filter Count
+```dart
+// Anywhere in the app with access to FilterController
+int activeCount = filterController.activeFilterCount;
+
+// Reactive updates in widgets
+Obx(() => Text('${filterController.activeFilterCount} filters active'))
 ```
