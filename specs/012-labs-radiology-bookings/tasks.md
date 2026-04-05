@@ -21,14 +21,14 @@
 
 **Checkpoint**: All paths, endpoints, and localization keys defined before foundational phase
 
-- [ ] T001 Create lib/api/lab_test_apis.dart with method signatures for getLabTestCategories(), getLabTests(), getTestOrder(), createTestOrder()
-- [ ] T002 Create lib/api/facility_booking_apis.dart with method signatures for getLabSlots(), getRadiologyCenterSlots(), createFacilityBooking(), getFacilityBookings()
-- [ ] T003 Update lib/utils/api_end_points.dart with all 13 new endpoints: labTestCategories, labTests, labTestDetail, testOrders, testOrderDetail, testOrderCancel, testOrderReportDownload, facilityBookings, facilityBookingDetail, facilityBookingCancel, labSlots, radiologyCenterSlots
-- [ ] T004 [P] Create lib/locale/ language keys in BaseLanguage: add ~30 keys for labs/radiology/booking terms (labTests, testName, sampleType, turnaroundTime, bookingNumber, selectDate, patientName, etc.)
-- [ ] T005 [P] Add English translations to lib/locale/language_en.dart for all new keys
-- [ ] T006 [P] Add Arabic translations to lib/locale/language_ar.dart for all new keys
-- [ ] T007 Create lib/models/ directory structure and placeholder files for all 8 models (LabTestCategory, LabTest, TestOrder, TestOrderItem, FacilityBooking, Lab, RadiologyCenter, BookingSlot)
-- [ ] T008 Update CLAUDE.md documentation with new feature summary, added endpoints, and key architectural decisions
+- [x] T001 Create lib/api/lab_test_apis.dart with method signatures for getLabTestCategories(), getLabTests(), getTestOrder(), createTestOrder()
+- [x] T002 Create lib/api/facility_booking_apis.dart with method signatures for getLabSlots(), getRadiologyCenterSlots(), createFacilityBooking(), getFacilityBookings()
+- [x] T003 Update lib/utils/api_end_points.dart with all 13 new endpoints: labTestCategories, labTests, labTestDetail, testOrders, testOrderDetail, testOrderCancel, testOrderReportDownload, facilityBookings, facilityBookingDetail, facilityBookingCancel, labSlots, radiologyCenterSlots
+- [x] T004 [P] Create lib/locale/ language keys in BaseLanguage: add ~30 keys for labs/radiology/booking terms (labTests, testName, sampleType, turnaroundTime, bookingNumber, selectDate, patientName, etc.)
+- [x] T005 [P] Add English translations to lib/locale/language_en.dart for all new keys
+- [x] T006 [P] Add Arabic translations to lib/locale/language_ar.dart for all new keys
+- [x] T007 Create lib/models/ directory structure and placeholder files for all 8 models (LabTestCategory, LabTest, TestOrder, TestOrderItem, FacilityBooking, Lab, RadiologyCenter, BookingSlot)
+- [x] T008 Update CLAUDE.md documentation with new feature summary, added endpoints, and key architectural decisions
 
 ---
 
