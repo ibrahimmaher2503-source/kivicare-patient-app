@@ -5,6 +5,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/app_scaffold.dart';
 import '../../components/cached_image_widget.dart';
+import '../../components/filter_count_badge.dart';
 import '../../components/loader_widget.dart';
 import '../../generated/assets.dart';
 import '../../main.dart';
@@ -12,6 +13,8 @@ import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import '../../utils/empty_error_state_widget.dart';
 import '../booking/filter/filter_screen.dart';
+import '../booking/filter/model/filter_params.dart';
+import '../booking/filter/filter_controller.dart';
 import 'components/service_card.dart';
 import 'model/service_list_model.dart';
 import 'search_service_widget.dart';
@@ -25,6 +28,7 @@ class ServiceListScreen extends StatelessWidget {
   ServiceListScreen({super.key, this.title, this.isFromClinicDetail = false, this.isFromDashboard = false});
 
   final ServiceListController serviceListCont = Get.put(ServiceListController());
+  final FilterController filterController = Get.put(FilterController());
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +56,22 @@ class ServiceListScreen extends StatelessWidget {
                     onTap: () async {
                       serviceListCont.searchCont.clear();
                       serviceListCont.page(1);
+
+                      // Create FilterParams with current filter values
+                      final params = FilterParams(
+                        moduleType: "category",
+                        clinicId: serviceListCont.clinicId.value,
+                        serviceType: serviceListCont.serviceType.value,
+                        priceMin: serviceListCont.priceMin.value,
+                        priceMax: serviceListCont.priceMax.value,
+                        categoryId: serviceListCont.category.value.id,
+                        governorateId: serviceListCont.selectedGovernorateId.value,
+                        cityId: serviceListCont.selectedCityId.value,
+                      );
+
                       await Get.to(
                         () => FilterScreen(displayName: 'category'),
-                        arguments: [
-                          serviceListCont.clinicId.value,
-                          serviceListCont.serviceType.value,
-                          serviceListCont.priceMin.value,
-                          serviceListCont.priceMax.value,
-                          "category",
-                          serviceListCont.category.value.id,
-                        ],
+                        arguments: params,
                         binding: BindingsBuilder(
                           () {
                             setStatusBarColor(
@@ -79,50 +89,33 @@ class ServiceListScreen extends StatelessWidget {
                       });
                     },
                     borderRadius: BorderRadius.circular(12),
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 46,
-                          width: 46,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(colors: [gradientStart, gradientEnd]),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: appColorPrimary.withValues(alpha: 0.2),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: const CachedImageWidget(
-                            url: Assets.iconsIcFilter,
-                            height: 28,
-                            color: white,
-                          ),
-                        ),
-                        if (serviceListCont.selectedFilterCount.value > 0)
-                          Positioned(
-                            top: -4,
-                            right: 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: const BoxDecoration(
-                                gradient: LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Text(
-                                '${serviceListCont.selectedFilterCount.value}',
-                                style: GoogleFonts.plusJakartaSans(
-                                  color: whiteTextColor,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
+                    child: Obx(
+                      () => Stack(
+                        children: [
+                          Container(
+                            height: 46,
+                            width: 46,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(colors: [gradientStart, gradientEnd]),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: appColorPrimary.withValues(alpha: 0.2),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
                                 ),
-                              ),
+                              ],
+                            ),
+                            child: const CachedImageWidget(
+                              url: Assets.iconsIcFilter,
+                              height: 28,
+                              color: white,
                             ),
                           ),
-                      ],
+                          FilterCountBadge(count: filterController.activeFilterCount),
+                        ],
+                      ),
                     ),
                   ),
                 ],

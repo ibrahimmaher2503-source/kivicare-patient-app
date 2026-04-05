@@ -1390,6 +1390,9 @@ class LanguageAr extends BaseLanguage {
   String get filterRating => 'التقييم';
 
   @override
+  String get filterLocation => 'الموقع';
+
+  @override
   String get filterCategory => 'الفئة';
 
   @override
@@ -1751,6 +1754,11 @@ class LanguageAr extends BaseLanguage {
   @override String get appointmentDetailsLabel => 'تفاصيل الموعد';
   @override String get slotIntervalLabel => 'فترة الفتحة الزمنية';
 
+  // Labs Browse
+  @override String get labs => 'المعامل';
+  @override String get browseLabs => 'تصفح المعامل';
+  @override String get noLabsFound => 'لم يتم العثور على معامل';
+
   // Location Filter
   @override String get governorate => 'المحافظة';
   @override String get allGovernorates => 'كل المحافظات';
@@ -1775,4 +1783,33 @@ class LanguageAr extends BaseLanguage {
   @override String get contactCenter => 'تواصل مع المركز';
   @override String get operatingHours => 'ساعات العمل';
   @override String get pricing => 'التسعير';
+
+  // Location & Search
+  @override String get searchProviders => 'البحث عن مقدمي الخدمات';
+  @override String get searchDoctors => 'البحث عن أطباء';
+  @override String get searchClinics => 'البحث عن عيادات';
+  @override String get searchNurses => 'البحث عن ممرضات';
+  @override String get searchLabs => 'البحث عن مختبرات';
+  @override String get searchRadiology => 'البحث عن أشعة';
+  @override String get searchHomeHealthcare => 'البحث عن رعاية منزلية';
+  @override String get specialty => 'التخصص';
+  @override String get minPrice => 'الحد الأدنى للسعر';
+  @override String get maxPrice => 'الحد الأقصى للسعر';
+  @override String get noSearchResults => 'لا توجد نتائج';
+  @override String get broadenFilters => 'حاول توسيع معايير البحث';
+  @override String get homeHealthcare => 'الرعاية الصحية المنزلية';
+  @override String get radiologyCenter => 'مركز الأشعة';
+  @override String get allSpecialties => 'جميع التخصصات';
+  @override String get filterByGender => 'تصفية حسب الجنس';
+  @override String get filterByAvailability => 'التوفر';
+  @override String get physiotherapy => 'علاج طبيعي';
+  @override String get elderlyCare => 'رعاية المسنين';
+  @override String get postSurgery => 'ما بعد الجراحة';
+  @override String get chronicCare => 'رعاية الأمراض المزمنة';
+
+  // Unified Doctor Booking
+  @override String get bookADoctor => 'Book a Doctor'; // TODO: translate
+  @override String get videoConsult => 'Video Consult'; // TODO: translate
+  @override String get myDoctorAppointments => 'My Doctor Appointments'; // TODO: translate
+  @override String get myVideoConsults => 'My Video Consults'; // TODO: translate
 }

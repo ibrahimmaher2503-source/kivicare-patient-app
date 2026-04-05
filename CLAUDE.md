@@ -48,7 +48,13 @@ flutterfire configure        # Reconfigure Firebase (if needed)
 ### State Management
 - **GetX** (`get: ^4.7.2`) for state management, routing, and dependency injection
 - Reactive state using `.obs` observables and `Obx()` widgets
-- Global state stored in `lib/utils/common_base.dart` (e.g., `isLoggedIn`, `loginUserData`, `isDarkMode`)
+- Global state stored in `lib/utils/common_base.dart` (e.g., `isLoggedIn`, `loginUserData`)
+- `isDarkMode` reactive var lives in `lib/utils/app_common.dart` — NOT in `common_base.dart`
+
+### UI Styling & Fonts
+- **nb_utils** helpers: `primaryTextStyle()`, `boldTextStyle()`, `boxDecorationDefault()`, etc.
+- **Fonts**: Google Fonts — **Plus Jakarta Sans** (body text) + **Outfit** (display/headings)
+- `GoogleFonts.xxx()` returns a `TextStyle` directly — do NOT call `.textStyle` on it
 
 ### Project Structure
 
@@ -69,14 +75,11 @@ lib/                                  # 261 Dart files, 59 directories
 ├── google_calendar/                  # Google Calendar integration
 │   ├── calendar_client.dart         # Calendar API client
 │   └── calendar_event_service.dart  # Event CRUD operations
-├── locale/                           # Internationalization (7 files)
+├── locale/                           # Internationalization (4 files)
 │   ├── app_localizations.dart
 │   ├── languages.dart               # Language configuration
 │   ├── language_en.dart             # English
-│   ├── language_ar.dart             # Arabic
-│   ├── language_de.dart             # German
-│   ├── language_fr.dart             # French
-│   └── language_hi.dart             # Hindi
+│   └── language_ar.dart             # Arabic
 ├── models/                           # Shared data models (3 files)
 │   ├── base_response_model.dart
 │   ├── notificationdata_model.dart
@@ -137,8 +140,8 @@ lib/                                  # 261 Dart files, 59 directories
 │   ├── colors.dart                  # Color definitions
 │   ├── api_end_points.dart          # API endpoints (72 endpoints)
 │   ├── local_storage.dart           # GetStorage wrapper
-│   ├── common_base.dart             # Global state variables
-│   ├── app_common.dart              # Common utility functions
+│   ├── common_base.dart             # Global state variables (isLoggedIn, loginUserData)
+│   ├── app_common.dart              # Common utility functions + isDarkMode reactive var
 │   ├── push_notification_service.dart # Firebase messaging
 │   ├── price_widget.dart            # Price formatting widget
 │   ├── empty_error_state_widget.dart # Empty/error state display
@@ -228,7 +231,7 @@ assets/
 - **Encounters**: View medical encounter records
 - **Incident Management**: Track and report healthcare incidents
 - **Multi-Patient Support**: Manage family members / other patients
-- **Multi-language**: Support for English, Arabic, German, French, Hindi
+- **Multi-language**: Support for English and Arabic (RTL)
 - **Push Notifications**: Firebase Cloud Messaging integration
 - **Google Calendar**: Sync appointments to Google Calendar
 - **Google Maps**: Location services for clinics
@@ -270,6 +273,11 @@ assets/
 - Global `locale` variable defined in `main.dart`
 - Add new translations to all language files in `lib/locale/`
 
+### Known Pre-existing Warnings (do not fix unless asked)
+- `Radio` `groupValue`/`onChanged` deprecation in `payment_screen.dart`
+- `AppBarTheme` `color` deprecation in theme files
+These existed before recent work and should not be treated as regressions.
+
 ### Custom Packages
 Several payment gateways use custom forks from `iqonic-design` GitHub:
 - `flutterwave_standard`
@@ -279,6 +287,29 @@ Several payment gateways use custom forks from `iqonic-design` GitHub:
 - `midpay`
 
 These are specified as git dependencies in `pubspec.yaml`.
+
+## UI Modernization (Clinical Elegance)
+
+Design system upgrade in progress. Phase 1 is complete.
+
+### Design Tokens
+- Card radius: **16px**
+- Input radius: **12px**
+- Bottom sheets / scaffold body padding: **24px**
+- Shadows: navy-tinted soft shadows
+
+### Phase 1 — COMPLETE (Foundation Layer)
+Modified files: `colors.dart`, `app_theme.dart`, `main.dart`, `common_base.dart`, `app_scaffold.dart`, `loader_widget.dart`, `app_dialogue_component.dart`, `bottom_selection_widget.dart`
+
+### Color Tokens Added to `colors.dart`
+- **Gradients**: `gradientStart`, `gradientEnd`, `gradientSecondaryStart`, `gradientSecondaryEnd`
+- **Glass**: `glassTintLight`, `glassTintDark`, `glassStrokeLight`, `glassStrokeDark`
+- **Shadows**: `softShadowColor`, `softShadowColorMedium`, `softShadowColorDark`
+- **Surfaces**: `surfaceElevated`, `surfaceElevatedDark`, `surfaceSubtle`
+- **Shimmer**: `shimmerBase`, `shimmerHighlight`, `shimmerBaseDark`, `shimmerHighlightDark`
+- **Input**: `inputFillColor`, `inputFillColorDark`, `inputFocusGlow`
+
+### Phases 2–6 — PENDING (Screens and remaining components)
 
 ## Common Patterns
 

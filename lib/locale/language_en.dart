@@ -1391,6 +1391,9 @@ class LanguageEn extends BaseLanguage {
   String get filterRating => 'Rating';
 
   @override
+  String get filterLocation => 'Location';
+
+  @override
   String get filterCategory => 'Category';
 
   @override
@@ -1752,6 +1755,11 @@ class LanguageEn extends BaseLanguage {
   @override String get appointmentDetailsLabel => 'Appointment Details';
   @override String get slotIntervalLabel => 'Slot Interval';
 
+  // Labs Browse
+  @override String get labs => 'Labs';
+  @override String get browseLabs => 'Browse Labs';
+  @override String get noLabsFound => 'No labs found';
+
   // Location Filter
   @override String get governorate => 'Governorate';
   @override String get allGovernorates => 'All Governorates';
@@ -1776,4 +1784,34 @@ class LanguageEn extends BaseLanguage {
   @override String get contactCenter => 'Contact Center';
   @override String get operatingHours => 'Operating Hours';
   @override String get pricing => 'Pricing';
+
+  // Location & Search
+  @override String get searchProviders => 'Search Providers';
+  @override String get searchDoctors => 'Search Doctors';
+  @override String get searchClinics => 'Search Clinics';
+  @override String get searchNurses => 'Search Nurses';
+  @override String get searchLabs => 'Search Labs';
+  @override String get searchRadiology => 'Search Radiology';
+  @override String get searchHomeHealthcare => 'Search Home Healthcare';
+  @override String get specialty => 'Specialty';
+
+  @override String get minPrice => 'Min Price';
+  @override String get maxPrice => 'Max Price';
+  @override String get noSearchResults => 'No results found';
+  @override String get broadenFilters => 'Try broadening your filters';
+  @override String get homeHealthcare => 'Home Healthcare';
+  @override String get radiologyCenter => 'Radiology Center';
+  @override String get allSpecialties => 'All Specialties';
+  @override String get filterByGender => 'Filter by Gender';
+  @override String get filterByAvailability => 'Availability';
+  @override String get physiotherapy => 'Physiotherapy';
+  @override String get elderlyCare => 'Elderly Care';
+  @override String get postSurgery => 'Post Surgery';
+  @override String get chronicCare => 'Chronic Care';
+
+  // Unified Doctor Booking
+  @override String get bookADoctor => 'Book a Doctor';
+  @override String get videoConsult => 'Video Consult';
+  @override String get myDoctorAppointments => 'My Doctor Appointments';
+  @override String get myVideoConsults => 'My Video Consults';
 }

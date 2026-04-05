@@ -929,6 +929,8 @@ abstract class BaseLanguage {
 
   String get filterRating;
 
+  String get filterLocation;
+
   String get incidentManagement;
 
   String get requestHelpForAnyMistakeHappen;
@@ -1245,6 +1247,11 @@ abstract class BaseLanguage {
   String get appointmentDetailsLabel;
   String get slotIntervalLabel;
 
+  // Labs Browse
+  String get labs;
+  String get browseLabs;
+  String get noLabsFound;
+
   // Location Filter
   String get governorate;
   String get allGovernorates;
@@ -1269,4 +1276,33 @@ abstract class BaseLanguage {
   String get contactCenter;
   String get operatingHours;
   String get pricing;
+
+  // Location & Search
+  String get searchProviders;
+  String get searchDoctors;
+  String get searchClinics;
+  String get searchNurses;
+  String get searchLabs;
+  String get searchRadiology;
+  String get searchHomeHealthcare;
+  String get specialty;
+  String get minPrice;
+  String get maxPrice;
+  String get noSearchResults;
+  String get broadenFilters;
+  String get homeHealthcare;
+  String get radiologyCenter;
+  String get allSpecialties;
+  String get filterByGender;
+  String get filterByAvailability;
+  String get physiotherapy;
+  String get elderlyCare;
+  String get postSurgery;
+  String get chronicCare;
+
+  // Unified Doctor Booking
+  String get bookADoctor;
+  String get videoConsult;
+  String get myDoctorAppointments;
+  String get myVideoConsults;
 }

@@ -7,12 +7,14 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../../components/app_scaffold.dart';
 import '../../../components/cached_image_widget.dart';
+import '../../../components/filter_count_badge.dart';
 import '../../../components/loader_widget.dart';
 import '../../../generated/assets.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/empty_error_state_widget.dart';
 import '../../booking/filter/filter_screen.dart';
+import '../../booking/filter/model/filter_params.dart';
 import '../../service/model/service_list_model.dart';
 import '../../service/popular_search_service.dart';
 
@@ -49,55 +51,50 @@ class PopularServiceListScreen extends StatelessWidget {
                   onTap: () {
                     popularServiceCont.searchCont.clear();
                     popularServiceCont.page(1);
-                    Get.to(() => FilterScreen(displayName: "service",), arguments: [
-                      popularServiceCont.clinicId.value,
-                      popularServiceCont.serviceType.value,
-                      popularServiceCont.priceMin,
-                      popularServiceCont.priceMax,
-                      "service"
-                    ], binding: BindingsBuilder(() {
-                      setStatusBarColor(
-                        transparentColor,
-                        statusBarIconBrightness: Brightness.light,
-                        statusBarBrightness: Brightness.light,
-                        systemNavigationBarColor: whiteTextColor,
-                      );
-                    }));
+
+                    // Create FilterParams with current filter values
+                    final params = FilterParams(
+                      moduleType: "service",
+                      clinicId: popularServiceCont.clinicId.value,
+                      serviceType: popularServiceCont.serviceType.value,
+                      priceMin: popularServiceCont.priceMin.toString(),
+                      priceMax: popularServiceCont.priceMax.toString(),
+                      governorateId: popularServiceCont.selectedGovernorateId.value,
+                      cityId: popularServiceCont.selectedCityId.value,
+                    );
+
+                    Get.to(() => FilterScreen(displayName: "service"),
+                      arguments: params,
+                      binding: BindingsBuilder(() {
+                        setStatusBarColor(
+                          transparentColor,
+                          statusBarIconBrightness: Brightness.light,
+                          statusBarBrightness: Brightness.light,
+                          systemNavigationBarColor: whiteTextColor,
+                        );
+                      }));
                   },
-                  child: Stack(
-                    alignment: Alignment.topRight,
-                    children: [
-                      Container(
-                        height: 46,
-                        width: 46,
-                        alignment: Alignment.center,
-                        decoration: boxDecorationDefault(
-                          color: appColorPrimary,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const CachedImageWidget(
-                          url: Assets.iconsIcFilter,
-                          height: 28,
-                          color: white,
-                        ),
-                      ),
-                       if (filterController.totalServiceCount.value > 0)
-                        Positioned(
-                          top: -4,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              '${filterController.totalServiceCount.value}',
-                              style: const TextStyle(color: Colors.white, fontSize: 10),
-                            ),
+                  child: Obx(
+                    () => Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          height: 46,
+                          width: 46,
+                          alignment: Alignment.center,
+                          decoration: boxDecorationDefault(
+                            color: appColorPrimary,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const CachedImageWidget(
+                            url: Assets.iconsIcFilter,
+                            height: 28,
+                            color: white,
                           ),
                         ),
-                    ],
+                        FilterCountBadge(count: filterController.activeFilterCount),
+                      ],
+                    ),
                   ),
                 ),
               ],
