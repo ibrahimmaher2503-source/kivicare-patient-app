@@ -9,6 +9,10 @@ abstract class BaseLanguage {
 
   String get forbidden;
 
+  String get accessDenied;
+
+  String get youDontHavePermissionToAccessThis;
+
   String get pageNotFound;
 
   String get tooManyRequests;
@@ -1305,4 +1309,42 @@ abstract class BaseLanguage {
   String get videoConsult;
   String get myDoctorAppointments;
   String get myVideoConsults;
+
+  // Doctor Home Visit
+  String get doctorHomeVisit;
+  String get visitRequests;
+  String get submitVisitRequest;
+  String get visitReason;
+  String get contactPhone;
+  String get preferredDoctorLabel;
+  String get additionalNotes;
+  String get visitRequestSubmitted;
+  String get visitRequestUpdated;
+  String get noVisitRequests;
+  String get visitRequestDetail;
+  String get assignDoctor;
+  String get updateStatusLabel;
+  String get statusPendingLabel;
+  String get statusConfirmedLabel;
+  String get statusCancelledLabel;
+  String get statusCompletedLabel;
+  String get confirmVisit;
+  String get completeVisit;
+  String get cancelVisit;
+  String get enterCancellationReason;
+  String get addNote;
+  String get doctorAssigned;
+  String get reassignDoctor;
+  String get filterByStatus;
+  String get dateFrom;
+  String get dateTo;
+
+  // Facility Booking Confirmation
+  String get yourBookingIsConfirmed;
+  String get bookingNumber;
+  String get bookingDate;
+  String get bookingTime;
+  String get bookingConfirmationSent;
+  String get viewAllBookings;
+  String get backToHome;
 }

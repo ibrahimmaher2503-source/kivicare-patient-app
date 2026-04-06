@@ -4,6 +4,8 @@ import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../main.dart';
+import '../../utils/app_common.dart';
 class CancellationReasonDialog extends StatefulWidget {
   final Function(String reason) onConfirm;
 

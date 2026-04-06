@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/facility_booking_model.dart';
-import 'package:kivicare_patient/api/facility_booking_apis.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:kivicare_patient/utils/constants.dart';
@@ -10,6 +10,7 @@ import 'package:kivicare_patient/screens/lab_test/components/cancellation_reason
 import 'package:nb_utils/nb_utils.dart';
 
 /// Controller for managing user's bookings with filtering and RBAC
+import '../../main.dart';
 class MyBookingsController extends GetxController {
   final RxList<FacilityBooking> bookings = RxList<FacilityBooking>();
   final RxBool isLoading = false.obs;
@@ -34,7 +35,7 @@ class MyBookingsController extends GetxController {
 
     try {
       page(1);
-      final response = await FacilityBookingAPIs.getFacilityBookings(
+      final response = await CoreServiceApis.getFacilityBookings(
         type: selectedType.value,
         status: selectedStatus.value,
         page: 1,
@@ -70,7 +71,7 @@ class MyBookingsController extends GetxController {
 
     try {
       page(page.value + 1);
-      final response = await FacilityBookingAPIs.getFacilityBookings(
+      final response = await CoreServiceApis.getFacilityBookings(
         type: selectedType.value,
         status: selectedStatus.value,
         page: page.value,
@@ -169,7 +170,7 @@ class MyBookingsController extends GetxController {
         if (reason != null) 'reason': reason,
       };
 
-      final response = await FacilityBookingAPIs.cancelFacilityBooking(
+      final response = await CoreServiceApis.cancelFacilityBooking(
         bookingId: bookingId,
         request: request,
       );

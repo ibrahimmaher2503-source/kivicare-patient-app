@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/models/facility_booking_model.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/colors.dart';
@@ -20,16 +22,16 @@ class BookingConfirmationScreen extends StatelessWidget {
         backgroundColor: isDarkMode.value ? appBackgroundColorDark : Colors.white,
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(24.w),
+            padding: EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 40.w),
+                SizedBox(height: 40),
 
                 // Success Icon
                 Container(
-                  width: 80.w,
-                  height: 80.w,
+                  width: 80,
+                  height: 80,
                   decoration: BoxDecoration(
                     color: completedStatusColor.withOpacity(0.2),
                     shape: BoxShape.circle,
@@ -37,12 +39,12 @@ class BookingConfirmationScreen extends StatelessWidget {
                   child: Center(
                     child: Icon(
                       Icons.check_circle,
-                      size: 48.w,
+                      size: 48,
                       color: completedStatusColor,
                     ),
                   ),
                 ),
-                SizedBox(height: 24.w),
+                SizedBox(height: 24),
 
                 // Confirmation Title
                 Text(
@@ -50,21 +52,21 @@ class BookingConfirmationScreen extends StatelessWidget {
                   style: boldTextStyle(size: 24),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 12.w),
+                SizedBox(height: 12),
                 Text(
                   locale.value.yourBookingIsConfirmed,
                   style: secondaryTextStyle(size: 14),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 32.w),
+                SizedBox(height: 32),
 
                 // Booking Details Container
                 Container(
-                  padding: EdgeInsets.all(20.w),
+                  padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: isDarkMode.value ? cardBackgroundBlackDark : Colors.grey.shade50,
                     border: Border.all(color: isDarkMode.value ? Colors.grey.shade700 : Colors.grey.shade200),
-                    borderRadius: BorderRadius.circular(16.w),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
                     children: [
@@ -74,16 +76,16 @@ class BookingConfirmationScreen extends StatelessWidget {
                         value: booking.bookingNumber,
                         isBold: true,
                       ),
-                      SizedBox(height: 16.w),
+                      SizedBox(height: 16),
                       Divider(color: isDarkMode.value ? Colors.grey.shade700 : Colors.grey.shade200),
-                      SizedBox(height: 16.w),
+                      SizedBox(height: 16),
 
                       // Facility Name
                       _DetailRow(
                         label: locale.value.facility,
                         value: booking.facility?.name ?? '-',
                       ),
-                      SizedBox(height: 12.w),
+                      SizedBox(height: 12),
 
                       // Booking Date
                       _DetailRow(
@@ -92,21 +94,21 @@ class BookingConfirmationScreen extends StatelessWidget {
                           DateTime.parse(booking.bookingDate),
                         ),
                       ),
-                      SizedBox(height: 12.w),
+                      SizedBox(height: 12),
 
                       // Booking Time
                       _DetailRow(
                         label: locale.value.bookingTime,
                         value: booking.bookingTime,
                       ),
-                      SizedBox(height: 12.w),
+                      SizedBox(height: 12),
 
                       // Patient Name
                       _DetailRow(
                         label: locale.value.patientName,
                         value: booking.patientName,
                       ),
-                      SizedBox(height: 12.w),
+                      SizedBox(height: 12),
 
                       // Patient Phone
                       _DetailRow(
@@ -114,7 +116,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                         value: booking.patientPhone,
                       ),
                       if (booking.notes?.isNotEmpty ?? false) ...[
-                        SizedBox(height: 12.w),
+                        SizedBox(height: 12),
 
                         // Notes
                         _DetailRow(
@@ -122,9 +124,9 @@ class BookingConfirmationScreen extends StatelessWidget {
                           value: booking.notes ?? '-',
                         ),
                       ],
-                      SizedBox(height: 16.w),
+                      SizedBox(height: 16),
                       Divider(color: isDarkMode.value ? Colors.grey.shade700 : Colors.grey.shade200),
-                      SizedBox(height: 16.w),
+                      SizedBox(height: 16),
 
                       // Booking Status
                       Row(
@@ -135,17 +137,17 @@ class BookingConfirmationScreen extends StatelessWidget {
                             style: secondaryTextStyle(),
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
+                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: orange.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(8.w),
+                              color: pendingStatusColor.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               booking.status.replaceFirst(
                                 booking.status[0],
                                 booking.status[0].toUpperCase(),
                               ),
-                              style: boldTextStyle(size: 12, color: orange),
+                              style: boldTextStyle(size: 12, color: pendingStatusColor),
                             ),
                           ),
                         ],
@@ -153,20 +155,20 @@ class BookingConfirmationScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 32.w),
+                SizedBox(height: 32),
 
                 // Info Box
                 Container(
-                  padding: EdgeInsets.all(16.w),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: blue.withOpacity(0.1),
-                    border: Border.all(color: blue.withOpacity(0.3)),
-                    borderRadius: BorderRadius.circular(12.w),
+                    color: appColorPrimary.withOpacity(0.1),
+                    border: Border.all(color: appColorPrimary.withOpacity(0.3)),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.info, color: blue, size: 20.w),
-                      SizedBox(width: 12.w),
+                      Icon(Icons.info, color: appColorPrimary, size: 20),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           locale.value.bookingConfirmationSent,
@@ -176,13 +178,13 @@ class BookingConfirmationScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 80.w),
+                SizedBox(height: 80),
               ],
             ),
           ),
         ),
         bottomNavigationBar: Container(
-          padding: EdgeInsets.all(24.w),
+          padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: isDarkMode.value ? cardBackgroundBlackDark : Colors.white,
             border: Border(top: BorderSide(color: isDarkMode.value ? Colors.grey.shade800 : Colors.grey.shade100)),
@@ -194,21 +196,21 @@ class BookingConfirmationScreen extends StatelessWidget {
                 onPressed: () => Get.offAllNamed('/bookings'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: appColorPrimary,
-                  minimumSize: Size(double.infinity, 56.w),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.w)),
+                  minimumSize: Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 child: Text(
                   locale.value.viewAllBookings,
                   style: boldTextStyle(color: Colors.white),
                 ),
               ),
-              SizedBox(height: 12.w),
+              SizedBox(height: 12),
               OutlinedButton(
                 onPressed: () => Get.offAllNamed('/home'),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: appColorPrimary),
-                  minimumSize: Size(double.infinity, 56.w),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.w)),
+                  minimumSize: Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 child: Text(
                   locale.value.backToHome,
@@ -241,7 +243,7 @@ class _DetailRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: secondaryTextStyle(size: 13)),
-        SizedBox(width: 12.w),
+        SizedBox(width: 12),
         Expanded(
           child: Text(
             value,

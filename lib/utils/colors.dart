@@ -66,6 +66,17 @@ const darkGrayTextColor = Color(0xff3F414D);
 const primaryTextColor = Color(0xFF08234F); // Dark navy
 const secondaryTextColor = Color(0xFF828A90);
 
+// Grayscale Colors
+const gray50 = Color(0xFFF9FAFB);   // Very light
+const gray100 = Color(0xFFF3F4F6);  // Light
+const gray200 = Color(0xFFE5E7EB);  // Lighter
+const gray300 = Color(0xFFD1D5DB);  // Light-medium
+const gray400 = Color(0xFF9CA3AF);  // Medium
+const gray500 = Color(0xFF6B7280);  // Medium-dark
+const gray600 = Color(0xFF4B5563);  // Dark
+const gray700 = Color(0xFF374151);  // Darker
+const gray800 = Color(0xFF1F2937);  // Very dark
+
 //Status Colors - Coordinated with brand
 const pendingStatusColor = Color(0xFFFF9F66); // Warm orange
 const checkoutStatusColor = Color(0xFFFFB84D); // Amber

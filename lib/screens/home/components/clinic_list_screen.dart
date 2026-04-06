@@ -94,10 +94,10 @@ class ClinicListComponent extends StatelessWidget {
                           ),
                         ),
                         FilterCountBadge(count: filterController.activeFilterCount),
-                        ),
                     ],
                   ),
                 ),
+              ),
               ],
             ).paddingAll(16),
             SnapHelperWidget(

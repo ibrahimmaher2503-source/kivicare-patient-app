@@ -142,4 +142,11 @@ class APIEndPoints {
   static const String getIndependentSlots = 'v1/independent-doctors'; // append /{id}/slots
   static const String createIndependentBooking = 'v1/independent-booking';
   static const String getIndependentBookings = 'v1/independent-booking';
+
+  // Doctor Home Visit
+  static const String doctorVisitRequests = 'v1/doctor-visit/requests';
+  static String doctorVisitRequestDetail(String reference) => '$doctorVisitRequests/$reference';
+  static const String adminDoctorVisitRequests = 'v1/admin/doctor-visit/requests';
+  static String adminDoctorVisitRequestStatus(String reference) => '$adminDoctorVisitRequests/$reference/status';
+  static String adminDoctorVisitRequestAssignDoctor(String reference) => '$adminDoctorVisitRequests/$reference/assign-doctor';
 }

@@ -4,6 +4,7 @@ import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../utils/app_common.dart';
 class SlotTimeGrid extends StatelessWidget {
   final List<BookingSlot> slots;
   final String? selectedTime;

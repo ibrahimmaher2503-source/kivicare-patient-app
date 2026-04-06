@@ -1812,4 +1812,46 @@ class LanguageAr extends BaseLanguage {
   @override String get videoConsult => 'Video Consult'; // TODO: translate
   @override String get myDoctorAppointments => 'My Doctor Appointments'; // TODO: translate
   @override String get myVideoConsults => 'My Video Consults'; // TODO: translate
+
+  // Doctor Home Visit
+  @override String get doctorHomeVisit => 'زيارة الطبيب المنزلية';
+  @override String get visitRequests => 'طلبات الزيارة';
+  @override String get submitVisitRequest => 'تقديم طلب زيارة';
+  @override String get visitReason => 'سبب الزيارة';
+  @override String get contactPhone => 'هاتف التواصل';
+  @override String get preferredDoctorLabel => 'الطبيب المفضل';
+  @override String get additionalNotes => 'ملاحظات إضافية';
+  @override String get visitRequestSubmitted => 'تم تقديم طلب الزيارة بنجاح';
+  @override String get visitRequestUpdated => 'تم تحديث طلب الزيارة بنجاح';
+  @override String get noVisitRequests => 'لا توجد طلبات زيارة حتى الآن';
+  @override String get visitRequestDetail => 'تفاصيل طلب الزيارة';
+  @override String get assignDoctor => 'تعيين طبيب';
+  @override String get updateStatusLabel => 'تحديث الحالة';
+  @override String get statusPendingLabel => 'قيد الانتظار';
+  @override String get statusConfirmedLabel => 'مؤكد';
+  @override String get statusCancelledLabel => 'ملغي';
+  @override String get statusCompletedLabel => 'مكتمل';
+  @override String get confirmVisit => 'تأكيد الزيارة';
+  @override String get completeVisit => 'إكمال الزيارة';
+  @override String get cancelVisit => 'إلغاء الزيارة';
+  @override String get enterCancellationReason => 'أدخل سبب الإلغاء';
+  @override String get addNote => 'إضافة ملاحظة';
+  @override String get doctorAssigned => 'تم تعيين الطبيب بنجاح';
+  @override String get reassignDoctor => 'إعادة تعيين الطبيب';
+  @override String get filterByStatus => 'تصفية حسب الحالة';
+  @override String get dateFrom => 'من تاريخ';
+  @override String get dateTo => 'إلى تاريخ';
+
+  // Access Control
+  @override String get accessDenied => 'تم رفض الوصول';
+  @override String get youDontHavePermissionToAccessThis => 'ليس لديك إذن للوصول إلى هذا';
+
+  // Facility Booking Confirmation
+  @override String get yourBookingIsConfirmed => 'تم تأكيد حجزك';
+  @override String get bookingNumber => 'رقم الحجز';
+  @override String get bookingDate => 'تاريخ الحجز';
+  @override String get bookingTime => 'وقت الحجز';
+  @override String get bookingConfirmationSent => 'تم إرسال تأكيد إلى بريدك الإلكتروني ورقم هاتفك المسجل';
+  @override String get viewAllBookings => 'عرض جميع الحجوزات';
+  @override String get backToHome => 'العودة إلى الصفحة الرئيسية';
 }

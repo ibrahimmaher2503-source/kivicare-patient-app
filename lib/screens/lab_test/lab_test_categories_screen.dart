@@ -11,6 +11,7 @@ import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 /// Screen for browsing available lab test categories
+import '../../main.dart';
 class LabTestCategoriesScreen extends StatelessWidget {
   const LabTestCategoriesScreen({Key? key}) : super(key: key);
 

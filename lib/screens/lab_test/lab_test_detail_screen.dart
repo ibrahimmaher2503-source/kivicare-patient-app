@@ -9,6 +9,7 @@ import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/price_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../main.dart';
 class LabTestDetailScreen extends StatelessWidget {
   final int testId;
 

@@ -9,6 +9,8 @@ import 'package:kivicare_patient/utils/form_validators.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../main.dart';
+import '../../utils/app_common.dart';
 class BookingDetailsScreen extends StatelessWidget {
   final int facilityId;
   final String facilityType;

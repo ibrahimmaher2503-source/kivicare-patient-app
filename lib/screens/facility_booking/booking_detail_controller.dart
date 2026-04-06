@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
+import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/facility_booking_model.dart';
-import 'package:kivicare_patient/api/facility_booking_apis.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/rbac_utils.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -27,7 +27,7 @@ class BookingDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await FacilityBookingAPIs.getFacilityBookingDetail(
+      final response = await CoreServiceApis.getFacilityBookingDetail(
         bookingId: bookingId,
       );
 
@@ -63,7 +63,7 @@ class BookingDetailController extends GetxController {
         if (reason != null) 'reason': reason,
       };
 
-      final response = await FacilityBookingAPIs.cancelFacilityBooking(
+      final response = await CoreServiceApis.cancelFacilityBooking(
         bookingId: id,
         request: request,
       );

@@ -8,6 +8,8 @@ import 'package:kivicare_patient/components/app_scaffold.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../main.dart';
+import '../../utils/app_common.dart';
 class RadiologyDetailScreen extends StatelessWidget {
   final int testId;
 
@@ -144,6 +146,8 @@ class RadiologyDetailScreen extends StatelessWidget {
   }
 }
 
+import '../../main.dart';
+import '../../utils/app_common.dart';
 class _HeaderSection extends StatelessWidget {
   final dynamic test;
 
@@ -192,6 +196,8 @@ class _HeaderSection extends StatelessWidget {
   }
 }
 
+import '../../main.dart';
+import '../../utils/app_common.dart';
 class _SectionCard extends StatelessWidget {
   final String title;
   final String content;

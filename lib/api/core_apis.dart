@@ -50,6 +50,7 @@ import '../models/home_healthcare_provider_model.dart';
 import '../screens/lab_test/model/lab_model.dart';
 import '../models/governorate_model.dart';
 import '../models/city_model.dart';
+import '../screens/doctor_visit/model/doctor_visit_request_model.dart';
 import '../utils/api_end_points.dart';
 import '../utils/app_common.dart';
 import '../utils/constants.dart';
@@ -1133,5 +1134,66 @@ class CoreServiceApis {
     lastPageCallBack?.call(res.currentPage >= res.lastPage);
 
     return providerList.obs;
+  }
+
+  // ─── Doctor Home Visit ──────────────────────────────────────────
+
+  static Future<DoctorVisitRequest> submitDoctorVisitRequest({required Map<String, dynamic> request}) async {
+    final res = await handleResponse(
+      await buildHttpResponse(APIEndPoints.doctorVisitRequests, request: request, method: HttpMethodType.POST),
+    );
+    return DoctorVisitRequest.fromJson(res['data'] is Map ? res['data'] : res);
+  }
+
+  static Future<DoctorVisitRequestListResponse> getDoctorVisitRequests({int page = 1, int perPage = 15}) async {
+    return DoctorVisitRequestListResponse.fromJson(await handleResponse(
+      await buildHttpResponse('${APIEndPoints.doctorVisitRequests}?page=$page&per_page=$perPage', method: HttpMethodType.GET),
+    ));
+  }
+
+  static Future<DoctorVisitRequest> getDoctorVisitRequestDetail({required String reference}) async {
+    final res = await handleResponse(
+      await buildHttpResponse(APIEndPoints.doctorVisitRequestDetail(reference), method: HttpMethodType.GET),
+    );
+    return DoctorVisitRequest.fromJson(res['data'] is Map ? res['data'] : res);
+  }
+
+  static Future<DoctorVisitRequestListResponse> getAdminDoctorVisitRequests({
+    int page = 1,
+    int perPage = 15,
+    String? status,
+    String? dateFrom,
+    String? dateTo,
+    int? assignedDoctorId,
+  }) async {
+    String params = '?page=$page&per_page=$perPage';
+    if (status != null && status.isNotEmpty) params += '&status=$status';
+    if (dateFrom != null && dateFrom.isNotEmpty) params += '&date_from=$dateFrom';
+    if (dateTo != null && dateTo.isNotEmpty) params += '&date_to=$dateTo';
+    if (assignedDoctorId != null) params += '&assigned_doctor_id=$assignedDoctorId';
+
+    return DoctorVisitRequestListResponse.fromJson(await handleResponse(
+      await buildHttpResponse('${APIEndPoints.adminDoctorVisitRequests}$params', method: HttpMethodType.GET),
+    ));
+  }
+
+  static Future<DoctorVisitRequest> updateDoctorVisitRequestStatus({
+    required String reference,
+    required Map<String, dynamic> request,
+  }) async {
+    final res = await handleResponse(
+      await buildHttpResponse(APIEndPoints.adminDoctorVisitRequestStatus(reference), request: request, method: HttpMethodType.PUT),
+    );
+    return DoctorVisitRequest.fromJson(res['data'] is Map ? res['data'] : res);
+  }
+
+  static Future<DoctorVisitRequest> assignDoctorToVisitRequest({
+    required String reference,
+    required Map<String, dynamic> request,
+  }) async {
+    final res = await handleResponse(
+      await buildHttpResponse(APIEndPoints.adminDoctorVisitRequestAssignDoctor(reference), request: request, method: HttpMethodType.PUT),
+    );
+    return DoctorVisitRequest.fromJson(res['data'] is Map ? res['data'] : res);
   }
 }

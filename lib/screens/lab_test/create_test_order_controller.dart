@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:kivicare_patient/api/lab_test_apis.dart';
+import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/lab_test_model.dart';
 import 'package:kivicare_patient/models/test_order_model.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
@@ -108,7 +108,7 @@ class CreateTestOrderController extends GetxController {
         // 'doctor_id': null, // Optional
       };
 
-      final response = await LabTestAPIs.createTestOrder(request: request);
+      final response = await CoreServiceApis.createTestOrder(request: request);
 
       if (response.status ?? false) {
         // Parse created order from response

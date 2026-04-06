@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:kivicare_patient/api/facility_booking_apis.dart';
+import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/booking_slot_model.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
 
@@ -24,8 +24,8 @@ class FacilitySlotCalendarController extends GetxController {
       selectedDate.value = date;
 
       final response = facilityType == 'lab'
-          ? await FacilityBookingAPIs.getLabSlots(labId: facilityId, date: date)
-          : await FacilityBookingAPIs.getRadiologyCenterSlots(centerId: facilityId, date: date);
+          ? await CoreServiceApis.getLabSlots(labId: facilityId, date: date)
+          : await CoreServiceApis.getRadiologyCenterSlots(centerId: facilityId, date: date);
 
       if (response.status ?? false) {
         final slotsData = response.data?['slots'] as List?;

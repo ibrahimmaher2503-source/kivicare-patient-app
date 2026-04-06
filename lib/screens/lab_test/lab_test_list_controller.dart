@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:kivicare_patient/api/lab_test_apis.dart';
+import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/lab_test_model.dart';
 import 'package:kivicare_patient/screens/lab_test/lab_test_categories_controller.dart';
 import 'package:kivicare_patient/screens/lab_test/model/lab_test_filter.dart';
@@ -31,7 +31,7 @@ class LabTestListController extends LabTestCategoriesController {
       isLoadingTests(true);
       testErrorMessage(null);
 
-      final response = await LabTestAPIs.getLabTests(
+      final response = await CoreServiceApis.getLabTests(
         categoryId: filter.value.categoryId?.toString(),
         department: filter.value.department,
         search: filter.value.searchQuery,

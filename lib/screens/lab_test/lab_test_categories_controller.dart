@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:kivicare_patient/api/lab_test_apis.dart';
+import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/lab_test_category_model.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
 
@@ -23,7 +23,7 @@ class LabTestCategoriesController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await LabTestAPIs.getLabTestCategories();
+      final response = await CoreServiceApis.getLabTestCategories();
 
       if (response.status ?? false) {
         // Parse categories from response

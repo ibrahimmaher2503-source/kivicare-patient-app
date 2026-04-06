@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:kivicare_patient/api/facility_booking_apis.dart';
+import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/facility_booking_model.dart';
 import 'package:kivicare_patient/screens/facility_booking/booking_confirmation_screen.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
@@ -79,7 +79,7 @@ class BookingDetailsController extends GetxController {
         if (notes.value.isNotEmpty) 'notes': notes.value,
       };
 
-      final response = await FacilityBookingAPIs.createFacilityBooking(request: request);
+      final response = await CoreServiceApis.createFacilityBooking(request: request);
 
       if (response.status ?? false) {
         final bookingData = response.data as Map<String, dynamic>?;

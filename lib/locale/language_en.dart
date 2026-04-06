@@ -1814,4 +1814,46 @@ class LanguageEn extends BaseLanguage {
   @override String get videoConsult => 'Video Consult';
   @override String get myDoctorAppointments => 'My Doctor Appointments';
   @override String get myVideoConsults => 'My Video Consults';
+
+  // Doctor Home Visit
+  @override String get doctorHomeVisit => 'Doctor Home Visit';
+  @override String get visitRequests => 'Visit Requests';
+  @override String get submitVisitRequest => 'Submit Visit Request';
+  @override String get visitReason => 'Visit Reason';
+  @override String get contactPhone => 'Contact Phone';
+  @override String get preferredDoctorLabel => 'Preferred Doctor';
+  @override String get additionalNotes => 'Additional Notes';
+  @override String get visitRequestSubmitted => 'Visit request submitted successfully';
+  @override String get visitRequestUpdated => 'Visit request updated successfully';
+  @override String get noVisitRequests => 'No visit requests yet';
+  @override String get visitRequestDetail => 'Visit Request Detail';
+  @override String get assignDoctor => 'Assign Doctor';
+  @override String get updateStatusLabel => 'Update Status';
+  @override String get statusPendingLabel => 'Pending';
+  @override String get statusConfirmedLabel => 'Confirmed';
+  @override String get statusCancelledLabel => 'Cancelled';
+  @override String get statusCompletedLabel => 'Completed';
+  @override String get confirmVisit => 'Confirm Visit';
+  @override String get completeVisit => 'Complete Visit';
+  @override String get cancelVisit => 'Cancel Visit';
+  @override String get enterCancellationReason => 'Enter cancellation reason';
+  @override String get addNote => 'Add Note';
+  @override String get doctorAssigned => 'Doctor assigned successfully';
+  @override String get reassignDoctor => 'Reassign Doctor';
+  @override String get filterByStatus => 'Filter by Status';
+  @override String get dateFrom => 'Date From';
+  @override String get dateTo => 'Date To';
+
+  // Access Control
+  @override String get accessDenied => 'Access Denied';
+  @override String get youDontHavePermissionToAccessThis => "You don't have permission to access this";
+
+  // Facility Booking Confirmation
+  @override String get yourBookingIsConfirmed => 'Your booking has been confirmed';
+  @override String get bookingNumber => 'Booking Number';
+  @override String get bookingDate => 'Booking Date';
+  @override String get bookingTime => 'Booking Time';
+  @override String get bookingConfirmationSent => 'A confirmation has been sent to your registered email and phone number';
+  @override String get viewAllBookings => 'View All Bookings';
+  @override String get backToHome => 'Back to Home';
 }

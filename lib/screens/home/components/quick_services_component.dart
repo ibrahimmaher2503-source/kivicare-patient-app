@@ -22,6 +22,7 @@ import '../../call_booking/call_booking_list_screen.dart';
 import '../../independent_booking/independent_doctor_list_screen.dart';
 import '../../independent_booking/independent_booking_list_screen.dart';
 import '../../search/search_hub_screen.dart';
+import '../../doctor_visit/doctor_visit_list_screen.dart';
 
 /// Custom painter for decorative geometric shapes on service cards
 class _CardDecorationPainter extends CustomPainter {
@@ -269,6 +270,25 @@ class QuickServicesComponent extends StatelessWidget {
                     Get.to(() => HospitalListScreen());
                   },
                 ),
+                _buildServiceCard(
+                  context,
+                  icon: Icons.home_rounded,
+                  label: locale.value.doctorHomeVisit,
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFF00695C),
+                      const Color(0xFF00897B).withValues(alpha: 0.85),
+                      const Color(0xFF26A69A).withValues(alpha: 0.65),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  delayIndex: 9,
+                  onTap: () {
+                    Get.to(() => const DoctorVisitListScreen());
+                  },
+                ),
               ],
             ),
           ),
@@ -360,6 +380,19 @@ class QuickServicesComponent extends StatelessWidget {
                   onTap: () {
                     doIfLoggedIn(() {
                       Get.to(() => const IndependentBookingListScreen());
+                    });
+                  },
+                ),
+                12.height,
+                _buildRequestTile(
+                  context,
+                  icon: Icons.home_outlined,
+                  label: locale.value.visitRequests,
+                  accentColor: const Color(0xFF00695C),
+                  delayIndex: 6,
+                  onTap: () {
+                    doIfLoggedIn(() {
+                      Get.to(() => const DoctorVisitListScreen());
                     });
                   },
                 ),

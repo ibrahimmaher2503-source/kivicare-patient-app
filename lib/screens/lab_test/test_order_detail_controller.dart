@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kivicare_patient/api/lab_test_apis.dart';
-import 'package:kivicare_patient/models/test_order_model.dart';
+import 'package:kivicare_patient/api/core_apis.dart';
+import 'package:kivicare_patient/screens/lab_test/model/test_order_model.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/screens/lab_test/components/cancellation_reason_dialog.dart';
 
@@ -25,7 +25,7 @@ class TestOrderDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await LabTestAPIs.getTestOrderDetail(orderId: orderId);
+      final response = await CoreServiceApis.getTestOrderDetail(orderId: orderId);
 
       if (response.status ?? false) {
         final orderData = response.data as Map<String, dynamic>?;
@@ -50,7 +50,7 @@ class TestOrderDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await LabTestAPIs.cancelTestOrder(
+      final response = await CoreServiceApis.cancelTestOrder(
         orderId: orderId,
         cancellationReason: reason,
       );
@@ -82,7 +82,7 @@ class TestOrderDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await LabTestAPIs.downloadTestReport(orderId: orderId);
+      final response = await CoreServiceApis.downloadTestReport(orderId: orderId);
 
       if (response.status ?? false) {
         // File download handled by API layer (returns binary PDF)

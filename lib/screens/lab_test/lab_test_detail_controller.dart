@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:kivicare_patient/api/lab_test_apis.dart';
+import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/lab_test_model.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
@@ -28,7 +28,7 @@ class LabTestDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await LabTestAPIs.getLabTestDetail(testId: testId);
+      final response = await CoreServiceApis.getLabTestDetail(testId: testId);
 
       if (response.status ?? false) {
         final testData = response.data as Map<String, dynamic>?;
