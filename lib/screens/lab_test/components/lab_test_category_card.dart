@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:kivicare_patient/models/lab_test_category_model.dart';
+import 'package:kivicare_patient/screens/lab_test/model/lab_test_category_model.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -22,10 +23,10 @@ class LabTestCategoryCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
-          color: appStore.isDarkMode ? cardDarkColor : Colors.white,
+          color: isDarkMode.value ? cardDarkColor : Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: appStore.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+            color: isDarkMode.value ? Colors.grey.shade800 : Colors.grey.shade200,
           ),
           boxShadow: [
             BoxShadow(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
-import 'package:kivicare_patient/locale/languages.dart';
 import 'package:kivicare_patient/screens/facility_booking/facility_booking_controller.dart';
 import 'package:kivicare_patient/screens/facility_booking/facility_slot_calendar_screen.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/lab_test_constants.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -17,7 +17,7 @@ class FacilitySelectionScreen extends StatelessWidget {
       init: FacilityBookingController(),
       builder: (controller) {
         return AppScaffold(
-          appBarTitle: 'Select Facility',
+          appBarTitle: const Text('Select Facility'),
           body: Obx(
             () => SingleChildScrollView(
               padding: const EdgeInsets.all(16),
@@ -129,9 +129,9 @@ class _LabsList extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: appStore.isDarkMode ? cardDarkColor : Colors.white,
+              color: isDarkMode.value ? cardDarkColor : Colors.white,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: appStore.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200),
+              border: Border.all(color: isDarkMode.value ? Colors.grey.shade800 : Colors.grey.shade200),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -179,9 +179,9 @@ class _RadiologyCentersList extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: appStore.isDarkMode ? cardDarkColor : Colors.white,
+              color: isDarkMode.value ? cardDarkColor : Colors.white,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: appStore.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200),
+              border: Border.all(color: isDarkMode.value ? Colors.grey.shade800 : Colors.grey.shade200),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

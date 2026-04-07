@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_patient/models/lab_test_model.dart';
+import 'package:kivicare_patient/screens/lab_test/model/lab_test_model.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../main.dart';
-import '../../utils/app_common.dart';
+import '../../../main.dart';
+import '../../../utils/app_common.dart';
 class RadiologyServiceCard extends StatelessWidget {
   final LabTest test;
   final VoidCallback? onTap;
@@ -20,12 +20,12 @@ class RadiologyServiceCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 12.w),
-        padding: EdgeInsets.all(16.w),
+        margin: EdgeInsets.symmetric(vertical: 12.0),
+        padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: isDarkMode.value ? cardDarkColor : Colors.white,
           border: Border.all(color: isDarkMode.value ? gray700 : gray200),
-          borderRadius: BorderRadius.circular(12.w),
+          borderRadius: BorderRadius.circular(12.0),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +44,7 @@ class RadiologyServiceCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 4.w),
+                      SizedBox(height: 4.0),
                       Text(
                         test.code,
                         style: secondaryTextStyle(size: 12),
@@ -52,22 +52,22 @@ class RadiologyServiceCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: 12.0),
                 // Price Badge
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
+                  padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                   decoration: BoxDecoration(
                     color: appColorPrimary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8.w),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                   child: Text(
-                    '${currencySymbol}${test.defaultPrice.toStringAsFixed(0)}',
+                    '${appCurrency.value.currencySymbol}${test.defaultPrice.toStringAsFixed(0)}',
                     style: boldTextStyle(size: 13, color: appColorPrimary),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 12.w),
+            SizedBox(height: 12.0),
 
             // Radiology-specific info
             Column(
@@ -77,9 +77,11 @@ class RadiologyServiceCard extends StatelessWidget {
                 _DetailItem(
                   icon: Icons.image,
                   label: locale.value.imagingFormat,
-                  value: test.sampleType.replaceAll('_', ' ').capitalize(),
+                  value: (test.sampleType.replaceAll('_', ' ')).isNotEmpty
+                      ? '${test.sampleType.replaceAll('_', ' ')[0].toUpperCase()}${test.sampleType.replaceAll('_', ' ').substring(1)}'
+                      : '',
                 ),
-                SizedBox(height: 8.w),
+                SizedBox(height: 8.0),
 
                 // Turnaround Time
                 _DetailItem(
@@ -87,7 +89,7 @@ class RadiologyServiceCard extends StatelessWidget {
                   label: locale.value.turnaroundTime,
                   value: test.turnaroundTime,
                 ),
-                SizedBox(height: 8.w),
+                SizedBox(height: 8.0),
 
                 // Description
                 Text(
@@ -98,15 +100,15 @@ class RadiologyServiceCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 12.w),
+            SizedBox(height: 12.0),
 
             // Category Chip
             if (test.category != null)
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
+                padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                 decoration: BoxDecoration(
                   color: isDarkMode.value ? gray800 : gray100,
-                  borderRadius: BorderRadius.circular(6.w),
+                  borderRadius: BorderRadius.circular(6.0),
                 ),
                 child: Text(
                   test.category!.name,
@@ -135,10 +137,10 @@ class _DetailItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 16.w, color: appColorPrimary),
-        SizedBox(width: 8.w),
+        Icon(icon, size: 16.0, color: appColorPrimary),
+        SizedBox(width: 8.0),
         Text(label, style: secondaryTextStyle(size: 11)),
-        SizedBox(width: 4.w),
+        SizedBox(width: 4.0),
         Expanded(
           child: Text(
             value,

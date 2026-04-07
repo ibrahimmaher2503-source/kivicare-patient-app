@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/lab_test_constants.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -17,10 +18,10 @@ class TestPrioritySelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: appStore.isDarkMode ? cardDarkColor : Colors.white,
+        color: isDarkMode.value ? cardDarkColor : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: appStore.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+          color: isDarkMode.value ? Colors.grey.shade800 : Colors.grey.shade200,
         ),
       ),
       child: Padding(
@@ -62,7 +63,7 @@ class TestPrioritySelector extends StatelessWidget {
                     label: 'STAT',
                     value: Priority.stat.value,
                     isSelected: selectedPriority == Priority.stat.value,
-                    color: Colors.cancelStatusColor,
+                    color: cancelStatusColor,
                     onTap: () => onPriorityChanged(Priority.stat.value),
                     description: 'Immediate',
                   ),

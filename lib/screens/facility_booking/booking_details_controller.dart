@@ -1,9 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:nb_utils/nb_utils.dart';
 import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/facility_booking_model.dart';
 import 'package:kivicare_patient/screens/facility_booking/booking_confirmation_screen.dart';
-import 'package:kivicare_patient/utils/app_common.dart';
-import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:kivicare_patient/utils/form_validators.dart';
 
 class BookingDetailsController extends GetxController {
@@ -79,40 +79,15 @@ class BookingDetailsController extends GetxController {
         if (notes.value.isNotEmpty) 'notes': notes.value,
       };
 
-      final response = await CoreServiceApis.createFacilityBooking(request: request);
-
-      if (response.status ?? false) {
-        final bookingData = response.data as Map<String, dynamic>?;
-        if (bookingData != null) {
-          createdBooking.value = FacilityBooking.fromJson(bookingData);
-          toast('Booking confirmed: ${createdBooking.value?.bookingNumber ?? "N/A"}');
-          _navigateToConfirmation();
-        } else {
-          errorMessage.value = 'Failed to parse booking response';
-        }
-      } else {
-        errorMessage.value = response.message ?? 'Failed to create booking';
-        
-        if (response.statusCode == 422) {
-          _handleValidationErrors(response);
-        }
-        
-        toast(errorMessage.value);
-      }
+      createdBooking.value = await CoreServiceApis.createFacilityBooking(request: request);
+      toast('Booking confirmed: ${createdBooking.value?.bookingNumber ?? "N/A"}');
+      _navigateToConfirmation();
     } catch (e) {
       errorMessage.value = e.toString();
-      appPrint('Error creating booking: $e');
+      debugPrint('Error creating booking: $e');
       toast('Error: ${e.toString()}');
     } finally {
       isLoading(false);
-    }
-  }
-
-  void _handleValidationErrors(dynamic response) {
-    final errors = response.errors as Map<String, dynamic>?;
-    if (errors != null) {
-      final errorMessages = errors.entries.map((e) => '${e.key}: ${e.value.join(', ')}').toList();
-      errorMessage.value = errorMessages.join('\n');
     }
   }
 

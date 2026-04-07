@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:kivicare_patient/models/booking_slot_model.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../utils/app_common.dart';
 class SlotTimeGrid extends StatelessWidget {
   final List<BookingSlot> slots;
   final String? selectedTime;
@@ -21,24 +21,21 @@ class SlotTimeGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (slots.isEmpty) {
-      return Center(
+      return const Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 24.w),
-          child: Text(
-            'No time slots available for selected date',
-            style: secondaryTextStyle(),
-          ),
+          padding: EdgeInsets.symmetric(vertical: 24.0),
+          child: Text('No time slots available for selected date'),
         ),
       );
     }
 
     return GridView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        crossAxisSpacing: 12.w,
-        mainAxisSpacing: 12.w,
+        crossAxisSpacing: 12.0,
+        mainAxisSpacing: 12.0,
         childAspectRatio: 1.2,
       ),
       itemCount: slots.length,
@@ -63,7 +60,7 @@ class SlotTimeGrid extends StatelessWidget {
                         ? (isDarkMode.value ? gray700 : gray200)
                         : (isDarkMode.value ? gray600 : gray100),
               ),
-              borderRadius: BorderRadius.circular(12.w),
+              borderRadius: BorderRadius.circular(12.0),
             ),
             child: Center(
               child: Column(
@@ -81,11 +78,11 @@ class SlotTimeGrid extends StatelessWidget {
                     ),
                   ),
                   if (!isAvailable)
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.w),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4.0),
                       child: Text(
                         'Booked',
-                        style: secondaryTextStyle(size: 10, color: gray500),
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                     ),
                 ],

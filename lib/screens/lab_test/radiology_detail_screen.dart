@@ -6,10 +6,11 @@ import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../main.dart';
-import '../../utils/app_common.dart';
+
 class RadiologyDetailScreen extends StatelessWidget {
   final int testId;
 
@@ -23,7 +24,7 @@ class RadiologyDetailScreen extends StatelessWidget {
     );
 
     return AppScaffold(
-      appBarTitle: locale.value.radiologyScan,
+      appBarTitle: Text(locale.value.radiologyScan),
       body: GetBuilder<LabTestDetailController>(
         tag: 'radiology_$testId',
         init: controller,
@@ -39,29 +40,29 @@ class RadiologyDetailScreen extends StatelessWidget {
                         ),
                       )
                     : SingleChildScrollView(
-                        padding: EdgeInsets.all(24.w),
+                        padding: const EdgeInsets.all(24.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Header
                             _HeaderSection(test: controller.selectedTest.value!),
-                            SizedBox(height: 24.w),
+                            const SizedBox(height: 24.0),
 
                             // Description
                             _SectionCard(
                               title: locale.value.description,
                               content: controller.selectedTest.value!.description,
                             ),
-                            SizedBox(height: 16.w),
+                            const SizedBox(height: 16.0),
 
                             // Imaging Format
                             _SectionCard(
                               title: locale.value.imagingFormat,
                               content: controller.selectedTest.value!.sampleType
                                   .replaceAll('_', ' ')
-                                  .capitalize(),
+                                  .capitalize!,
                             ),
-                            SizedBox(height: 16.w),
+                            const SizedBox(height: 16.0),
 
                             // Preparation Instructions
                             _SectionCard(
@@ -70,14 +71,14 @@ class RadiologyDetailScreen extends StatelessWidget {
                                   ? locale.value.noSpecialPreparation
                                   : controller.selectedTest.value!.preparationInstructions,
                             ),
-                            SizedBox(height: 16.w),
+                            const SizedBox(height: 16.0),
 
                             // Safety Information
                             _SectionCard(
                               title: locale.value.safetyInformation,
                               content: _getSafetyInfo(controller.selectedTest.value!),
                             ),
-                            SizedBox(height: 16.w),
+                            const SizedBox(height: 16.0),
 
                             // Turnaround Time
                             _InfoRow(
@@ -85,15 +86,15 @@ class RadiologyDetailScreen extends StatelessWidget {
                               label: locale.value.turnaroundTime,
                               value: controller.selectedTest.value!.turnaroundTime,
                             ),
-                            SizedBox(height: 8.w),
+                            const SizedBox(height: 8.0),
 
                             // Price
                             _InfoRow(
                               icon: Icons.attach_money,
                               label: locale.value.price,
-                              value: '${currencySymbol}${controller.selectedTest.value!.defaultPrice.toStringAsFixed(2)}',
+                              value: '${appCurrency.value.currencySymbol}${controller.selectedTest.value!.defaultPrice.toStringAsFixed(2)}',
                             ),
-                            SizedBox(height: 8.w),
+                            const SizedBox(height: 8.0),
 
                             // Category
                             if (controller.selectedTest.value!.category != null)
@@ -103,18 +104,18 @@ class RadiologyDetailScreen extends StatelessWidget {
                                 value: controller.selectedTest.value!.category!.name,
                               ),
 
-                            SizedBox(height: 32.w),
+                            const SizedBox(height: 32.0),
 
                             // Add to Cart Button
                             SizedBox(
                               width: double.infinity,
-                              height: 56.w,
+                              height: 56.0,
                               child: ElevatedButton.icon(
                                 onPressed: () {
                                   controller.addToCart();
                                   Get.to(() => CreateTestOrderScreen());
                                 },
-                                icon: Icon(Icons.add_shopping_cart, size: 20.w),
+                                icon: const Icon(Icons.add_shopping_cart, size: 20.0),
                                 label: Text(
                                   locale.value.addToCart,
                                   style: boldTextStyle(color: Colors.white, size: 16),
@@ -122,7 +123,7 @@ class RadiologyDetailScreen extends StatelessWidget {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: appColorPrimary,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.w),
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
                                 ),
                               ),
@@ -146,8 +147,6 @@ class RadiologyDetailScreen extends StatelessWidget {
   }
 }
 
-import '../../main.dart';
-import '../../utils/app_common.dart';
 class _HeaderSection extends StatelessWidget {
   final dynamic test;
 
@@ -156,10 +155,10 @@ class _HeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: appColorPrimary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12.w),
+        color: appColorPrimary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,19 +171,19 @@ class _HeaderSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(test.name, style: boldTextStyle(size: 18)),
-                    SizedBox(height: 4.w),
+                    const SizedBox(height: 4.0),
                     Text(test.code, style: secondaryTextStyle()),
                   ],
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                 decoration: BoxDecoration(
                   color: appColorPrimary,
-                  borderRadius: BorderRadius.circular(8.w),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Text(
-                  '${currencySymbol}${test.defaultPrice.toStringAsFixed(0)}',
+                  '${appCurrency.value.currencySymbol}${test.defaultPrice.toStringAsFixed(0)}',
                   style: boldTextStyle(color: Colors.white),
                 ),
               ),
@@ -196,8 +195,6 @@ class _HeaderSection extends StatelessWidget {
   }
 }
 
-import '../../main.dart';
-import '../../utils/app_common.dart';
 class _SectionCard extends StatelessWidget {
   final String title;
   final String content;
@@ -210,17 +207,17 @@ class _SectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: isDarkMode.value ? cardDarkColor : gray50,
         border: Border.all(color: isDarkMode.value ? gray700 : gray200),
-        borderRadius: BorderRadius.circular(12.w),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: boldTextStyle(size: 14)),
-          SizedBox(height: 8.w),
+          const SizedBox(height: 8.0),
           Text(
             content,
             style: primaryTextStyle(size: 13),
@@ -246,10 +243,10 @@ class _InfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 20.w, color: appColorPrimary),
-        SizedBox(width: 12.w),
+        Icon(icon, size: 20.0, color: appColorPrimary),
+        const SizedBox(width: 12.0),
         Text(label, style: secondaryTextStyle()),
-        Spacer(),
+        const Spacer(),
         Text(value, style: boldTextStyle()),
       ],
     );

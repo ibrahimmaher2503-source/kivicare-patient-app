@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/api/core_apis.dart';
 import 'package:kivicare_patient/screens/lab_test/model/test_order_model.dart';
-import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/screens/lab_test/components/cancellation_reason_dialog.dart';
 
 class TestOrderDetailController extends GetxController {
@@ -25,21 +25,11 @@ class TestOrderDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await CoreServiceApis.getTestOrderDetail(orderId: orderId);
-
-      if (response.status ?? false) {
-        final orderData = response.data as Map<String, dynamic>?;
-        if (orderData != null) {
-          order.value = TestOrder.fromJson(orderData);
-        } else {
-          errorMessage.value = 'Invalid order data';
-        }
-      } else {
-        errorMessage.value = response.message ?? 'Failed to load order';
-      }
+      final loadedOrder = await CoreServiceApis.getTestOrderDetail(orderId: orderId);
+      order.value = loadedOrder;
     } catch (e) {
       errorMessage.value = e.toString();
-      appPrint('Error loading order detail: $e');
+      debugPrint('Error loading order detail: $e');
     } finally {
       isLoading(false);
     }
@@ -50,21 +40,16 @@ class TestOrderDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await CoreServiceApis.cancelTestOrder(
+      await CoreServiceApis.cancelTestOrder(
         orderId: orderId,
-        cancellationReason: reason,
+        request: {'reason': reason},
       );
 
-      if (response.status ?? false) {
-        toast('Order cancelled successfully');
-        await loadOrderDetail();
-      } else {
-        errorMessage.value = response.message ?? 'Failed to cancel order';
-        toast(errorMessage.value);
-      }
+      toast('Order cancelled successfully');
+      await loadOrderDetail();
     } catch (e) {
       errorMessage.value = e.toString();
-      appPrint('Error cancelling order: $e');
+      debugPrint('Error cancelling order: $e');
       toast('Error: ${e.toString()}');
     } finally {
       isLoading(false);
@@ -82,23 +67,12 @@ class TestOrderDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await CoreServiceApis.downloadTestReport(orderId: orderId);
-
-      if (response.status ?? false) {
-        // File download handled by API layer (returns binary PDF)
-        // In production, you would:
-        // 1. Save to device storage
-        // 2. Open with PDF viewer
-        // 3. Show success toast
-        toast('Report downloaded successfully');
-        appPrint('Report downloaded for order $orderId');
-      } else {
-        errorMessage.value = response.message ?? 'Failed to download report';
-        toast(errorMessage.value);
-      }
+      await CoreServiceApis.downloadTestReport(orderId: orderId);
+      toast('Report downloaded successfully');
+      debugPrint('Report downloaded for order $orderId');
     } catch (e) {
       errorMessage.value = e.toString();
-      appPrint('Error downloading report: $e');
+      debugPrint('Error downloading report: $e');
       toast('Error: ${e.toString()}');
     } finally {
       isLoading(false);

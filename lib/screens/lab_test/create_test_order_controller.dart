@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:nb_utils/nb_utils.dart';
 import '../../api/core_apis.dart';
-import 'package:kivicare_patient/models/lab_test_model.dart';
-import 'package:kivicare_patient/models/test_order_model.dart';
+import 'package:kivicare_patient/screens/lab_test/model/lab_test_model.dart';
+import 'package:kivicare_patient/screens/lab_test/model/test_order_model.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:kivicare_patient/utils/form_validators.dart';
@@ -50,17 +52,17 @@ class CreateTestOrderController extends GetxController {
   /// Calculate order total, discount, and final amount
   Future<void> calculateOrderTotal() async {
     double total = 0.0;
-    
+
     for (final test in selectedTests) {
       total += test.defaultPrice;
     }
-    
+
     totalAmount.value = total;
-    
+
     // Apply discount logic (if any)
     // For now, no automatic discount
     discountAmount.value = 0.0;
-    
+
     finalAmount.value = totalAmount.value - discountAmount.value;
   }
 
@@ -105,62 +107,29 @@ class CreateTestOrderController extends GetxController {
         'clinical_notes': clinicalNotes.value.isEmpty ? null : clinicalNotes.value,
         'priority': priority.value,
         'patient_id': loginUserData.value.id,
-        // 'doctor_id': null, // Optional
       };
 
-      final response = await CoreServiceApis.createTestOrder(request: request);
+      final order = await CoreServiceApis.createTestOrder(request: request);
+      createdOrder.value = order;
 
-      if (response.status ?? false) {
-        // Parse created order from response
-        final orderData = response.data as Map<String, dynamic>?;
-        if (orderData != null) {
-          createdOrder.value = TestOrder.fromJson(orderData);
-          
-          // Show success message
-          final orderNumber = createdOrder.value?.orderNumber ?? 'N/A';
-          toast('Order created: $orderNumber');
-          
-          // Navigate to confirmation screen
-          _navigateToConfirmation();
-        } else {
-          errorMessage.value = 'Failed to parse order response';
-        }
-      } else {
-        // Handle API error
-        errorMessage.value = response.message ?? 'Failed to create order';
-        
-        // Check for validation errors (422)
-        if (response.statusCode == 422) {
-          _handleValidationErrors(response);
-        } else {
-          toast(errorMessage.value ?? 'Error creating order');
-        }
-      }
+      // Show success message
+      final orderNumber = createdOrder.value?.orderNumber ?? 'N/A';
+      toast('Order created: $orderNumber');
+
+      // Navigate to confirmation screen
+      _navigateToConfirmation();
     } catch (e) {
       errorMessage.value = e.toString();
-      appPrint('Error creating order: $e');
+      debugPrint('Error creating order: $e');
       toast('Error: ${e.toString()}');
     } finally {
       isLoading(false);
     }
   }
 
-  /// Handle 422 validation errors from API
-  void _handleValidationErrors(dynamic response) {
-    // Extract field-specific errors if available
-    final errors = response.errors as Map<String, dynamic>?;
-    if (errors != null) {
-      final errorMessages = errors.entries.map((e) => '${e.key}: ${e.value.join(', ')}').toList();
-      errorMessage.value = errorMessages.join('\n');
-    }
-  }
-
   /// Navigate to confirmation screen
   void _navigateToConfirmation() {
     // TODO: Navigate to CreateTestOrderConfirmationScreen with createdOrder
-    // Get.to(() => CreateTestOrderConfirmationScreen(
-    //   testOrder: createdOrder.value,
-    // ));
   }
 
   /// Reset form for new order

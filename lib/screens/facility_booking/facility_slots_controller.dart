@@ -1,47 +1,45 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:nb_utils/nb_utils.dart';
 import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/booking_slot_model.dart';
-import 'package:kivicare_patient/utils/app_common.dart';
 
-class FacilitySlotCalendarController extends GetxController {
+class FacilitySlotsController extends GetxController {
   final int facilityId;
   final String facilityType;
 
   final RxList<BookingSlot> slots = RxList<BookingSlot>([]);
-  final RxBool isLoadingSlots = false.obs;
+  final RxBool isLoading = false.obs;
   final Rx<String?> errorMessage = Rx<String?>(null);
-  final Rx<String?> selectedDate = Rx<String?>(null);
+  final Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
 
-  FacilitySlotCalendarController({
+  FacilitySlotsController({
     required this.facilityId,
     required this.facilityType,
   });
 
-  Future<void> loadSlots(String date) async {
+  void setSelectedDate(DateTime date) {
+    selectedDate.value = date;
+  }
+
+  Future<void> loadSlots(DateTime date) async {
     try {
-      isLoadingSlots(true);
+      isLoading(true);
       errorMessage(null);
       selectedDate.value = date;
 
-      final response = facilityType == 'lab'
-          ? await CoreServiceApis.getLabSlots(labId: facilityId, date: date)
-          : await CoreServiceApis.getRadiologyCenterSlots(centerId: facilityId, date: date);
+      final dateStr = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 
-      if (response.status ?? false) {
-        final slotsData = response.data?['slots'] as List?;
-        if (slotsData != null) {
-          slots.value = slotsData.map((slot) => BookingSlot.fromJson(slot as Map<String, dynamic>)).toList();
-        } else {
-          slots.value = [];
-        }
-      } else {
-        errorMessage.value = response.message ?? 'Failed to load slots';
-      }
+      final result = facilityType == 'lab'
+          ? await CoreServiceApis.getLabSlots(labId: facilityId, date: dateStr)
+          : await CoreServiceApis.getRadiologyCenterSlots(centerId: facilityId, date: dateStr);
+
+      slots.value = result;
     } catch (e) {
       errorMessage.value = e.toString();
-      appPrint('Error loading slots: $e');
+      debugPrint('Error loading slots: $e');
     } finally {
-      isLoadingSlots(false);
+      isLoading(false);
     }
   }
 
@@ -57,7 +55,7 @@ class FacilitySlotCalendarController extends GetxController {
     return slots.any((slot) => slot.time == time && slot.available);
   }
 
-  Future<void> retry(String date) async {
+  Future<void> retry(DateTime date) async {
     await loadSlots(date);
   }
 

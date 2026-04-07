@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import '../../api/core_apis.dart';
 import 'package:kivicare_patient/models/facility_booking_model.dart';
-import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/rbac_utils.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -27,27 +27,14 @@ class BookingDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await CoreServiceApis.getFacilityBookingDetail(
+      final result = await CoreServiceApis.getFacilityBookingDetail(
         bookingId: bookingId,
       );
-
-      if (response.status ?? false) {
-        final bookingData = response.data as Map<String, dynamic>?;
-        if (bookingData != null) {
-          booking.value = FacilityBooking.fromJson(bookingData);
-          appPrint('Booking detail loaded: ${booking.value?.bookingNumber}');
-        } else {
-          errorMessage.value = 'Invalid booking data';
-        }
-      } else {
-        errorMessage.value = response.message ?? 'Failed to load booking';
-        if (response.statusCode == 403) {
-          RBACUtils.handle403Error(response.message);
-        }
-      }
+      booking.value = result;
+      debugPrint('Booking detail loaded: ${booking.value?.bookingNumber}');
     } catch (e) {
       errorMessage.value = e.toString();
-      appPrint('Error loading booking detail: $e');
+      debugPrint('Error loading booking detail: $e');
     } finally {
       isLoading(false);
     }
@@ -59,7 +46,7 @@ class BookingDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final request = {
+      final request = <String, dynamic>{
         if (reason != null) 'reason': reason,
       };
 
@@ -68,21 +55,17 @@ class BookingDetailController extends GetxController {
         request: request,
       );
 
-      if (response.status ?? false) {
+      if (response.status) {
         toast('Booking cancelled successfully');
         RBACUtils.logAccessAttempt('Booking#$id:cancel', true, null);
-        // Navigate back and refresh
         Get.back();
       } else {
-        errorMessage.value = response.message ?? 'Failed to cancel booking';
-        toast(errorMessage.value);
-        if (response.statusCode == 403) {
-          RBACUtils.handle403Error(response.message);
-        }
+        errorMessage.value = response.message.isNotEmpty ? response.message : 'Failed to cancel booking';
+        toast(errorMessage.value ?? '');
       }
     } catch (e) {
       errorMessage.value = e.toString();
-      appPrint('Error cancelling booking: $e');
+      debugPrint('Error cancelling booking: $e');
       toast('Error: ${e.toString()}');
     } finally {
       isLoading(false);

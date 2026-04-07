@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
-import 'package:kivicare_patient/components/empty_error_state_widget.dart';
+import 'package:kivicare_patient/utils/empty_error_state_widget.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
 import 'package:kivicare_patient/locale/languages.dart';
 import 'package:kivicare_patient/screens/lab_test/components/lab_test_category_card.dart';
@@ -21,7 +21,7 @@ class LabTestCategoriesScreen extends StatelessWidget {
       init: LabTestCategoriesController(),
       builder: (controller) {
         return AppScaffold(
-          appBarTitle: locale.value.labTestCategories ?? 'Lab Test Categories',
+          appBarTitle: Text(locale.value.labTestCategories),
           body: Obx(
             () => controller.isLoading.value
                 ? const LoaderWidget()

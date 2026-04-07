@@ -61,6 +61,7 @@ class LabTest {
   String preparationInstructions;
   double defaultPrice;
   String turnaroundTime;
+  String referenceRange;
   bool status;
   Governorate? governorate;
   City? city;
@@ -69,7 +70,8 @@ class LabTest {
     this.id = -1, this.name = "", this.code = "", this.slug = "",
     this.category, this.department = "", this.sampleType = "",
     this.description = "", this.preparationInstructions = "",
-    this.defaultPrice = 0.0, this.turnaroundTime = "", this.status = true,
+    this.defaultPrice = 0.0, this.turnaroundTime = "", this.referenceRange = "",
+    this.status = true,
     this.governorate,
     this.city,
   });
@@ -87,6 +89,7 @@ class LabTest {
       preparationInstructions: json["preparation_instructions"] is String ? json["preparation_instructions"] : "",
       defaultPrice: json["default_price"] is num ? json["default_price"].toDouble() : 0.0,
       turnaroundTime: json["turnaround_time"] is String ? json["turnaround_time"] : "",
+      referenceRange: json["reference_range"] is String ? json["reference_range"] : "",
       status: json["status"] is bool ? json["status"] : true,
       governorate: json['governorate'] is Map
           ? Governorate.fromJson(Map<String, dynamic>.from(json['governorate']))
@@ -100,6 +103,6 @@ class LabTest {
     "category": category?.toJson(), "department": department,
     "sample_type": sampleType, "description": description,
     "preparation_instructions": preparationInstructions,
-    "default_price": defaultPrice, "turnaround_time": turnaroundTime, "status": status,
+    "default_price": defaultPrice, "turnaround_time": turnaroundTime, "reference_range": referenceRange, "status": status,
   };
 }

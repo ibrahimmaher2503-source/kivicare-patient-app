@@ -7,18 +7,19 @@ import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
-import 'package:kivicare_patient/components/empty_error_state_widget.dart';
+import 'package:kivicare_patient/utils/empty_error_state_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../main.dart';
 import '../../utils/app_common.dart';
+
 class MyBookingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(MyBookingsController());
 
     return AppScaffold(
-      appBarTitle: locale.value.myBookings,
+      appBarTitle: Text(locale.value.myBookings),
       body: GetBuilder<MyBookingsController>(
         init: controller,
         builder: (controller) {
@@ -28,7 +29,7 @@ class MyBookingsScreen extends StatelessWidget {
                 // Filter Tabs
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.w),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                   child: Row(
                     children: [
                       // Type Filter
@@ -36,9 +37,9 @@ class MyBookingsScreen extends StatelessWidget {
                         locale.value.type,
                         style: secondaryTextStyle(size: 12),
                       ),
-                      SizedBox(width: 12.w),
+                      const SizedBox(width: 12.0),
                       Wrap(
-                        spacing: 8.w,
+                        spacing: 8.0,
                         children: [
                           _FilterChip(
                             label: locale.value.all,
@@ -64,16 +65,16 @@ class MyBookingsScreen extends StatelessWidget {
                 // Status Filter
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Row(
                     children: [
                       Text(
                         locale.value.status,
                         style: secondaryTextStyle(size: 12),
                       ),
-                      SizedBox(width: 12.w),
+                      const SizedBox(width: 12.0),
                       Wrap(
-                        spacing: 8.w,
+                        spacing: 8.0,
                         children: [
                           _FilterChip(
                             label: locale.value.all,
@@ -101,11 +102,11 @@ class MyBookingsScreen extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: 24.w),
+                const SizedBox(height: 24.0),
 
                 // Bookings List
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Obx(
                     () => controller.isLoading.value
                         ? Center(child: LoaderWidget())
@@ -117,7 +118,7 @@ class MyBookingsScreen extends StatelessWidget {
                               )
                             : ListView.builder(
                                 shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemCount: controller.bookings.length,
                                 itemBuilder: (context, index) {
                                   final booking = controller.bookings[index];
@@ -138,15 +139,15 @@ class MyBookingsScreen extends StatelessWidget {
                 // Load More
                 if (!controller.isLastPage.value && controller.bookings.isNotEmpty)
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24.w),
+                    padding: const EdgeInsets.symmetric(vertical: 24.0),
                     child: Center(
                       child: ElevatedButton(
                         onPressed: () => controller.loadMoreBookings(),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: appColorPrimary,
-                          padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 12.w),
+                          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.w),
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                         child: Text(
@@ -157,7 +158,7 @@ class MyBookingsScreen extends StatelessWidget {
                     ),
                   ),
 
-                SizedBox(height: 24.w),
+                const SizedBox(height: 24.0),
               ],
             ),
           );
@@ -183,13 +184,13 @@ class _FilterChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
         decoration: BoxDecoration(
           color: selected ? appColorPrimary : (isDarkMode.value ? cardDarkColor : gray100),
           border: Border.all(
             color: selected ? appColorPrimary : (isDarkMode.value ? gray700 : gray200),
           ),
-          borderRadius: BorderRadius.circular(20.w),
+          borderRadius: BorderRadius.circular(20.0),
         ),
         child: Text(
           label,

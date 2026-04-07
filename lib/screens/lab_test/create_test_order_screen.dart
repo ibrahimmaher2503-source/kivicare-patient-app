@@ -38,7 +38,7 @@ class _CreateTestOrderScreenState extends State<CreateTestOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBarTitle: locale.value.createOrder ?? 'Create Order',
+      appBarTitle: Text(locale.value.createOrder),
       body: GetBuilder<CreateTestOrderController>(
         builder: (controller) {
           return Obx(
@@ -104,11 +104,11 @@ class _CreateTestOrderScreenState extends State<CreateTestOrderScreen> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.cancelStatusColor.withOpacity(0.1),
+                                color: cancelStatusColor.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.cancelStatusColor.withOpacity(0.3)),
+                                border: Border.all(color: cancelStatusColor.withOpacity(0.3)),
                               ),
-                              child: Text(controller.errorMessage.value ?? 'Error', style: primaryTextStyle(size: 12, color: Colors.cancelStatusColor)),
+                              child: Text(controller.errorMessage.value ?? 'Error', style: primaryTextStyle(size: 12, color: cancelStatusColor)),
                             ),
                           if (controller.hasError) const SizedBox(height: 16),
                           SizedBox(

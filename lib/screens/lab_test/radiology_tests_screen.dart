@@ -6,14 +6,14 @@ import 'package:kivicare_patient/screens/lab_test/components/lab_test_card.dart'
 import 'package:kivicare_patient/screens/lab_test/lab_test_categories_controller.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
-import 'package:kivicare_patient/utils/constants.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
-import 'package:kivicare_patient/components/empty_error_state_widget.dart';
+import 'package:kivicare_patient/utils/empty_error_state_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../main.dart';
-import '../../utils/app_common.dart';
+
 class RadiologyTestsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -21,12 +21,12 @@ class RadiologyTestsScreen extends StatelessWidget {
     final categoryController = Get.find<LabTestCategoriesController>();
 
     return AppScaffold(
-      appBarTitle: locale.value.radiologyScan,
+      appBarTitle: Text(locale.value.radiologyScan),
       body: GetBuilder<RadiologyTestsController>(
         init: radiologyController,
         builder: (controller) {
           return SingleChildScrollView(
-            padding: EdgeInsets.all(24.w),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -35,7 +35,7 @@ class RadiologyTestsScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isDarkMode.value ? cardDarkColor : gray50,
                     border: Border.all(color: isDarkMode.value ? gray700 : gray200),
-                    borderRadius: BorderRadius.circular(12.w),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: TextField(
                     onChanged: (value) {
@@ -48,14 +48,14 @@ class RadiologyTestsScreen extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: locale.value.searchRadiology,
                       hintStyle: secondaryTextStyle(color: gray400),
-                      prefixIcon: Icon(Icons.search, color: gray500, size: 20.w),
+                      prefixIcon: Icon(Icons.search, color: gray500, size: 20.0),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 16.w),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
                     ),
                     style: primaryTextStyle(),
                   ),
                 ),
-                SizedBox(height: 24.w),
+                const SizedBox(height: 24.0),
 
                 // Category Filter Chips
                 if (categoryController.categories.isNotEmpty)
@@ -63,10 +63,10 @@ class RadiologyTestsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(locale.value.category, style: boldTextStyle(size: 14)),
-                      SizedBox(height: 12.w),
+                      const SizedBox(height: 12.0),
                       Wrap(
-                        spacing: 8.w,
-                        runSpacing: 8.w,
+                        spacing: 8.0,
+                        runSpacing: 8.0,
                         children: categoryController.categories.map((category) {
                           final isSelected = controller.filter.value.categoryId == category.id;
                           return FilterChip(
@@ -93,13 +93,13 @@ class RadiologyTestsScreen extends StatelessWidget {
                           );
                         }).toList(),
                       ),
-                      SizedBox(height: 24.w),
+                      const SizedBox(height: 24.0),
                     ],
                   ),
 
                 // Radiology Tests List
                 Obx(
-                  () => controller.isLoading.value
+                  () => controller.isLoadingTests.value
                       ? Center(child: LoaderWidget())
                       : controller.tests.isEmpty
                           ? EmptyErrorStateWidget(
@@ -113,13 +113,10 @@ class RadiologyTestsScreen extends StatelessWidget {
                               itemCount: controller.tests.length,
                               itemBuilder: (context, index) {
                                 final test = controller.tests[index];
-                                return GestureDetector(
+                                return LabTestCard(
+                                  test: test,
                                   onTap: () => Get.to(
                                     () => RadiologyDetailScreen(testId: test.id),
-                                  ),
-                                  child: LabTestCard(
-                                    test: test,
-                                    isRadiology: true,
                                   ),
                                 );
                               },
@@ -127,26 +124,30 @@ class RadiologyTestsScreen extends StatelessWidget {
                 ),
 
                 // Load More Button
-                if (!controller.isLastPage.value && controller.tests.isNotEmpty)
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24.w),
-                    child: Center(
-                      child: ElevatedButton(
-                        onPressed: () => controller.loadMoreTests(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: appColorPrimary,
-                          padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 12.w),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.w),
+                Obx(() {
+                  if (!controller.isLastPage.value && controller.tests.isNotEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24.0),
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: () => controller.loadMoreTests(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: appColorPrimary,
+                            padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: Text(
+                            locale.value.loadMore,
+                            style: boldTextStyle(color: Colors.white),
                           ),
                         ),
-                        child: Text(
-                          locale.value.loadMore,
-                          style: boldTextStyle(color: Colors.white),
-                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }),
               ],
             ),
           );

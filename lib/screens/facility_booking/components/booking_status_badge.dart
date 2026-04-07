@@ -16,9 +16,9 @@ class BookingStatusBadge extends StatelessWidget {
       case 'pending':
         return orange.withOpacity(0.2);
       case 'confirmed':
-        return blue.withOpacity(0.2);
+        return Colors.blue.withValues(alpha: 0.2);
       case 'completed':
-        return green.withOpacity(0.2);
+        return Colors.green.withValues(alpha: 0.2);
       case 'cancelled':
         return cancelStatusColor.withOpacity(0.2);
       case 'no_show':
@@ -33,9 +33,9 @@ class BookingStatusBadge extends StatelessWidget {
       case 'pending':
         return orange;
       case 'confirmed':
-        return blue;
+        return Colors.blue;
       case 'completed':
-        return green;
+        return Colors.green;
       case 'cancelled':
         return cancelStatusColor;
       case 'no_show':
@@ -70,17 +70,17 @@ class BookingStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.w),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       decoration: BoxDecoration(
         color: _backgroundColor,
-        borderRadius: BorderRadius.circular(8.w),
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (showIcon && _icon != null) ...[
-            Icon(_icon, size: 12.w, color: _textColor),
-            SizedBox(width: 6.w),
+            Icon(_icon, size: 12.0, color: _textColor),
+            const SizedBox(width: 6.0),
           ],
           Text(
             _displayText,

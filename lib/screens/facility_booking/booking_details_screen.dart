@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kivicare_patient/screens/facility_booking/booking_details_controller.dart';
 import 'package:kivicare_patient/screens/facility_booking/facility_booking_controller.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
-import 'package:kivicare_patient/utils/constants.dart';
 import 'package:kivicare_patient/utils/form_validators.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../main.dart';
 import '../../utils/app_common.dart';
+
 class BookingDetailsScreen extends StatelessWidget {
   final int facilityId;
   final String facilityType;
@@ -29,8 +30,8 @@ class BookingDetailsScreen extends StatelessWidget {
       BookingDetailsController(
         facilityId: facilityId,
         facilityType: facilityType,
-        selectedDate: bookingController.selectedDate?.toString() ?? '',
-        selectedTime: bookingController.selectedTime ?? '',
+        selectedDate: bookingController.selectedDate.value ?? '',
+        selectedTime: bookingController.selectedTime.value ?? '',
       ),
     );
 
@@ -51,42 +52,42 @@ class BookingDetailsScreen extends StatelessWidget {
       body: GetBuilder<BookingDetailsController>(
         builder: (controller) {
           return SingleChildScrollView(
-            padding: EdgeInsets.all(24.w),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Facility Info
                 Container(
-                  padding: EdgeInsets.all(16.w),
+                  padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     color: isDarkMode.value ? cardDarkColor : Colors.white,
                     border: Border.all(color: isDarkMode.value ? gray800 : gray100),
-                    borderRadius: BorderRadius.circular(16.w),
+                    borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(facilityName, style: boldTextStyle(size: 16)),
-                      SizedBox(height: 12.w),
+                      const SizedBox(height: 12.0),
                       Row(
                         children: [
-                          Icon(Icons.calendar_today, size: 14.w, color: gray500),
-                          SizedBox(width: 8.w),
+                          Icon(Icons.calendar_today, size: 14.0, color: gray500),
+                          const SizedBox(width: 8.0),
                           Text(
-                            bookingController.selectedDate != null
-                                ? DateFormat('dd MMM yyyy').format(bookingController.selectedDate!)
+                            bookingController.selectedDate.value != null
+                                ? DateFormat('dd MMM yyyy').format(DateTime.tryParse(bookingController.selectedDate.value ?? '') ?? DateTime.now())
                                 : '-',
                             style: secondaryTextStyle(),
                           ),
                         ],
                       ),
-                      SizedBox(height: 8.w),
+                      const SizedBox(height: 8.0),
                       Row(
                         children: [
-                          Icon(Icons.access_time, size: 14.w, color: gray500),
-                          SizedBox(width: 8.w),
+                          Icon(Icons.access_time, size: 14.0, color: gray500),
+                          const SizedBox(width: 8.0),
                           Text(
-                            bookingController.selectedTime ?? '-',
+                            bookingController.selectedTime.value ?? '-',
                             style: secondaryTextStyle(),
                           ),
                         ],
@@ -94,20 +95,20 @@ class BookingDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 24.w),
+                const SizedBox(height: 24.0),
 
                 // Patient Details Section
                 Text(locale.value.patientInformation, style: boldTextStyle(size: 16)),
-                SizedBox(height: 16.w),
+                const SizedBox(height: 16.0),
 
                 // Patient Name Input
                 Text(locale.value.patientName, style: secondaryTextStyle(size: 12)),
-                SizedBox(height: 8.w),
+                const SizedBox(height: 8.0),
                 Container(
                   decoration: BoxDecoration(
                     color: isDarkMode.value ? cardDarkColor : gray50,
                     border: Border.all(color: isDarkMode.value ? gray700 : gray200),
-                    borderRadius: BorderRadius.circular(12.w),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: TextFormField(
                     initialValue: controller.patientName.value,
@@ -116,21 +117,21 @@ class BookingDetailsScreen extends StatelessWidget {
                       hintText: 'e.g., John Doe',
                       hintStyle: secondaryTextStyle(color: gray400),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(16.w),
+                      contentPadding: const EdgeInsets.all(16.0),
                     ),
                     style: primaryTextStyle(),
                   ),
                 ),
-                SizedBox(height: 16.w),
+                const SizedBox(height: 16.0),
 
                 // Patient Phone Input
                 Text(locale.value.patientPhone, style: secondaryTextStyle(size: 12)),
-                SizedBox(height: 8.w),
+                const SizedBox(height: 8.0),
                 Container(
                   decoration: BoxDecoration(
                     color: isDarkMode.value ? cardDarkColor : gray50,
                     border: Border.all(color: isDarkMode.value ? gray700 : gray200),
-                    borderRadius: BorderRadius.circular(12.w),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: TextFormField(
                     initialValue: controller.patientPhone.value,
@@ -139,22 +140,22 @@ class BookingDetailsScreen extends StatelessWidget {
                       hintText: 'e.g., +1234567890',
                       hintStyle: secondaryTextStyle(color: gray400),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(16.w),
+                      contentPadding: const EdgeInsets.all(16.0),
                     ),
                     style: primaryTextStyle(),
                     keyboardType: TextInputType.phone,
                   ),
                 ),
-                SizedBox(height: 16.w),
+                const SizedBox(height: 16.0),
 
                 // Clinical Notes Input
                 Text(locale.value.notes, style: secondaryTextStyle(size: 12)),
-                SizedBox(height: 8.w),
+                const SizedBox(height: 8.0),
                 Container(
                   decoration: BoxDecoration(
                     color: isDarkMode.value ? cardDarkColor : gray50,
                     border: Border.all(color: isDarkMode.value ? gray700 : gray200),
-                    borderRadius: BorderRadius.circular(12.w),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                   child: TextFormField(
                     initialValue: controller.notes.value,
@@ -163,14 +164,14 @@ class BookingDetailsScreen extends StatelessWidget {
                       hintText: locale.value.addNotesOptional,
                       hintStyle: secondaryTextStyle(color: gray400),
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(16.w),
+                      contentPadding: const EdgeInsets.all(16.0),
                     ),
                     style: primaryTextStyle(),
                     maxLines: 4,
                     maxLength: 1000,
                   ),
                 ),
-                SizedBox(height: 32.w),
+                const SizedBox(height: 32.0),
               ],
             ),
           );
@@ -179,7 +180,7 @@ class BookingDetailsScreen extends StatelessWidget {
       bottomNavigationBar: GetBuilder<BookingDetailsController>(
         builder: (controller) {
           return Container(
-            padding: EdgeInsets.all(24.w),
+            padding: const EdgeInsets.all(24.0),
             decoration: BoxDecoration(
               color: isDarkMode.value ? cardDarkColor : Colors.white,
               border: Border(top: BorderSide(color: isDarkMode.value ? gray800 : gray100)),
@@ -206,13 +207,13 @@ class BookingDetailsScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: appColorPrimary,
                       disabledBackgroundColor: gray300,
-                      minimumSize: Size(double.infinity, 56.w),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.w)),
+                      minimumSize: const Size(double.infinity, 56.0),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                     ),
                     child: controller.isLoading.value
-                        ? SizedBox(
-                            height: 24.w,
-                            width: 24.w,
+                        ? const SizedBox(
+                            height: 24.0,
+                            width: 24.0,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation(Colors.white),

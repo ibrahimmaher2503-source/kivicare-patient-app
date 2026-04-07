@@ -1,8 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:nb_utils/nb_utils.dart';
 import '../../api/core_apis.dart';
-import 'package:kivicare_patient/models/lab_test_model.dart';
-import 'package:kivicare_patient/utils/app_common.dart';
-import 'package:kivicare_patient/utils/common_base.dart';
+import 'package:kivicare_patient/screens/lab_test/model/lab_test_model.dart';
 
 /// Controller for Lab Test Detail Screen
 /// Manages loading and displaying individual test information
@@ -28,21 +28,11 @@ class LabTestDetailController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await CoreServiceApis.getLabTestDetail(testId: testId);
-
-      if (response.status ?? false) {
-        final testData = response.data as Map<String, dynamic>?;
-        if (testData != null) {
-          selectedTest.value = LabTest.fromJson(testData);
-        } else {
-          errorMessage.value = 'Invalid test data';
-        }
-      } else {
-        errorMessage.value = response.message ?? 'Failed to load test details';
-      }
+      final test = await CoreServiceApis.getLabTestDetail(testId: testId);
+      selectedTest.value = test;
     } catch (e) {
       errorMessage.value = e.toString();
-      appPrint('Error loading test detail: $e');
+      debugPrint('Error loading test detail: $e');
     } finally {
       isLoading(false);
     }
@@ -56,8 +46,7 @@ class LabTestDetailController extends GetxController {
     }
 
     // TODO: Implement cart functionality
-    // For now, just show a message
-    toast('Added to cart', length: Toast.LENGTH_SHORT);
+    toast('Added to cart');
   }
 
   /// Navigate to order creation with this test
@@ -68,9 +57,6 @@ class LabTestDetailController extends GetxController {
     }
 
     // TODO: Navigate to create test order screen with pre-selected test
-    // Get.to(() => CreateTestOrderScreen(
-    //   preSelectedTests: [selectedTest.value!],
-    // ));
   }
 
   /// Retry loading if error occurred

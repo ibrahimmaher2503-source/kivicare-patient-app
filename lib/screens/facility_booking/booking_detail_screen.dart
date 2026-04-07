@@ -8,11 +8,12 @@ import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
-import 'package:kivicare_patient/components/empty_error_state_widget.dart';
+import 'package:kivicare_patient/utils/empty_error_state_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../main.dart';
 import '../../utils/app_common.dart';
+
 class BookingDetailScreen extends StatelessWidget {
   final int bookingId;
 
@@ -28,7 +29,7 @@ class BookingDetailScreen extends StatelessWidget {
     );
 
     return AppScaffold(
-      appBarTitle: locale.value.bookingDetail ?? 'Booking Detail',
+      appBarTitle: Text(locale.value.bookingDetail),
       body: GetBuilder<BookingDetailController>(
         builder: (controller) {
           if (controller.isLoading.value) {
@@ -54,34 +55,34 @@ class BookingDetailScreen extends StatelessWidget {
           final booking = controller.booking.value!;
 
           return SingleChildScrollView(
-            padding: EdgeInsets.all(24.w),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Booking Header
                 _buildBookingHeader(booking, context),
-                SizedBox(height: 32.w),
+                const SizedBox(height: 32.0),
 
                 // Facility Section
                 _buildSection(
                   title: locale.value.facility,
                   child: _buildFacilityCard(booking),
                 ),
-                SizedBox(height: 24.w),
+                const SizedBox(height: 24.0),
 
                 // Appointment Section
                 _buildSection(
                   title: locale.value.appointment,
                   child: _buildAppointmentCard(booking),
                 ),
-                SizedBox(height: 24.w),
+                const SizedBox(height: 24.0),
 
                 // Patient Section
                 _buildSection(
                   title: locale.value.patientInformation,
                   child: _buildPatientCard(booking),
                 ),
-                SizedBox(height: 24.w),
+                const SizedBox(height: 24.0),
 
                 // Notes Section (if available)
                 if (booking.notes?.isNotEmpty ?? false) ...[
@@ -89,12 +90,12 @@ class BookingDetailScreen extends StatelessWidget {
                     title: locale.value.notes,
                     child: _buildNotesCard(booking),
                   ),
-                  SizedBox(height: 24.w),
+                  const SizedBox(height: 24.0),
                 ],
 
                 // Action Buttons
                 _buildActionButtons(booking, controller, context),
-                SizedBox(height: 24.w),
+                const SizedBox(height: 24.0),
               ],
             ),
           );
@@ -104,14 +105,18 @@ class BookingDetailScreen extends StatelessWidget {
   }
 
   Widget _buildBookingHeader(FacilityBooking booking, BuildContext context) {
+    final createdDateStr = booking.createdAt != null
+        ? '${booking.createdAt!.year}-${booking.createdAt!.month.toString().padLeft(2, '0')}-${booking.createdAt!.day.toString().padLeft(2, '0')}'
+        : 'N/A';
+
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: isDarkMode.value ? cardDarkColor : gray50,
         border: Border.all(
           color: isDarkMode.value ? gray700 : gray200,
         ),
-        borderRadius: BorderRadius.circular(12.w),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,19 +131,19 @@ class BookingDetailScreen extends StatelessWidget {
                     locale.value.bookingNumber,
                     style: secondaryTextStyle(size: 12),
                   ),
-                  SizedBox(height: 4.w),
+                  const SizedBox(height: 4.0),
                   Text(
-                    booking.bookingNumber ?? 'N/A',
+                    booking.bookingNumber,
                     style: boldTextStyle(size: 16),
                   ),
                 ],
               ),
-              BookingStatusBadge(status: booking.status ?? 'pending'),
+              BookingStatusBadge(status: booking.status),
             ],
           ),
-          SizedBox(height: 12.w),
+          const SizedBox(height: 12.0),
           Text(
-            'Booked on ${booking.createdAt?.split('T')[0] ?? 'N/A'}',
+            'Booked on $createdDateStr',
             style: secondaryTextStyle(size: 12),
           ),
         ],
@@ -157,7 +162,7 @@ class BookingDetailScreen extends StatelessWidget {
           title,
           style: boldTextStyle(size: 14),
         ),
-        SizedBox(height: 8.w),
+        const SizedBox(height: 8.0),
         child,
       ],
     );
@@ -165,40 +170,40 @@ class BookingDetailScreen extends StatelessWidget {
 
   Widget _buildFacilityCard(FacilityBooking booking) {
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: isDarkMode.value ? cardDarkColor : Colors.white,
         border: Border.all(
           color: isDarkMode.value ? gray700 : gray200,
         ),
-        borderRadius: BorderRadius.circular(12.w),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(8.w),
+            padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: isDarkMode.value ? gray800 : gray100,
-              borderRadius: BorderRadius.circular(8.w),
+              borderRadius: BorderRadius.circular(8.0),
             ),
             child: Icon(
               booking.type == 'lab' ? Icons.local_hospital : Icons.medical_services,
               color: appColorPrimary,
-              size: 20.w,
+              size: 20.0,
             ),
           ),
-          SizedBox(width: 12.w),
+          const SizedBox(width: 12.0),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  booking.facility?['name'] ?? 'N/A',
+                  booking.facility.name,
                   style: boldTextStyle(size: 14),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 4.w),
+                const SizedBox(height: 4.0),
                 Text(
                   booking.type == 'lab'
                       ? locale.value.laboratory
@@ -215,26 +220,26 @@ class BookingDetailScreen extends StatelessWidget {
 
   Widget _buildAppointmentCard(FacilityBooking booking) {
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: isDarkMode.value ? cardDarkColor : Colors.white,
         border: Border.all(
           color: isDarkMode.value ? gray700 : gray200,
         ),
-        borderRadius: BorderRadius.circular(12.w),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
         children: [
           _buildInfoRow(
             icon: Icons.calendar_today,
             label: locale.value.date,
-            value: booking.bookingDate ?? 'N/A',
+            value: booking.bookingDate,
           ),
-          SizedBox(height: 12.w),
+          const SizedBox(height: 12.0),
           _buildInfoRow(
             icon: Icons.schedule,
             label: locale.value.time,
-            value: booking.bookingTime ?? 'N/A',
+            value: booking.bookingTime,
           ),
         ],
       ),
@@ -243,26 +248,26 @@ class BookingDetailScreen extends StatelessWidget {
 
   Widget _buildPatientCard(FacilityBooking booking) {
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: isDarkMode.value ? cardDarkColor : Colors.white,
         border: Border.all(
           color: isDarkMode.value ? gray700 : gray200,
         ),
-        borderRadius: BorderRadius.circular(12.w),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
         children: [
           _buildInfoRow(
             icon: Icons.person,
             label: locale.value.name,
-            value: booking.patientName ?? 'N/A',
+            value: booking.patientName,
           ),
-          SizedBox(height: 12.w),
+          const SizedBox(height: 12.0),
           _buildInfoRow(
             icon: Icons.phone,
             label: locale.value.phone,
-            value: booking.patientPhone ?? 'N/A',
+            value: booking.patientPhone,
           ),
         ],
       ),
@@ -271,13 +276,13 @@ class BookingDetailScreen extends StatelessWidget {
 
   Widget _buildNotesCard(FacilityBooking booking) {
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: isDarkMode.value ? cardDarkColor : Colors.white,
         border: Border.all(
           color: isDarkMode.value ? gray700 : gray200,
         ),
-        borderRadius: BorderRadius.circular(12.w),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Text(
         booking.notes ?? '',
@@ -298,9 +303,9 @@ class BookingDetailScreen extends StatelessWidget {
         Icon(
           icon,
           color: appColorPrimary,
-          size: 18.w,
+          size: 18.0,
         ),
-        SizedBox(width: 12.w),
+        const SizedBox(width: 12.0),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -308,7 +313,7 @@ class BookingDetailScreen extends StatelessWidget {
               label,
               style: secondaryTextStyle(size: 11),
             ),
-            SizedBox(height: 2.w),
+            const SizedBox(height: 2.0),
             Text(
               value,
               style: boldTextStyle(size: 13),
@@ -335,14 +340,14 @@ class BookingDetailScreen extends StatelessWidget {
               onPressed: () => _showCancelDialog(booking, controller, context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: redColor,
-                padding: EdgeInsets.symmetric(vertical: 12.w),
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.w),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              icon: Icon(Icons.close, size: 18.w),
+              icon: const Icon(Icons.close, size: 18.0),
               label: Text(
-                locale.value.cancelBooking ?? 'Cancel Booking',
+                locale.value.cancelBooking,
                 style: boldTextStyle(color: Colors.white, size: 14),
               ),
             ),

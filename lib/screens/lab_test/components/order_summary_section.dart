@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_patient/models/lab_test_model.dart';
+import 'package:kivicare_patient/screens/lab_test/model/lab_test_model.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/price_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -24,10 +25,10 @@ class OrderSummarySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: appStore.isDarkMode ? cardDarkColor : Colors.white,
+        color: isDarkMode.value ? cardDarkColor : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: appStore.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+          color: isDarkMode.value ? Colors.grey.shade800 : Colors.grey.shade200,
         ),
       ),
       child: Column(
@@ -74,12 +75,14 @@ class OrderSummarySection extends StatelessWidget {
                     const SizedBox(width: 8),
                     PriceWidget(
                       price: test.defaultPrice,
-                      textStyle: boldTextStyle(size: 12, color: appColorPrimary),
+                      size: 12,
+                      color: appColorPrimary,
+                      isBoldText: true,
                     ),
                     const SizedBox(width: 8),
                     GestureDetector(
                       onTap: () => onRemoveTest(test.id),
-                      child: Icon(Icons.close, size: 20, color: Colors.cancelStatusColor.shade400),
+                      child: const Icon(Icons.close, size: 20, color: cancelStatusColor),
                     ),
                   ],
                 ),
@@ -152,11 +155,9 @@ class _PriceRow extends StatelessWidget {
         ),
         PriceWidget(
           price: amount.abs(),
-          textStyle: (isBold ? boldTextStyle : primaryTextStyle)(
-            size: 12,
-            color: color,
-          ),
-          prefix: amount < 0 ? '-' : '',
+          size: 12,
+          color: color,
+          isBoldText: isBold,
         ),
       ],
     );

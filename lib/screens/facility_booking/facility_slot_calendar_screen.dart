@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 import 'package:kivicare_patient/screens/facility_booking/facility_booking_controller.dart';
 import 'package:kivicare_patient/screens/facility_booking/facility_slots_controller.dart';
 import 'package:kivicare_patient/screens/facility_booking/booking_details_screen.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
-import 'package:kivicare_patient/utils/constants.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../main.dart';
 import '../../utils/app_common.dart';
+
 class FacilitySlotCalendarScreen extends StatelessWidget {
   final int facilityId;
   final String facilityType;
@@ -48,23 +48,23 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
         init: slotsController,
         builder: (controller) {
           return SingleChildScrollView(
-            padding: EdgeInsets.all(24.w),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Facility Info
                 Container(
-                  padding: EdgeInsets.all(16.w),
+                  padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     color: isDarkMode.value ? cardDarkColor : Colors.white,
                     border: Border.all(color: isDarkMode.value ? gray800 : gray100),
-                    borderRadius: BorderRadius.circular(16.w),
+                    borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(facilityName, style: boldTextStyle(size: 16)),
-                      SizedBox(height: 8.w),
+                      const SizedBox(height: 8.0),
                       Text(
                         facilityType == 'lab' ? locale.value.laboratory : locale.value.radiologyCenter,
                         style: secondaryTextStyle(size: 14),
@@ -72,81 +72,52 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 24.w),
+                const SizedBox(height: 24.0),
 
                 // Calendar Header
                 Text(locale.value.selectDate, style: boldTextStyle(size: 16)),
-                SizedBox(height: 16.w),
+                const SizedBox(height: 16.0),
 
-                // Calendar Widget
-                Container(
-                  decoration: BoxDecoration(
-                    color: isDarkMode.value ? cardDarkColor : Colors.white,
-                    border: Border.all(color: isDarkMode.value ? gray800 : gray100),
-                    borderRadius: BorderRadius.circular(16.w),
-                  ),
-                  padding: EdgeInsets.all(12.w),
-                  child: TableCalendar(
-                    firstDay: DateTime.now(),
-                    lastDay: DateTime.now().add(Duration(days: 90)),
-                    focusedDay: controller.selectedDate ?? DateTime.now(),
-                    selectedDayPredicate: (day) => isSameDay(controller.selectedDate, day),
-                    onDaySelected: (selectedDay, focusedDay) {
-                      controller.setSelectedDate(selectedDay);
-                      controller.loadSlots(selectedDay);
-                    },
-                    calendarFormat: CalendarFormat.month,
-                    startingDayOfWeek: StartingDayOfWeek.sunday,
-                    headerStyle: HeaderStyle(
-                      formatButtonVisible: false,
-                      titleCentered: true,
-                      titleTextStyle: boldTextStyle(size: 16),
-                      leftChevronIcon: Icon(Icons.chevron_left, color: appColorPrimary),
-                      rightChevronIcon: Icon(Icons.chevron_right, color: appColorPrimary),
-                    ),
-                    calendarStyle: CalendarStyle(
-                      selectedDecoration: BoxDecoration(color: appColorPrimary, shape: BoxShape.circle),
-                      selectedTextStyle: boldTextStyle(color: Colors.white),
-                      todayDecoration: BoxDecoration(color: appColorPrimary.withOpacity(0.3), shape: BoxShape.circle),
-                      todayTextStyle: boldTextStyle(color: appColorPrimary),
-                      defaultTextStyle: primaryTextStyle(),
-                      weekendTextStyle: primaryTextStyle(color: cancelStatusColor),
-                      outsideTextStyle: primaryTextStyle(color: gray400),
-                    ),
-                  ),
+                // Custom Calendar Widget
+                _CalendarPicker(
+                  selectedDate: controller.selectedDate.value,
+                  onDateSelected: (date) {
+                    controller.setSelectedDate(date);
+                    controller.loadSlots(date);
+                  },
                 ),
-                SizedBox(height: 24.w),
+                const SizedBox(height: 24.0),
 
                 // Time Slots
                 if (controller.isLoading.value)
                   Center(child: LoaderWidget())
-                else if (controller.selectedDate != null)
+                else if (controller.selectedDate.value != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(locale.value.selectTime, style: boldTextStyle(size: 16)),
-                      SizedBox(height: 16.w),
+                      const SizedBox(height: 16.0),
                       if (controller.slots.isEmpty)
                         Center(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 24.w),
+                            padding: const EdgeInsets.symmetric(vertical: 24.0),
                             child: Text(locale.value.noSlotsAvailable, style: secondaryTextStyle()),
                           ),
                         )
                       else
                         GridView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
-                            crossAxisSpacing: 12.w,
-                            mainAxisSpacing: 12.w,
+                            crossAxisSpacing: 12.0,
+                            mainAxisSpacing: 12.0,
                             childAspectRatio: 1.2,
                           ),
                           itemCount: controller.slots.length,
                           itemBuilder: (context, index) {
                             final slot = controller.slots[index];
-                            final isSelected = bookingController.selectedTime == slot.time;
+                            final isSelected = bookingController.selectedTime.value == slot.time;
                             final isAvailable = slot.available;
                             return GestureDetector(
                               onTap: isAvailable ? () => bookingController.selectTime(slot.time) : null,
@@ -164,7 +135,7 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
                                             ? (isDarkMode.value ? gray700 : gray200)
                                             : (isDarkMode.value ? gray600 : gray100),
                                   ),
-                                  borderRadius: BorderRadius.circular(12.w),
+                                  borderRadius: BorderRadius.circular(12.0),
                                 ),
                                 child: Center(
                                   child: Column(
@@ -205,9 +176,9 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
         builder: (controller) {
           return GetBuilder<FacilityBookingController>(
             builder: (bookingController) {
-              final isEnabled = controller.selectedDate != null && bookingController.selectedTime != null;
+              final isEnabled = controller.selectedDate.value != null && bookingController.selectedTime.value != null;
               return Container(
-                padding: EdgeInsets.all(24.w),
+                padding: const EdgeInsets.all(24.0),
                 decoration: BoxDecoration(
                   color: isDarkMode.value ? cardDarkColor : Colors.white,
                   border: Border(top: BorderSide(color: isDarkMode.value ? gray800 : gray100)),
@@ -217,10 +188,10 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
                   children: [
                     // Summary
                     Container(
-                      padding: EdgeInsets.all(12.w),
+                      padding: const EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
                         color: isDarkMode.value ? gray800 : gray50,
-                        borderRadius: BorderRadius.circular(12.w),
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: Column(
                         children: [
@@ -229,25 +200,25 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
                             children: [
                               Text(locale.value.selectedDate, style: secondaryTextStyle()),
                               Text(
-                                controller.selectedDate != null
-                                    ? DateFormat('dd MMM yyyy').format(controller.selectedDate!)
+                                controller.selectedDate.value != null
+                                    ? DateFormat('dd MMM yyyy').format(controller.selectedDate.value!)
                                     : '-',
                                 style: boldTextStyle(),
                               ),
                             ],
                           ),
-                          SizedBox(height: 8.w),
+                          const SizedBox(height: 8.0),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(locale.value.selectedTime, style: secondaryTextStyle()),
-                              Text(bookingController.selectedTime ?? '-', style: boldTextStyle()),
+                              Text(bookingController.selectedTime.value ?? '-', style: boldTextStyle()),
                             ],
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 16.w),
+                    const SizedBox(height: 16.0),
 
                     // Continue Button
                     ElevatedButton(
@@ -263,8 +234,8 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isEnabled ? appColorPrimary : gray300,
                         disabledBackgroundColor: gray300,
-                        minimumSize: Size(double.infinity, 56.w),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.w)),
+                        minimumSize: const Size(double.infinity, 56.0),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                       ),
                       child: Text(locale.value.continueText, style: boldTextStyle(color: Colors.white)),
                     ),
@@ -276,5 +247,141 @@ class FacilitySlotCalendarScreen extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class _CalendarPicker extends StatefulWidget {
+  final DateTime? selectedDate;
+  final ValueChanged<DateTime> onDateSelected;
+
+  const _CalendarPicker({
+    required this.selectedDate,
+    required this.onDateSelected,
+  });
+
+  @override
+  State<_CalendarPicker> createState() => _CalendarPickerState();
+}
+
+class _CalendarPickerState extends State<_CalendarPicker> {
+  late DateTime _focusedMonth;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusedMonth = widget.selectedDate ?? DateTime.now();
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final lastDay = now.add(const Duration(days: 90));
+    final firstDayOfMonth = DateTime(_focusedMonth.year, _focusedMonth.month, 1);
+    final lastDayOfMonth = DateTime(_focusedMonth.year, _focusedMonth.month + 1, 0);
+    final startWeekday = firstDayOfMonth.weekday % 7;
+    final totalCells = startWeekday + lastDayOfMonth.day;
+    final rows = (totalCells / 7).ceil();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode.value ? cardDarkColor : Colors.white,
+        border: Border.all(color: isDarkMode.value ? gray800 : gray100),
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.chevron_left, color: appColorPrimary),
+                onPressed: () {
+                  setState(() {
+                    _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month - 1, 1);
+                  });
+                },
+              ),
+              Text(
+                '${_monthName(_focusedMonth.month)} ${_focusedMonth.year}',
+                style: boldTextStyle(size: 16),
+              ),
+              IconButton(
+                icon: Icon(Icons.chevron_right, color: appColorPrimary),
+                onPressed: () {
+                  setState(() {
+                    _focusedMonth = DateTime(_focusedMonth.year, _focusedMonth.month + 1, 1);
+                  });
+                },
+              ),
+            ],
+          ),
+          Row(
+            children: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) {
+              return Expanded(
+                child: Center(child: Text(d, style: secondaryTextStyle(size: 11))),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 8.0),
+          ...List.generate(rows, (row) {
+            return Row(
+              children: List.generate(7, (col) {
+                final cellIndex = row * 7 + col;
+                final dayNum = cellIndex - startWeekday + 1;
+                if (dayNum < 1 || dayNum > lastDayOfMonth.day) {
+                  return const Expanded(child: SizedBox());
+                }
+                final date = DateTime(_focusedMonth.year, _focusedMonth.month, dayNum);
+                final isSelected = widget.selectedDate != null && _isSameDay(date, widget.selectedDate!);
+                final isToday = _isSameDay(date, now);
+                final isDisabled = date.isBefore(DateTime(now.year, now.month, now.day)) || date.isAfter(lastDay);
+
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: isDisabled ? null : () => widget.onDateSelected(date),
+                    child: Container(
+                      margin: const EdgeInsets.all(2.0),
+                      height: 36.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isSelected
+                            ? appColorPrimary
+                            : isToday
+                                ? appColorPrimary.withValues(alpha: 0.3)
+                                : Colors.transparent,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$dayNum',
+                          style: primaryTextStyle(
+                            color: isSelected
+                                ? Colors.white
+                                : isDisabled
+                                    ? gray400
+                                    : null,
+                            size: 13,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  String _monthName(int month) {
+    const names = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+    return names[month - 1];
   }
 }

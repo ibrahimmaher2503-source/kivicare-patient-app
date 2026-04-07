@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kivicare_patient/models/lab_test_model.dart';
+import 'package:kivicare_patient/screens/lab_test/model/lab_test_model.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/price_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -24,10 +25,10 @@ class LabTestCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: appStore.isDarkMode ? cardDarkColor : Colors.white,
+          color: isDarkMode.value ? cardDarkColor : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: appStore.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+            color: isDarkMode.value ? Colors.grey.shade800 : Colors.grey.shade200,
           ),
           boxShadow: [
             BoxShadow(
@@ -72,10 +73,9 @@ class LabTestCard extends StatelessWidget {
                   ),
                   child: PriceWidget(
                     price: test.defaultPrice,
-                    textStyle: boldTextStyle(
-                      size: 13,
-                      color: appColorPrimary,
-                    ),
+                    size: 13,
+                    color: appColorPrimary,
+                    isBoldText: true,
                   ),
                 ),
               ],

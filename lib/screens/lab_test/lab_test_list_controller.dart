@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:nb_utils/nb_utils.dart';
 import '../../api/core_apis.dart';
-import 'package:kivicare_patient/models/lab_test_model.dart';
+import 'package:kivicare_patient/screens/lab_test/model/lab_test_model.dart';
 import 'package:kivicare_patient/screens/lab_test/lab_test_categories_controller.dart';
 import 'package:kivicare_patient/screens/lab_test/model/lab_test_filter.dart';
-import 'package:kivicare_patient/utils/app_common.dart';
 
 /// Controller for Lab Test List Browsing with Filtering
 /// Extends LabTestCategoriesController to add filtering and pagination
@@ -13,10 +14,9 @@ class LabTestListController extends LabTestCategoriesController {
   final RxList<LabTest> tests = RxList<LabTest>([]);
   final RxBool isLoadingTests = false.obs;
   final Rx<String?> testErrorMessage = Rx<String?>(null);
-  
+
   // Pagination state
-  final RxInt totalTests = 0.obs;
-  final RxInt totalPages = 0.obs;
+  final RxBool isLastPage = false.obs;
   final RxBool hasMorePages = true.obs;
 
   @override
@@ -31,40 +31,27 @@ class LabTestListController extends LabTestCategoriesController {
       isLoadingTests(true);
       testErrorMessage(null);
 
-      final response = await CoreServiceApis.getLabTests(
-        categoryId: filter.value.categoryId?.toString(),
-        department: filter.value.department,
-        search: filter.value.searchQuery,
+      final bool isFirstPage = filter.value.currentPage == 1;
+      if (isFirstPage) tests.clear();
+
+      bool reachedLastPage = false;
+      await CoreServiceApis.getLabTestList(
         page: filter.value.currentPage,
+        perPage: filter.value.perPage,
+        labTestList: tests,
+        categoryId: filter.value.categoryId,
+        department: filter.value.department ?? '',
+        search: filter.value.searchQuery ?? '',
+        lastPageCallBack: (lastPage) {
+          reachedLastPage = lastPage;
+        },
       );
 
-      if (response.status ?? false) {
-        // Parse tests from response
-        final List<dynamic> data = response.data ?? [];
-        final loadedTests = data
-            .map((json) => LabTest.fromJson(json as Map<String, dynamic>))
-            .toList();
-
-        // Handle pagination
-        final meta = response.meta as Map<String, dynamic>?;
-        if (meta != null) {
-          totalTests.value = meta['total'] ?? 0;
-          totalPages.value = meta['last_page'] ?? 1;
-          hasMorePages.value = filter.value.currentPage < (meta['last_page'] ?? 1);
-        }
-
-        // Append or replace tests based on pagination
-        if (filter.value.currentPage == 1) {
-          tests.value = loadedTests;
-        } else {
-          tests.addAll(loadedTests);
-        }
-      } else {
-        testErrorMessage.value = response.message ?? 'Failed to load tests';
-      }
+      isLastPage.value = reachedLastPage;
+      hasMorePages.value = !reachedLastPage;
     } catch (e) {
       testErrorMessage.value = e.toString();
-      appPrint('Error loading tests: $e');
+      debugPrint('Error loading tests: $e');
     } finally {
       isLoadingTests(false);
     }
@@ -95,11 +82,24 @@ class LabTestListController extends LabTestCategoriesController {
   }
 
   /// Load next page of tests
-  Future<void> loadNextPage() async {
-    if (!hasMorePages.value || isLoadingTests.value) return;
-    
+  Future<void> loadMoreTests() async {
+    if (isLastPage.value || isLoadingTests.value) return;
     filter.value = filter.value.nextPage();
     await loadTests();
+  }
+
+  /// Reset pagination
+  void resetPagination() {
+    filter.value = filter.value.resetPagination();
+  }
+
+  /// Reset filters but keep department
+  void resetFilters() {
+    filter.value = LabTestFilter(
+      department: filter.value.department,
+      currentPage: 1,
+    );
+    loadTests();
   }
 
   /// Get test by ID

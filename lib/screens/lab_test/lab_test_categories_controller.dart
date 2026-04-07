@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import '../../api/core_apis.dart';
-import 'package:kivicare_patient/models/lab_test_category_model.dart';
-import 'package:kivicare_patient/utils/app_common.dart';
+import 'package:kivicare_patient/screens/lab_test/model/lab_test_category_model.dart';
 
 /// Controller for Lab Test Categories Browsing
 /// Manages loading and displaying available test categories
@@ -23,22 +23,11 @@ class LabTestCategoriesController extends GetxController {
       isLoading(true);
       errorMessage(null);
 
-      final response = await CoreServiceApis.getLabTestCategories();
-
-      if (response.status ?? false) {
-        // Parse categories from response
-        final List<dynamic> data = response.data ?? [];
-        final loadedCategories = data
-            .map((json) => LabTestCategory.fromJson(json as Map<String, dynamic>))
-            .toList();
-
-        categories.value = loadedCategories;
-      } else {
-        errorMessage.value = response.message ?? 'Failed to load categories';
-      }
+      final loadedCategories = await CoreServiceApis.getLabTestCategories();
+      categories.value = loadedCategories;
     } catch (e) {
       errorMessage.value = e.toString();
-      appPrint('Error loading categories: $e');
+      debugPrint('Error loading categories: $e');
     } finally {
       isLoading(false);
     }

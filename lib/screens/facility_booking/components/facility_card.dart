@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../utils/app_common.dart';
 class FacilityCard extends StatelessWidget {
   final int id;
   final String name;
@@ -26,37 +26,37 @@ class FacilityCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8.w),
-        padding: EdgeInsets.all(16.w),
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: isSelected
-              ? appColorPrimary.withOpacity(0.1)
+              ? appColorPrimary.withValues(alpha: 0.1)
               : (isDarkMode.value ? cardDarkColor : Colors.white),
           border: Border.all(
             color: isSelected ? appColorPrimary : (isDarkMode.value ? gray700 : gray200),
             width: isSelected ? 2 : 1,
           ),
-          borderRadius: BorderRadius.circular(12.w),
+          borderRadius: BorderRadius.circular(12.0),
         ),
         child: Row(
           children: [
             // Leading Icon
             Container(
-              width: 48.w,
-              height: 48.w,
+              width: 48.0,
+              height: 48.0,
               decoration: BoxDecoration(
-                color: appColorPrimary.withOpacity(0.1),
+                color: appColorPrimary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Center(
                 child: Icon(
                   Icons.local_hospital,
-                  size: 24.w,
+                  size: 24.0,
                   color: appColorPrimary,
                 ),
               ),
             ),
-            SizedBox(width: 12.w),
+            const SizedBox(width: 12.0),
 
             // Facility Info
             Expanded(
@@ -70,7 +70,7 @@ class FacilityCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   if (address != null && address!.isNotEmpty) ...[
-                    SizedBox(height: 4.w),
+                    const SizedBox(height: 4.0),
                     Text(
                       address!,
                       style: secondaryTextStyle(size: 12),
@@ -79,7 +79,7 @@ class FacilityCard extends StatelessWidget {
                     ),
                   ],
                   if (description != null && description!.isNotEmpty) ...[
-                    SizedBox(height: 4.w),
+                    const SizedBox(height: 4.0),
                     Text(
                       description!,
                       style: secondaryTextStyle(size: 11),
@@ -90,19 +90,19 @@ class FacilityCard extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 12.w),
+            const SizedBox(width: 12.0),
 
             // Selection Indicator
             if (isSelected)
               Icon(
                 Icons.check_circle,
-                size: 24.w,
+                size: 24.0,
                 color: appColorPrimary,
               )
             else
               Icon(
                 Icons.radio_button_unchecked,
-                size: 24.w,
+                size: 24.0,
                 color: gray400,
               ),
           ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
-import 'package:kivicare_patient/components/empty_error_state_widget.dart';
+import 'package:kivicare_patient/utils/empty_error_state_widget.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
 import 'package:kivicare_patient/locale/languages.dart';
 import 'package:kivicare_patient/screens/lab_test/components/lab_test_card.dart';
@@ -51,7 +51,7 @@ class _LabTestListScreenState extends State<LabTestListScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBarTitle: locale.value.labTests ?? 'Lab Tests',
+      appBarTitle: Text(locale.value.labTests),
       body: GetBuilder<LabTestListController>(
         builder: (controller) {
           return Column(

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
-import 'package:kivicare_patient/components/empty_error_state_widget.dart';
+import 'package:kivicare_patient/utils/empty_error_state_widget.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
 import 'package:kivicare_patient/locale/languages.dart';
 import 'package:kivicare_patient/screens/lab_test/lab_test_detail_controller.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/price_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -13,7 +14,7 @@ import '../../main.dart';
 class LabTestDetailScreen extends StatelessWidget {
   final int testId;
 
-  const LabTestDetailScreen({Key key, required this.testId}) : super(key: key);
+  const LabTestDetailScreen({Key? key, required this.testId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class LabTestDetailScreen extends StatelessWidget {
       init: LabTestDetailController(testId: testId),
       builder: (controller) {
         return AppScaffold(
-          appBarTitle: locale.value.testDetail ?? 'Test Details',
+          appBarTitle: Text(locale.value.testDetail),
           body: Obx(
             () => controller.isLoading.value
                 ? const LoaderWidget()
@@ -76,7 +77,7 @@ class _DetailContent extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Code: ${test.code}', style: secondaryTextStyle(size: 12)),
-                  PriceWidget(price: test.defaultPrice, textStyle: boldTextStyle(size: 16, color: appColorPrimary)),
+                  PriceWidget(price: test.defaultPrice, size: 16, color: appColorPrimary, isBoldText: true),
                 ],
               ),
             ],
@@ -141,7 +142,7 @@ class _DetailCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(color: appStore.isDarkMode ? cardDarkColor : Colors.grey.shade50, borderRadius: BorderRadius.circular(8), border: Border.all(color: appStore.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200)),
+    decoration: BoxDecoration(color: isDarkMode.value ? cardDarkColor : Colors.grey.shade50, borderRadius: BorderRadius.circular(8), border: Border.all(color: isDarkMode.value ? Colors.grey.shade800 : Colors.grey.shade200)),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [Text(title, style: secondaryTextStyle(size: 11), maxLines: 1, overflow: TextOverflow.ellipsis), const SizedBox(height: 6), Text(value, style: boldTextStyle(size: 12), maxLines: 2, overflow: TextOverflow.ellipsis)]),
   );
 }

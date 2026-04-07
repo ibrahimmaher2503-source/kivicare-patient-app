@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nb_utils/nb_utils.dart';
+
 import '../../api/core_apis.dart';
+import '../../main.dart';
 import 'package:kivicare_patient/models/facility_booking_model.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
-import 'package:kivicare_patient/utils/constants.dart';
 import 'package:kivicare_patient/utils/rbac_utils.dart';
 import 'package:kivicare_patient/screens/lab_test/components/cancellation_reason_dialog.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 /// Controller for managing user's bookings with filtering and RBAC
-import '../../main.dart';
 class MyBookingsController extends GetxController {
   final RxList<FacilityBooking> bookings = RxList<FacilityBooking>();
   final RxBool isLoading = false.obs;
@@ -35,30 +35,18 @@ class MyBookingsController extends GetxController {
 
     try {
       page(1);
-      final response = await CoreServiceApis.getFacilityBookings(
+      final result = await CoreServiceApis.getFacilityBookings(
         type: selectedType.value,
         status: selectedStatus.value,
         page: 1,
       );
 
-      if (response.status ?? false) {
-        final bookingList = response.data as List?;
-        if (bookingList != null) {
-          // Filter by RBAC
-          final filtered = bookingList
-              .map((e) => FacilityBooking.fromJson(e as Map<String, dynamic>))
-              .where((booking) => canViewBooking(booking))
-              .toList();
-
-          bookings.value = filtered;
-          isLastPage.value = false;
-          appPrint('Bookings loaded: ${filtered.length}');
-        }
-      } else {
-        toast(response.message ?? locale.value.somethingWentWrong);
-      }
+      final filtered = result.where((booking) => canViewBooking(booking)).toList();
+      bookings.value = filtered;
+      isLastPage.value = false;
+      debugPrint('Bookings loaded: ${filtered.length}');
     } catch (e) {
-      appPrint('Error loading bookings: $e');
+      debugPrint('Error loading bookings: $e');
       toast(locale.value.somethingWentWrong);
     } finally {
       isLoading(false);
@@ -71,29 +59,20 @@ class MyBookingsController extends GetxController {
 
     try {
       page(page.value + 1);
-      final response = await CoreServiceApis.getFacilityBookings(
+      final result = await CoreServiceApis.getFacilityBookings(
         type: selectedType.value,
         status: selectedStatus.value,
         page: page.value,
       );
 
-      if (response.status ?? false) {
-        final bookingList = response.data as List?;
-        if (bookingList != null) {
-          if (bookingList.isEmpty) {
-            isLastPage(true);
-          } else {
-            final filtered = bookingList
-                .map((e) => FacilityBooking.fromJson(e as Map<String, dynamic>))
-                .where((booking) => canViewBooking(booking))
-                .toList();
-
-            bookings.addAll(filtered);
-          }
-        }
+      if (result.isEmpty) {
+        isLastPage(true);
+      } else {
+        final filtered = result.where((booking) => canViewBooking(booking)).toList();
+        bookings.addAll(filtered);
       }
     } catch (e) {
-      appPrint('Error loading more bookings: $e');
+      debugPrint('Error loading more bookings: $e');
       toast(locale.value.somethingWentWrong);
     }
   }
@@ -166,7 +145,7 @@ class MyBookingsController extends GetxController {
     try {
       isLoading(true);
 
-      final request = {
+      final request = <String, dynamic>{
         if (reason != null) 'reason': reason,
       };
 
@@ -175,19 +154,15 @@ class MyBookingsController extends GetxController {
         request: request,
       );
 
-      if (response.status ?? false) {
-        toast(response.message ?? locale.value.bookingCancelledSuccessfully);
-        // Remove from list
+      if (response.status) {
+        toast(response.message.isNotEmpty ? response.message : locale.value.bookingCancelledSuccessfully);
         bookings.removeWhere((b) => b.id == bookingId);
         RBACUtils.logAccessAttempt('Booking#$bookingId:cancel', true, null);
       } else {
-        toast(response.message ?? locale.value.failedToCancelBooking);
-        if (response.statusCode == 403) {
-          RBACUtils.handle403Error(response.message);
-        }
+        toast(response.message.isNotEmpty ? response.message : locale.value.failedToCancelBooking);
       }
     } catch (e) {
-      appPrint('Error cancelling booking: $e');
+      debugPrint('Error cancelling booking: $e');
       toast(locale.value.somethingWentWrong);
     } finally {
       isLoading(false);

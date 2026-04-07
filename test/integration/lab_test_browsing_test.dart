@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Lab Test Browsing - Integration Tests', () {
-    
+
     testWidgets('Load and display lab test categories', (WidgetTester tester) async {
       // TODO: Implement integration test for loading categories
       // Steps:
@@ -11,8 +10,7 @@ void main() {
       // 2. Verify categories are loaded
       // 3. Verify category cards are displayed with icon, name, and test count
       // 4. Verify LoaderWidget shows while loading
-      skip('Integration tests require app launch setup');
-    });
+    }, skip: true);
 
     testWidgets('Filter tests by category', (WidgetTester tester) async {
       // TODO: Implement integration test for category filtering
@@ -21,8 +19,7 @@ void main() {
       // 2. Tap on a category
       // 3. Verify LabTestListScreen loads
       // 4. Verify filtered tests are displayed
-      skip('Integration tests require app launch setup');
-    });
+    }, skip: true);
 
     testWidgets('Filter tests by department (Laboratory vs Radiology)', (WidgetTester tester) async {
       // TODO: Implement integration test for department filtering
@@ -32,8 +29,7 @@ void main() {
       // 3. Verify only laboratory tests are shown
       // 4. Tap "Radiology" filter chip
       // 5. Verify only radiology tests are shown
-      skip('Integration tests require app launch setup');
-    });
+    }, skip: true);
 
     testWidgets('Search for tests by name', (WidgetTester tester) async {
       // TODO: Implement integration test for search functionality
@@ -42,8 +38,7 @@ void main() {
       // 2. Type search query in search field
       // 3. Verify matching tests are displayed
       // 4. Clear search and verify all tests reappear
-      skip('Integration tests require app launch setup');
-    });
+    }, skip: true);
 
     testWidgets('View test details', (WidgetTester tester) async {
       // TODO: Implement integration test for viewing test details
@@ -57,8 +52,7 @@ void main() {
       //    - Preparation instructions
       //    - Sample type, department, turnaround time, category
       //    - Reference range
-      skip('Integration tests require app launch setup');
-    });
+    }, skip: true);
 
     testWidgets('Handle error states gracefully', (WidgetTester tester) async {
       // TODO: Implement integration test for error handling
@@ -69,8 +63,7 @@ void main() {
       // 4. Verify error message is shown
       // 5. Tap retry button
       // 6. Verify content loads on retry
-      skip('Integration tests require app launch setup');
-    });
+    }, skip: true);
 
     testWidgets('Handle empty states gracefully', (WidgetTester tester) async {
       // TODO: Implement integration test for empty state
@@ -78,7 +71,6 @@ void main() {
       // 1. Mock API to return empty list
       // 2. Open LabTestListScreen
       // 3. Verify EmptyErrorStateWidget is displayed with "No Data" message
-      skip('Integration tests require app launch setup');
-    });
+    }, skip: true);
   });
 }

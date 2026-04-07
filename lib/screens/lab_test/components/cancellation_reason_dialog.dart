@@ -4,8 +4,8 @@ import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../main.dart';
-import '../../utils/app_common.dart';
+import '../../../main.dart';
+import '../../../utils/app_common.dart';
 class CancellationReasonDialog extends StatefulWidget {
   final Function(String reason) onConfirm;
 
@@ -42,7 +42,7 @@ class _CancellationReasonDialogState extends State<CancellationReasonDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: isDarkMode.value ? cardDarkColor : Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.w)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       title: Text(
         locale.value.cancellationReason,
         style: boldTextStyle(size: 18),
@@ -51,17 +51,17 @@ class _CancellationReasonDialogState extends State<CancellationReasonDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 8.w),
+          SizedBox(height: 8.0),
           Text(
             locale.value.pleaseProvideReasonForCancellation,
             style: secondaryTextStyle(size: 13),
           ),
-          SizedBox(height: 16.w),
+          SizedBox(height: 16.0),
           Container(
             decoration: BoxDecoration(
               color: isDarkMode.value ? gray800 : gray50,
               border: Border.all(color: isDarkMode.value ? gray700 : gray200),
-              borderRadius: BorderRadius.circular(12.w),
+              borderRadius: BorderRadius.circular(12.0),
             ),
             child: TextField(
               controller: reasonController,
@@ -72,14 +72,14 @@ class _CancellationReasonDialogState extends State<CancellationReasonDialog> {
                 hintText: locale.value.enterCancellationReason,
                 hintStyle: secondaryTextStyle(color: gray400),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.all(12.w),
+                contentPadding: EdgeInsets.all(12.0),
                 counterText: '',
               ),
               style: primaryTextStyle(size: 13),
               onChanged: (_) => setState(() {}),
             ),
           ),
-          SizedBox(height: 4.w),
+          SizedBox(height: 4.0),
           Align(
             alignment: Alignment.bottomRight,
             child: Text(
@@ -107,7 +107,7 @@ class _CancellationReasonDialogState extends State<CancellationReasonDialog> {
           style: ElevatedButton.styleFrom(
             backgroundColor: appColorPrimary,
             disabledBackgroundColor: gray300,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.w)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           ),
           child: Text(
             locale.value.confirm,
