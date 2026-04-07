@@ -6,7 +6,6 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:kivicare_patient/api/core_apis.dart';
 
-import '../../utils/app_common.dart';
 import '../service/model/service_list_model.dart';
 import 'model/doctor_list_res.dart';
 
@@ -29,6 +28,8 @@ class DoctorListController extends GetxController {
   RxString serviceType = "".obs;
   RxString ratingMin = ''.obs;
   RxString ratingMax = ''.obs;
+  RxnInt selectedGovernorateId = RxnInt();
+  RxnInt selectedCityId = RxnInt();
   @override
   void onInit() {
     _scrollController.addListener(() => Get.context != null ? hideKeyboard(Get.context) : null);
@@ -52,18 +53,14 @@ class DoctorListController extends GetxController {
       isLoading(true);
     }
     await doctorsFuture(
-      CoreServiceApis.getDoctors(
-        isPopulars: isPopular.value,
+      CoreServiceApis.searchDoctors(
         page: page.value,
-        doctorRatingMin: ratingMin.value,
-        doctorRatingMax: ratingMax.value,
-        doctors: doctors,
-        serviceId: currentSelectedService.value.id == -1 ? null : currentSelectedService.value.id,
-        clinicId: clinicId.value,
-        search: searchDoctorCont.text.trim(),
-        lastPageCallBack: (p0) {
-          isLastPage(p0);
-        },
+        perPage: 20,
+        doctorList: doctors,
+        name: searchDoctorCont.text.trim(),
+        governorateId: selectedGovernorateId.value,
+        cityId: selectedCityId.value,
+        lastPageCallBack: (p0) => isLastPage(p0),
       ),
     ).then((value) {
       log('value.length ==> ${value.length}');
@@ -71,6 +68,19 @@ class DoctorListController extends GetxController {
       isLoading(false);
       log("getDoctors error $e");
     }).whenComplete(() => isLoading(false));
+  }
+
+  void onGovernorateChanged(int? id) {
+    selectedGovernorateId.value = id;
+    selectedCityId.value = null;
+    page(1);
+    getDoctors();
+  }
+
+  void onCityChanged(int? id) {
+    selectedCityId.value = id;
+    page(1);
+    getDoctors();
   }
 
   @override

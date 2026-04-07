@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -15,9 +14,6 @@ class NurseRequestListController extends GetxController {
   RxBool isLastPage = false.obs;
   RxInt page = 1.obs;
 
-  // Search
-  TextEditingController searchCont = TextEditingController();
-
   // Filter tabs
   RxString selectedStatus = ''.obs;
   RxList<Map<String, String>> statusFilters = RxList();
@@ -30,17 +26,11 @@ class NurseRequestListController extends GetxController {
       {'key': NurseRequestStatusConst.confirmed, 'label': locale.value.nurseRequestConfirmed},
       {'key': NurseRequestStatusConst.inProgress, 'label': locale.value.nurseRequestInProgress},
       {'key': NurseRequestStatusConst.completed, 'label': locale.value.nurseRequestCompleted},
-      {'key': NurseRequestStatusConst.cancelled, 'label': locale.value.cancel},
+      {'key': NurseRequestStatusConst.cancelled, 'label': locale.value.cancelled},
     ].obs;
 
     getNurseRequests();
     super.onInit();
-  }
-
-  @override
-  void dispose() {
-    searchCont.dispose();
-    super.dispose();
   }
 
   Future<void> getNurseRequests({bool showLoader = true}) async {
@@ -51,10 +41,10 @@ class NurseRequestListController extends GetxController {
     await nurseRequestFuture(
       CoreServiceApis.getNurseRequestList(
         page: page.value,
-        perPage: 15,
+        perPage: Constants.perPageItem,
         requestList: nurseRequests,
         status: selectedStatus.value,
-        search: searchCont.text.trim(),
+        search: '',
         lastPageCallBack: (isLast) => isLastPage(isLast),
       ),
     ).then((value) {

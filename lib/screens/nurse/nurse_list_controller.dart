@@ -17,10 +17,13 @@ class NurseListController extends GetxController {
 
   // Search
   TextEditingController searchCont = TextEditingController();
+  RxString searchQuery = ''.obs;
 
   // Filter
   RxString selectedAvailability = ''.obs;
   RxList<Map<String, String>> availabilityFilters = RxList();
+  RxnInt selectedGovernorateId = RxnInt();
+  RxnInt selectedCityId = RxnInt();
 
   @override
   void onInit() {
@@ -32,19 +35,21 @@ class NurseListController extends GetxController {
     ].obs;
 
     getNurses();
-    debounce(RxString(''), (_) => getNurses(), time: const Duration(milliseconds: 500));
+    debounce(searchQuery, (_) {
+      page(1);
+      getNurses();
+    }, time: const Duration(milliseconds: 500));
     super.onInit();
   }
 
   void onSearchChanged(String val) {
-    page(1);
-    getNurses();
+    searchQuery.value = val;
   }
 
   @override
-  void dispose() {
+  void onClose() {
     searchCont.dispose();
-    super.dispose();
+    super.onClose();
   }
 
   Future<void> getNurses({bool showLoader = true}) async {
@@ -53,12 +58,14 @@ class NurseListController extends GetxController {
     }
 
     await nurseFuture(
-      CoreServiceApis.getNurseList(
+      CoreServiceApis.searchNurses(
         page: page.value,
-        perPage: 15,
+        perPage: Constants.perPageItem,
         nurseList: nurses,
         search: searchCont.text.trim(),
-        availabilityStatus: selectedAvailability.value,
+        availability: selectedAvailability.value,
+        governorateId: selectedGovernorateId.value,
+        cityId: selectedCityId.value,
         lastPageCallBack: (isLast) => isLastPage(isLast),
       ),
     ).then((value) {
@@ -70,6 +77,19 @@ class NurseListController extends GetxController {
 
   void onFilterChanged(String availability) {
     selectedAvailability(availability);
+    page(1);
+    getNurses();
+  }
+
+  void onGovernorateChanged(int? id) {
+    selectedGovernorateId.value = id;
+    selectedCityId.value = null;
+    page(1);
+    getNurses();
+  }
+
+  void onCityChanged(int? id) {
+    selectedCityId.value = id;
     page(1);
     getNurses();
   }

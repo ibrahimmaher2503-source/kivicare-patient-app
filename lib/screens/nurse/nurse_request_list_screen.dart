@@ -12,10 +12,27 @@ import 'components/nurse_request_card.dart';
 import 'create_nurse_request_screen.dart';
 import 'nurse_request_list_controller.dart';
 
-class NurseRequestListScreen extends StatelessWidget {
-  NurseRequestListScreen({super.key});
+class NurseRequestListScreen extends StatefulWidget {
+  const NurseRequestListScreen({super.key});
 
-  final NurseRequestListController controller = Get.put(NurseRequestListController());
+  @override
+  State<NurseRequestListScreen> createState() => _NurseRequestListScreenState();
+}
+
+class _NurseRequestListScreenState extends State<NurseRequestListScreen> {
+  late final NurseRequestListController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(NurseRequestListController());
+  }
+
+  @override
+  void dispose() {
+    Get.delete<NurseRequestListController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +175,7 @@ class NurseRequestListScreen extends StatelessWidget {
           ),
           10.height,
           Text(
-            'You have no nurse requests yet.',
+            locale.value.noNurseRequestsYet,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               letterSpacing: 0.1,

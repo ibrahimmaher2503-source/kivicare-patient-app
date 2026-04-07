@@ -49,7 +49,7 @@ class NurseRequestCard extends StatelessWidget {
       case NurseRequestStatusConst.completed:
         return locale.value.nurseRequestCompleted;
       case NurseRequestStatusConst.cancelled:
-        return locale.value.cancel;
+        return locale.value.cancelled;
       default:
         return requestData.status;
     }
@@ -191,7 +191,7 @@ class NurseRequestCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                    10.height,
+                    if (requestData.nurse != null) 10.height,
 
                     // Service description (truncated)
                     if (requestData.serviceDescription.isNotEmpty)
@@ -271,32 +271,27 @@ class NurseRequestCard extends StatelessWidget {
                     ),
                     12.height,
 
-                    // View Detail Button
-                    GestureDetector(
-                      onTap: () => Get.to(() => NurseRequestDetailScreen(requestData: requestData))?.then((_) {
-                        onUpdateRequest?.call();
-                      }),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: appColorSecondary.withValues(alpha: 0.3),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          locale.value.viewDetail,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.1,
-                            color: Colors.white,
+                    // View Detail Button (visual only, card-level GestureDetector handles navigation)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: appColorSecondary.withValues(alpha: 0.3),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
                           ),
+                        ],
+                      ),
+                      child: Text(
+                        locale.value.viewDetail,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.1,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -313,7 +308,7 @@ class NurseRequestCard extends StatelessWidget {
 
   /// Builds a mini timeline showing request progress
   Widget _buildMiniTimeline() {
-    final steps = ['Requested', 'Confirmed', 'In Progress', 'Completed'];
+    final steps = [locale.value.nurseRequestPending, locale.value.nurseRequestConfirmed, locale.value.nurseRequestInProgress, locale.value.nurseRequestCompleted];
     final currentStep = _statusStep;
 
     return Row(

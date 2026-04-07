@@ -79,17 +79,89 @@ class APIEndPoints {
   static const String updateNurseRequest = 'v1/nurse-requests'; // append /{id}
   static const String cancelNurseRequest = 'v1/nurse-requests'; // append /{id}/cancel
 
+  //Location
+  static const String governorates = 'governorates';
+  static const String cities = 'cities'; // ?governorate_id=
+
+  // New search endpoints (additive — existing endpoints remain)
+  static const String doctorsSearch = 'doctors/search';
+  static const String clinicsSearch = 'clinics/search';
+  static const String nursesSearch = 'nurses/search';
+  static const String labsSearch = 'labs/search';
+
+  // Home Healthcare
+  static const String homeHealthcareSearch = 'home-healthcare/search';
+  static const String homeHealthcareDetail = 'home-healthcare';    // append /{id}
+  static const String homeHealthcareRequests = 'v1/home-healthcare-requests';
+  static const String homeHealthcareRequestDetail = 'v1/home-healthcare-requests'; // append /{id}
+  static const String homeHealthcareRequestCancel = 'v1/home-healthcare-requests'; // append /{id}/cancel
+
+  // Radiology
+  static const String radiologySearch = 'radiology/search';
+  static const String radiologyDetail = 'radiology'; // append /{id}
+
   //Lab Tests
-  static const String getLabTestCategories = 'v1/lab-test-categories';
-  static const String getLabTests = 'v1/lab-tests';
-  static const String getLabTestDetail = 'v1/lab-tests'; // append /{id}
-  static const String getTestOrders = 'v1/test-orders';
-  static const String createTestOrder = 'v1/test-orders';
-  static const String getTestOrderDetail = 'v1/test-orders'; // append /{id}
-  static const String cancelTestOrder = 'v1/test-orders'; // append /{id}/cancel
-  static const String downloadTestReport = 'v1/test-orders'; // append /{id}/report/download
+  static const String labTestCategories = 'v1/lab-test-categories';
+  static const String labTests = 'v1/lab-tests';
+  static String labTestDetail(int id) => '$labTests/$id';
+  static const String testOrders = 'v1/test-orders';
+  static String testOrderDetail(int id) => '$testOrders/$id';
+  static String testOrderCancel(int id) => '$testOrders/$id/cancel';
+  static String testOrderReportDownload(int id) => '$testOrders/$id/report/download';
+
+  // Facility Bookings
+  static const String facilityBookings = 'v1/facility-bookings';
+  static String facilityBookingDetail(int id) => '$facilityBookings/$id';
+  static String facilityBookingCancel(int id) => '$facilityBookings/$id/cancel';
+  static String labSlots(int labId) => '$facilityBookings/labs/$labId/slots';
+  static String radiologyCenterSlots(int centerId) => '$facilityBookings/radiology-centers/$centerId/slots';
 
   //Request Service
   static const String saveRequestService = 'v1/save-request-service';
   static const String getRequestService = 'v1/get-request-service';
+
+  //ICU Admissions
+  static const String getHospitals = 'v1/hospitals';
+  static const String getHospitalDetail = 'v1/hospitals'; // append /{id}
+  static const String getIcuDepartments = 'v1/icu-departments';
+  static const String getIcuAdmissionRequests = 'v1/icu-admission-requests';
+  static const String createIcuAdmissionRequest = 'v1/icu-admission-requests';
+  static const String getIcuAdmissionRequestDetail = 'v1/icu-admission-requests'; // append /{id}
+  static const String cancelIcuAdmissionRequest = 'v1/icu-admission-requests'; // append /{id}/cancel
+
+  //Call Booking
+  static const String getCallDoctors = 'v1/call-doctors';
+  static const String getCallDoctorServices = 'v1/call-doctors'; // append /{id}/services
+  static const String getCallSlots = 'v1/call-doctors'; // append /{id}/slots
+  static const String createCallBooking = 'v1/call-booking';
+  static const String getCallBookings = 'v1/call-booking';
+
+  //Independent Doctor Booking
+  static const String getIndependentDoctors = 'v1/independent-doctors';
+  static const String getIndependentDoctorServices = 'v1/independent-doctors'; // append /{id}/services
+  static const String getIndependentSlots = 'v1/independent-doctors'; // append /{id}/slots
+  static const String createIndependentBooking = 'v1/independent-booking';
+  static const String getIndependentBookings = 'v1/independent-booking';
+
+  // Doctor Home Visit
+  static const String doctorVisitRequests = 'v1/doctor-visit/requests';
+  static String doctorVisitRequestDetail(String reference) => '$doctorVisitRequests/$reference';
+  static const String adminDoctorVisitRequests = 'v1/admin/doctor-visit/requests';
+  static String adminDoctorVisitRequestStatus(String reference) => '$adminDoctorVisitRequests/$reference/status';
+  static String adminDoctorVisitRequestAssignDoctor(String reference) => '$adminDoctorVisitRequests/$reference/assign-doctor';
+
+  // Pharmacy Marketplace
+  static const String pharmacyCategories = 'v1/pharmacy/categories';
+  static String pharmacyCategoryChildren(int id) => '$pharmacyCategories/$id/children';
+  static const String pharmacyProducts = 'v1/pharmacy/products';
+  static String pharmacyProductDetail(int id) => '$pharmacyProducts/$id';
+  static const String pharmacyFilterBrands = 'v1/pharmacy/filters/brands';
+  static const String pharmacyFilterProductTypes = 'v1/pharmacy/filters/product-types';
+  static const String pharmacyCart = 'v1/pharmacy/cart';
+  static const String pharmacyCartItems = 'v1/pharmacy/cart/items';
+  static String pharmacyCartItemDetail(int id) => '$pharmacyCartItems/$id';
+  static const String pharmacyAvailablePharmacies = 'v1/pharmacy/cart/available-pharmacies';
+  static const String pharmacyOrders = 'v1/pharmacy/orders';
+  static String pharmacyOrderDetail(int id) => '$pharmacyOrders/$id';
+  static String pharmacyOrderCancel(int id) => '$pharmacyOrders/$id/cancel';
 }

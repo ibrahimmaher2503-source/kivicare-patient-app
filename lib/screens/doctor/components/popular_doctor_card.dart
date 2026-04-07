@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
+import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../doctor_detail_screen.dart';
@@ -192,6 +193,29 @@ class PopularDoctorCard extends StatelessWidget {
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: appColorSecondary,
+                      ),
+                    ),
+                  ),
+                  8.height,
+                  Container(
+                    width: double.infinity,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [appColorPrimary, appColorSecondary],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        locale.value.bookNow,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

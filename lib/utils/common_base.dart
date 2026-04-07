@@ -83,8 +83,8 @@ void toggleThemeMode({required int themeId}) {
   setValueToLocal(SettingsLocalConst.THEME_MODE, themeId);
   log('toggleDarkLightSwitch: $themeId');
   if (isDarkMode.value) {
-    textPrimaryColorGlobal = Colors.white;
-    textSecondaryColorGlobal = Colors.white70;
+    textPrimaryColorGlobal = textPrimaryDark;
+    textSecondaryColorGlobal = textSecondaryDark;
   } else {
     textPrimaryColorGlobal = primaryTextColor;
     textSecondaryColorGlobal = secondaryTextColor;
@@ -94,10 +94,7 @@ void toggleThemeMode({required int themeId}) {
 List<LanguageDataModel> languageList() {
   return [
     LanguageDataModel(id: 1, name: 'English', languageCode: 'en', fullLanguageCode: 'en-US', flag: Assets.flagsIcUs),
-    LanguageDataModel(id: 2, name: 'Hindi', languageCode: 'hi', fullLanguageCode: 'hi-IN', flag: Assets.flagsIcIn),
-    LanguageDataModel(id: 3, name: 'Arabic', languageCode: 'ar', fullLanguageCode: 'ar-AR', flag: Assets.flagsIcAr),
-    LanguageDataModel(id: 4, name: 'French', languageCode: 'fr', fullLanguageCode: 'fr-FR', flag: Assets.flagsIcFr),
-    LanguageDataModel(id: 5, name: 'German', languageCode: 'de', fullLanguageCode: 'de-DE', flag: Assets.flagsIcDe),
+    LanguageDataModel(id: 2, name: 'Arabic', languageCode: 'ar', fullLanguageCode: 'ar-AR', flag: Assets.flagsIcAr),
   ];
 }
 

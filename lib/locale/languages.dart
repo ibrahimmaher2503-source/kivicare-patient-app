@@ -9,6 +9,10 @@ abstract class BaseLanguage {
 
   String get forbidden;
 
+  String get accessDenied;
+
+  String get youDontHavePermissionToAccessThis;
+
   String get pageNotFound;
 
   String get tooManyRequests;
@@ -929,6 +933,8 @@ abstract class BaseLanguage {
 
   String get filterRating;
 
+  String get filterLocation;
+
   String get incidentManagement;
 
   String get requestHelpForAnyMistakeHappen;
@@ -1039,6 +1045,7 @@ abstract class BaseLanguage {
   String get nurseRequestUpdated;
   String get nurseRequestCancelled;
   String get cancellationReason;
+  String get pleaseProvideReasonForCancellation;
   String get totalAmount;
   String get addressLine1;
   String get addressLine2;
@@ -1100,4 +1107,333 @@ abstract class BaseLanguage {
 
   String get hours;
   String get adminNotes;
+  String get quickServices;
+  String get myRequests;
+  String get noNurseRequestsYet;
+  String get noTestCategoriesAvailable;
+  String get noTestOrdersFound;
+  String get fillDetailsBelow;
+  String get cancelledByPatient;
+  String get categoriesAvailable;
+  String get stateLabel;
+  String get countryLabel;
+  String get perHour;
+  String get estimatedTotal;
+  String get toBeDetermined;
+  String get freeLabel;
+
+  // ICU Admissions
+  String get icuAdmissions;
+  String get hospitals;
+  String get hospitalDetails;
+  String get icuDepartments;
+  String get browseHospitals;
+  String get myIcuRequests;
+  String get createAdmissionRequest;
+  String get admissionRequestDetails;
+  String get admissionSubmitted;
+  String get admissionCancelled;
+  String get patientInformation;
+  String get caseDetailsLabel;
+  String get emergencyContact;
+  String get paymentInformation;
+  String get medicalReportsLabel;
+  String get patientName;
+  String get patientAge;
+  String get patientGender;
+  String get nationalId;
+  String get insuranceNumberLabel;
+  String get medicalCondition;
+  String get diagnosisLabel;
+  String get caseTypeLabel;
+  String get urgencyLabel;
+  String get needsVentilator;
+  String get needsOxygen;
+  String get currentLocationLabel;
+  String get needsAmbulance;
+  String get contactNameLabel;
+  String get contactPhoneLabel;
+  String get relationshipLabel;
+  String get paymentMethodLabel;
+  String get insuranceProviderLabel;
+  String get attachReports;
+  String get supportedFileFormats;
+  String get requestNumberLabel;
+  String get totalBedsLabel;
+  String get availableBedsLabel;
+  String get dailyPriceLabel;
+  String get equipmentLevelLabel;
+  String get hospitalTypeLabel;
+  String get noHospitalsFound;
+  String get noIcuRequestsYet;
+  String get criticalLabel;
+  String get urgentLabel;
+  String get standardLabel;
+  String get acceptedLabel;
+  String get rejectedLabel;
+  String get infoRequestedLabel;
+  String get maleLabel;
+  String get femaleLabel;
+  String get insuranceLabel;
+  String get cashLabel;
+
+  // ICU Case Types
+  String get caseTypeStroke;
+  String get caseTypeCardiac;
+  String get caseTypePostOperative;
+  String get caseTypeVentilator;
+  String get caseTypeNeonatal;
+  String get caseTypePediatric;
+  String get caseTypeBurns;
+  String get caseTypeGeneral;
+
+  // ICU Specialties
+  String get specialtyCardiac;
+  String get specialtyNeurology;
+  String get specialtyPediatric;
+  String get specialtyNeonatal;
+  String get specialtyBurns;
+  String get specialtyChest;
+  String get specialtySurgical;
+  String get specialtyGeneral;
+
+  // Call Booking
+  String get callBooking;
+  String get callDoctors;
+  String get browseCallDoctors;
+  String get myCallBookings;
+  String get bookCall;
+  String get videoConsultation;
+  String get phoneConsultation;
+  String get callServices;
+  String get selectDate;
+  String get selectTimeSlot;
+  String get availableSlots;
+  String get noSlotsAvailable;
+  String get tryAnotherDate;
+  String get bookingConfirmed;
+  String get meetingLinkLabel;
+  String get joinCall;
+  String get callTypeLabel;
+  String get videoCallLabel;
+  String get phoneCallLabel;
+  String get durationMinLabel;
+  String get startingFrom;
+  String get originalPriceLabel;
+  String get discountLabel;
+  String get finalPriceLabel;
+  String get appointmentDateLabel;
+  String get appointmentTimeLabel;
+  String get serviceNameLabel;
+  String get totalAmountLabel;
+  String get noCallDoctorsFound;
+  String get noCallBookingsYet;
+  String get selectServiceLabel;
+  String get confirmBooking;
+  String get bookingDetailsLabel;
+  String get transactionTypeLabel;
+
+  // Independent Doctor Booking
+  String get independentBooking;
+  String get independentDoctors;
+  String get browseIndependentDoctors;
+  String get myIndependentBookings;
+  String get bookAppointmentLabel;
+  String get independentServices;
+  String get inPersonConsultation;
+  String get totalAppointmentsLabel;
+  String get totalPatientsLabel;
+  String get taxIncludedLabel;
+  String get inclusiveTaxLabel;
+  String get pricingBreakdownLabel;
+  String get noIndependentDoctorsFound;
+  String get noIndependentBookingsYet;
+  String get independentBookingConfirmed;
+  String get appointmentDetailsLabel;
+  String get slotIntervalLabel;
+
+  // Labs Browse
+  String get labs;
+  String get browseLabs;
+  String get noLabsFound;
+
+  // Location Filter
+  String get governorate;
+  String get allGovernorates;
+  String get allCities;
+  String get selectGovernorate;
+  String get selectCity;
+  String get locationFilter;
+
+  // Radiology
+  String get browseRadiology;
+  String get radiologyCenters;
+  String get scanType;
+  String get availableScans;
+  String get mriScan;
+  String get ctScan;
+  String get xRay;
+  String get ultrasound;
+  String get mammogram;
+  String get dexaScan;
+  String get noRadiologyCentersFound;
+  String get radiologyCenterDetail;
+  String get contactCenter;
+  String get operatingHours;
+  String get pricing;
+
+  // Location & Search
+  String get searchProviders;
+  String get searchDoctors;
+  String get searchClinics;
+  String get searchNurses;
+  String get searchLabs;
+  String get searchRadiology;
+  String get searchHomeHealthcare;
+  String get specialty;
+  String get minPrice;
+  String get maxPrice;
+  String get noSearchResults;
+  String get broadenFilters;
+  String get homeHealthcare;
+  String get radiologyCenter;
+  String get allSpecialties;
+  String get filterByGender;
+  String get filterByAvailability;
+  String get physiotherapy;
+  String get elderlyCare;
+  String get postSurgery;
+  String get chronicCare;
+
+  // Unified Doctor Booking
+  String get bookADoctor;
+  String get videoConsult;
+  String get myDoctorAppointments;
+  String get myVideoConsults;
+
+  // Doctor Home Visit
+  String get doctorHomeVisit;
+  String get visitRequests;
+  String get submitVisitRequest;
+  String get visitReason;
+  String get contactPhone;
+  String get preferredDoctorLabel;
+  String get additionalNotes;
+  String get visitRequestSubmitted;
+  String get visitRequestUpdated;
+  String get noVisitRequests;
+  String get visitRequestDetail;
+  String get assignDoctor;
+  String get updateStatusLabel;
+  String get statusPendingLabel;
+  String get statusConfirmedLabel;
+  String get statusCancelledLabel;
+  String get statusCompletedLabel;
+  String get confirmVisit;
+  String get completeVisit;
+  String get cancelVisit;
+  String get enterCancellationReason;
+  String get addNote;
+  String get doctorAssigned;
+  String get reassignDoctor;
+  String get filterByStatus;
+  String get dateFrom;
+  String get dateTo;
+
+  // Facility Booking List
+  String get myBookings;
+  String get noBookingsFound;
+  String get youHaveNoBookingsYet;
+  String get bookingCancelledSuccessfully;
+  String get failedToCancelBooking;
+  String get type;
+  String get selectTime;
+  String get booked;
+  String get selectedDate;
+  String get selectedTime;
+
+  // Facility Booking Confirmation
+  String get yourBookingIsConfirmed;
+  String get bookingNumber;
+  String get bookingDate;
+  String get bookingTime;
+  String get bookingConfirmationSent;
+  String get viewAllBookings;
+  String get backToHome;
+
+  // Facility Booking Detail
+  String get facility;
+  String get patientPhone;
+  String get status;
+  String get bookingDetail;
+  String get bookingDetails;
+  String get bookingNotFound;
+  String get tryAgainLater;
+  String get cancelBooking;
+  String get name;
+  String get phone;
+  String get addNotesOptional;
+
+  // Radiology detail
+  String get radiologyScan;
+  String get testNotFound;
+  String get imagingFormat;
+  String get noSpecialPreparation;
+  String get safetyInformation;
+  String get addToCart;
+  String get noRadiologyTests;
+  String get tryAdjustingYourFilters;
+  String get loadMore;
+  String get createOrder;
+  String get error;
+  String get noData;
+  String get search;
+  String get testDetail;
+
+  // Pharmacy Marketplace
+  String get pharmacyMarketplace;
+  String get pharmacy;
+  String get myPharmacyOrders;
+  String get browseMedicines;
+  String get pharmacyCategories;
+  String get pharmacySubCategories;
+  String get products;
+  String get noProductsFound;
+  String get outOfStock;
+  String get requiresPrescription;
+  String get priceFrom;
+  String get filterProducts;
+  String get selectBrands;
+  String get selectProductTypes;
+  String get noBrandsAvailable;
+  String get noProductTypesAvailable;
+  String get brand;
+  String get productDetails;
+  String get cart;
+  String get cartEmpty;
+  String get cartEmptyMessage;
+  String get itemsInCart;
+  String get quantity;
+  String get removeFromCart;
+  String get updateQuantity;
+  String get proceedToCheckout;
+  String get selectDeliveryAddress;
+  String get enterAddressId;
+  String get findPharmacies;
+  String get availablePharmacies;
+  String get noPharmaciesAvailable;
+  String get deliveryFee;
+  String get selectPharmacy;
+  String get placeOrder;
+  String get orderPlaced;
+  String get orderPlacedMessage;
+  String get orderHistory;
+  String get orderDetail;
+  String get orderStatus;
+  String get orderItems;
+  String get cancelOrder;
+  String get orderCancelledSuccess;
+  String get cannotCancelOrder;
+  String get cashOnDelivery;
+  String get insufficientStock;
 }

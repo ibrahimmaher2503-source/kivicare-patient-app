@@ -1,4 +1,5 @@
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import '../../../models/governorate_model.dart';
+import '../../../models/city_model.dart';
 
 class NurseListResponse {
   bool status;
@@ -13,18 +14,40 @@ class NurseListResponse {
     this.data = const [],
     this.currentPage = 1,
     this.lastPage = 1,
-    this.perPage = 15,
+    this.perPage = 20,
     this.total = 0,
   });
 
   factory NurseListResponse.fromJson(Map<String, dynamic> json) {
+    List<dynamic> items = [];
+    if (json["data"] is List) {
+      items = json["data"];
+    } else if (json["data"] is Map && json["data"]["items"] is List) {
+      items = json["data"]["items"];
+    }
+    int currPage = 1;
+    int lastPg = 1;
+    int perPg = 20;
+    int tot = 0;
+    if (json["meta"] is Map) {
+      currPage = json["meta"]["current_page"] ?? 1;
+      lastPg = json["meta"]["last_page"] ?? 1;
+      perPg = json["meta"]["per_page"] ?? 20;
+      tot = json["meta"]["total"] ?? 0;
+    } else if (json["data"] is Map && json["data"]["pagination"] is Map) {
+      final p = json["data"]["pagination"];
+      currPage = p["current_page"] ?? 1;
+      lastPg = p["last_page"] ?? 1;
+      perPg = p["per_page"] ?? 20;
+      tot = p["total"] ?? 0;
+    }
     return NurseListResponse(
       status: json["status"] is bool ? json["status"] : false,
-      data: json["data"] is List ? List<Nurse>.from(json["data"].map((x) => Nurse.fromJson(x))) : [],
-      currentPage: json["meta"] is Map ? (json["meta"]["current_page"] ?? 1) : 1,
-      lastPage: json["meta"] is Map ? (json["meta"]["last_page"] ?? 1) : 1,
-      perPage: json["meta"] is Map ? (json["meta"]["per_page"] ?? 15) : 15,
-      total: json["meta"] is Map ? (json["meta"]["total"] ?? 0) : 0,
+      data: items.map((x) => Nurse.fromJson(Map<String, dynamic>.from(x))).toList(),
+      currentPage: currPage,
+      lastPage: lastPg,
+      perPage: perPg,
+      total: tot,
     );
   }
 }
@@ -47,6 +70,8 @@ class Nurse {
   bool status;
   String createdAt;
   String updatedAt;
+  Governorate? governorate;
+  City? city;
 
   Nurse({
     this.id = -1,
@@ -66,6 +91,8 @@ class Nurse {
     this.status = true,
     this.createdAt = "",
     this.updatedAt = "",
+    this.governorate,
+    this.city,
   });
 
   factory Nurse.fromJson(Map<String, dynamic> json) {
@@ -87,6 +114,10 @@ class Nurse {
       status: json["status"] is bool ? json["status"] : true,
       createdAt: json["created_at"] is String ? json["created_at"] : "",
       updatedAt: json["updated_at"] is String ? json["updated_at"] : "",
+      governorate: json['governorate'] is Map
+          ? Governorate.fromJson(Map<String, dynamic>.from(json['governorate']))
+          : null,
+      city: json['city'] is Map ? City.fromJson(Map<String, dynamic>.from(json['city'])) : null,
     );
   }
 
@@ -111,10 +142,4 @@ class Nurse {
       "updated_at": updatedAt,
     };
   }
-}
-
-class NurseListResult {
-  final RxList<Nurse> nurses;
-
-  NurseListResult({required this.nurses});
 }

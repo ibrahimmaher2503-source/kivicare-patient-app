@@ -44,6 +44,9 @@ void main() async {
   }).catchError(onError);
 
   await GetStorage.init();
+
+  // Use bundled fonts instead of fetching from network
+  GoogleFonts.config.allowRuntimeFetching = false;
   //
   fontFamilyPrimaryGlobal = GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w500).fontFamily;
   textPrimarySizeGlobal = 14;

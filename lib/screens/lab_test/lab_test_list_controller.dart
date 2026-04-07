@@ -1,80 +1,133 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
-
 import '../../api/core_apis.dart';
-import '../../main.dart';
-import 'model/lab_test_model.dart';
+import 'package:kivicare_patient/screens/lab_test/model/lab_test_model.dart';
+import 'package:kivicare_patient/screens/lab_test/lab_test_categories_controller.dart';
+import 'package:kivicare_patient/screens/lab_test/model/lab_test_filter.dart';
 
-class LabTestListController extends GetxController {
-  // List state
-  Rx<Future<RxList<LabTest>>> labTestFuture = Future(() => RxList<LabTest>()).obs;
-  RxList<LabTest> labTests = RxList<LabTest>();
-  RxBool isLoading = false.obs;
-  RxBool isLastPage = false.obs;
-  RxInt page = 1.obs;
+/// Controller for Lab Test List Browsing with Filtering
+/// Extends LabTestCategoriesController to add filtering and pagination
+class LabTestListController extends LabTestCategoriesController {
+  // Reactive variables for filtering
+  final Rx<LabTestFilter> filter = LabTestFilter.empty.obs;
+  final RxList<LabTest> tests = RxList<LabTest>([]);
+  final RxBool isLoadingTests = false.obs;
+  final Rx<String?> testErrorMessage = Rx<String?>(null);
 
-  // Search
-  TextEditingController searchCont = TextEditingController();
-
-  // Filters
-  int? categoryId;
-  RxString selectedDepartment = ''.obs;
-  RxList<Map<String, String>> departmentFilters = RxList();
+  // Pagination state
+  final RxBool isLastPage = false.obs;
+  final RxBool hasMorePages = true.obs;
 
   @override
   void onInit() {
-    // Check for category filter from arguments
-    if (Get.arguments is Map && Get.arguments['categoryId'] != null) {
-      categoryId = Get.arguments['categoryId'] as int;
-    }
-
-    departmentFilters = [
-      {'key': '', 'label': locale.value.all},
-      {'key': 'laboratory', 'label': locale.value.laboratory},
-      {'key': 'radiology', 'label': locale.value.radiology},
-    ].obs;
-
-    getLabTests();
     super.onInit();
+    // Don't auto-load tests, wait for user to select category or search
   }
 
-  void onSearchChanged(String val) {
-    page(1);
-    getLabTests();
-  }
+  /// Load tests with current filters
+  Future<void> loadTests() async {
+    try {
+      isLoadingTests(true);
+      testErrorMessage(null);
 
-  @override
-  void dispose() {
-    searchCont.dispose();
-    super.dispose();
-  }
+      final bool isFirstPage = filter.value.currentPage == 1;
+      if (isFirstPage) tests.clear();
 
-  Future<void> getLabTests({bool showLoader = true}) async {
-    if (showLoader) {
-      isLoading(true);
+      bool reachedLastPage = false;
+      await CoreServiceApis.getLabTestList(
+        page: filter.value.currentPage,
+        perPage: filter.value.perPage,
+        labTestList: tests,
+        categoryId: filter.value.categoryId,
+        department: filter.value.department ?? '',
+        search: filter.value.searchQuery ?? '',
+        lastPageCallBack: (lastPage) {
+          reachedLastPage = lastPage;
+        },
+      );
+
+      isLastPage.value = reachedLastPage;
+      hasMorePages.value = !reachedLastPage;
+    } catch (e) {
+      testErrorMessage.value = e.toString();
+      debugPrint('Error loading tests: $e');
+    } finally {
+      isLoadingTests(false);
     }
-
-    await labTestFuture(
-      CoreServiceApis.getLabTestList(
-        page: page.value,
-        perPage: 15,
-        labTestList: labTests,
-        search: searchCont.text.trim(),
-        categoryId: categoryId,
-        department: selectedDepartment.value,
-        lastPageCallBack: (isLast) => isLastPage(isLast),
-      ),
-    ).then((value) {
-      log('Lab tests fetched: ${value.length}');
-    }).catchError((e) {
-      log("getLabTests error $e");
-    }).whenComplete(() => isLoading(false));
   }
 
-  void onFilterChanged(String department) {
-    selectedDepartment(department);
-    page(1);
-    getLabTests();
+  /// Set category filter and reload tests
+  Future<void> filterByCategory(int? categoryId) async {
+    filter.value = filter.value.copyWith(categoryId: categoryId).resetPagination();
+    await loadTests();
+  }
+
+  /// Set department filter and reload tests
+  Future<void> filterByDepartment(String? department) async {
+    filter.value = filter.value.copyWith(department: department).resetPagination();
+    await loadTests();
+  }
+
+  /// Search tests by query and reload
+  Future<void> searchTests(String query) async {
+    filter.value = filter.value.copyWith(searchQuery: query.isEmpty ? null : query).resetPagination();
+    await loadTests();
+  }
+
+  /// Clear all filters and reload
+  Future<void> clearFilters() async {
+    filter.value = LabTestFilter.empty;
+    tests.clear();
+  }
+
+  /// Load next page of tests
+  Future<void> loadMoreTests() async {
+    if (isLastPage.value || isLoadingTests.value) return;
+    filter.value = filter.value.nextPage();
+    await loadTests();
+  }
+
+  /// Reset pagination
+  void resetPagination() {
+    filter.value = filter.value.resetPagination();
+  }
+
+  /// Reset filters but keep department
+  void resetFilters() {
+    filter.value = LabTestFilter(
+      department: filter.value.department,
+      currentPage: 1,
+    );
+    loadTests();
+  }
+
+  /// Get test by ID
+  LabTest? getTestById(int testId) {
+    try {
+      return tests.firstWhere((test) => test.id == testId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Check if tests are loaded
+  bool get hasTestsLoaded => tests.isNotEmpty;
+
+  /// Check if there's a test error
+  bool get hasTestError => testErrorMessage.value != null;
+
+  /// Get active filter count
+  int get activeFilterCount {
+    int count = 0;
+    if (filter.value.categoryId != null) count++;
+    if (filter.value.department != null) count++;
+    if (filter.value.searchQuery != null) count++;
+    return count;
+  }
+
+  /// Retry loading tests if error occurred
+  Future<void> retryLoadTests() async {
+    await loadTests();
   }
 }

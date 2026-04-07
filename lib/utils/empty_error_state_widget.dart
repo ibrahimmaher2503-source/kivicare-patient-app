@@ -115,6 +115,23 @@ class ErrorStateWidget extends StatelessWidget {
   }
 }
 
+/// Unified widget that shows either an error state (with retry) or an empty state
+class EmptyErrorStateWidget extends StatelessWidget {
+  final String? title;
+  final String? subTitle;
+  final VoidCallback? onRetry;
+
+  const EmptyErrorStateWidget({super.key, this.title, this.subTitle, this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    if (onRetry != null) {
+      return ErrorStateWidget(title: title, subtitle: subTitle, onRetry: onRetry);
+    }
+    return EmptyStateWidget(title: title, subtitle: subTitle);
+  }
+}
+
 class _RetryButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;

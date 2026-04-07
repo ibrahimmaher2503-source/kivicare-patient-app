@@ -48,7 +48,7 @@ class AppTheme {
     drawerTheme: const DrawerThemeData(backgroundColor: appScreenBackground),
     appBarTheme: AppBarTheme(
       surfaceTintColor: appLayoutBackground,
-      color: appLayoutBackground,
+      backgroundColor: appLayoutBackground,
       iconTheme: const IconThemeData(color: textPrimaryColor),
       titleTextStyle: TextStyle(
         color: canvasColor,
@@ -83,8 +83,10 @@ class AppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: appColorPrimary,
       primary: appColorPrimary,
-      surface: const Color(0xFFF1F3F4),
+      surface: surfaceElevatedDark,
       secondary: appColorSecondary,
+      onSurface: textPrimaryDark,
+      onPrimary: textPrimaryDark,
       brightness: Brightness.dark,
     ),
     useMaterial3: true,
@@ -94,7 +96,7 @@ class AppTheme {
     drawerTheme: const DrawerThemeData(backgroundColor: fullDarkCanvasColorDark),
     appBarTheme: AppBarTheme(
       surfaceTintColor: appScreenBackgroundDark,
-      color: appScreenBackgroundDark,
+      backgroundColor: appScreenBackgroundDark,
       iconTheme: const IconThemeData(color: whiteColor),
       titleTextStyle: TextStyle(
         color: whiteTextColor,
@@ -108,7 +110,7 @@ class AppTheme {
     cardColor: fullDarkCanvasColor,
     iconTheme: const IconThemeData(color: whiteColor),
     bottomSheetTheme: const BottomSheetThemeData(backgroundColor: appBackgroundColorDark),
-    textTheme: _buildTextTheme(GoogleFonts.plusJakartaSansTextTheme()),
+    textTheme: _buildTextTheme(_darkTextTheme()),
     radioTheme: RadioThemeData(
       fillColor: WidgetStateProperty.all(appColorPrimary),
     ),
@@ -121,4 +123,26 @@ class AppTheme {
       },
     ),
   );
+
+  /// Dark text theme with proper light-on-dark hierarchy
+  static TextTheme _darkTextTheme() {
+    final base = GoogleFonts.plusJakartaSansTextTheme(ThemeData.dark().textTheme);
+    return base.copyWith(
+      displayLarge: base.displayLarge?.copyWith(color: textPrimaryDark),
+      displayMedium: base.displayMedium?.copyWith(color: textPrimaryDark),
+      displaySmall: base.displaySmall?.copyWith(color: textPrimaryDark),
+      headlineLarge: base.headlineLarge?.copyWith(color: textPrimaryDark),
+      headlineMedium: base.headlineMedium?.copyWith(color: textPrimaryDark),
+      headlineSmall: base.headlineSmall?.copyWith(color: textPrimaryDark),
+      titleLarge: base.titleLarge?.copyWith(color: textPrimaryDark),
+      titleMedium: base.titleMedium?.copyWith(color: textPrimaryDark),
+      titleSmall: base.titleSmall?.copyWith(color: textSecondaryDark),
+      bodyLarge: base.bodyLarge?.copyWith(color: textPrimaryDark),
+      bodyMedium: base.bodyMedium?.copyWith(color: textSecondaryDark),
+      bodySmall: base.bodySmall?.copyWith(color: textTertiaryDark),
+      labelLarge: base.labelLarge?.copyWith(color: textPrimaryDark),
+      labelMedium: base.labelMedium?.copyWith(color: textSecondaryDark),
+      labelSmall: base.labelSmall?.copyWith(color: textTertiaryDark),
+    );
+  }
 }

@@ -32,45 +32,54 @@ class DashboardScreen extends StatelessWidget {
               () => Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ClipRRect(
+                  margin: const EdgeInsets.symmetric(horizontal: 18),
+                  decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(50)),
+                    // Outer gradient stroke ring
+                    gradient: LinearGradient(
+                      colors: isDarkMode.value
+                          ? [
+                              glassStrokeDark.withValues(alpha: 0.6),
+                              glassStrokeDark.withValues(alpha: 0.2),
+                            ]
+                          : [
+                              appColorSecondary.withValues(alpha: 0.18),
+                              appColorPrimary.withValues(alpha: 0.08),
+                            ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isDarkMode.value
+                            ? softShadowColorDark
+                            : appColorPrimary.withValues(alpha: 0.18),
+                        offset: const Offset(0, -4),
+                        blurRadius: 24,
+                        spreadRadius: 0,
+                      ),
+                      BoxShadow(
+                        color: isDarkMode.value
+                            ? Colors.transparent
+                            : softShadowColorMedium,
+                        offset: const Offset(0, 10),
+                        blurRadius: 28,
+                        spreadRadius: -2,
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(1.2),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(49)),
                     child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
                       child: Container(
                         decoration: BoxDecoration(
-                          // Glassmorphism: semi-transparent background
                           color: isDarkMode.value
-                              ? fullDarkCanvasColor.withValues(alpha: 0.82)
-                              : canvasColor.withValues(alpha: 0.85),
-                          borderRadius: const BorderRadius.all(Radius.circular(50)),
-                          // Subtle glass border on top
-                          border: Border(
-                            top: BorderSide(
-                              color: isDarkMode.value ? glassStrokeDark : glassStrokeLight,
-                              width: 0.5,
-                            ),
-                          ),
-                          boxShadow: [
-                            // Primary upward shadow for depth
-                            BoxShadow(
-                              color: isDarkMode.value
-                                  ? softShadowColorDark
-                                  : softShadowColorMedium,
-                              offset: const Offset(0, -4),
-                              blurRadius: 16,
-                              spreadRadius: 0,
-                            ),
-                            // Soft ambient shadow beneath
-                            BoxShadow(
-                              color: isDarkMode.value
-                                  ? Colors.transparent
-                                  : softShadowColor,
-                              offset: const Offset(0, 8),
-                              blurRadius: 24,
-                              spreadRadius: -2,
-                            ),
-                          ],
+                              ? fullDarkCanvasColor.withValues(alpha: 0.84)
+                              : canvasColor.withValues(alpha: 0.88),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(49)),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,7 +102,8 @@ class DashboardScreen extends StatelessWidget {
                                         handleChangeTabIndex(index);
                                       }
                                     },
-                                    selectedNav: dashboardController.selectedBottomNav.value,
+                                    selectedNav:
+                                        dashboardController.selectedBottomNav.value,
                                   ),
                                 );
                               },

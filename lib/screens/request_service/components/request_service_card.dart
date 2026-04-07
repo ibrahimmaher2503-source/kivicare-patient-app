@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../main.dart';
@@ -221,7 +222,7 @@ class RequestServiceCard extends StatelessWidget {
                         ),
                         6.width,
                         Text(
-                          serviceData.createdAt,
+                          _formatDate(serviceData.createdAt),
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
@@ -238,6 +239,12 @@ class RequestServiceCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _formatDate(String rawDate) {
+    final parsed = DateTime.tryParse(rawDate);
+    if (parsed == null) return rawDate;
+    return DateFormat(DateFormatConst.D_MMMM_yyyy).format(parsed.toLocal());
   }
 
   Widget _buildStatusBadge() {

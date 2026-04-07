@@ -11,6 +11,7 @@ import '../../main.dart';
 import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import '../../utils/common_base.dart';
+import '../../utils/price_widget.dart';
 import 'create_nurse_request_controller.dart';
 import 'model/nurse_model.dart';
 import 'model/nurse_request_model.dart';
@@ -108,7 +109,7 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
                           controller: controller.serviceDescriptionCont,
                           focus: controller.serviceDescriptionFocus,
                           nextFocus: controller.durationHoursFocus,
-                          maxLength: 500,
+                          maxLength: 1000,
                           minLines: 3,
                           errorThisFieldRequired: locale.value.thisFieldIsRequired,
                           decoration: inputDecoration(
@@ -180,6 +181,7 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
                           nextFocus: controller.contactNumberFocus,
                           errorThisFieldRequired: locale.value.thisFieldIsRequired,
                           keyboardType: TextInputType.number,
+                          onChanged: controller.onDurationChanged,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             _RangeTextInputFormatter(min: 1, max: 24),
@@ -204,6 +206,7 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
                           controller: controller.contactNumberCont,
                           focus: controller.contactNumberFocus,
                           nextFocus: controller.patientNotesFocus,
+                          maxLength: 20,
                           errorThisFieldRequired: locale.value.thisFieldIsRequired,
                           keyboardType: TextInputType.phone,
                           inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9+]'))],
@@ -241,7 +244,7 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
 
                         // Section: Address
                         Text(
-                          locale.value.addressLine1,
+                          locale.value.address,
                           style: GoogleFonts.outfit(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -263,6 +266,7 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
                           controller: controller.addressLine1Cont,
                           focus: controller.addressLine1Focus,
                           nextFocus: controller.addressLine2Focus,
+                          maxLength: 255,
                           errorThisFieldRequired: locale.value.thisFieldIsRequired,
                           decoration: inputDecoration(
                             context,
@@ -309,6 +313,7 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
                                 controller: controller.cityCont,
                                 focus: controller.cityFocus,
                                 nextFocus: controller.stateFocus,
+                                maxLength: 100,
                                 errorThisFieldRequired: locale.value.thisFieldIsRequired,
                                 decoration: inputDecoration(
                                   context,
@@ -333,8 +338,7 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
                                 nextFocus: controller.countryFocus,
                                 decoration: inputDecoration(
                                   context,
-                                  // TODO: Add locale getter for 'State' when available
-                                  hintText: 'State',
+                                  hintText: locale.value.stateLabel,
                                   fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                                   filled: true,
                                 ),
@@ -361,8 +365,7 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
                                 nextFocus: controller.postalCodeFocus,
                                 decoration: inputDecoration(
                                   context,
-                                  // TODO: Add locale getter for 'Country' when available
-                                  hintText: 'Country',
+                                  hintText: locale.value.countryLabel,
                                   fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
                                   filled: true,
                                 ),
@@ -390,6 +393,63 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
                             ),
                           ],
                         ),
+                        24.height,
+
+                        // Estimated Total
+                        Obx(() {
+                          final nurse = controller.selectedNurse.value;
+                          final duration = controller.durationHoursValue.value;
+
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  locale.value.estimatedTotal,
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: -0.3,
+                                    color: isDarkMode.value ? Colors.white : primaryTextColor,
+                                  ),
+                                ),
+                                if (nurse != null && nurse.hourlyRate > 0 && duration > 0)
+                                  Text(
+                                    '${leftCurrencyFormat()}${(nurse.hourlyRate * duration).toStringAsFixed(2)}${rightCurrencyFormat()}',
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0.1,
+                                      color: appColorSecondary,
+                                    ),
+                                  )
+                                else
+                                  Text(
+                                    locale.value.toBeDetermined,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0.1,
+                                      color: secondaryTextColor,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          );
+                        }),
                         16.height,
                       ],
                     ).paddingSymmetric(horizontal: 16),
@@ -405,10 +465,6 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
                   child: GestureDetector(
                     onTap: () async {
                       if (formKey.currentState?.validate() ?? false) {
-                        if (controller.selectedNurse.value == null) {
-                          toast(locale.value.selectNurse);
-                          return;
-                        }
                         if (controller.isEditMode) {
                           await controller.updateRequest();
                         } else {
@@ -550,10 +606,12 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
   }
 
   void _navigateToSelectNurse() {
-    // Navigate to nurse list for selection
-    Get.to(() => NurseListScreen())?.then((_) {
-      // Selection is handled via the controller
-    });
+    Get.to(() => NurseListScreen(
+      selectionMode: true,
+      onNurseSelected: (nurse) {
+        controller.setNurse(nurse);
+      },
+    ));
   }
 
   Future<void> _pickDate(BuildContext context) async {
@@ -565,12 +623,19 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: appColorSecondary,
-              onPrimary: Colors.white,
-              surface: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-              onSurface: isDarkMode.value ? Colors.white : primaryTextColor,
-            ),
+            colorScheme: isDarkMode.value
+                ? ColorScheme.dark(
+                    primary: appColorSecondary,
+                    onPrimary: Colors.white,
+                    surface: surfaceElevatedDark,
+                    onSurface: Colors.white,
+                  )
+                : ColorScheme.light(
+                    primary: appColorSecondary,
+                    onPrimary: Colors.white,
+                    surface: surfaceElevated,
+                    onSurface: primaryTextColor,
+                  ),
           ),
           child: child!,
         );
@@ -588,12 +653,19 @@ class _CreateNurseRequestScreenState extends State<CreateNurseRequestScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: appColorSecondary,
-              onPrimary: Colors.white,
-              surface: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-              onSurface: isDarkMode.value ? Colors.white : primaryTextColor,
-            ),
+            colorScheme: isDarkMode.value
+                ? ColorScheme.dark(
+                    primary: appColorSecondary,
+                    onPrimary: Colors.white,
+                    surface: surfaceElevatedDark,
+                    onSurface: Colors.white,
+                  )
+                : ColorScheme.light(
+                    primary: appColorSecondary,
+                    onPrimary: Colors.white,
+                    surface: surfaceElevated,
+                    onSurface: primaryTextColor,
+                  ),
           ),
           child: child!,
         );

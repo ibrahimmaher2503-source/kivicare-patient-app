@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../api/core_apis.dart';
@@ -27,7 +28,7 @@ class NurseRequestDetailScreen extends StatefulWidget {
 }
 
 class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final RxBool isLoading = false.obs;
   late final AnimationController _borderController;
 
@@ -76,6 +77,7 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _borderController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 3000),
@@ -83,7 +85,17 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _borderController.stop();
+    } else if (state == AppLifecycleState.resumed) {
+      _borderController.repeat();
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _borderController.dispose();
     super.dispose();
   }
@@ -123,8 +135,7 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
             _buildInfoRow(locale.value.durationHours, '${requestData.durationHours} ${locale.value.hours}'),
           if (requestData.contactNumber.isNotEmpty)
             _buildInfoRow(locale.value.contactNumber, requestData.contactNumber),
-          if (requestData.totalAmount > 0)
-            Padding(
+          Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,10 +152,23 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
                     ),
                   ),
                   8.width,
-                  Expanded(child: PriceWidget(price: requestData.totalAmount)),
+                  Expanded(
+                    child: requestData.totalAmount > 0
+                        ? PriceWidget(price: requestData.totalAmount)
+                        : Text(
+                            locale.value.toBeDetermined,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.1,
+                              color: secondaryTextColor,
+                            ),
+                          ),
+                  ),
                 ],
               ),
             ),
+          _buildInfoRow(locale.value.paymentStatus, requestData.paymentStatus ? locale.value.paid : locale.value.nurseRequestPending),
         ],
       ),
     ));
@@ -173,9 +197,9 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
       ));
     }
 
-    if (requestData.address != null && requestData.address!.fullAddress.isNotEmpty) {
+    if (requestData.address != null && (requestData.address!.fullAddress.isNotEmpty || requestData.address!.addressLine1.isNotEmpty || requestData.address!.city.isNotEmpty)) {
       sections.add(_TimelineSection(
-        title: locale.value.addressLine1,
+        title: locale.value.address,
         index: sectionIndex++,
         child: _buildInfoContainer(
           children: [
@@ -185,6 +209,10 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
               _buildInfoRow(locale.value.addressLine2, requestData.address!.addressLine2),
             if (requestData.address!.city.isNotEmpty)
               _buildInfoRow(locale.value.city, requestData.address!.city),
+            if (requestData.address!.state.isNotEmpty)
+              _buildInfoRow(locale.value.stateLabel, requestData.address!.state),
+            if (requestData.address!.country.isNotEmpty)
+              _buildInfoRow(locale.value.countryLabel, requestData.address!.country),
             if (requestData.address!.postalCode.isNotEmpty)
               _buildInfoRow(locale.value.postalCode, requestData.address!.postalCode),
           ],
@@ -216,7 +244,19 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
       ));
     }
 
-    if (requestData.cancellationReason != null && requestData.cancellationReason!.isNotEmpty) {
+    if (requestData.cancelledBy != null && requestData.cancelledBy!.isNotEmpty) {
+      sections.add(_TimelineSection(
+        title: locale.value.cancel,
+        index: sectionIndex++,
+        child: _buildInfoContainer(
+          children: [
+            _buildInfoRow(locale.value.cancel, requestData.cancelledBy!),
+            if (requestData.cancellationReason != null && requestData.cancellationReason!.isNotEmpty)
+              _buildInfoRow(locale.value.cancellationReason, requestData.cancellationReason!),
+          ],
+        ),
+      ));
+    } else if (requestData.cancellationReason != null && requestData.cancellationReason!.isNotEmpty) {
       sections.add(_TimelineSection(
         title: locale.value.cancellationReason,
         index: sectionIndex++,
@@ -345,7 +385,7 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
                             if (requestData.createdAt.isNotEmpty) ...[
                               10.height,
                               Text(
-                                requestData.createdAt,
+                                _formatDate(requestData.createdAt),
                                 style: GoogleFonts.plusJakartaSans(
                                   fontSize: 13,
                                   letterSpacing: 0.1,
@@ -475,7 +515,9 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              Get.to(() => CreateNurseRequestScreen(editRequest: requestData));
+                              Get.to(() => CreateNurseRequestScreen(editRequest: requestData))?.then((_) {
+                                Get.back(result: true);
+                              });
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -521,8 +563,15 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
     );
   }
 
+  String _formatDate(String rawDate) {
+    final parsed = DateTime.tryParse(rawDate);
+    if (parsed == null) return rawDate;
+    return DateFormat(DateFormatConst.D_MMMM_yyyy).format(parsed.toLocal());
+  }
+
   void _showCancelDialog(BuildContext context) {
     final reasonController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
 
     showDialog(
       context: context,
@@ -531,50 +580,59 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
           backgroundColor: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Text(
-            locale.value.cancel,
+            '${locale.value.cancel}?',
             style: GoogleFonts.outfit(
               fontSize: 18,
               fontWeight: FontWeight.w600,
               color: isDarkMode.value ? Colors.white : primaryTextColor,
             ),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${locale.value.cancel}?',
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 14,
-                  letterSpacing: 0.1,
-                  color: secondaryTextColor,
-                ),
-              ),
-              16.height,
-              AppTextField(
-                textStyle: GoogleFonts.plusJakartaSans(
-                  fontSize: 12,
-                  letterSpacing: 0.1,
-                  color: isDarkMode.value ? Colors.white : primaryTextColor,
-                ),
-                controller: reasonController,
-                textFieldType: TextFieldType.MULTILINE,
-                minLines: 3,
-                decoration: InputDecoration(
-                  hintText: locale.value.cancellationReason,
-                  hintStyle: GoogleFonts.plusJakartaSans(
-                    fontSize: 12,
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  locale.value.cancellationReason,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 14,
                     letterSpacing: 0.1,
                     color: secondaryTextColor,
                   ),
-                  filled: true,
-                  fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
                 ),
-              ),
-            ],
+                16.height,
+                TextFormField(
+                  controller: reasonController,
+                  maxLines: 3,
+                  maxLength: 500,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    letterSpacing: 0.1,
+                    color: isDarkMode.value ? Colors.white : primaryTextColor,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: locale.value.cancellationReason,
+                    hintStyle: GoogleFonts.plusJakartaSans(
+                      fontSize: 12,
+                      letterSpacing: 0.1,
+                      color: secondaryTextColor,
+                    ),
+                    filled: true,
+                    fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return locale.value.thisFieldIsRequired;
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -585,9 +643,11 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
               ),
             ),
             TextButton(
-              onPressed: () async {
-                Navigator.pop(ctx);
-                await _cancelRequest(reasonController.text.trim());
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  Navigator.pop(ctx);
+                  _cancelRequest(reasonController.text.trim());
+                }
               },
               child: Text(
                 locale.value.submit,
@@ -602,10 +662,9 @@ class _NurseRequestDetailScreenState extends State<NurseRequestDetailScreen>
 
   Future<void> _cancelRequest(String reason) async {
     isLoading(true);
-    final request = <String, dynamic>{};
-    if (reason.isNotEmpty) {
-      request['cancellation_reason'] = reason;
-    }
+    final request = <String, dynamic>{
+      'cancellation_reason': reason,
+    };
     await CoreServiceApis.cancelNurseRequest(requestId: requestData.id, request: request).then((res) {
       toast(locale.value.nurseRequestCancelled);
       Get.back();

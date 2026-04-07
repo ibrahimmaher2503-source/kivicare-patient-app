@@ -43,9 +43,9 @@ class RequestServiceListController extends GetxController {
   }
 
   @override
-  void dispose() {
+  void onClose() {
     searchCont.dispose();
-    super.dispose();
+    super.onClose();
   }
 
   Future<void> getServiceRequests({bool showLoader = true}) async {
@@ -56,7 +56,7 @@ class RequestServiceListController extends GetxController {
     await serviceFuture(
       CoreServiceApis.getRequestServiceList(
         page: page.value,
-        perPage: 15,
+        perPage: Constants.perPageItem,
         serviceList: services,
         search: searchCont.text.trim(),
         isStatus: selectedStatus.value,

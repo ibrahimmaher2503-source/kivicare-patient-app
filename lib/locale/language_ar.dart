@@ -1390,6 +1390,9 @@ class LanguageAr extends BaseLanguage {
   String get filterRating => 'التقييم';
 
   @override
+  String get filterLocation => 'الموقع';
+
+  @override
   String get filterCategory => 'الفئة';
 
   @override
@@ -1545,6 +1548,7 @@ class LanguageAr extends BaseLanguage {
   @override String get nurseRequestUpdated => 'تم تحديث طلب الممرضة بنجاح';
   @override String get nurseRequestCancelled => 'تم إلغاء طلب الممرضة بنجاح';
   @override String get cancellationReason => 'سبب الإلغاء';
+  @override String get pleaseProvideReasonForCancellation => 'يرجى تقديم سبب الإلغاء';
   @override String get totalAmount => 'المبلغ الإجمالي';
   @override String get addressLine1 => 'العنوان السطر 1';
   @override String get addressLine2 => 'العنوان السطر 2';
@@ -1606,4 +1610,337 @@ class LanguageAr extends BaseLanguage {
 
   @override String get hours => 'ساعات';
   @override String get adminNotes => 'ملاحظات المسؤول';
+  @override String get quickServices => 'خدمات سريعة';
+  @override String get myRequests => 'طلباتي';
+  @override String get noNurseRequestsYet => 'ليس لديك طلبات ممرضات بعد.';
+  @override String get noTestCategoriesAvailable => 'لا توجد فئات اختبارات متاحة حالياً.';
+  @override String get noTestOrdersFound => 'لم يتم العثور على طلبات اختبارات.';
+  @override String get fillDetailsBelow => 'املأ التفاصيل أدناه';
+  @override String get cancelledByPatient => 'ألغاه المريض';
+  @override String get categoriesAvailable => 'فئات متاحة';
+  @override String get stateLabel => 'المحافظة';
+  @override String get countryLabel => 'الدولة';
+  @override String get perHour => '/ساعة';
+  @override String get estimatedTotal => 'التكلفة التقديرية';
+  @override String get toBeDetermined => 'سيتم تحديده';
+  @override String get freeLabel => 'مجاني';
+
+  // ICU Admissions
+  @override String get icuAdmissions => 'دخول العناية المركزة';
+  @override String get hospitals => 'المستشفيات';
+  @override String get hospitalDetails => 'تفاصيل المستشفى';
+  @override String get icuDepartments => 'أقسام العناية المركزة';
+  @override String get browseHospitals => 'تصفح المستشفيات';
+  @override String get myIcuRequests => 'طلبات العناية المركزة';
+  @override String get createAdmissionRequest => 'إنشاء طلب دخول';
+  @override String get admissionRequestDetails => 'تفاصيل طلب الدخول';
+  @override String get admissionSubmitted => 'تم تقديم طلب الدخول بنجاح';
+  @override String get admissionCancelled => 'تم إلغاء طلب الدخول بنجاح';
+  @override String get patientInformation => 'معلومات المريض';
+  @override String get caseDetailsLabel => 'تفاصيل الحالة';
+  @override String get emergencyContact => 'جهة اتصال الطوارئ';
+  @override String get paymentInformation => 'معلومات الدفع';
+  @override String get medicalReportsLabel => 'التقارير الطبية';
+  @override String get patientName => 'اسم المريض';
+  @override String get patientAge => 'عمر المريض';
+  @override String get patientGender => 'جنس المريض';
+  @override String get nationalId => 'الرقم الوطني';
+  @override String get insuranceNumberLabel => 'رقم التأمين';
+  @override String get medicalCondition => 'الحالة الطبية';
+  @override String get diagnosisLabel => 'التشخيص';
+  @override String get caseTypeLabel => 'نوع الحالة';
+  @override String get urgencyLabel => 'الاستعجال';
+  @override String get needsVentilator => 'يحتاج جهاز تنفس';
+  @override String get needsOxygen => 'يحتاج أكسجين';
+  @override String get currentLocationLabel => 'الموقع الحالي';
+  @override String get needsAmbulance => 'يحتاج سيارة إسعاف';
+  @override String get contactNameLabel => 'اسم جهة الاتصال';
+  @override String get contactPhoneLabel => 'هاتف جهة الاتصال';
+  @override String get relationshipLabel => 'العلاقة بالمريض';
+  @override String get paymentMethodLabel => 'طريقة الدفع';
+  @override String get insuranceProviderLabel => 'مزود التأمين';
+  @override String get attachReports => 'إرفاق التقارير';
+  @override String get supportedFileFormats => 'PDF, JPG, PNG, DOC (بحد أقصى 10 ميجابايت لكل ملف)';
+  @override String get requestNumberLabel => 'رقم الطلب';
+  @override String get totalBedsLabel => 'إجمالي الأسرة';
+  @override String get availableBedsLabel => 'الأسرة المتاحة';
+  @override String get dailyPriceLabel => 'السعر اليومي';
+  @override String get equipmentLevelLabel => 'مستوى التجهيزات';
+  @override String get hospitalTypeLabel => 'نوع المستشفى';
+  @override String get noHospitalsFound => 'لم يتم العثور على مستشفيات';
+  @override String get noIcuRequestsYet => 'لا توجد طلبات عناية مركزة بعد';
+  @override String get criticalLabel => 'حرج';
+  @override String get urgentLabel => 'عاجل';
+  @override String get standardLabel => 'عادي';
+  @override String get acceptedLabel => 'مقبول';
+  @override String get rejectedLabel => 'مرفوض';
+  @override String get infoRequestedLabel => 'طلب معلومات';
+  @override String get maleLabel => 'ذكر';
+  @override String get femaleLabel => 'أنثى';
+  @override String get insuranceLabel => 'تأمين';
+  @override String get cashLabel => 'نقدي';
+
+  // ICU Case Types
+  @override String get caseTypeStroke => 'سكتة دماغية';
+  @override String get caseTypeCardiac => 'قلبي';
+  @override String get caseTypePostOperative => 'ما بعد العملية';
+  @override String get caseTypeVentilator => 'جهاز تنفس';
+  @override String get caseTypeNeonatal => 'حديثي الولادة';
+  @override String get caseTypePediatric => 'أطفال';
+  @override String get caseTypeBurns => 'حروق';
+  @override String get caseTypeGeneral => 'عام';
+
+  // ICU Specialties
+  @override String get specialtyCardiac => 'قلبي';
+  @override String get specialtyNeurology => 'أعصاب';
+  @override String get specialtyPediatric => 'أطفال';
+  @override String get specialtyNeonatal => 'حديثي الولادة';
+  @override String get specialtyBurns => 'حروق';
+  @override String get specialtyChest => 'صدرية';
+  @override String get specialtySurgical => 'جراحي';
+  @override String get specialtyGeneral => 'عام';
+
+  // Call Booking
+  @override String get callBooking => 'حجز مكالمة';
+  @override String get callDoctors => 'أطباء المكالمات';
+  @override String get browseCallDoctors => 'تصفح أطباء المكالمات';
+  @override String get myCallBookings => 'حجوزات مكالماتي';
+  @override String get bookCall => 'حجز مكالمة';
+  @override String get videoConsultation => 'استشارة فيديو';
+  @override String get phoneConsultation => 'استشارة هاتفية';
+  @override String get callServices => 'خدمات المكالمات';
+  @override String get selectDate => 'اختر التاريخ';
+  @override String get selectTimeSlot => 'اختر الفترة الزمنية';
+  @override String get availableSlots => 'الفترات المتاحة';
+  @override String get noSlotsAvailable => 'لا توجد فترات متاحة';
+  @override String get tryAnotherDate => 'جرب تاريخاً آخر';
+  @override String get bookingConfirmed => 'تم تأكيد الحجز';
+  @override String get meetingLinkLabel => 'رابط الاجتماع';
+  @override String get joinCall => 'انضم للمكالمة';
+  @override String get callTypeLabel => 'نوع المكالمة';
+  @override String get videoCallLabel => 'مكالمة فيديو';
+  @override String get phoneCallLabel => 'مكالمة هاتفية';
+  @override String get durationMinLabel => 'المدة (دقيقة)';
+  @override String get startingFrom => 'ابتداءً من';
+  @override String get originalPriceLabel => 'السعر الأصلي';
+  @override String get discountLabel => 'الخصم';
+  @override String get finalPriceLabel => 'السعر النهائي';
+  @override String get appointmentDateLabel => 'تاريخ الموعد';
+  @override String get appointmentTimeLabel => 'وقت الموعد';
+  @override String get serviceNameLabel => 'اسم الخدمة';
+  @override String get totalAmountLabel => 'المبلغ الإجمالي';
+  @override String get noCallDoctorsFound => 'لم يتم العثور على أطباء مكالمات';
+  @override String get noCallBookingsYet => 'لا توجد حجوزات مكالمات بعد';
+  @override String get selectServiceLabel => 'اختر الخدمة';
+  @override String get confirmBooking => 'تأكيد الحجز';
+  @override String get bookingDetailsLabel => 'تفاصيل الحجز';
+  @override String get transactionTypeLabel => 'نوع المعاملة';
+
+  // Independent Doctor Booking
+  @override String get independentBooking => 'حجز مستقل';
+  @override String get independentDoctors => 'أطباء مستقلون';
+  @override String get browseIndependentDoctors => 'تصفح الأطباء المستقلين';
+  @override String get myIndependentBookings => 'حجوزاتي المستقلة';
+  @override String get bookAppointmentLabel => 'حجز موعد';
+  @override String get independentServices => 'خدمات مستقلة';
+  @override String get inPersonConsultation => 'استشارة شخصية';
+  @override String get totalAppointmentsLabel => 'إجمالي المواعيد';
+  @override String get totalPatientsLabel => 'إجمالي المرضى';
+  @override String get taxIncludedLabel => 'شامل الضريبة';
+  @override String get inclusiveTaxLabel => 'ضريبة شاملة';
+  @override String get pricingBreakdownLabel => 'تفصيل الأسعار';
+  @override String get noIndependentDoctorsFound => 'لم يتم العثور على أطباء مستقلين';
+  @override String get noIndependentBookingsYet => 'لا توجد حجوزات مستقلة بعد';
+  @override String get independentBookingConfirmed => 'تم تأكيد الحجز المستقل';
+  @override String get appointmentDetailsLabel => 'تفاصيل الموعد';
+  @override String get slotIntervalLabel => 'فترة الفتحة الزمنية';
+
+  // Labs Browse
+  @override String get labs => 'المعامل';
+  @override String get browseLabs => 'تصفح المعامل';
+  @override String get noLabsFound => 'لم يتم العثور على معامل';
+
+  // Location Filter
+  @override String get governorate => 'المحافظة';
+  @override String get allGovernorates => 'كل المحافظات';
+  @override String get allCities => 'كل المدن';
+  @override String get selectGovernorate => 'اختر المحافظة';
+  @override String get selectCity => 'اختر المدينة';
+  @override String get locationFilter => 'تصفية الموقع';
+
+  // Radiology
+  @override String get browseRadiology => 'مراكز الأشعة';
+  @override String get radiologyCenters => 'مراكز الأشعة';
+  @override String get scanType => 'نوع الفحص';
+  @override String get availableScans => 'الفحوصات المتاحة';
+  @override String get mriScan => 'رنين مغناطيسي';
+  @override String get ctScan => 'أشعة مقطعية';
+  @override String get xRay => 'أشعة سينية';
+  @override String get ultrasound => 'الموجات فوق الصوتية';
+  @override String get mammogram => 'ماموجرام';
+  @override String get dexaScan => 'فحص كثافة العظام';
+  @override String get noRadiologyCentersFound => 'لا توجد مراكز أشعة';
+  @override String get radiologyCenterDetail => 'تفاصيل المركز';
+  @override String get contactCenter => 'تواصل مع المركز';
+  @override String get operatingHours => 'ساعات العمل';
+  @override String get pricing => 'التسعير';
+
+  // Location & Search
+  @override String get searchProviders => 'البحث عن مقدمي الخدمات';
+  @override String get searchDoctors => 'البحث عن أطباء';
+  @override String get searchClinics => 'البحث عن عيادات';
+  @override String get searchNurses => 'البحث عن ممرضات';
+  @override String get searchLabs => 'البحث عن مختبرات';
+  @override String get searchRadiology => 'البحث عن أشعة';
+  @override String get searchHomeHealthcare => 'البحث عن رعاية منزلية';
+  @override String get specialty => 'التخصص';
+  @override String get minPrice => 'الحد الأدنى للسعر';
+  @override String get maxPrice => 'الحد الأقصى للسعر';
+  @override String get noSearchResults => 'لا توجد نتائج';
+  @override String get broadenFilters => 'حاول توسيع معايير البحث';
+  @override String get homeHealthcare => 'الرعاية الصحية المنزلية';
+  @override String get radiologyCenter => 'مركز الأشعة';
+  @override String get allSpecialties => 'جميع التخصصات';
+  @override String get filterByGender => 'تصفية حسب الجنس';
+  @override String get filterByAvailability => 'التوفر';
+  @override String get physiotherapy => 'علاج طبيعي';
+  @override String get elderlyCare => 'رعاية المسنين';
+  @override String get postSurgery => 'ما بعد الجراحة';
+  @override String get chronicCare => 'رعاية الأمراض المزمنة';
+
+  // Unified Doctor Booking
+  @override String get bookADoctor => 'Book a Doctor'; // TODO: translate
+  @override String get videoConsult => 'Video Consult'; // TODO: translate
+  @override String get myDoctorAppointments => 'My Doctor Appointments'; // TODO: translate
+  @override String get myVideoConsults => 'My Video Consults'; // TODO: translate
+
+  // Doctor Home Visit
+  @override String get doctorHomeVisit => 'زيارة الطبيب المنزلية';
+  @override String get visitRequests => 'طلبات الزيارة';
+  @override String get submitVisitRequest => 'تقديم طلب زيارة';
+  @override String get visitReason => 'سبب الزيارة';
+  @override String get contactPhone => 'هاتف التواصل';
+  @override String get preferredDoctorLabel => 'الطبيب المفضل';
+  @override String get additionalNotes => 'ملاحظات إضافية';
+  @override String get visitRequestSubmitted => 'تم تقديم طلب الزيارة بنجاح';
+  @override String get visitRequestUpdated => 'تم تحديث طلب الزيارة بنجاح';
+  @override String get noVisitRequests => 'لا توجد طلبات زيارة حتى الآن';
+  @override String get visitRequestDetail => 'تفاصيل طلب الزيارة';
+  @override String get assignDoctor => 'تعيين طبيب';
+  @override String get updateStatusLabel => 'تحديث الحالة';
+  @override String get statusPendingLabel => 'قيد الانتظار';
+  @override String get statusConfirmedLabel => 'مؤكد';
+  @override String get statusCancelledLabel => 'ملغي';
+  @override String get statusCompletedLabel => 'مكتمل';
+  @override String get confirmVisit => 'تأكيد الزيارة';
+  @override String get completeVisit => 'إكمال الزيارة';
+  @override String get cancelVisit => 'إلغاء الزيارة';
+  @override String get enterCancellationReason => 'أدخل سبب الإلغاء';
+  @override String get addNote => 'إضافة ملاحظة';
+  @override String get doctorAssigned => 'تم تعيين الطبيب بنجاح';
+  @override String get reassignDoctor => 'إعادة تعيين الطبيب';
+  @override String get filterByStatus => 'تصفية حسب الحالة';
+  @override String get dateFrom => 'من تاريخ';
+  @override String get dateTo => 'إلى تاريخ';
+
+  // Access Control
+  @override String get accessDenied => 'تم رفض الوصول';
+  @override String get youDontHavePermissionToAccessThis => 'ليس لديك إذن للوصول إلى هذا';
+
+  // Facility Booking List
+  @override String get myBookings => 'حجوزاتي';
+  @override String get noBookingsFound => 'لم يتم العثور على حجوزات';
+  @override String get youHaveNoBookingsYet => 'ليس لديك حجوزات بعد';
+  @override String get bookingCancelledSuccessfully => 'تم إلغاء الحجز بنجاح';
+  @override String get failedToCancelBooking => 'فشل إلغاء الحجز';
+  @override String get type => 'النوع';
+  @override String get selectTime => 'اختر الوقت';
+  @override String get booked => 'محجوز';
+  @override String get selectedDate => 'التاريخ المختار';
+  @override String get selectedTime => 'الوقت المختار';
+
+  // Facility Booking Confirmation
+  @override String get yourBookingIsConfirmed => 'تم تأكيد حجزك';
+  @override String get bookingNumber => 'رقم الحجز';
+  @override String get bookingDate => 'تاريخ الحجز';
+  @override String get bookingTime => 'وقت الحجز';
+  @override String get bookingConfirmationSent => 'تم إرسال تأكيد إلى بريدك الإلكتروني ورقم هاتفك المسجل';
+  @override String get viewAllBookings => 'عرض جميع الحجوزات';
+  @override String get backToHome => 'العودة إلى الصفحة الرئيسية';
+
+  // Facility Booking Detail
+  @override String get facility => 'المنشأة';
+  @override String get patientPhone => 'هاتف المريض';
+  @override String get status => 'الحالة';
+  @override String get bookingDetail => 'تفاصيل الحجز';
+  @override String get bookingDetails => 'تفاصيل الحجز';
+  @override String get bookingNotFound => 'الحجز غير موجود';
+  @override String get tryAgainLater => 'حاول مرة أخرى لاحقاً';
+  @override String get cancelBooking => 'إلغاء الحجز';
+  @override String get name => 'الاسم';
+  @override String get phone => 'الهاتف';
+  @override String get addNotesOptional => 'أضف ملاحظات (اختياري)';
+
+  // Radiology detail
+  @override String get radiologyScan => 'فحص الأشعة';
+  @override String get testNotFound => 'الفحص غير موجود';
+  @override String get imagingFormat => 'تنسيق التصوير';
+  @override String get noSpecialPreparation => 'لا إعداد خاص';
+  @override String get safetyInformation => 'معلومات السلامة';
+  @override String get addToCart => 'أضف إلى السلة';
+  @override String get noRadiologyTests => 'لا توجد فحوصات أشعة';
+  @override String get tryAdjustingYourFilters => 'حاول تعديل الفلاتر';
+  @override String get loadMore => 'تحميل المزيد';
+  @override String get createOrder => 'إنشاء طلب';
+  @override String get error => 'خطأ';
+  @override String get noData => 'لا توجد بيانات';
+  @override String get search => 'بحث';
+  @override String get testDetail => 'تفاصيل الفحص';
+
+  // Pharmacy Marketplace
+  @override String get pharmacyMarketplace => 'الصيدلية'; // TODO: translate
+  @override String get pharmacy => 'الصيدلية';
+  @override String get myPharmacyOrders => 'طلباتي من الصيدلية';
+  @override String get browseMedicines => 'تصفح الأدوية';
+  @override String get pharmacyCategories => 'الفئات';
+  @override String get pharmacySubCategories => 'الفئات الفرعية';
+  @override String get products => 'المنتجات';
+  @override String get noProductsFound => 'لا توجد منتجات';
+  @override String get outOfStock => 'غير متوفر';
+  @override String get requiresPrescription => 'يتطلب وصفة طبية';
+  @override String get priceFrom => 'من';
+  @override String get filterProducts => 'تصفية المنتجات';
+  @override String get selectBrands => 'اختر العلامات التجارية';
+  @override String get selectProductTypes => 'اختر أنواع المنتجات';
+  @override String get noBrandsAvailable => 'لا توجد علامات تجارية';
+  @override String get noProductTypesAvailable => 'لا توجد أنواع منتجات';
+  @override String get brand => 'علامة تجارية';
+  @override String get productDetails => 'تفاصيل المنتج';
+  @override String get cart => 'السلة';
+  @override String get cartEmpty => 'سلتك فارغة';
+  @override String get cartEmptyMessage => 'تصفح الأدوية وأضف عناصر إلى سلتك';
+  @override String get itemsInCart => 'عناصر في السلة';
+  @override String get quantity => 'الكمية';
+  @override String get removeFromCart => 'إزالة من السلة';
+  @override String get updateQuantity => 'تحديث الكمية';
+  @override String get proceedToCheckout => 'المتابعة للدفع';
+  @override String get selectDeliveryAddress => 'عنوان التوصيل';
+  @override String get enterAddressId => 'أدخل معرّف العنوان';
+  @override String get findPharmacies => 'البحث عن صيدليات';
+  @override String get availablePharmacies => 'الصيدليات المتاحة';
+  @override String get noPharmaciesAvailable => 'لا توجد صيدليات متاحة';
+  @override String get deliveryFee => 'رسوم التوصيل';
+  @override String get selectPharmacy => 'اختر صيدلية';
+  @override String get placeOrder => 'تأكيد الطلب';
+  @override String get orderPlaced => 'تم تقديم الطلب!';
+  @override String get orderPlacedMessage => 'تم تقديم طلبك بنجاح.';
+  @override String get orderHistory => 'سجل الطلبات';
+  @override String get orderDetail => 'تفاصيل الطلب';
+  @override String get orderStatus => 'حالة الطلب';
+  @override String get orderItems => 'عناصر الطلب';
+  @override String get cancelOrder => 'إلغاء الطلب';
+  @override String get orderCancelledSuccess => 'تم إلغاء الطلب بنجاح.';
+  @override String get cannotCancelOrder => 'لا يمكن إلغاء هذا الطلب.';
+  @override String get cashOnDelivery => 'الدفع عند الاستلام';
+  @override String get insufficientStock => 'المخزون غير كافٍ.';
 }

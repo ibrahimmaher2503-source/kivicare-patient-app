@@ -4,10 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../components/cached_image_widget.dart';
+import '../../../components/location_badge.dart';
 import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/price_widget.dart';
 import '../model/nurse_model.dart';
 import '../nurse_detail_screen.dart';
 
@@ -134,19 +136,33 @@ class NurseCard extends StatelessWidget {
                         shaderCallback: (bounds) => const LinearGradient(
                           colors: [gradientSecondaryStart, gradientSecondaryEnd],
                         ).createShader(bounds),
-                        child: Text(
-                          '\$${nurseData.hourlyRate.toStringAsFixed(2)}/hr',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.1,
-                            color: Colors.white,
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            PriceWidget(
+                              price: nurseData.hourlyRate,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              locale.value.perHour,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.1,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ],
                 ),
+                if (nurseData.governorate != null) ...[
+                  8.height,
+                  locationBadge(nurseData.governorate, nurseData.city),
+                ],
               ],
             ),
           ),
@@ -168,14 +184,17 @@ class NurseCard extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: CachedImageWidget(
-                      url: nurseData.profileImage,
-                      height: 80,
-                      width: 80,
-                      fit: BoxFit.cover,
-                      radius: 14,
+                  Hero(
+                    tag: 'nurse_${nurseData.id}',
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: CachedImageWidget(
+                        url: nurseData.profileImage,
+                        height: 80,
+                        width: 80,
+                        fit: BoxFit.cover,
+                        radius: 14,
+                      ),
                     ),
                   ),
                   // Gradient overlay on profile image for depth

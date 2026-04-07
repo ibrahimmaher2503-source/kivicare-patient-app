@@ -45,6 +45,7 @@ class CreateRequestServiceController extends GetxController {
   }
 
   Future<void> submitRequest() async {
+    if (isLoading.value) return;
     if (nameCont.text.trim().isEmpty) {
       toast(locale.value.thisFieldIsRequired);
       return;

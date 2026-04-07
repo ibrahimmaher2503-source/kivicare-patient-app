@@ -18,10 +18,12 @@ import '../../doctor/doctor_list_controller.dart';
 import '../../service/service_list_controller.dart';
 import 'components/clinic_filter/filter_clinic_component.dart';
 import 'components/filter_category.dart';
+import 'components/filter_location_component.dart';
 import 'components/filter_service.dart';
 import 'components/price_filter/filter_price_component.dart';
 import 'components/rating_filter.dart';
 import 'components/service_type_filter/filter_service_type_component.dart';
+import 'model/filter_params.dart';
 
 class FilterController extends GetxController {
   RxString filterType = "".obs;
@@ -70,26 +72,97 @@ class FilterController extends GetxController {
   Rx<RangeValues> rangeValues = const RangeValues(1, 5000).obs;
   Rx<RangeValues> rangeRatingValues = const RangeValues(1, 5).obs;
 
-  RxList filterList = [locale.value.clinic, locale.value.filterService, locale.value.filterRating].obs;
-  RxList serviceFilterList = [locale.value.clinic, locale.value.price, locale.value.category].obs;
-  RxList clinicFilterList = [locale.value.filterService].obs;
-  RxList categoryFilterList = [locale.value.clinic, locale.value.price].obs;
+  // Location filters (new)
+  RxnInt selectedGovernorateId = RxnInt();
+  RxnInt selectedCityId = RxnInt();
+
+  // Advanced filters (doctor module)
+  RxnInt selectedSpecialtyId = RxnInt();
+  RxString selectedGender = "".obs;
+
+  RxList filterList = [locale.value.clinic, locale.value.filterService, locale.value.filterLocation, locale.value.filterRating].obs;
+  RxList serviceFilterList = [locale.value.clinic, locale.value.price, locale.value.filterLocation, locale.value.category].obs;
+  RxList clinicFilterList = [locale.value.filterService, locale.value.filterLocation].obs;
+  RxList categoryFilterList = [locale.value.clinic, locale.value.price, locale.value.filterLocation].obs;
 
   RxList serviceTypeList = [
-    {"title": "In Clinic", "value": ServiceTypeConst.inClinic},
-    {"title": "Online", "value": ServiceTypeConst.online}
+    {"title": locale.value.inClinic, "value": ServiceTypeConst.inClinic},
+    {"title": locale.value.online, "value": ServiceTypeConst.online}
   ].obs;
   RxString selectedServiceType = "".obs;
 
   @override
   void onInit() {
-    if (Get.arguments is List) {
-      if (Get.arguments[0] is int) {
-        selectedClinicData(Clinic(id: Get.arguments[0], clinicSession: ClinicSession()));
-        seleClinicFilterCount(1);
+    // Read from FilterParams if available, otherwise fall back to old List pattern for backwards compatibility
+    if (Get.arguments is FilterParams) {
+      FilterParams params = Get.arguments as FilterParams;
+
+      if (params.clinicId > 0) {
+        selectedClinicData(Clinic(id: params.clinicId, clinicSession: ClinicSession()));
       }
 
-      if (Get.arguments[1] is String) {
+      if (params.serviceType.isNotEmpty) {
+        selectedServiceType(params.serviceType);
+      }
+
+      if (params.priceMin.isNotEmpty) {
+        minimumPrice(double.tryParse(params.priceMin) ?? 1.0);
+      }
+
+      if (params.priceMax.isNotEmpty) {
+        maximumPrice(double.tryParse(params.priceMax) ?? 5000.0);
+      }
+
+      if (params.ratingMin.isNotEmpty) {
+        minimumRating(double.tryParse(params.ratingMin) ?? 0.0);
+      }
+
+      if (params.ratingMax.isNotEmpty) {
+        maximumRating(double.tryParse(params.ratingMax) ?? 5.0);
+      }
+
+      if (params.categoryId > 0) {
+        selectedCategoryData(CategoryElement(id: params.categoryId));
+      }
+
+      // Location filters
+      if (params.governorateId != null) {
+        selectedGovernorateId(params.governorateId);
+      }
+
+      if (params.cityId != null) {
+        selectedCityId(params.cityId);
+      }
+
+      // Advanced doctor filters
+      if (params.specialtyId != null) {
+        selectedSpecialtyId(params.specialtyId);
+      }
+
+      if (params.gender.isNotEmpty) {
+        selectedGender(params.gender);
+      }
+
+      // Determine which filter type list to use based on moduleType
+      if (params.moduleType == "service") {
+        filterType(serviceFilterList[0]);
+      } else if (params.moduleType == "clinic") {
+        filterType(clinicFilterList[0]);
+      } else if (params.moduleType == "category") {
+        filterType(categoryFilterList[0]);
+      } else {
+        filterType(filterList[0]);
+      }
+
+      rangeValues(RangeValues(minimumPrice.value, maximumPrice.value));
+      rangeRatingValues(RangeValues(minimumRating.value, maximumRating.value));
+    } else if (Get.arguments is List) {
+      // Legacy: support old List-based argument pattern for backwards compatibility
+      if (Get.arguments[0] is int) {
+        selectedClinicData(Clinic(id: Get.arguments[0], clinicSession: ClinicSession()));
+      }
+
+      if (Get.arguments[1] is String && (Get.arguments[1] as String).isNotEmpty) {
         selectedServiceType(Get.arguments[1]);
       }
 
@@ -112,9 +185,10 @@ class FilterController extends GetxController {
       } else {
         filterType(filterList[0]);
       }
-    }
-    if (Get.arguments[5] is int) {
-      selectedCategoryData(CategoryElement(id: Get.arguments[5]));
+
+      if (Get.arguments.length > 5 && Get.arguments[5] is int) {
+        selectedCategoryData(CategoryElement(id: Get.arguments[5]));
+      }
     }
 
     getClinic();
@@ -228,10 +302,28 @@ class FilterController extends GetxController {
 
   RxInt appliedFilterCount = 0.obs;
 
+  /// Computed getter that returns the count of active filters
+  /// based on which filter parameters differ from their default values
+  int get activeFilterCount {
+    int count = 0;
+
+    // Check each filter parameter against its default value
+    if (selectedClinicData.value.id > 0) count++;
+    if (selectedServiceType.value.isNotEmpty) count++;
+    if (minimumPrice.value > 0.0 && maximumPrice.value < 5000.0) count++;
+    if (minimumRating.value > 0.0 && maximumRating.value < 5.0) count++;
+    if (selectedGovernorateId.value != null) count++;
+    if (selectedCityId.value != null) count++;
+    if (selectedSpecialtyId.value != null) count++;
+    if (selectedGender.value.isNotEmpty) count++;
+    if (selectedCategoryData.value.id > 0) count++;
+    if (selectedServiceData.value.id > 0) count++;
+
+    return count;
+  }
+
   void resetFilter(String moduleType, String filterType) {
     selectedClinicData(Clinic(clinicSession: ClinicSession()));
-    totalServiceCount(0).obs;
-    totalDoctorCount(0).obs;
     seleFilterCount(0).obs;
     selePriceFilterCount(0).obs;
     seleRatingFilterCount(0).obs;
@@ -244,6 +336,14 @@ class FilterController extends GetxController {
     maximumRating(0.0);
     rangeValues(const RangeValues(1, 5000));
     rangeRatingValues(const RangeValues(1, 5));
+
+    // Reset location filters
+    selectedGovernorateId(null);
+    selectedCityId(null);
+
+    // Reset advanced filters
+    selectedSpecialtyId(null);
+    selectedGender("");
 
     if (filterType != 'category') {
       selectedCategoryData(CategoryElement());
@@ -270,6 +370,8 @@ class FilterController extends GetxController {
             : SizedBox().expand(flex: 3).visible(displayValue == 'doctor');
       case "Rating":
         return FilterRatingComponent().expand(flex: 3).visible(displayValue == 'doctor');
+      case "Location":
+        return FilterLocationComponent(controller: this).expand(flex: 3);
       default:
         return FilterServiceComponent().expand(flex: 3);
     }
@@ -380,32 +482,43 @@ class FilterController extends GetxController {
   /// Proper count calculation that only counts actually applied filters
   RxInt get actualCategoryFilterCount {
     int count = 0;
-    
+
     // Count clinic filter if applied
     if (selectedClinicData.value.id > 0) {
       count++;
     }
-    
+
     // Count price filter if applied (only if not default range)
     if (minimumPrice.value > 0.0 && maximumPrice.value < 5000.0) {
       count++;
     }
-    
+
     // Count category filter if applied
     if (selectedCategoryData.value.id > 0) {
       count++;
     }
-    
+
     return count.obs;
   }
 
+  // Location filter callbacks (Phase 3: User Story 1)
+  void onGovernorateChanged(int? id) {
+    selectedGovernorateId(id);
+    // Reset city when governorate changes
+    selectedCityId(null);
+  }
 
+  void onCityChanged(int? id) {
+    selectedCityId(id);
+  }
 
   Future<void> applyFilter(String type, {bool isReset = false, String newFilterType = ''}) async {
     if (type == "service") {
       ServiceListController serviceCont = Get.find();
       serviceCont.clinicId(selectedClinicData.value.id);
       serviceCont.serviceType(selectedServiceType.value);
+      serviceCont.selectedGovernorateId(selectedGovernorateId.value);
+      serviceCont.selectedCityId(selectedCityId.value);
 
       serviceCont.priceMin(minimumPrice.value > 0 ? minimumPrice.value.toString() : "");
       serviceCont.priceMax(maximumPrice.value > 0 ? maximumPrice.value.toString() : "");
@@ -414,32 +527,32 @@ class FilterController extends GetxController {
       serviceCont.categoryId(selectedCategoryData.value.id);
       applyFilterCount();
       serviceCont.refresh();
-      Get.back(result: actualCategoryFilterCount.value);
+      Get.back(result: activeFilterCount);
       serviceCont.getServiceList();
     } else if (type == 'doctor') {
       DoctorListController doctorConte = Get.find();
       doctorConte.clinicId(selectedClinicData.value.id);
       doctorConte.serviceType(selectedServiceType.value);
+      doctorConte.selectedGovernorateId(selectedGovernorateId.value);
+      doctorConte.selectedCityId(selectedCityId.value);
       doctorConte.ratingMin(minimumRating.value > 0 ? minimumRating.value.toString() : "");
       doctorConte.ratingMax(maximumRating.value > 0 ? maximumRating.value.toString() : "");
       currentSelectedService(selectedServiceData.value);
       applyFilterCount();
-      Get.back(
-        result: {
-          'totalDoctorCount': actualDoctorFilterCount.value,
-        },
-      );
+      Get.back(result: activeFilterCount);
 
       doctorConte.getDoctors();
     } else if (type == 'clinic') {
       ClinicListController clinicCont = Get.find();
       clinicCont.clinicId(selectedClinicData.value.id);
       clinicCont.service(selectedServiceData.value);
+      clinicCont.selectedGovernorateId(selectedGovernorateId.value);
+      clinicCont.selectedCityId(selectedCityId.value);
 
       clinicCont.priceMin(minimumPrice.value > 0 ? minimumPrice.value.toString() : "");
       clinicCont.priceMax(maximumPrice.value > 0 ? maximumPrice.value.toString() : "");
       applyFilterCount();
-      Get.back(result: actualCategoryFilterCount.value);
+      Get.back(result: activeFilterCount);
       clinicCont.page(1);
       clinicCont.getClinicList();
     }

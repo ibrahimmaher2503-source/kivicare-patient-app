@@ -8,14 +8,32 @@ import '../../components/loader_widget.dart';
 import '../../main.dart';
 import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
+import '../../utils/common_base.dart';
 import 'components/request_service_card.dart';
 import 'create_request_service_screen.dart';
 import 'request_service_list_controller.dart';
 
-class RequestServiceListScreen extends StatelessWidget {
-  RequestServiceListScreen({super.key});
+class RequestServiceListScreen extends StatefulWidget {
+  const RequestServiceListScreen({super.key});
 
-  final RequestServiceListController controller = Get.put(RequestServiceListController());
+  @override
+  State<RequestServiceListScreen> createState() => _RequestServiceListScreenState();
+}
+
+class _RequestServiceListScreenState extends State<RequestServiceListScreen> {
+  late final RequestServiceListController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(RequestServiceListController());
+  }
+
+  @override
+  void dispose() {
+    Get.delete<RequestServiceListController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +47,11 @@ class RequestServiceListScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add_circle_outline_rounded, color: Colors.white),
             onPressed: () {
-              Get.to(() => CreateRequestServiceScreen())?.then((_) {
-                controller.page(1);
-                controller.getServiceRequests();
+              doIfLoggedIn(() {
+                Get.to(() => CreateRequestServiceScreen())?.then((_) {
+                  controller.page(1);
+                  controller.getServiceRequests();
+                });
               });
             },
           ),
@@ -43,7 +63,7 @@ class RequestServiceListScreen extends StatelessWidget {
             errorBuilder: (error) {
               return _buildEmptyState();
             },
-            loadingWidget: controller.isLoading.value ? const LoaderWidget() : const Offstage(),
+            loadingWidget: controller.isLoading.value ? const Offstage() : const LoaderWidget(),
             onSuccess: (_) {
               return AnimatedScrollView(
                 listAnimationType: ListAnimationType.FadeIn,
@@ -102,7 +122,7 @@ class RequestServiceListScreen extends StatelessWidget {
                               ),
                               4.height,
                               Obx(() => Text(
-                                '${controller.services.length} request${controller.services.length != 1 ? 's' : ''}',
+                                '${controller.services.length} ${locale.value.myRequests}',
                                 style: GoogleFonts.plusJakartaSans(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -226,7 +246,7 @@ class RequestServiceListScreen extends StatelessWidget {
                           final service = controller.services[index];
                           return TweenAnimationBuilder<double>(
                             tween: Tween(begin: 0.0, end: 1.0),
-                            duration: Duration(milliseconds: 400 + (index * 80)),
+                            duration: Duration(milliseconds: 400 + (index.clamp(0, 10) * 80)),
                             curve: Curves.easeOutCubic,
                             builder: (context, value, child) {
                               return Transform.translate(
@@ -313,16 +333,6 @@ class RequestServiceListScreen extends StatelessWidget {
               color: isDarkMode.value ? Colors.white : primaryTextColor,
             ),
           ),
-          10.height,
-          Text(
-            '',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              letterSpacing: 0.1,
-              color: darkGrayGeneral,
-            ),
-            textAlign: TextAlign.center,
-          ).paddingOnly(left: 12, right: 12),
         ],
       ),
     );

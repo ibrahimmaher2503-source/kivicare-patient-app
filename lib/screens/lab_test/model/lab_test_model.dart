@@ -1,4 +1,6 @@
 import 'lab_test_category_model.dart';
+import '../../../models/governorate_model.dart';
+import '../../../models/city_model.dart';
 
 class LabTestListResponse {
   bool status;
@@ -10,17 +12,39 @@ class LabTestListResponse {
 
   LabTestListResponse({
     this.status = false, this.data = const [],
-    this.currentPage = 1, this.lastPage = 1, this.perPage = 15, this.total = 0,
+    this.currentPage = 1, this.lastPage = 1, this.perPage = 20, this.total = 0,
   });
 
   factory LabTestListResponse.fromJson(Map<String, dynamic> json) {
+    List<dynamic> items = [];
+    if (json["data"] is List) {
+      items = json["data"];
+    } else if (json["data"] is Map && json["data"]["items"] is List) {
+      items = json["data"]["items"];
+    }
+    int currPage = 1;
+    int lastPg = 1;
+    int perPg = 20;
+    int tot = 0;
+    if (json["meta"] is Map) {
+      currPage = json["meta"]["current_page"] ?? 1;
+      lastPg = json["meta"]["last_page"] ?? 1;
+      perPg = json["meta"]["per_page"] ?? 20;
+      tot = json["meta"]["total"] ?? 0;
+    } else if (json["data"] is Map && json["data"]["pagination"] is Map) {
+      final p = json["data"]["pagination"];
+      currPage = p["current_page"] ?? 1;
+      lastPg = p["last_page"] ?? 1;
+      perPg = p["per_page"] ?? 20;
+      tot = p["total"] ?? 0;
+    }
     return LabTestListResponse(
       status: json["status"] is bool ? json["status"] : false,
-      data: json["data"] is List ? List<LabTest>.from(json["data"].map((x) => LabTest.fromJson(x))) : [],
-      currentPage: json["meta"] is Map ? (json["meta"]["current_page"] ?? 1) : 1,
-      lastPage: json["meta"] is Map ? (json["meta"]["last_page"] ?? 1) : 1,
-      perPage: json["meta"] is Map ? (json["meta"]["per_page"] ?? 15) : 15,
-      total: json["meta"] is Map ? (json["meta"]["total"] ?? 0) : 0,
+      data: items.map((x) => LabTest.fromJson(Map<String, dynamic>.from(x))).toList(),
+      currentPage: currPage,
+      lastPage: lastPg,
+      perPage: perPg,
+      total: tot,
     );
   }
 }
@@ -37,13 +61,19 @@ class LabTest {
   String preparationInstructions;
   double defaultPrice;
   String turnaroundTime;
+  String referenceRange;
   bool status;
+  Governorate? governorate;
+  City? city;
 
   LabTest({
     this.id = -1, this.name = "", this.code = "", this.slug = "",
     this.category, this.department = "", this.sampleType = "",
     this.description = "", this.preparationInstructions = "",
-    this.defaultPrice = 0.0, this.turnaroundTime = "", this.status = true,
+    this.defaultPrice = 0.0, this.turnaroundTime = "", this.referenceRange = "",
+    this.status = true,
+    this.governorate,
+    this.city,
   });
 
   factory LabTest.fromJson(Map<String, dynamic> json) {
@@ -59,7 +89,12 @@ class LabTest {
       preparationInstructions: json["preparation_instructions"] is String ? json["preparation_instructions"] : "",
       defaultPrice: json["default_price"] is num ? json["default_price"].toDouble() : 0.0,
       turnaroundTime: json["turnaround_time"] is String ? json["turnaround_time"] : "",
+      referenceRange: json["reference_range"] is String ? json["reference_range"] : "",
       status: json["status"] is bool ? json["status"] : true,
+      governorate: json['governorate'] is Map
+          ? Governorate.fromJson(Map<String, dynamic>.from(json['governorate']))
+          : null,
+      city: json['city'] is Map ? City.fromJson(Map<String, dynamic>.from(json['city'])) : null,
     );
   }
 
@@ -68,6 +103,6 @@ class LabTest {
     "category": category?.toJson(), "department": department,
     "sample_type": sampleType, "description": description,
     "preparation_instructions": preparationInstructions,
-    "default_price": defaultPrice, "turnaround_time": turnaroundTime, "status": status,
+    "default_price": defaultPrice, "turnaround_time": turnaroundTime, "reference_range": referenceRange, "status": status,
   };
 }
