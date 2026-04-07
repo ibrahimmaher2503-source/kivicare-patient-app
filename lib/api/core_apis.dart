@@ -51,9 +51,16 @@ import '../screens/lab_test/model/lab_model.dart';
 import '../models/governorate_model.dart';
 import '../models/city_model.dart';
 import '../screens/doctor_visit/model/doctor_visit_request_model.dart';
+import '../models/facility_booking_model.dart';
+import '../models/booking_slot_model.dart';
 import '../utils/api_end_points.dart';
 import '../utils/app_common.dart';
 import '../utils/constants.dart';
+import '../screens/pharmacy/model/pharmacy_category_model.dart';
+import '../screens/pharmacy/model/pharmacy_product_model.dart';
+import '../screens/pharmacy/model/pharmacy_filter_model.dart';
+import '../screens/pharmacy/model/pharmacy_cart_model.dart';
+import '../screens/pharmacy/model/pharmacy_order_model.dart';
 
 class CoreServiceApis {
   static Future<RxList<SystemService>> getSystemService({
@@ -1136,6 +1143,50 @@ class CoreServiceApis {
     return providerList.obs;
   }
 
+  // ===== FACILITY BOOKINGS MODULE =====
+
+  static Future<FacilityBooking> getFacilityBookingDetail({required int bookingId}) async {
+    final json = await handleResponse(await buildHttpResponse(APIEndPoints.facilityBookingDetail(bookingId), method: HttpMethodType.GET));
+    return FacilityBooking.fromJson(json["data"] is Map<String, dynamic> ? json["data"] : json);
+  }
+
+  static Future<BaseResponseModel> cancelFacilityBooking({required int bookingId, required Map<String, dynamic> request}) async {
+    return BaseResponseModel.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.facilityBookingCancel(bookingId), method: HttpMethodType.POST, request: request)));
+  }
+
+  static Future<FacilityBooking> createFacilityBooking({required Map<String, dynamic> request}) async {
+    final json = await handleResponse(await buildHttpResponse(APIEndPoints.facilityBookings, method: HttpMethodType.POST, request: request));
+    return FacilityBooking.fromJson(json["data"] is Map<String, dynamic> ? json["data"] : json);
+  }
+
+  static Future<RxList<FacilityBooking>> getFacilityBookings({
+    int page = 1,
+    int perPage = 20,
+    String? type,
+    String? status,
+  }) async {
+    String typeParam = type != null ? '&type=$type' : '';
+    String statusParam = status != null ? '&status=$status' : '';
+    final res = await handleResponse(await buildHttpResponse(
+      '${APIEndPoints.facilityBookings}?per_page=$perPage&page=$page$typeParam$statusParam',
+      method: HttpMethodType.GET,
+    ));
+    final list = res["data"] is List ? res["data"] as List : [];
+    return list.map((e) => FacilityBooking.fromJson(e as Map<String, dynamic>)).toList().obs;
+  }
+
+  static Future<List<BookingSlot>> getLabSlots({required int labId, required String date}) async {
+    final json = await handleResponse(await buildHttpResponse('${APIEndPoints.labSlots(labId)}?date=$date', method: HttpMethodType.GET));
+    final slotsData = json["data"] is List ? json["data"] as List : (json["slots"] is List ? json["slots"] as List : <dynamic>[]);
+    return slotsData.map((e) => BookingSlot.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  static Future<List<BookingSlot>> getRadiologyCenterSlots({required int centerId, required String date}) async {
+    final json = await handleResponse(await buildHttpResponse('${APIEndPoints.radiologyCenterSlots(centerId)}?date=$date', method: HttpMethodType.GET));
+    final slotsData = json["data"] is List ? json["data"] as List : (json["slots"] is List ? json["slots"] as List : <dynamic>[]);
+    return slotsData.map((e) => BookingSlot.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
   // ─── Doctor Home Visit ──────────────────────────────────────────
 
   static Future<DoctorVisitRequest> submitDoctorVisitRequest({required Map<String, dynamic> request}) async {
@@ -1195,5 +1246,184 @@ class CoreServiceApis {
       await buildHttpResponse(APIEndPoints.adminDoctorVisitRequestAssignDoctor(reference), request: request, method: HttpMethodType.PUT),
     );
     return DoctorVisitRequest.fromJson(res['data'] is Map ? res['data'] : res);
+  }
+
+  // Pharmacy Marketplace — T008
+  static Future<PharmacyCategoryListResponse> getPharmacyCategories() async {
+    return PharmacyCategoryListResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse(APIEndPoints.pharmacyCategories, method: HttpMethodType.GET),
+      ),
+    );
+  }
+
+  static Future<PharmacyCategoryListResponse> getPharmacyCategoryChildren(int id) async {
+    return PharmacyCategoryListResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse(APIEndPoints.pharmacyCategoryChildren(id), method: HttpMethodType.GET),
+      ),
+    );
+  }
+
+  // T009
+  static Future<void> getPharmacyProducts({
+    required int subCategoryId,
+    required List<PharmacyProduct> list,
+    String search = '',
+    List<int> brandIds = const [],
+    List<int> productTypeIds = const [],
+    int page = 1,
+    int perPage = 15,
+    Function(bool)? lastPageCallback,
+  }) async {
+    String params = 'sub_category_id=$subCategoryId&page=$page&per_page=$perPage';
+    if (search.isNotEmpty) params += '&search=${Uri.encodeComponent(search)}';
+    for (final id in brandIds) {
+      params += '&brand_ids[]=$id';
+    }
+    for (final id in productTypeIds) {
+      params += '&product_type_ids[]=$id';
+    }
+    final res = PharmacyProductListResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse('${APIEndPoints.pharmacyProducts}?$params', method: HttpMethodType.GET),
+      ),
+    );
+    if (page == 1) list.clear();
+    list.addAll(res.data);
+    lastPageCallback?.call(res.currentPage >= res.lastPage);
+  }
+
+  static Future<PharmacyProductDetailResponse> getPharmacyProductDetail(int id) async {
+    return PharmacyProductDetailResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse(APIEndPoints.pharmacyProductDetail(id), method: HttpMethodType.GET),
+      ),
+    );
+  }
+
+  // T010
+  static Future<PharmacyFilterListResponse> getPharmacyFilterBrands(int subCategoryId) async {
+    return PharmacyFilterListResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse('${APIEndPoints.pharmacyFilterBrands}?sub_category_id=$subCategoryId', method: HttpMethodType.GET),
+      ),
+    );
+  }
+
+  static Future<PharmacyFilterListResponse> getPharmacyFilterProductTypes(int subCategoryId) async {
+    return PharmacyFilterListResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse('${APIEndPoints.pharmacyFilterProductTypes}?sub_category_id=$subCategoryId', method: HttpMethodType.GET),
+      ),
+    );
+  }
+
+  // T011
+  static Future<PharmacyCartResponse> getPharmacyCart() async {
+    return PharmacyCartResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse(APIEndPoints.pharmacyCart, method: HttpMethodType.GET),
+      ),
+    );
+  }
+
+  static Future<PharmacyCartResponse> addToPharmacyCart({
+    required int productId,
+    required int quantity,
+  }) async {
+    return PharmacyCartResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse(
+          APIEndPoints.pharmacyCartItems,
+          method: HttpMethodType.POST,
+          request: {'product_id': productId, 'quantity': quantity},
+        ),
+      ),
+    );
+  }
+
+  static Future<PharmacyCartResponse> updatePharmacyCartItem({
+    required int itemId,
+    required int quantity,
+  }) async {
+    return PharmacyCartResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse(
+          APIEndPoints.pharmacyCartItemDetail(itemId),
+          method: HttpMethodType.PATCH,
+          request: {'quantity': quantity},
+        ),
+      ),
+    );
+  }
+
+  static Future<void> removePharmacyCartItem(int itemId) async {
+    await handleResponse(
+      await buildHttpResponse(APIEndPoints.pharmacyCartItemDetail(itemId), method: HttpMethodType.DELETE),
+    );
+  }
+
+  // T012
+  static Future<PharmacyAvailablePharmacyListResponse> getAvailablePharmacies(int addressId) async {
+    return PharmacyAvailablePharmacyListResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse('${APIEndPoints.pharmacyAvailablePharmacies}?address_id=$addressId', method: HttpMethodType.GET),
+      ),
+    );
+  }
+
+  // T013
+  static Future<PharmacyOrderPlacedResponse> placePharmacyOrder({
+    required int pharmacyId,
+    required int addressId,
+    String paymentMethod = 'cash_on_delivery',
+  }) async {
+    return PharmacyOrderPlacedResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse(
+          APIEndPoints.pharmacyOrders,
+          method: HttpMethodType.POST,
+          request: {
+            'pharmacy_id': pharmacyId,
+            'address_id': addressId,
+            'payment_method': paymentMethod,
+          },
+        ),
+      ),
+    );
+  }
+
+  static Future<void> getPharmacyOrders({
+    required List<PharmacyOrderSummary> list,
+    int page = 1,
+    int perPage = 15,
+    String? status,
+    Function(bool)? lastPageCallback,
+  }) async {
+    String params = '?page=$page&per_page=$perPage';
+    if (status != null && status.isNotEmpty) params += '&status=$status';
+    final res = PharmacyOrderListResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse('${APIEndPoints.pharmacyOrders}$params', method: HttpMethodType.GET),
+      ),
+    );
+    if (page == 1) list.clear();
+    list.addAll(res.data);
+    lastPageCallback?.call(res.currentPage >= res.lastPage);
+  }
+
+  static Future<PharmacyOrderDetailResponse> getPharmacyOrderDetail(int id) async {
+    return PharmacyOrderDetailResponse.fromJson(
+      await handleResponse(
+        await buildHttpResponse(APIEndPoints.pharmacyOrderDetail(id), method: HttpMethodType.GET),
+      ),
+    );
+  }
+
+  static Future<void> cancelPharmacyOrder(int id) async {
+    await handleResponse(
+      await buildHttpResponse(APIEndPoints.pharmacyOrderCancel(id), method: HttpMethodType.POST),
+    );
   }
 }

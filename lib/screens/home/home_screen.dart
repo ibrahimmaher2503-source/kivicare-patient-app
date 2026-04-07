@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
+import 'package:kivicare_patient/utils/colors.dart';
 
 import '../../components/app_scaffold.dart';
 import '../../main.dart';
@@ -29,15 +30,36 @@ class HomeScreen extends StatelessWidget {
   Widget _staggeredSection({required Widget child, required int index}) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(milliseconds: 450 + (index * 100)),
+      duration: Duration(milliseconds: 480 + (index * 90)),
       curve: Curves.easeOutCubic,
       builder: (context, value, child) {
         return Transform.translate(
-          offset: Offset(0, 16 * (1 - value)),
+          offset: Offset(0, 20 * (1 - value)),
           child: Opacity(opacity: value, child: child),
         );
       },
       child: child,
+    );
+  }
+
+  /// Thin gradient divider between sections
+  Widget _sectionDivider() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Container(
+        height: 1,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              appColorPrimary.withValues(alpha: 0.0),
+              appColorPrimary.withValues(alpha: 0.07),
+              appColorSecondary.withValues(alpha: 0.07),
+              appColorPrimary.withValues(alpha: 0.0),
+            ],
+            stops: const [0.0, 0.3, 0.7, 1.0],
+          ),
+        ),
+      ),
     );
   }
 
@@ -47,7 +69,7 @@ class HomeScreen extends StatelessWidget {
       hasLeadingWidget: false,
       isBlurBackgroundinLoader: true,
       isLoading: homeScreenController.isLoading,
-      appBarVerticalSize: Get.height * 0.14,
+      appBarVerticalSize: Get.height * 0.21,
       appBarChild: const GreetingsComponent(),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -82,17 +104,29 @@ class HomeScreen extends StatelessWidget {
                     _staggeredSection(index: 0, child: ChooseCategoryComponents()),
                     const SizedBox(height: 8),
                     _staggeredSection(index: 1, child: SliderComponent()),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
                     _staggeredSection(index: 2, child: DoctorQuickBookComponent()),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
                     _staggeredSection(index: 3, child: const QuickServicesComponent()),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
                     _staggeredSection(index: 4, child: UpcomingAppointmentComponents()),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
                     _staggeredSection(index: 5, child: PopularDoctorComponent()),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
                     _staggeredSection(index: 6, child: PopularServiceComponent()),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
                     _staggeredSection(index: 7, child: PerfectClinicComponent()),
                   ],
                 ),

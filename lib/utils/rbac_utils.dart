@@ -13,14 +13,14 @@ class RBACUtils {
     toast(errorMsg);
 
     // Log access denial for audit
-    appPrint('403 Access Denied: $errorMsg');
+    debugPrint('403 Access Denied: $errorMsg');
   }
 
   /// Show unauthorized access screen
   static void showUnauthorizedScreen(String? message) {
     Get.dialog(
-      WillPopScope(
-        onWillPop: () async => false,
+      PopScope(
+        canPop: false,
         child: AlertDialog(
           title: Text(
             locale.value.accessDenied,
@@ -59,7 +59,7 @@ class RBACUtils {
     final auditMessage =
         'Audit: User#$userId ($userRoles) attempted access to $resource at $timestamp - ${allowed ? 'ALLOWED' : 'DENIED: $reason'}';
 
-    appPrint(auditMessage);
+    debugPrint(auditMessage);
 
     // TODO: Send to backend logging/analytics service
     // Crashlytics.instance.log(auditMessage);

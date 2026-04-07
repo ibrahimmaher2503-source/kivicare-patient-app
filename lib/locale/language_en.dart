@@ -1549,6 +1549,7 @@ class LanguageEn extends BaseLanguage {
   @override String get nurseRequestUpdated => 'Nurse request updated successfully';
   @override String get nurseRequestCancelled => 'Nurse request cancelled successfully';
   @override String get cancellationReason => 'Cancellation Reason';
+  @override String get pleaseProvideReasonForCancellation => 'Please provide a reason for cancellation';
   @override String get totalAmount => 'Total Amount';
   @override String get addressLine1 => 'Address Line 1';
   @override String get addressLine2 => 'Address Line 2';
@@ -1848,6 +1849,18 @@ class LanguageEn extends BaseLanguage {
   @override String get accessDenied => 'Access Denied';
   @override String get youDontHavePermissionToAccessThis => "You don't have permission to access this";
 
+  // Facility Booking List
+  @override String get myBookings => 'My Bookings';
+  @override String get noBookingsFound => 'No Bookings Found';
+  @override String get youHaveNoBookingsYet => 'You have no bookings yet';
+  @override String get bookingCancelledSuccessfully => 'Booking cancelled successfully';
+  @override String get failedToCancelBooking => 'Failed to cancel booking';
+  @override String get type => 'Type';
+  @override String get selectTime => 'Select Time';
+  @override String get booked => 'Booked';
+  @override String get selectedDate => 'Selected Date';
+  @override String get selectedTime => 'Selected Time';
+
   // Facility Booking Confirmation
   @override String get yourBookingIsConfirmed => 'Your booking has been confirmed';
   @override String get bookingNumber => 'Booking Number';
@@ -1856,4 +1869,80 @@ class LanguageEn extends BaseLanguage {
   @override String get bookingConfirmationSent => 'A confirmation has been sent to your registered email and phone number';
   @override String get viewAllBookings => 'View All Bookings';
   @override String get backToHome => 'Back to Home';
+
+  // Facility Booking Detail
+  @override String get facility => 'Facility';
+  @override String get patientPhone => 'Patient Phone';
+  @override String get status => 'Status';
+  @override String get bookingDetail => 'Booking Detail';
+  @override String get bookingDetails => 'Booking Details';
+  @override String get bookingNotFound => 'Booking Not Found';
+  @override String get tryAgainLater => 'Try Again Later';
+  @override String get cancelBooking => 'Cancel Booking';
+  @override String get name => 'Name';
+  @override String get phone => 'Phone';
+  @override String get addNotesOptional => 'Add notes (optional)';
+
+  // Radiology detail
+  @override String get radiologyScan => 'Radiology Scan';
+  @override String get testNotFound => 'Test Not Found';
+  @override String get imagingFormat => 'Imaging Format';
+  @override String get noSpecialPreparation => 'No Special Preparation';
+  @override String get safetyInformation => 'Safety Information';
+  @override String get addToCart => 'Add to Cart';
+  @override String get noRadiologyTests => 'No Radiology Tests';
+  @override String get tryAdjustingYourFilters => 'Try adjusting your filters';
+  @override String get loadMore => 'Load More';
+  @override String get createOrder => 'Create Order';
+  @override String get error => 'Error';
+  @override String get noData => 'No Data';
+  @override String get search => 'Search';
+  @override String get testDetail => 'Test Detail';
+
+  // Pharmacy Marketplace
+  @override String get pharmacyMarketplace => 'Pharmacy';
+  @override String get pharmacy => 'Pharmacy';
+  @override String get myPharmacyOrders => 'My Pharmacy Orders';
+  @override String get browseMedicines => 'Browse Medicines';
+  @override String get pharmacyCategories => 'Categories';
+  @override String get pharmacySubCategories => 'Sub-Categories';
+  @override String get products => 'Products';
+  @override String get noProductsFound => 'No Products Found';
+  @override String get outOfStock => 'Out of Stock';
+  @override String get requiresPrescription => 'Requires Prescription';
+  @override String get priceFrom => 'From';
+  @override String get filterProducts => 'Filter Products';
+  @override String get selectBrands => 'Select Brands';
+  @override String get selectProductTypes => 'Select Product Types';
+  @override String get noBrandsAvailable => 'No Brands Available';
+  @override String get noProductTypesAvailable => 'No Product Types Available';
+  @override String get brand => 'Brand';
+  @override String get productDetails => 'Product Details';
+  @override String get cart => 'Cart';
+  @override String get cartEmpty => 'Your Cart is Empty';
+  @override String get cartEmptyMessage => 'Browse medicines and add items to your cart';
+  @override String get itemsInCart => 'items in cart';
+  @override String get quantity => 'Quantity';
+  @override String get removeFromCart => 'Remove from Cart';
+  @override String get updateQuantity => 'Update Quantity';
+  @override String get proceedToCheckout => 'Proceed to Checkout';
+  @override String get selectDeliveryAddress => 'Delivery Address';
+  @override String get enterAddressId => 'Enter address ID';
+  @override String get findPharmacies => 'Find Pharmacies';
+  @override String get availablePharmacies => 'Available Pharmacies';
+  @override String get noPharmaciesAvailable => 'No Pharmacies Available';
+  @override String get deliveryFee => 'Delivery Fee';
+  @override String get selectPharmacy => 'Select Pharmacy';
+  @override String get placeOrder => 'Place Order';
+  @override String get orderPlaced => 'Order Placed!';
+  @override String get orderPlacedMessage => 'Your order has been placed successfully.';
+  @override String get orderHistory => 'Order History';
+  @override String get orderDetail => 'Order Detail';
+  @override String get orderStatus => 'Order Status';
+  @override String get orderItems => 'Order Items';
+  @override String get cancelOrder => 'Cancel Order';
+  @override String get orderCancelledSuccess => 'Order cancelled successfully.';
+  @override String get cannotCancelOrder => 'This order cannot be cancelled.';
+  @override String get cashOnDelivery => 'Cash on Delivery';
+  @override String get insufficientStock => 'Insufficient stock.';
 }

@@ -1548,6 +1548,7 @@ class LanguageAr extends BaseLanguage {
   @override String get nurseRequestUpdated => 'تم تحديث طلب الممرضة بنجاح';
   @override String get nurseRequestCancelled => 'تم إلغاء طلب الممرضة بنجاح';
   @override String get cancellationReason => 'سبب الإلغاء';
+  @override String get pleaseProvideReasonForCancellation => 'يرجى تقديم سبب الإلغاء';
   @override String get totalAmount => 'المبلغ الإجمالي';
   @override String get addressLine1 => 'العنوان السطر 1';
   @override String get addressLine2 => 'العنوان السطر 2';
@@ -1846,6 +1847,18 @@ class LanguageAr extends BaseLanguage {
   @override String get accessDenied => 'تم رفض الوصول';
   @override String get youDontHavePermissionToAccessThis => 'ليس لديك إذن للوصول إلى هذا';
 
+  // Facility Booking List
+  @override String get myBookings => 'حجوزاتي';
+  @override String get noBookingsFound => 'لم يتم العثور على حجوزات';
+  @override String get youHaveNoBookingsYet => 'ليس لديك حجوزات بعد';
+  @override String get bookingCancelledSuccessfully => 'تم إلغاء الحجز بنجاح';
+  @override String get failedToCancelBooking => 'فشل إلغاء الحجز';
+  @override String get type => 'النوع';
+  @override String get selectTime => 'اختر الوقت';
+  @override String get booked => 'محجوز';
+  @override String get selectedDate => 'التاريخ المختار';
+  @override String get selectedTime => 'الوقت المختار';
+
   // Facility Booking Confirmation
   @override String get yourBookingIsConfirmed => 'تم تأكيد حجزك';
   @override String get bookingNumber => 'رقم الحجز';
@@ -1854,4 +1867,80 @@ class LanguageAr extends BaseLanguage {
   @override String get bookingConfirmationSent => 'تم إرسال تأكيد إلى بريدك الإلكتروني ورقم هاتفك المسجل';
   @override String get viewAllBookings => 'عرض جميع الحجوزات';
   @override String get backToHome => 'العودة إلى الصفحة الرئيسية';
+
+  // Facility Booking Detail
+  @override String get facility => 'المنشأة';
+  @override String get patientPhone => 'هاتف المريض';
+  @override String get status => 'الحالة';
+  @override String get bookingDetail => 'تفاصيل الحجز';
+  @override String get bookingDetails => 'تفاصيل الحجز';
+  @override String get bookingNotFound => 'الحجز غير موجود';
+  @override String get tryAgainLater => 'حاول مرة أخرى لاحقاً';
+  @override String get cancelBooking => 'إلغاء الحجز';
+  @override String get name => 'الاسم';
+  @override String get phone => 'الهاتف';
+  @override String get addNotesOptional => 'أضف ملاحظات (اختياري)';
+
+  // Radiology detail
+  @override String get radiologyScan => 'فحص الأشعة';
+  @override String get testNotFound => 'الفحص غير موجود';
+  @override String get imagingFormat => 'تنسيق التصوير';
+  @override String get noSpecialPreparation => 'لا إعداد خاص';
+  @override String get safetyInformation => 'معلومات السلامة';
+  @override String get addToCart => 'أضف إلى السلة';
+  @override String get noRadiologyTests => 'لا توجد فحوصات أشعة';
+  @override String get tryAdjustingYourFilters => 'حاول تعديل الفلاتر';
+  @override String get loadMore => 'تحميل المزيد';
+  @override String get createOrder => 'إنشاء طلب';
+  @override String get error => 'خطأ';
+  @override String get noData => 'لا توجد بيانات';
+  @override String get search => 'بحث';
+  @override String get testDetail => 'تفاصيل الفحص';
+
+  // Pharmacy Marketplace
+  @override String get pharmacyMarketplace => 'الصيدلية'; // TODO: translate
+  @override String get pharmacy => 'الصيدلية';
+  @override String get myPharmacyOrders => 'طلباتي من الصيدلية';
+  @override String get browseMedicines => 'تصفح الأدوية';
+  @override String get pharmacyCategories => 'الفئات';
+  @override String get pharmacySubCategories => 'الفئات الفرعية';
+  @override String get products => 'المنتجات';
+  @override String get noProductsFound => 'لا توجد منتجات';
+  @override String get outOfStock => 'غير متوفر';
+  @override String get requiresPrescription => 'يتطلب وصفة طبية';
+  @override String get priceFrom => 'من';
+  @override String get filterProducts => 'تصفية المنتجات';
+  @override String get selectBrands => 'اختر العلامات التجارية';
+  @override String get selectProductTypes => 'اختر أنواع المنتجات';
+  @override String get noBrandsAvailable => 'لا توجد علامات تجارية';
+  @override String get noProductTypesAvailable => 'لا توجد أنواع منتجات';
+  @override String get brand => 'علامة تجارية';
+  @override String get productDetails => 'تفاصيل المنتج';
+  @override String get cart => 'السلة';
+  @override String get cartEmpty => 'سلتك فارغة';
+  @override String get cartEmptyMessage => 'تصفح الأدوية وأضف عناصر إلى سلتك';
+  @override String get itemsInCart => 'عناصر في السلة';
+  @override String get quantity => 'الكمية';
+  @override String get removeFromCart => 'إزالة من السلة';
+  @override String get updateQuantity => 'تحديث الكمية';
+  @override String get proceedToCheckout => 'المتابعة للدفع';
+  @override String get selectDeliveryAddress => 'عنوان التوصيل';
+  @override String get enterAddressId => 'أدخل معرّف العنوان';
+  @override String get findPharmacies => 'البحث عن صيدليات';
+  @override String get availablePharmacies => 'الصيدليات المتاحة';
+  @override String get noPharmaciesAvailable => 'لا توجد صيدليات متاحة';
+  @override String get deliveryFee => 'رسوم التوصيل';
+  @override String get selectPharmacy => 'اختر صيدلية';
+  @override String get placeOrder => 'تأكيد الطلب';
+  @override String get orderPlaced => 'تم تقديم الطلب!';
+  @override String get orderPlacedMessage => 'تم تقديم طلبك بنجاح.';
+  @override String get orderHistory => 'سجل الطلبات';
+  @override String get orderDetail => 'تفاصيل الطلب';
+  @override String get orderStatus => 'حالة الطلب';
+  @override String get orderItems => 'عناصر الطلب';
+  @override String get cancelOrder => 'إلغاء الطلب';
+  @override String get orderCancelledSuccess => 'تم إلغاء الطلب بنجاح.';
+  @override String get cannotCancelOrder => 'لا يمكن إلغاء هذا الطلب.';
+  @override String get cashOnDelivery => 'الدفع عند الاستلام';
+  @override String get insufficientStock => 'المخزون غير كافٍ.';
 }

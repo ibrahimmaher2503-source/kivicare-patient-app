@@ -471,5 +471,18 @@ if (Get.arguments is FilterParams) {
 int activeCount = filterController.activeFilterCount;
 
 // Reactive updates in widgets
-Obx(() => Text('${filterController.activeFilterCount} filters active'))
+Obx(() => Text('${filterController.activeFilterCount} filters active')
+
+
+
 ```
+- Get crash logs: `adb logcat -d -s AndroidRuntime:E Flutter:E`
+- Clear logs: `adb logcat -c`
+- Filter by package: `adb logcat -d | grep "com.yourapp"`
+
+## Android Emulator Debug
+- Screenshot: use mobile-mcp `take_screenshot`
+- Logcat errors: `adb logcat -d *:E | head -50`
+- Flutter errors: `adb logcat -d | grep -E "Flutter|Exception|Error"`
+- Hot reload after fix: `flutter hot-reload` or press `r` in terminal
+- Device: 

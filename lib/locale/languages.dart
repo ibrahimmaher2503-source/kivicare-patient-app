@@ -1045,6 +1045,7 @@ abstract class BaseLanguage {
   String get nurseRequestUpdated;
   String get nurseRequestCancelled;
   String get cancellationReason;
+  String get pleaseProvideReasonForCancellation;
   String get totalAmount;
   String get addressLine1;
   String get addressLine2;
@@ -1339,6 +1340,18 @@ abstract class BaseLanguage {
   String get dateFrom;
   String get dateTo;
 
+  // Facility Booking List
+  String get myBookings;
+  String get noBookingsFound;
+  String get youHaveNoBookingsYet;
+  String get bookingCancelledSuccessfully;
+  String get failedToCancelBooking;
+  String get type;
+  String get selectTime;
+  String get booked;
+  String get selectedDate;
+  String get selectedTime;
+
   // Facility Booking Confirmation
   String get yourBookingIsConfirmed;
   String get bookingNumber;
@@ -1347,4 +1360,80 @@ abstract class BaseLanguage {
   String get bookingConfirmationSent;
   String get viewAllBookings;
   String get backToHome;
+
+  // Facility Booking Detail
+  String get facility;
+  String get patientPhone;
+  String get status;
+  String get bookingDetail;
+  String get bookingDetails;
+  String get bookingNotFound;
+  String get tryAgainLater;
+  String get cancelBooking;
+  String get name;
+  String get phone;
+  String get addNotesOptional;
+
+  // Radiology detail
+  String get radiologyScan;
+  String get testNotFound;
+  String get imagingFormat;
+  String get noSpecialPreparation;
+  String get safetyInformation;
+  String get addToCart;
+  String get noRadiologyTests;
+  String get tryAdjustingYourFilters;
+  String get loadMore;
+  String get createOrder;
+  String get error;
+  String get noData;
+  String get search;
+  String get testDetail;
+
+  // Pharmacy Marketplace
+  String get pharmacyMarketplace;
+  String get pharmacy;
+  String get myPharmacyOrders;
+  String get browseMedicines;
+  String get pharmacyCategories;
+  String get pharmacySubCategories;
+  String get products;
+  String get noProductsFound;
+  String get outOfStock;
+  String get requiresPrescription;
+  String get priceFrom;
+  String get filterProducts;
+  String get selectBrands;
+  String get selectProductTypes;
+  String get noBrandsAvailable;
+  String get noProductTypesAvailable;
+  String get brand;
+  String get productDetails;
+  String get cart;
+  String get cartEmpty;
+  String get cartEmptyMessage;
+  String get itemsInCart;
+  String get quantity;
+  String get removeFromCart;
+  String get updateQuantity;
+  String get proceedToCheckout;
+  String get selectDeliveryAddress;
+  String get enterAddressId;
+  String get findPharmacies;
+  String get availablePharmacies;
+  String get noPharmaciesAvailable;
+  String get deliveryFee;
+  String get selectPharmacy;
+  String get placeOrder;
+  String get orderPlaced;
+  String get orderPlacedMessage;
+  String get orderHistory;
+  String get orderDetail;
+  String get orderStatus;
+  String get orderItems;
+  String get cancelOrder;
+  String get orderCancelledSuccess;
+  String get cannotCancelOrder;
+  String get cashOnDelivery;
+  String get insufficientStock;
 }

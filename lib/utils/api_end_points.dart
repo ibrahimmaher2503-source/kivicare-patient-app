@@ -149,4 +149,19 @@ class APIEndPoints {
   static const String adminDoctorVisitRequests = 'v1/admin/doctor-visit/requests';
   static String adminDoctorVisitRequestStatus(String reference) => '$adminDoctorVisitRequests/$reference/status';
   static String adminDoctorVisitRequestAssignDoctor(String reference) => '$adminDoctorVisitRequests/$reference/assign-doctor';
+
+  // Pharmacy Marketplace
+  static const String pharmacyCategories = 'v1/pharmacy/categories';
+  static String pharmacyCategoryChildren(int id) => '$pharmacyCategories/$id/children';
+  static const String pharmacyProducts = 'v1/pharmacy/products';
+  static String pharmacyProductDetail(int id) => '$pharmacyProducts/$id';
+  static const String pharmacyFilterBrands = 'v1/pharmacy/filters/brands';
+  static const String pharmacyFilterProductTypes = 'v1/pharmacy/filters/product-types';
+  static const String pharmacyCart = 'v1/pharmacy/cart';
+  static const String pharmacyCartItems = 'v1/pharmacy/cart/items';
+  static String pharmacyCartItemDetail(int id) => '$pharmacyCartItems/$id';
+  static const String pharmacyAvailablePharmacies = 'v1/pharmacy/cart/available-pharmacies';
+  static const String pharmacyOrders = 'v1/pharmacy/orders';
+  static String pharmacyOrderDetail(int id) => '$pharmacyOrders/$id';
+  static String pharmacyOrderCancel(int id) => '$pharmacyOrders/$id/cancel';
 }
