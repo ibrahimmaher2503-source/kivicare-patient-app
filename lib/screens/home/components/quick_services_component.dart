@@ -298,6 +298,7 @@ class QuickServicesComponent extends StatelessWidget {
                     Get.to(() => HospitalListScreen());
                   },
                 ),
+                16.width,
                 _buildServiceCard(
                   context,
                   icon: Icons.home_rounded,

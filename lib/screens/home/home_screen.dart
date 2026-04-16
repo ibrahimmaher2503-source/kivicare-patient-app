@@ -42,6 +42,24 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  /// Reactive top spacer: minimal padding when categories+slider are both empty,
+  /// full 28px+divider+20px when content exists above QuickBook.
+  Widget _conditionalTopSpacer() {
+    return Obx(() {
+      final hasAbove = homeScreenController.dashboardData.value.categories.isNotEmpty ||
+          homeScreenController.dashboardData.value.slider.isNotEmpty;
+      if (!hasAbove) return const SizedBox(height: 8);
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 28),
+          _sectionDivider(),
+          const SizedBox(height: 20),
+        ],
+      );
+    });
+  }
+
   /// Thin gradient divider between sections
   Widget _sectionDivider() {
     return Padding(
@@ -102,11 +120,11 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _staggeredSection(index: 0, child: ChooseCategoryComponents()),
-                    const SizedBox(height: 8),
+                    Obx(() => homeScreenController.dashboardData.value.categories.isNotEmpty
+                        ? const SizedBox(height: 8)
+                        : const SizedBox.shrink()),
                     _staggeredSection(index: 1, child: SliderComponent()),
-                    const SizedBox(height: 28),
-                    _sectionDivider(),
-                    const SizedBox(height: 20),
+                    _conditionalTopSpacer(),
                     _staggeredSection(index: 2, child: DoctorQuickBookComponent()),
                     const SizedBox(height: 28),
                     _sectionDivider(),
