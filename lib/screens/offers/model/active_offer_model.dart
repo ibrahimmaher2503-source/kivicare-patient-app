@@ -1,3 +1,5 @@
+import '../../../utils/price_widget.dart';
+
 class ActiveOffer {
   int id;
   String title;
@@ -54,7 +56,7 @@ class ActiveOffer {
     if (discountType == 'percentage') {
       return '${discountValue.toInt()}%';
     } else {
-      return 'EGP ${discountValue.toStringAsFixed(0)}';
+      return '${leftCurrencyFormat()}${discountValue.toStringAsFixed(0)}${rightCurrencyFormat()}';
     }
   }
 }
