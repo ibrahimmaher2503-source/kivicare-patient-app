@@ -164,6 +164,7 @@ class Doctor {
   List<ServiceElement> services;
   Governorate? governorate;
   City? governorateCity;
+  bool hasActiveOffer;
 
   Doctor({
     this.id = -1,
@@ -213,6 +214,7 @@ class Doctor {
     this.services = const <ServiceElement>[],
     this.governorate,
     this.governorateCity,
+    this.hasActiveOffer = false,
   });
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
@@ -269,6 +271,7 @@ class Doctor {
       governorateCity: json['city'] is Map
           ? City.fromJson(Map<String, dynamic>.from(json['city']))
           : null,
+      hasActiveOffer: json['has_active_offer'] is bool ? json['has_active_offer'] : false,
     );
   }
 
@@ -319,6 +322,7 @@ class Doctor {
       'reviews': reviews.map((e) => e.toJson()).toList(),
       'qualifications': qualifications.map((e) => e.toJson()).toList(),
       'services': services.map((e) => e.toJson()).toList(),
+      'has_active_offer': hasActiveOffer,
     };
   }
 }

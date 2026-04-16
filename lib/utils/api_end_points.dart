@@ -164,4 +164,13 @@ class APIEndPoints {
   static const String pharmacyOrders = 'v1/pharmacy/orders';
   static String pharmacyOrderDetail(int id) => '$pharmacyOrders/$id';
   static String pharmacyOrderCancel(int id) => '$pharmacyOrders/$id/cancel';
+
+  // Offers & Coupons
+  static const String offersPublic = 'v1/offers/public';
+  static String offersPublicBySlug(String slug) => '$offersPublic/$slug';
+  static String serviceOffers(int serviceId) => 'v1/services/$serviceId/offers';
+  static const String validateCoupon = 'v1/offers/validate-coupon';
+  static const String calculateDiscount = 'v1/offers/calculate-discount';
+  static const String applyOffer = 'v1/offers/apply';
+  static const String removeOffer = 'v1/offers/remove';
 }

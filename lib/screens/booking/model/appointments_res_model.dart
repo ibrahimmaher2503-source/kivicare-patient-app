@@ -112,6 +112,9 @@ class AppointmentData {
   String refundStatus;
   num paidAmount;
   String durationDiff;
+  int? offerId;
+  num offerDiscount;
+  String offerCode;
 
   bool get isAdvancePaymentDone => paidAmount.validate() != 0;
 
@@ -194,6 +197,9 @@ class AppointmentData {
     this.refundStatus = "",
     this.durationDiff = "",
     this.paidAmount = 0,
+    this.offerId,
+    this.offerDiscount = 0,
+    this.offerCode = "",
   });
 
   factory AppointmentData.fromJson(Map<String, dynamic> json) {
@@ -280,6 +286,9 @@ class AppointmentData {
       refundAmount: json['refund_amount'] is num ? json['refund_amount'] : 0,
       refundStatus: json['refund_status'] is String ? json['refund_status'] : "",
       durationDiff: json['duration_diff'] is String ? json['duration_diff'] : "",
+      offerId: json['offer_id'] is int ? json['offer_id'] : null,
+      offerDiscount: json['offer_discount'] is num ? json['offer_discount'] : 0,
+      offerCode: json['offer_code'] is String ? json['offer_code'] : "",
     );
   }
 
@@ -355,6 +364,9 @@ class AppointmentData {
       'refund_amount': refundAmount,
       'refund_status': refundStatus,
       'duration_diff': durationDiff,
+      if (offerId != null) 'offer_id': offerId,
+      'offer_discount': offerDiscount,
+      'offer_code': offerCode,
     };
   }
 }
