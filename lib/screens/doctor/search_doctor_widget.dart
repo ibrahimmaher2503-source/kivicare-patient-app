@@ -47,7 +47,7 @@ class SearchDoctorWidget extends StatelessWidget {
         textStyle: GoogleFonts.plusJakartaSans(
           fontSize: 14,
           fontWeight: FontWeight.w500,
-          color: isDarkMode.value ? Colors.white : appColorPrimary,
+          color: isDarkMode.value ? whiteTextColor : appColorPrimary,
         ),
         onTap: onTap,
         onFieldSubmitted: onFieldSubmitted,

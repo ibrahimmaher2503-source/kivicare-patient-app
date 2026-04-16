@@ -1,25 +1,17 @@
 <!--
 Sync Impact Report
 ===================
-Version change: N/A (template) → 1.0.0
-Modified principles: N/A (initial creation)
-Added sections:
-  - Core Principles (7 principles: Platform Parity, Patient Data Security,
-    GetX Architecture Consistency, Backend Contract Fidelity,
-    Localization-First, Testing Discipline, Simplicity & Maintainability)
-  - Technology Stack Constraints
-  - Development Workflow
-  - Governance
+Version change: 1.0.0 → 1.0.1
+Modified principles:
+  - III. GetX Architecture Consistency — corrected isDarkMode location
+    from common_base.dart to app_common.dart
+Added sections: None
 Removed sections: None
 Templates requiring updates:
   - .specify/templates/plan-template.md — ✅ no changes needed
-    (Constitution Check section is generic and will reference this file)
   - .specify/templates/spec-template.md — ✅ no changes needed
-    (spec requirements sections align with principles)
   - .specify/templates/tasks-template.md — ✅ no changes needed
-    (task phases and testing policy align; testing marked optional)
   - .specify/templates/checklist-template.md — ✅ no changes needed
-    (generic structure, filled per feature)
 Follow-up TODOs: None
 -->
 
@@ -84,8 +76,9 @@ approaches creates maintenance debt and unpredictable behavior.
 - Navigation MUST use `Get.to()`, `Get.back()`, `Get.offAll()`.
   Do not use `Navigator.push()` directly.
 - Dependency injection MUST use `Get.put()` or `Get.lazyPut()`.
-- Global state variables (`isLoggedIn`, `loginUserData`, `isDarkMode`,
-  `locale`) MUST be accessed from `lib/utils/common_base.dart`.
+- Global state variables (`isLoggedIn`, `loginUserData`, `locale`)
+  MUST be accessed from `lib/utils/common_base.dart`. The `isDarkMode`
+  reactive var lives in `lib/utils/app_common.dart`.
   Do not create parallel global state.
 - Controllers MAY be embedded in screen files (current convention)
   or placed in separate files, but each screen MUST have exactly one
@@ -126,11 +119,10 @@ Hardcoded strings in UI code are defects.
 
 - User-visible strings MUST use `locale.value.<key>` from the
   `BaseLanguage` system in `lib/locale/`.
-- New strings MUST be added to ALL language files: `language_en.dart`,
-  `language_ar.dart`, `language_de.dart`, `language_fr.dart`,
-  `language_hi.dart`.
-- If a translation is unknown, use the English string as a placeholder
-  and add a `// TODO: translate` comment in non-English files.
+- New strings MUST be added to BOTH language files: `language_en.dart`
+  and `language_ar.dart`.
+- If an Arabic translation is unknown, use the English string as a
+  placeholder and add a `// TODO: translate` comment.
 - RTL layout support MUST be maintained for Arabic (ar) locale.
 - Date and number formatting MUST use the `intl` package, not manual
   string formatting.
@@ -244,4 +236,4 @@ conflicts with a principle above, the principle takes precedence.
   runtime development guidance (commands, patterns, structure).
   It MUST NOT contradict this constitution.
 
-**Version**: 1.0.0 | **Ratified**: 2026-03-02 | **Last Amended**: 2026-03-02
+**Version**: 1.0.1 | **Ratified**: 2026-03-02 | **Last Amended**: 2026-03-29

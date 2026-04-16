@@ -1,0 +1,1024 @@
+{
+  "info": {
+    "name": "Espitalia Patient API",
+    "description": "Complete API collection for the Espitalia patient mobile app.\n\n**Base URL:** https://espitalia.net/api/\n\n**Auth:** Bearer token — login first, then set `authToken` variable.\n\n**Headers on every request:**\n- `Authorization: Bearer {{authToken}}`\n- `global-localization: en`\n- `content-type: application/json`\n\n**Known Issues (flagged with ⚠️ tests):**\n- Dashboard returns empty arrays for all sections\n- No categories, doctors, clinics, or services configured on backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://espitalia.net/api", "type": "string" },
+    { "key": "authToken", "value": "", "type": "string", "description": "Set after login" },
+    { "key": "lang", "value": "en", "type": "string" },
+    { "key": "userId", "value": "", "type": "string" },
+    { "key": "doctorId", "value": "1", "type": "string" },
+    { "key": "clinicId", "value": "1", "type": "string" },
+    { "key": "appointmentId", "value": "1", "type": "string" },
+    { "key": "nurseId", "value": "1", "type": "string" },
+    { "key": "nurseRequestId", "value": "1", "type": "string" },
+    { "key": "labId", "value": "1", "type": "string" },
+    { "key": "testOrderId", "value": "1", "type": "string" },
+    { "key": "hospitalId", "value": "1", "type": "string" },
+    { "key": "governorateId", "value": "1", "type": "string" },
+    { "key": "pharmacyProductId", "value": "1", "type": "string" },
+    { "key": "pharmacyCartItemId", "value": "1", "type": "string" },
+    { "key": "pharmacyOrderId", "value": "1", "type": "string" },
+    { "key": "incidentId", "value": "1", "type": "string" },
+    { "key": "facilityBookingId", "value": "1", "type": "string" },
+    { "key": "serviceId", "value": "1", "type": "string" },
+    { "key": "categoryId", "value": "1", "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{authToken}}", "type": "string" }]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": ["pm.request.headers.add({ key: 'global-localization', value: pm.collectionVariables.get('lang') || 'en' });"]
+      }
+    }
+  ],
+  "item": [
+
+    {
+      "name": "⚙️ Config",
+      "item": [
+        {
+          "name": "App Configuration",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Response OK', () => { const j = pm.response.json(); pm.expect(j.status).to.be.true; });",
+            "pm.test('⚠️ Check payment gateways configured', () => { const j = pm.response.json(); pm.expect(j.data).to.exist; });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/app-configuration?is_authenticated=0", "host": ["{{baseUrl}}"], "path": ["app-configuration"], "query": [{ "key": "is_authenticated", "value": "0" }] },
+            "description": "Fetches app config: payment gateways, social login settings, app version."
+          }
+        },
+        {
+          "name": "Page List (About / Terms)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('⚠️ Pages should not be empty', () => { const j = pm.response.json(); pm.expect(j.data).to.be.an('array'); if (j.data.length === 0) console.warn('ISSUE: No pages configured on backend'); });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/page-list", "host": ["{{baseUrl}}"], "path": ["page-list"] },
+            "description": "Returns CMS pages (Terms, Privacy, About). Currently returns empty array."
+          }
+        },
+        {
+          "name": "System Services",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Response OK', () => { const j = pm.response.json(); pm.expect(j.status).to.be.true; });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-system-service", "host": ["{{baseUrl}}"], "path": ["get-system-service"] },
+            "description": "Fetches available system services configuration."
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "🔐 Auth & User",
+      "item": [
+        {
+          "name": "Register",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Returns api_token', () => { const j = pm.response.json(); if (j.status && j.data) { pm.collectionVariables.set('authToken', j.data.api_token || ''); } });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"first_name\": \"Test\",\n  \"last_name\": \"Patient\",\n  \"email\": \"testpatient@espitalia.net\",\n  \"password\": \"Password@123\",\n  \"password_confirmation\": \"Password@123\",\n  \"mobile\": \"+201012345678\",\n  \"user_type\": \"patient\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/register", "host": ["{{baseUrl}}"], "path": ["register"] },
+            "description": "Register a new patient account."
+          }
+        },
+        {
+          "name": "Login ← run first, sets authToken",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Sets auth token', () => { const j = pm.response.json(); pm.expect(j.status).to.be.true; if (j.data && j.data.api_token) { pm.collectionVariables.set('authToken', j.data.api_token); pm.collectionVariables.set('userId', String(j.data.id || '')); console.log('Token set:', j.data.api_token.substring(0,20) + '...'); } });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"testpatient@espitalia.net\",\n  \"password\": \"Password@123\",\n  \"user_type\": \"patient\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/login", "host": ["{{baseUrl}}"], "path": ["login"] },
+            "description": "Login and retrieve API token. Auto-sets {{authToken}} variable."
+          }
+        },
+        {
+          "name": "Social Login (Google / Apple)",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"user@gmail.com\",\n  \"login_type\": \"google\",\n  \"user_type\": \"patient\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"User\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/social-login", "host": ["{{baseUrl}}"], "path": ["social-login"] }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"testpatient@espitalia.net\",\n  \"otp\": \"123456\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/verify", "host": ["{{baseUrl}}"], "path": ["verify"] }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"testpatient@espitalia.net\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/forgot-password", "host": ["{{baseUrl}}"], "path": ["forgot-password"] }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"old_password\": \"OldPassword@123\",\n  \"new_password\": \"NewPassword@123\",\n  \"new_password_confirmation\": \"NewPassword@123\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/change-password", "host": ["{{baseUrl}}"], "path": ["change-password"] }
+          }
+        },
+        {
+          "name": "View Profile",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Has user data', () => { const j = pm.response.json(); pm.expect(j.data).to.exist; });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/user-detail?id={{userId}}", "host": ["{{baseUrl}}"], "path": ["user-detail"], "query": [{ "key": "id", "value": "{{userId}}" }] }
+          }
+        },
+        {
+          "name": "Update Profile (multipart)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": { "mode": "formdata", "formdata": [
+              { "key": "first_name", "value": "Updated", "type": "text" },
+              { "key": "last_name", "value": "Patient", "type": "text" },
+              { "key": "mobile", "value": "+201012345678", "type": "text" },
+              { "key": "address", "value": "Cairo, Egypt", "type": "text" },
+              { "key": "gender", "value": "male", "type": "text" },
+              { "key": "date_of_birth", "value": "1990-01-01", "type": "text" },
+              { "key": "profile_image", "type": "file", "src": [], "disabled": true }
+            ]},
+            "url": { "raw": "{{baseUrl}}/update-profile", "host": ["{{baseUrl}}"], "path": ["update-profile"] },
+            "description": "Multipart form — profile_image is optional file upload."
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/logout", "host": ["{{baseUrl}}"], "path": ["logout"] }
+          }
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/delete-account", "host": ["{{baseUrl}}"], "path": ["delete-account"] }
+          }
+        },
+        {
+          "name": "Notification List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/notification-list?per_page=10&page=1", "host": ["{{baseUrl}}"], "path": ["notification-list"], "query": [{ "key": "per_page", "value": "10" }, { "key": "page", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Remove Notification",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/notification-remove?id=1", "host": ["{{baseUrl}}"], "path": ["notification-remove"], "query": [{ "key": "id", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Clear All Notifications",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/notification-deleteall", "host": ["{{baseUrl}}"], "path": ["notification-deleteall"] }
+          }
+        },
+        {
+          "name": "Patient Wallet",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-patient-wallet", "host": ["{{baseUrl}}"], "path": ["get-patient-wallet"] }
+          }
+        },
+        {
+          "name": "Wallet History",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-wallet-history?per_page=10&page=1", "host": ["{{baseUrl}}"], "path": ["get-wallet-history"], "query": [{ "key": "per_page", "value": "10" }, { "key": "page", "value": "1" }] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "🏠 Dashboard & Browse",
+      "item": [
+        {
+          "name": "Dashboard Detail ⚠️",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Response OK', () => { const j = pm.response.json(); pm.expect(j.status).to.be.true; });",
+            "pm.test('⚠️ ISSUE: categories should not be empty', () => { const j = pm.response.json(); const cats = j.data && j.data.category; pm.expect(cats, 'category array missing').to.exist; if (cats && cats.length === 0) console.warn('BUG REPORT: /dashboard-detail returns empty category array. Please add categories in the admin panel.'); pm.expect(cats.length).to.be.above(0, 'No categories returned — home screen Category section is hidden'); });",
+            "pm.test('⚠️ ISSUE: slider should not be empty', () => { const j = pm.response.json(); const s = j.data && j.data.slider; if (s && s.length === 0) console.warn('BUG REPORT: /dashboard-detail returns empty slider. Please add banner images in the admin panel.'); pm.expect(s.length).to.be.above(0, 'No slider/banners returned — home screen banner section is hidden'); });",
+            "pm.test('⚠️ ISSUE: popular_doctors should not be empty', () => { const j = pm.response.json(); const d = j.data && j.data.popular_doctors && j.data.popular_doctors.selected_doctor; if (d && d.length === 0) console.warn('BUG REPORT: No popular doctors configured. Home screen Popular Doctors section is hidden.'); pm.expect(d.length).to.be.above(0, 'No popular doctors — section hidden on home screen'); });",
+            "pm.test('⚠️ ISSUE: popular_services should not be empty', () => { const j = pm.response.json(); const s = j.data && j.data.popular_services && j.data.popular_services.selected_service; if (s && s.length === 0) console.warn('BUG REPORT: No popular services configured.'); pm.expect(s.length).to.be.above(0, 'No popular services — section hidden on home screen'); });",
+            "pm.test('⚠️ ISSUE: perfect_clinics should not be empty', () => { const j = pm.response.json(); const c = j.data && j.data.perfect_clinics && j.data.perfect_clinics.selected_clinic; if (c && c.length === 0) console.warn('BUG REPORT: No featured clinics configured.'); pm.expect(c.length).to.be.above(0, 'No clinics — section hidden on home screen'); });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/dashboard-detail", "host": ["{{baseUrl}}"], "path": ["dashboard-detail"] },
+            "description": "⚠️ KNOWN ISSUE: Returns all empty arrays. Home screen shows blank sections.\n\nExpected non-empty fields:\n- category[]\n- slider[]\n- popular_doctors.selected_doctor[]\n- popular_services.selected_service[]\n- perfect_clinics.selected_clinic[]\n\nAction required: Configure data in the admin panel."
+          }
+        },
+        {
+          "name": "Category List ⚠️",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('⚠️ ISSUE: Should return categories', () => { const j = pm.response.json(); const data = j.data || []; if (data.length === 0) console.warn('BUG REPORT: get-category-list returns empty. Category browsing screen will show empty state.'); pm.expect(data.length).to.be.above(0, 'No categories configured in admin panel'); });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-category-list?page=1&per_page=20", "host": ["{{baseUrl}}"], "path": ["get-category-list"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "20" }] },
+            "description": "⚠️ Returns empty — no categories in admin panel."
+          }
+        },
+        {
+          "name": "Service List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-service-list?page=1&per_page=20", "host": ["{{baseUrl}}"], "path": ["get-service-list"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "20" }] }
+          }
+        },
+        {
+          "name": "Service Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-service-details?id={{serviceId}}", "host": ["{{baseUrl}}"], "path": ["get-service-details"], "query": [{ "key": "id", "value": "{{serviceId}}" }] }
+          }
+        },
+        {
+          "name": "Clinic List ⚠️",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('⚠️ ISSUE: Should return clinics', () => { const j = pm.response.json(); const data = j.data || []; if (data.length === 0) console.warn('BUG REPORT: get-clinic-list returns empty. Clinic browsing screen will show empty state.'); });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-clinic-list?page=1&per_page=20", "host": ["{{baseUrl}}"], "path": ["get-clinic-list"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "20" }] }
+          }
+        },
+        {
+          "name": "Clinic Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-clinic-details?id={{clinicId}}", "host": ["{{baseUrl}}"], "path": ["get-clinic-details"], "query": [{ "key": "id", "value": "{{clinicId}}" }] }
+          }
+        },
+        {
+          "name": "Clinic Gallery",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-clinic-gallery?clinic_id={{clinicId}}", "host": ["{{baseUrl}}"], "path": ["get-clinic-gallery"], "query": [{ "key": "clinic_id", "value": "{{clinicId}}" }] }
+          }
+        },
+        {
+          "name": "Doctor List ⚠️",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('⚠️ ISSUE: Should return doctors', () => { const j = pm.response.json(); const data = j.data || []; if (data.length === 0) console.warn('BUG REPORT: get-doctor-list returns empty.'); });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-doctor-list?page=1&per_page=20", "host": ["{{baseUrl}}"], "path": ["get-doctor-list"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "20" }] }
+          }
+        },
+        {
+          "name": "Doctor Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-doctor-details?id={{doctorId}}", "host": ["{{baseUrl}}"], "path": ["get-doctor-details"], "query": [{ "key": "id", "value": "{{doctorId}}" }] }
+          }
+        },
+        {
+          "name": "Time Slots",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-time-slots?doctor_id={{doctorId}}&date=2026-04-20&clinic_id={{clinicId}}", "host": ["{{baseUrl}}"], "path": ["get-time-slots"], "query": [{ "key": "doctor_id", "value": "{{doctorId}}" }, { "key": "date", "value": "2026-04-20" }, { "key": "clinic_id", "value": "{{clinicId}}" }] }
+          }
+        },
+        {
+          "name": "Search — Doctors",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/doctors/search?query=ahmed&page=1", "host": ["{{baseUrl}}"], "path": ["doctors", "search"], "query": [{ "key": "query", "value": "ahmed" }, { "key": "page", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Search — Clinics",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/clinics/search?query=cairo&page=1", "host": ["{{baseUrl}}"], "path": ["clinics", "search"], "query": [{ "key": "query", "value": "cairo" }, { "key": "page", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Search — Nurses",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/nurses/search?query=&page=1", "host": ["{{baseUrl}}"], "path": ["nurses", "search"], "query": [{ "key": "query", "value": "" }, { "key": "page", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Search — Labs",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/labs/search?query=&page=1", "host": ["{{baseUrl}}"], "path": ["labs", "search"], "query": [{ "key": "query", "value": "" }, { "key": "page", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Governorates",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/governorates", "host": ["{{baseUrl}}"], "path": ["governorates"] }
+          }
+        },
+        {
+          "name": "Cities by Governorate",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cities?governorate_id={{governorateId}}", "host": ["{{baseUrl}}"], "path": ["cities"], "query": [{ "key": "governorate_id", "value": "{{governorateId}}" }] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "📅 Appointments & Booking",
+      "item": [
+        {
+          "name": "Appointment List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/appointment-list?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["appointment-list"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Appointment Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/appointment-detail?id={{appointmentId}}", "host": ["{{baseUrl}}"], "path": ["appointment-detail"], "query": [{ "key": "id", "value": "{{appointmentId}}" }] }
+          }
+        },
+        {
+          "name": "Save Booking",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"doctor_id\": {{doctorId}},\n  \"clinic_id\": {{clinicId}},\n  \"date\": \"2026-04-20\",\n  \"slot_id\": 1,\n  \"patient_id\": {{userId}},\n  \"payment_type\": \"cash\",\n  \"amount\": 100\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/save-booking", "host": ["{{baseUrl}}"], "path": ["save-booking"] }
+          }
+        },
+        {
+          "name": "Save Payment",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"appointment_id\": {{appointmentId}},\n  \"payment_type\": \"stripe\",\n  \"transaction_id\": \"txn_test_123\",\n  \"amount\": 100\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/save-payment", "host": ["{{baseUrl}}"], "path": ["save-payment"] }
+          }
+        },
+        {
+          "name": "Reschedule Booking",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"appointment_id\": {{appointmentId}},\n  \"date\": \"2026-04-25\",\n  \"slot_id\": 2\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/reschedule-booking", "host": ["{{baseUrl}}"], "path": ["reschedule-booking"] }
+          }
+        },
+        {
+          "name": "Update Appointment Status",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"appointment_id\": {{appointmentId}},\n  \"status\": \"cancelled\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/update-status", "host": ["{{baseUrl}}"], "path": ["update-status"] }
+          }
+        },
+        {
+          "name": "Download Invoice",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/download_invoice?appointment_id={{appointmentId}}", "host": ["{{baseUrl}}"], "path": ["download_invoice"], "query": [{ "key": "appointment_id", "value": "{{appointmentId}}" }] }
+          }
+        },
+        {
+          "name": "Encounter List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/encounter-list?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["encounter-list"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Encounter Dashboard Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/encounter-dashboard-detail?appointment_id={{appointmentId}}", "host": ["{{baseUrl}}"], "path": ["encounter-dashboard-detail"], "query": [{ "key": "appointment_id", "value": "{{appointmentId}}" }] }
+          }
+        },
+        {
+          "name": "Save Rating",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"doctor_id\": {{doctorId}},\n  \"appointment_id\": {{appointmentId}},\n  \"rating\": 5,\n  \"review\": \"Excellent doctor!\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/save-rating", "host": ["{{baseUrl}}"], "path": ["save-rating"] }
+          }
+        },
+        {
+          "name": "Get Ratings",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/get-rating?doctor_id={{doctorId}}&page=1", "host": ["{{baseUrl}}"], "path": ["get-rating"], "query": [{ "key": "doctor_id", "value": "{{doctorId}}" }, { "key": "page", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Delete Rating",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"rating_id\": 1\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/delete-rating", "host": ["{{baseUrl}}"], "path": ["delete-rating"] }
+          }
+        },
+        {
+          "name": "Other Patient — Add Member",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"first_name\": \"Family\",\n  \"last_name\": \"Member\",\n  \"relation\": \"spouse\",\n  \"date_of_birth\": \"1992-05-15\",\n  \"gender\": \"female\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/add-patient-member", "host": ["{{baseUrl}}"], "path": ["add-patient-member"] }
+          }
+        },
+        {
+          "name": "Other Patient — List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/other-members-list", "host": ["{{baseUrl}}"], "path": ["other-members-list"] }
+          }
+        },
+        {
+          "name": "Other Patient — Delete",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"member_id\": 1\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/delete-other_member", "host": ["{{baseUrl}}"], "path": ["delete-other_member"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "🚨 Incident Management",
+      "item": [
+        {
+          "name": "Incident List",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('Response OK', () => { const j = pm.response.json(); pm.expect(j.status).to.be.true; });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/incidence-list?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["incidence-list"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] },
+            "description": "Get list of patient incidents/reports."
+          }
+        },
+        {
+          "name": "Save Incident",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Incident Report\",\n  \"description\": \"Description of the incident\",\n  \"incident_type\": \"complaint\",\n  \"priority\": \"medium\",\n  \"date\": \"2026-04-16\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/incidence-save", "host": ["{{baseUrl}}"], "path": ["incidence-save"] },
+            "description": "Create a new incident report."
+          }
+        },
+        {
+          "name": "Update Incident Status",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"incidence_id\": {{incidentId}},\n  \"status\": \"resolved\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/update-incident-status", "host": ["{{baseUrl}}"], "path": ["update-incident-status"] },
+            "description": "Update the status of an existing incident."
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "👩‍⚕️ Nurse Requests",
+      "item": [
+        {
+          "name": "Nurse List",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test('Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('⚠️ Should return nurses', () => { const j = pm.response.json(); const data = (j.data && j.data.data) || j.data || []; if (!Array.isArray(data) || data.length === 0) console.warn('BUG REPORT: v1/nurses returns empty. Nurse booking screen will show empty state.'); });"
+          ], "type": "text/javascript" }}],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/nurses?page=1&per_page=15", "host": ["{{baseUrl}}"], "path": ["v1", "nurses"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "15" }] }
+          }
+        },
+        {
+          "name": "Nurse Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/nurses/{{nurseId}}", "host": ["{{baseUrl}}"], "path": ["v1", "nurses", "{{nurseId}}"] }
+          }
+        },
+        {
+          "name": "Nurse Requests List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/nurse-requests?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["v1", "nurse-requests"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Create Nurse Request",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"nurse_id\": {{nurseId}},\n  \"date\": \"2026-04-20\",\n  \"time\": \"10:00\",\n  \"duration_hours\": 4,\n  \"address\": \"123 Main St, Cairo\",\n  \"notes\": \"Post-surgery care needed\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/nurse-requests", "host": ["{{baseUrl}}"], "path": ["v1", "nurse-requests"] }
+          }
+        },
+        {
+          "name": "Nurse Request Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/nurse-requests/{{nurseRequestId}}", "host": ["{{baseUrl}}"], "path": ["v1", "nurse-requests", "{{nurseRequestId}}"] }
+          }
+        },
+        {
+          "name": "Update Nurse Request",
+          "request": {
+            "method": "PUT",
+            "body": { "mode": "raw", "raw": "{\n  \"date\": \"2026-04-25\",\n  \"notes\": \"Updated notes\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/nurse-requests/{{nurseRequestId}}", "host": ["{{baseUrl}}"], "path": ["v1", "nurse-requests", "{{nurseRequestId}}"] }
+          }
+        },
+        {
+          "name": "Cancel Nurse Request",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/nurse-requests/{{nurseRequestId}}/cancel", "host": ["{{baseUrl}}"], "path": ["v1", "nurse-requests", "{{nurseRequestId}}", "cancel"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "🧪 Lab Tests & Radiology",
+      "item": [
+        {
+          "name": "Lab Test Categories",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/lab-test-categories", "host": ["{{baseUrl}}"], "path": ["v1", "lab-test-categories"] }
+          }
+        },
+        {
+          "name": "Lab Tests List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/lab-tests?page=1&per_page=20&category_id=", "host": ["{{baseUrl}}"], "path": ["v1", "lab-tests"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "20" }, { "key": "category_id", "value": "" }] }
+          }
+        },
+        {
+          "name": "Lab Test Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/lab-tests/{{labId}}", "host": ["{{baseUrl}}"], "path": ["v1", "lab-tests", "{{labId}}"] }
+          }
+        },
+        {
+          "name": "Labs Search",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/labs/search?query=&page=1", "host": ["{{baseUrl}}"], "path": ["labs", "search"], "query": [{ "key": "query", "value": "" }, { "key": "page", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Radiology Centers Search",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/radiology/search?query=&page=1", "host": ["{{baseUrl}}"], "path": ["radiology", "search"], "query": [{ "key": "query", "value": "" }, { "key": "page", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Radiology Center Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/radiology/1", "host": ["{{baseUrl}}"], "path": ["radiology", "1"] }
+          }
+        },
+        {
+          "name": "Test Orders List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/test-orders?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["v1", "test-orders"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Test Order Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/test-orders/{{testOrderId}}", "host": ["{{baseUrl}}"], "path": ["v1", "test-orders", "{{testOrderId}}"] }
+          }
+        },
+        {
+          "name": "Cancel Test Order",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/test-orders/{{testOrderId}}/cancel", "host": ["{{baseUrl}}"], "path": ["v1", "test-orders", "{{testOrderId}}", "cancel"] }
+          }
+        },
+        {
+          "name": "Download Test Report",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/test-orders/{{testOrderId}}/report/download", "host": ["{{baseUrl}}"], "path": ["v1", "test-orders", "{{testOrderId}}", "report", "download"] }
+          }
+        },
+        {
+          "name": "Lab Slots",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/facility-bookings/labs/{{labId}}/slots?date=2026-04-20", "host": ["{{baseUrl}}"], "path": ["v1", "facility-bookings", "labs", "{{labId}}", "slots"], "query": [{ "key": "date", "value": "2026-04-20" }] }
+          }
+        },
+        {
+          "name": "Radiology Center Slots",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/facility-bookings/radiology-centers/1/slots?date=2026-04-20", "host": ["{{baseUrl}}"], "path": ["v1", "facility-bookings", "radiology-centers", "1", "slots"], "query": [{ "key": "date", "value": "2026-04-20" }] }
+          }
+        },
+        {
+          "name": "Facility Bookings List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/facility-bookings?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["v1", "facility-bookings"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Facility Booking Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/facility-bookings/{{facilityBookingId}}", "host": ["{{baseUrl}}"], "path": ["v1", "facility-bookings", "{{facilityBookingId}}"] },
+            "description": "Get details of a specific facility booking."
+          }
+        },
+        {
+          "name": "Cancel Facility Booking",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/facility-bookings/{{facilityBookingId}}/cancel", "host": ["{{baseUrl}}"], "path": ["v1", "facility-bookings", "{{facilityBookingId}}", "cancel"] },
+            "description": "Cancel a facility booking."
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "🏥 ICU Admissions",
+      "item": [
+        {
+          "name": "Hospital List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/hospitals?page=1&per_page=15", "host": ["{{baseUrl}}"], "path": ["v1", "hospitals"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "15" }] }
+          }
+        },
+        {
+          "name": "Hospital Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/hospitals/{{hospitalId}}", "host": ["{{baseUrl}}"], "path": ["v1", "hospitals", "{{hospitalId}}"] }
+          }
+        },
+        {
+          "name": "ICU Departments",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/icu-departments?hospital_id={{hospitalId}}", "host": ["{{baseUrl}}"], "path": ["v1", "icu-departments"], "query": [{ "key": "hospital_id", "value": "{{hospitalId}}" }] }
+          }
+        },
+        {
+          "name": "ICU Admission Requests List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/icu-admission-requests?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["v1", "icu-admission-requests"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Create ICU Admission Request",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"hospital_id\": {{hospitalId}},\n  \"department_id\": 1,\n  \"patient_name\": \"Test Patient\",\n  \"admission_date\": \"2026-04-20\",\n  \"notes\": \"Urgent ICU admission\",\n  \"contact_phone\": \"+201012345678\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/icu-admission-requests", "host": ["{{baseUrl}}"], "path": ["v1", "icu-admission-requests"] }
+          }
+        },
+        {
+          "name": "ICU Admission Request Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/icu-admission-requests/1", "host": ["{{baseUrl}}"], "path": ["v1", "icu-admission-requests", "1"] }
+          }
+        },
+        {
+          "name": "Cancel ICU Admission Request",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/icu-admission-requests/1/cancel", "host": ["{{baseUrl}}"], "path": ["v1", "icu-admission-requests", "1", "cancel"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "📞 Call Booking (Video / Phone)",
+      "item": [
+        {
+          "name": "Call Doctors List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/call-doctors?page=1&per_page=15", "host": ["{{baseUrl}}"], "path": ["v1", "call-doctors"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "15" }] }
+          }
+        },
+        {
+          "name": "Call Doctor Services",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/call-doctors/{{doctorId}}/services", "host": ["{{baseUrl}}"], "path": ["v1", "call-doctors", "{{doctorId}}", "services"] }
+          }
+        },
+        {
+          "name": "Call Doctor Slots",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/call-doctors/{{doctorId}}/slots?date=2026-04-20", "host": ["{{baseUrl}}"], "path": ["v1", "call-doctors", "{{doctorId}}", "slots"], "query": [{ "key": "date", "value": "2026-04-20" }] }
+          }
+        },
+        {
+          "name": "Create Call Booking",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"doctor_id\": {{doctorId}},\n  \"service_id\": 1,\n  \"slot_id\": 1,\n  \"date\": \"2026-04-20\",\n  \"call_type\": \"video\",\n  \"amount\": 150\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/call-booking", "host": ["{{baseUrl}}"], "path": ["v1", "call-booking"] }
+          }
+        },
+        {
+          "name": "Call Bookings List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/call-booking?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["v1", "call-booking"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "👨‍⚕️ Independent Doctor Booking",
+      "item": [
+        {
+          "name": "Independent Doctors List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/independent-doctors?page=1&per_page=15", "host": ["{{baseUrl}}"], "path": ["v1", "independent-doctors"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "15" }] }
+          }
+        },
+        {
+          "name": "Independent Doctor Services",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/independent-doctors/{{doctorId}}/services", "host": ["{{baseUrl}}"], "path": ["v1", "independent-doctors", "{{doctorId}}", "services"] }
+          }
+        },
+        {
+          "name": "Independent Doctor Slots",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/independent-doctors/{{doctorId}}/slots?date=2026-04-20", "host": ["{{baseUrl}}"], "path": ["v1", "independent-doctors", "{{doctorId}}", "slots"], "query": [{ "key": "date", "value": "2026-04-20" }] }
+          }
+        },
+        {
+          "name": "Create Independent Booking",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"doctor_id\": {{doctorId}},\n  \"service_id\": 1,\n  \"slot_id\": 1,\n  \"date\": \"2026-04-20\",\n  \"amount\": 200\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/independent-booking", "host": ["{{baseUrl}}"], "path": ["v1", "independent-booking"] }
+          }
+        },
+        {
+          "name": "Independent Bookings List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/independent-booking?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["v1", "independent-booking"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "🏡 Doctor Home Visit",
+      "item": [
+        {
+          "name": "Home Healthcare Search",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/home-healthcare/search?query=&page=1", "host": ["{{baseUrl}}"], "path": ["home-healthcare", "search"], "query": [{ "key": "query", "value": "" }, { "key": "page", "value": "1" }] }
+          }
+        },
+        {
+          "name": "Home Healthcare Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/home-healthcare/1", "host": ["{{baseUrl}}"], "path": ["home-healthcare", "1"] }
+          }
+        },
+        {
+          "name": "Doctor Visit Requests List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/doctor-visit/requests?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["v1", "doctor-visit", "requests"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Doctor Visit Request Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/doctor-visit/requests/REF-001", "host": ["{{baseUrl}}"], "path": ["v1", "doctor-visit", "requests", "REF-001"] }
+          }
+        },
+        {
+          "name": "Home Healthcare Requests List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/home-healthcare-requests?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["v1", "home-healthcare-requests"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Cancel Home Healthcare Request",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/home-healthcare-requests/1/cancel", "host": ["{{baseUrl}}"], "path": ["v1", "home-healthcare-requests", "1", "cancel"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "🛎️ Request Service",
+      "item": [
+        {
+          "name": "Get Request Services",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/get-request-service?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["v1", "get-request-service"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Save Request Service",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"service_id\": 1,\n  \"date\": \"2026-04-20\",\n  \"notes\": \"Please send at 10am\",\n  \"address\": \"Cairo, Egypt\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/save-request-service", "host": ["{{baseUrl}}"], "path": ["v1", "save-request-service"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "💊 Pharmacy Marketplace",
+      "item": [
+        {
+          "name": "Pharmacy Categories",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/categories", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "categories"] }
+          }
+        },
+        {
+          "name": "Pharmacy Category Children",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/categories/1/children", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "categories", "1", "children"] }
+          }
+        },
+        {
+          "name": "Pharmacy Products",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/products?page=1&per_page=20&category_id=&search=", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "products"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "20" }, { "key": "category_id", "value": "" }, { "key": "search", "value": "" }] }
+          }
+        },
+        {
+          "name": "Pharmacy Product Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/products/{{pharmacyProductId}}", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "products", "{{pharmacyProductId}}"] }
+          }
+        },
+        {
+          "name": "Pharmacy Filter — Brands",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/filters/brands", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "filters", "brands"] }
+          }
+        },
+        {
+          "name": "Pharmacy Filter — Product Types",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/filters/product-types", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "filters", "product-types"] }
+          }
+        },
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/cart", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "cart"] }
+          }
+        },
+        {
+          "name": "Add Item to Cart",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{\n  \"product_id\": {{pharmacyProductId}},\n  \"quantity\": 2\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/cart/items", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "cart", "items"] }
+          }
+        },
+        {
+          "name": "Update Cart Item",
+          "request": {
+            "method": "PUT",
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 3\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/cart/items/{{pharmacyCartItemId}}", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "cart", "items", "{{pharmacyCartItemId}}"] }
+          }
+        },
+        {
+          "name": "Delete Cart Item",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/cart/items/{{pharmacyCartItemId}}", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "cart", "items", "{{pharmacyCartItemId}}"] }
+          }
+        },
+        {
+          "name": "Available Pharmacies (for cart)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/cart/available-pharmacies", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "cart", "available-pharmacies"] }
+          }
+        },
+        {
+          "name": "Pharmacy Orders List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/orders?page=1&per_page=10", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "orders"], "query": [{ "key": "page", "value": "1" }, { "key": "per_page", "value": "10" }] }
+          }
+        },
+        {
+          "name": "Pharmacy Order Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/orders/{{pharmacyOrderId}}", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "orders", "{{pharmacyOrderId}}"] }
+          }
+        },
+        {
+          "name": "Cancel Pharmacy Order",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/v1/pharmacy/orders/{{pharmacyOrderId}}/cancel", "host": ["{{baseUrl}}"], "path": ["v1", "pharmacy", "orders", "{{pharmacyOrderId}}", "cancel"] }
+          }
+        }
+      ]
+    }
+
+  ]
+}

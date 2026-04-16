@@ -34,7 +34,7 @@ class SearchServiceWidget extends StatelessWidget {
       textInputAction: TextInputAction.done,
       textStyle: GoogleFonts.plusJakartaSans(
         fontSize: 14,
-        color: isDarkMode.value ? Colors.white : primaryTextColor,
+        color: isDarkMode.value ? whiteTextColor : primaryTextColor,
         letterSpacing: 0.1,
       ),
       onTap: onTap,

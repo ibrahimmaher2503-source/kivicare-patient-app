@@ -62,11 +62,11 @@ class ProfileScreen extends StatelessWidget {
 
                 // Wallet Balance Card with gradient
                 24.height,
-                _buildWalletCard(context),
+                Obx(() => _buildWalletCard(context)),
 
                 // Account Section
                 24.height,
-                _buildSectionHeader(context, locale.value.editProfile.split(' ').first),
+                _buildSectionHeader(context, locale.value.editProfile),
                 8.height,
                 _buildGroupedCard(context, [
                   _buildSettingTile(
@@ -126,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                   _buildSettingTile(
                     context,
                     title: locale.value.settings,
-                    subtitle: "${locale.value.changePassword},${locale.value.themeAndMore}",
+                    subtitle: "${locale.value.changePassword}, ${locale.value.themeAndMore}",
                     iconPath: Assets.iconsIcSetting,
                     onTap: () {
                       Get.to(() => SettingScreen());

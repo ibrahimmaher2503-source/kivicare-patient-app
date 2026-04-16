@@ -12,21 +12,21 @@ class AppTheme {
     final bodyFont = GoogleFonts.plusJakartaSans();
     final displayFont = GoogleFonts.outfit();
     return base.copyWith(
-      displayLarge: displayFont.copyWith(letterSpacing: -0.5),
-      displayMedium: displayFont.copyWith(letterSpacing: -0.5),
-      displaySmall: displayFont.copyWith(letterSpacing: -0.5),
-      headlineLarge: displayFont.copyWith(letterSpacing: -0.5),
-      headlineMedium: displayFont.copyWith(letterSpacing: -0.3),
-      headlineSmall: displayFont.copyWith(letterSpacing: -0.3),
-      titleLarge: displayFont.copyWith(letterSpacing: -0.3),
-      titleMedium: bodyFont.copyWith(letterSpacing: 0.1),
-      titleSmall: bodyFont.copyWith(letterSpacing: 0.1),
-      bodyLarge: bodyFont.copyWith(letterSpacing: 0.1),
-      bodyMedium: bodyFont.copyWith(letterSpacing: 0.1),
-      bodySmall: bodyFont.copyWith(letterSpacing: 0.1),
-      labelLarge: bodyFont.copyWith(letterSpacing: 0.1),
-      labelMedium: bodyFont.copyWith(letterSpacing: 0.1),
-      labelSmall: bodyFont.copyWith(letterSpacing: 0.1),
+      displayLarge: base.displayLarge?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.5),
+      displayMedium: base.displayMedium?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.5),
+      displaySmall: base.displaySmall?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.5),
+      headlineLarge: base.headlineLarge?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.5),
+      headlineMedium: base.headlineMedium?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.3),
+      headlineSmall: base.headlineSmall?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.3),
+      titleLarge: base.titleLarge?.copyWith(fontFamily: displayFont.fontFamily, letterSpacing: -0.3),
+      titleMedium: base.titleMedium?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      titleSmall: base.titleSmall?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      bodyLarge: base.bodyLarge?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      bodyMedium: base.bodyMedium?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      bodySmall: base.bodySmall?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      labelLarge: base.labelLarge?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      labelMedium: base.labelMedium?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
+      labelSmall: base.labelSmall?.copyWith(fontFamily: bodyFont.fontFamily, letterSpacing: 0.1),
     );
   }
 
@@ -48,7 +48,7 @@ class AppTheme {
     drawerTheme: const DrawerThemeData(backgroundColor: appScreenBackground),
     appBarTheme: AppBarTheme(
       surfaceTintColor: appLayoutBackground,
-      color: appLayoutBackground,
+      backgroundColor: appLayoutBackground,
       iconTheme: const IconThemeData(color: textPrimaryColor),
       titleTextStyle: TextStyle(
         color: canvasColor,
@@ -83,8 +83,10 @@ class AppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: appColorPrimary,
       primary: appColorPrimary,
-      surface: const Color(0xFFF1F3F4),
+      surface: surfaceElevatedDark,
       secondary: appColorSecondary,
+      onSurface: textPrimaryDark,
+      onPrimary: textPrimaryDark,
       brightness: Brightness.dark,
     ),
     useMaterial3: true,
@@ -94,7 +96,7 @@ class AppTheme {
     drawerTheme: const DrawerThemeData(backgroundColor: fullDarkCanvasColorDark),
     appBarTheme: AppBarTheme(
       surfaceTintColor: appScreenBackgroundDark,
-      color: appScreenBackgroundDark,
+      backgroundColor: appScreenBackgroundDark,
       iconTheme: const IconThemeData(color: whiteColor),
       titleTextStyle: TextStyle(
         color: whiteTextColor,
@@ -108,7 +110,7 @@ class AppTheme {
     cardColor: fullDarkCanvasColor,
     iconTheme: const IconThemeData(color: whiteColor),
     bottomSheetTheme: const BottomSheetThemeData(backgroundColor: appBackgroundColorDark),
-    textTheme: _buildTextTheme(GoogleFonts.plusJakartaSansTextTheme()),
+    textTheme: _buildTextTheme(_darkTextTheme()),
     radioTheme: RadioThemeData(
       fillColor: WidgetStateProperty.all(appColorPrimary),
     ),
@@ -121,4 +123,26 @@ class AppTheme {
       },
     ),
   );
+
+  /// Dark text theme with proper light-on-dark hierarchy
+  static TextTheme _darkTextTheme() {
+    final base = GoogleFonts.plusJakartaSansTextTheme(ThemeData.dark().textTheme);
+    return base.copyWith(
+      displayLarge: base.displayLarge?.copyWith(color: textPrimaryDark),
+      displayMedium: base.displayMedium?.copyWith(color: textPrimaryDark),
+      displaySmall: base.displaySmall?.copyWith(color: textPrimaryDark),
+      headlineLarge: base.headlineLarge?.copyWith(color: textPrimaryDark),
+      headlineMedium: base.headlineMedium?.copyWith(color: textPrimaryDark),
+      headlineSmall: base.headlineSmall?.copyWith(color: textPrimaryDark),
+      titleLarge: base.titleLarge?.copyWith(color: textPrimaryDark),
+      titleMedium: base.titleMedium?.copyWith(color: textPrimaryDark),
+      titleSmall: base.titleSmall?.copyWith(color: textSecondaryDark),
+      bodyLarge: base.bodyLarge?.copyWith(color: textPrimaryDark),
+      bodyMedium: base.bodyMedium?.copyWith(color: textSecondaryDark),
+      bodySmall: base.bodySmall?.copyWith(color: textTertiaryDark),
+      labelLarge: base.labelLarge?.copyWith(color: textPrimaryDark),
+      labelMedium: base.labelMedium?.copyWith(color: textSecondaryDark),
+      labelSmall: base.labelSmall?.copyWith(color: textTertiaryDark),
+    );
+  }
 }

@@ -48,7 +48,13 @@ flutterfire configure        # Reconfigure Firebase (if needed)
 ### State Management
 - **GetX** (`get: ^4.7.2`) for state management, routing, and dependency injection
 - Reactive state using `.obs` observables and `Obx()` widgets
-- Global state stored in `lib/utils/common_base.dart` (e.g., `isLoggedIn`, `loginUserData`, `isDarkMode`)
+- Global state stored in `lib/utils/common_base.dart` (e.g., `isLoggedIn`, `loginUserData`)
+- `isDarkMode` reactive var lives in `lib/utils/app_common.dart` — NOT in `common_base.dart`
+
+### UI Styling & Fonts
+- **nb_utils** helpers: `primaryTextStyle()`, `boldTextStyle()`, `boxDecorationDefault()`, etc.
+- **Fonts**: Google Fonts — **Plus Jakarta Sans** (body text) + **Outfit** (display/headings)
+- `GoogleFonts.xxx()` returns a `TextStyle` directly — do NOT call `.textStyle` on it
 
 ### Project Structure
 
@@ -58,25 +64,23 @@ lib/                                  # 261 Dart files, 59 directories
 │   ├── auth_apis.dart               # Authentication endpoints
 │   ├── core_apis.dart               # Core app endpoints
 │   └── home_apis.dart               # Home/dashboard endpoints
-├── components/                       # Reusable UI components (20 files)
+├── components/                       # Reusable UI components (21 files)
 │   ├── app_scaffold.dart            # Base scaffold wrapper
 │   ├── cached_image_widget.dart     # Cached network images
 │   ├── loader_widget.dart           # Loading indicators
 │   ├── new_update_dialog.dart       # App update prompts
+│   ├── filter_count_badge.dart      # Filter count badge (unified across modules)
 │   └── ...                          # ~16 more shared widgets
 ├── generated/                        # Auto-generated code
 │   └── assets.dart                  # Asset path constants
 ├── google_calendar/                  # Google Calendar integration
 │   ├── calendar_client.dart         # Calendar API client
 │   └── calendar_event_service.dart  # Event CRUD operations
-├── locale/                           # Internationalization (7 files)
+├── locale/                           # Internationalization (4 files)
 │   ├── app_localizations.dart
 │   ├── languages.dart               # Language configuration
 │   ├── language_en.dart             # English
-│   ├── language_ar.dart             # Arabic
-│   ├── language_de.dart             # German
-│   ├── language_fr.dart             # French
-│   └── language_hi.dart             # Hindi
+│   └── language_ar.dart             # Arabic
 ├── models/                           # Shared data models (3 files)
 │   ├── base_response_model.dart
 │   ├── notificationdata_model.dart
@@ -117,7 +121,11 @@ lib/                                  # 261 Dart files, 59 directories
 │   ├── booking/                     # Appointment booking
 │   │   ├── components/
 │   │   ├── model/
-│   │   └── filter/                 # Clinic, price, service type filters
+│   │   └── filter/                 # Typed filtering system (FilterParams, location)
+│   │       ├── components/         # FilterLocationComponent (governorate/city picker)
+│   │       ├── model/              # FilterParams (typed filter data structure)
+│   │       ├── filter_controller.dart
+│   │       └── filter_screen.dart
 │   ├── slots/                       # Appointment slot selection
 │   ├── doctor/                      # Doctor listings & profiles
 │   ├── clinic/                      # Clinic information
@@ -137,8 +145,8 @@ lib/                                  # 261 Dart files, 59 directories
 │   ├── colors.dart                  # Color definitions
 │   ├── api_end_points.dart          # API endpoints (72 endpoints)
 │   ├── local_storage.dart           # GetStorage wrapper
-│   ├── common_base.dart             # Global state variables
-│   ├── app_common.dart              # Common utility functions
+│   ├── common_base.dart             # Global state variables (isLoggedIn, loginUserData)
+│   ├── app_common.dart              # Common utility functions + isDarkMode reactive var
 │   ├── push_notification_service.dart # Firebase messaging
 │   ├── price_widget.dart            # Price formatting widget
 │   ├── empty_error_state_widget.dart # Empty/error state display
@@ -225,10 +233,11 @@ assets/
 ## Key Features
 
 - **Appointments**: Book, view, reschedule appointments with doctors
+- **Lab Tests & Radiology**: Browse test catalog, create orders, book facility appointments
 - **Encounters**: View medical encounter records
 - **Incident Management**: Track and report healthcare incidents
 - **Multi-Patient Support**: Manage family members / other patients
-- **Multi-language**: Support for English, Arabic, German, French, Hindi
+- **Multi-language**: Support for English and Arabic (RTL)
 - **Push Notifications**: Firebase Cloud Messaging integration
 - **Google Calendar**: Sync appointments to Google Calendar
 - **Google Maps**: Location services for clinics
@@ -270,6 +279,11 @@ assets/
 - Global `locale` variable defined in `main.dart`
 - Add new translations to all language files in `lib/locale/`
 
+### Known Pre-existing Warnings (do not fix unless asked)
+- `Radio` `groupValue`/`onChanged` deprecation in `payment_screen.dart`
+- `AppBarTheme` `color` deprecation in theme files
+These existed before recent work and should not be treated as regressions.
+
 ### Custom Packages
 Several payment gateways use custom forks from `iqonic-design` GitHub:
 - `flutterwave_standard`
@@ -279,6 +293,107 @@ Several payment gateways use custom forks from `iqonic-design` GitHub:
 - `midpay`
 
 These are specified as git dependencies in `pubspec.yaml`.
+
+## UI Modernization (Clinical Elegance)
+
+Design system upgrade in progress. Phase 1 is complete.
+
+### Design Tokens
+- Card radius: **16px**
+- Input radius: **12px**
+- Bottom sheets / scaffold body padding: **24px**
+- Shadows: navy-tinted soft shadows
+
+### Phase 1 — COMPLETE (Foundation Layer)
+Modified files: `colors.dart`, `app_theme.dart`, `main.dart`, `common_base.dart`, `app_scaffold.dart`, `loader_widget.dart`, `app_dialogue_component.dart`, `bottom_selection_widget.dart`
+
+### Color Tokens Added to `colors.dart`
+- **Gradients**: `gradientStart`, `gradientEnd`, `gradientSecondaryStart`, `gradientSecondaryEnd`
+- **Glass**: `glassTintLight`, `glassTintDark`, `glassStrokeLight`, `glassStrokeDark`
+- **Shadows**: `softShadowColor`, `softShadowColorMedium`, `softShadowColorDark`
+- **Surfaces**: `surfaceElevated`, `surfaceElevatedDark`, `surfaceSubtle`
+- **Shimmer**: `shimmerBase`, `shimmerHighlight`, `shimmerBaseDark`, `shimmerHighlightDark`
+- **Input**: `inputFillColor`, `inputFillColorDark`, `inputFocusGlow`
+
+### Phases 2–6 — PENDING (Screens and remaining components)
+
+## Enhanced Filter System (Complete)
+
+Comprehensive redesign of filtering across doctor, clinic, service, and category modules. Implements typed FilterParams, consolidated filter logic, and location-based filtering.
+
+### FilterParams Model
+Type-safe replacement for positional `Get.arguments` lists. Located in `lib/screens/booking/filter/model/filter_params.dart`.
+
+```dart
+class FilterParams {
+  final int clinicId;
+  final String serviceType;
+  final String priceMin;
+  final String priceMax;
+  final String moduleType;      // "doctor", "clinic", "service", "category"
+  final int categoryId;
+  final int? governorateId;     // Location filters
+  final int? cityId;
+  final int? specialtyId;        // Advanced filters
+  final String gender;
+  final String ratingMin;
+  final String ratingMax;
+}
+```
+
+**Usage Pattern:**
+```dart
+// In list screen, construct FilterParams with current filter state
+final params = FilterParams(
+  moduleType: "doctor",
+  clinicId: doctorListCont.clinicId.value,
+  serviceType: doctorListCont.serviceType.value,
+  governorateId: doctorListCont.selectedGovernorateId.value,
+  cityId: doctorListCont.selectedCityId.value,
+  // ... other fields
+);
+
+// Pass via arguments to FilterScreen
+Get.to(() => FilterScreen(...), arguments: params);
+```
+
+### FilterCountBadge Component
+Unified badge widget showing active filter count across all modules.
+- **Location**: `lib/components/filter_count_badge.dart`
+- **Features**: Small gradient circle (gradientSecondaryStart/End), positioned overlay, auto-hide when count = 0
+- **Used in**: Doctor list, clinic list, service list, category list screens
+
+```dart
+Stack(
+  children: [
+    FilterButton(...),
+    FilterCountBadge(count: filterController.activeFilterCount),
+  ],
+)
+```
+
+### FilterLocationComponent
+Wraps GovernoratesCityPicker with design token styling.
+- **Location**: `lib/screens/booking/filter/components/filter_location_component.dart`
+- **Features**: surfaceElevated background, glass border, 16px radius, soft navy shadow
+- **State**: Reads from `FilterController.selectedGovernorateId` and `selectedCityId`
+- **Behavior**: Automatically resets city when governorate changes
+
+### FilterController Features
+- **activeFilterCount getter**: Single computed property replacing 9 scattered counter variables
+- **Location support**: `selectedGovernorateId`, `selectedCityId` reactive variables
+- **Advanced filters**: `selectedSpecialtyId`, `selectedGender`
+- **Callbacks**: `onGovernorateChanged(id)`, `onCityChanged(id)` for cascading logic
+- **Backwards compatible**: Still accepts legacy List-based Get.arguments if needed
+
+### Applied Modules
+All four list screens use the new filter system:
+1. **Doctor List**: `lib/screens/home/components/doctor_list_screen.dart`
+2. **Clinic List**: `lib/screens/home/components/clinic_list_screen.dart`
+3. **Service List**: `lib/screens/home/components/popular_service_list.dart`
+4. **Category List**: `lib/screens/service/services_list_screen.dart`
+
+Each module constructs FilterParams with its specific filters and passes to FilterScreen.
 
 ## Common Patterns
 
@@ -323,3 +438,51 @@ Get.to(() => NextScreen());                    // Push
 Get.back();                                    // Pop
 Get.offAll(() => DashboardScreen());          // Replace all
 ```
+
+### Filter Navigation Pattern
+```dart
+// Build FilterParams with current state
+final params = FilterParams(
+  moduleType: "doctor",
+  clinicId: doctorListCont.clinicId.value,
+  serviceType: doctorListCont.serviceType.value,
+  priceMin: doctorListCont.minimumPrice.toString(),
+  priceMax: doctorListCont.maximumPrice.toString(),
+  governorateId: doctorListCont.selectedGovernorateId.value,
+  cityId: doctorListCont.selectedCityId.value,
+  ratingMin: doctorListCont.minimumRating.toString(),
+  ratingMax: doctorListCont.maximumRating.toString(),
+  // ... other fields
+);
+
+// Navigate with typed arguments
+Get.to(() => FilterScreen(displayName: 'Doctor'), arguments: params);
+
+// In FilterScreen.onInit(), read FilterParams:
+if (Get.arguments is FilterParams) {
+  var params = Get.arguments as FilterParams;
+  // Use params.clinicId, params.governorateId, etc.
+}
+```
+
+### Accessing Active Filter Count
+```dart
+// Anywhere in the app with access to FilterController
+int activeCount = filterController.activeFilterCount;
+
+// Reactive updates in widgets
+Obx(() => Text('${filterController.activeFilterCount} filters active')
+
+
+
+```
+- Get crash logs: `adb logcat -d -s AndroidRuntime:E Flutter:E`
+- Clear logs: `adb logcat -c`
+- Filter by package: `adb logcat -d | grep "com.yourapp"`
+
+## Android Emulator Debug
+- Screenshot: use mobile-mcp `take_screenshot`
+- Logcat errors: `adb logcat -d *:E | head -50`
+- Flutter errors: `adb logcat -d | grep -E "Flutter|Exception|Error"`
+- Hot reload after fix: `flutter hot-reload` or press `r` in terminal
+- Device: 

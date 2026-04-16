@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 
 enum AppShaderMode {
@@ -21,7 +20,7 @@ class AppShaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Color> shaderColors;
     if (color != null) {
-      shaderColors = [color ?? white, color ?? white];
+      shaderColors = [color!, color!];
     } else {
       switch (mode) {
         case AppShaderMode.gradient:

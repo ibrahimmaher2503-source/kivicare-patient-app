@@ -9,6 +9,7 @@ import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import 'components/type_list_component.dart';
 import 'filter_controller.dart';
+import 'model/filter_params.dart';
 
 class FilterScreen extends StatelessWidget {
   final String filterType;
@@ -20,6 +21,12 @@ class FilterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determine moduleType from FilterParams if available
+    String moduleType = displayName ?? 'service';
+    if (Get.arguments is FilterParams) {
+      moduleType = (Get.arguments as FilterParams).moduleType;
+    }
+
     return AppScaffoldNew(
       appBartitleText: locale.value.filterBy,
       appBarVerticalSize: Get.height * 0.12,
@@ -27,7 +34,7 @@ class FilterScreen extends StatelessWidget {
         Obx(
           () => TextButton(
             onPressed: () {
-              filterCont.resetFilter(filterType, displayName ?? 'service');
+              filterCont.resetFilter(moduleType, moduleType);
             },
             child: Text(
               locale.value.reset,
@@ -57,15 +64,15 @@ class FilterScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 FilterTypeListComponent(
-                  filterList: displayName == "service"
+                  filterList: moduleType == "service"
                       ? filterCont.serviceFilterList
-                      : displayName == "clinic"
+                      : moduleType == "clinic"
                           ? filterCont.clinicFilterList
-                          : displayName == "category"
+                          : moduleType == "category"
                               ? filterCont.categoryFilterList
                               : filterCont.filterList,
                 ).expand(flex: 1),
-                Obx(() => filterCont.viewFilterWidget(displayName ?? "")),
+                Obx(() => filterCont.viewFilterWidget(moduleType)),
               ],
             ).expand(),
             Container(
@@ -100,17 +107,15 @@ class FilterScreen extends StatelessWidget {
                 child: AppButton(
                   width: Get.width,
                   text: locale.value.apply,
-                  color: Colors.transparent,
+                  color: appTransparentColor,
                   elevation: 0,
                   textStyle: GoogleFonts.plusJakartaSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    color: whiteTextColor,
                   ),
                   shapeBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   onTap: () {
-                    log('--------------------here000000000000000000');
-                    log(filterType);
                     filterCont.applyFilter(filterType);
                   },
                 ),

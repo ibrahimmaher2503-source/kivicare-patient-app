@@ -11,7 +11,7 @@ import '../../main.dart';
 import '../../utils/app_common.dart';
 import '../../utils/constants.dart';
 import '../auth/model/common_model.dart';
-import 'components/incident_description_conponent.dart';
+import 'components/incident_description_component.dart';
 import 'incident_management_controller.dart';
 import 'model/incident_response_model.dart';
 

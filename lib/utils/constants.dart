@@ -158,6 +158,48 @@ class StatusConst {
   static const accepted = 'accept';
 }
 
+class NurseRequestStatusConst {
+  static const String pending = 'pending';
+  static const String confirmed = 'confirmed';
+  static const String inProgress = 'in_progress';
+  static const String completed = 'completed';
+  static const String cancelled = 'cancelled';
+}
+
+class TestOrderStatusConst {
+  static const String pending = 'pending';
+  static const String confirmed = 'confirmed';
+  static const String sampleCollected = 'sample_collected';
+  static const String processing = 'processing';
+  static const String completed = 'completed';
+  static const String delivered = 'delivered';
+  static const String cancelled = 'cancelled';
+}
+
+class TestOrderPriorityConst {
+  static const String routine = 'routine';
+  static const String urgent = 'urgent';
+  static const String stat = 'stat';
+}
+
+class TestResultStatusConst {
+  static const String normal = 'normal';
+  static const String abnormal = 'abnormal';
+  static const String critical = 'critical';
+}
+
+class ServiceRequestStatusConst {
+  static const String pending = 'pending';
+  static const String accept = 'accept';
+  static const String reject = 'reject';
+}
+
+class NurseAvailabilityConst {
+  static const String available = 'available';
+  static const String busy = 'busy';
+  static const String offDuty = 'off_duty';
+}
+
 //region PaymentStatus
 class PaymentStatus {
   static const PAID = 'paid';
@@ -395,4 +437,78 @@ class CancellationStatusKeys {
 }
 //endregion
 
+class IcuAdmissionStatusConst {
+  static const String pending = 'pending';
+  static const String accepted = 'accepted';
+  static const String rejected = 'rejected';
+  static const String infoRequested = 'info_requested';
+  static const String cancelled = 'cancelled';
+}
+
+class IcuUrgencyConst {
+  static const String critical = 'critical';
+  static const String urgent = 'urgent';
+  static const String standard = 'standard';
+}
+
+class IcuCaseTypeConst {
+  static const String stroke = 'stroke';
+  static const String cardiac = 'cardiac';
+  static const String postOperative = 'post_operative';
+  static const String ventilator = 'ventilator';
+  static const String neonatal = 'neonatal';
+  static const String pediatric = 'pediatric';
+  static const String burns = 'burns';
+  static const String general = 'general';
+}
+
+class IcuEquipmentLevelConst {
+  static const String basic = 'basic';
+  static const String advanced = 'advanced';
+  static const String full = 'full';
+}
+
+class IcuHospitalTypeConst {
+  static const String government = 'government';
+  static const String private_ = 'private';
+  static const String military = 'military';
+  static const String university = 'university';
+}
+
+class IcuPaymentMethodConst {
+  static const String insurance = 'insurance';
+  static const String cash = 'cash';
+}
+
+class IcuSpecialtyConst {
+  static const String cardiac = 'cardiac';
+  static const String neurology = 'neurology';
+  static const String pediatric = 'pediatric';
+  static const String neonatal = 'neonatal';
+  static const String burns = 'burns';
+  static const String chest = 'chest';
+  static const String surgical = 'surgical';
+  static const String general = 'general';
+}
+
 const SERVICE_PAYMENT_STATUS_ADVANCE_PAID = 'advanced_paid';
+
+class ScanTypeConst {
+  static const String mri = 'mri';
+  static const String ct = 'ct';
+  static const String xray = 'xray';
+  static const String ultrasound = 'ultrasound';
+  static const String mammogram = 'mammogram';
+  static const String dexa = 'dexa';
+}
+
+class CallTypeConst {
+  static const String video = 'video';
+  static const String phone = 'phone';
+}
+
+class CallBookingStatusConst {
+  static const String confirmed = 'confirmed';
+  static const String completed = 'completed';
+  static const String cancelled = 'cancelled';
+}

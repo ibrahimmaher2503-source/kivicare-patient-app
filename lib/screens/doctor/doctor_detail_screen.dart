@@ -119,7 +119,7 @@ class DoctorDetailScreen extends StatelessWidget {
                                             fontSize: 20,
                                             fontWeight: FontWeight.w700,
                                             letterSpacing: -0.3,
-                                            color: isDarkMode.value ? Colors.white : appColorPrimary,
+                                            color: isDarkMode.value ? whiteTextColor : appColorPrimary,
                                           ),
                                         ),
                                         const CachedImageWidget(url: Assets.iconsIcVerified, width: 14, height: 14).paddingLeft(8),
@@ -147,7 +147,7 @@ class DoctorDetailScreen extends StatelessWidget {
                                             style: GoogleFonts.plusJakartaSans(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w700,
-                                              color: isDarkMode.value ? Colors.white : appColorPrimary,
+                                              color: isDarkMode.value ? whiteTextColor : appColorPrimary,
                                             ),
                                           ).paddingTop(2),
                                         ],

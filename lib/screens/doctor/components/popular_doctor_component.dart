@@ -5,8 +5,9 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../main.dart';
 import '../../../utils/view_all_label_component.dart';
 import '../../home/home_controller.dart';
-import 'popular_doctor_card.dart';
 import '../../home/components/doctor_list_screen.dart';
+import 'unified_doctor_card.dart';
+import '../model/unified_doctor_model.dart';
 
 class PopularDoctorComponent extends StatelessWidget {
   PopularDoctorComponent({super.key});
@@ -38,7 +39,14 @@ class PopularDoctorComponent extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: homeController.dashboardData.value.topDoctor.selectedDoctor.length,
               itemBuilder: (context, index) {
-                return PopularDoctorCard(doctorElement: homeController.dashboardData.value.topDoctor.selectedDoctor[index]);
+                return SizedBox(
+                  width: Get.width * 0.78,
+                  child: UnifiedDoctorCard(
+                    doctor: UnifiedDoctor.fromDoctor(
+                      homeController.dashboardData.value.topDoctor.selectedDoctor[index],
+                    ),
+                  ),
+                );
               },
             ),
           ),

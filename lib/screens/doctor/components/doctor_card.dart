@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/components/cached_image_widget.dart';
 import 'package:kivicare_patient/screens/doctor/model/doctor_list_res.dart';
+import '../../../components/location_badge.dart';
 
 import '../../../../generated/assets.dart';
 import '../../../utils/app_common.dart';
@@ -167,6 +168,10 @@ class DoctorCard extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
+                              if (doctorData.governorate != null) ...[
+                                6.height,
+                                locationBadge(doctorData.governorate, doctorData.governorateCity),
+                              ],
                             ],
                           ).expand(),
                           8.width,

@@ -1,3 +1,5 @@
+import '../../../models/governorate_model.dart';
+import '../../../models/city_model.dart';
 import '../../booking/model/employee_review_data.dart';
 import '../../clinic/model/clinics_res_model.dart';
 import '../../service/model/service_list_model.dart';
@@ -30,6 +32,57 @@ class DoctorListRes {
     };
   }
 }
+class DoctorSearchListResponse {
+  bool status;
+  List<Doctor> data;
+  int currentPage;
+  int lastPage;
+  int perPage;
+  int total;
+
+  DoctorSearchListResponse({
+    this.status = false,
+    this.data = const [],
+    this.currentPage = 1,
+    this.lastPage = 1,
+    this.perPage = 20,
+    this.total = 0,
+  });
+
+  factory DoctorSearchListResponse.fromJson(Map<String, dynamic> json) {
+    List<dynamic> items = [];
+    if (json["data"] is List) {
+      items = json["data"];
+    } else if (json["data"] is Map && json["data"]["items"] is List) {
+      items = json["data"]["items"];
+    }
+    int currPage = 1;
+    int lastPg = 1;
+    int perPg = 20;
+    int tot = 0;
+    if (json["meta"] is Map) {
+      currPage = json["meta"]["current_page"] ?? 1;
+      lastPg = json["meta"]["last_page"] ?? 1;
+      perPg = json["meta"]["per_page"] ?? 20;
+      tot = json["meta"]["total"] ?? 0;
+    } else if (json["data"] is Map && json["data"]["pagination"] is Map) {
+      final p = json["data"]["pagination"];
+      currPage = p["current_page"] ?? 1;
+      lastPg = p["last_page"] ?? 1;
+      perPg = p["per_page"] ?? 20;
+      tot = p["total"] ?? 0;
+    }
+    return DoctorSearchListResponse(
+      status: json["status"] is bool ? json["status"] : false,
+      data: items.map((x) => Doctor.fromJson(Map<String, dynamic>.from(x))).toList(),
+      currentPage: currPage,
+      lastPage: lastPg,
+      perPage: perPg,
+      total: tot,
+    );
+  }
+}
+
 class PopularDoctorData {
   String title;
   String subTitle;
@@ -109,6 +162,9 @@ class Doctor {
   List<DoctorReviewData> reviews;
   List<Qualifications> qualifications;
   List<ServiceElement> services;
+  Governorate? governorate;
+  City? governorateCity;
+  bool hasActiveOffer;
 
   Doctor({
     this.id = -1,
@@ -156,6 +212,9 @@ class Doctor {
     this.reviews = const <DoctorReviewData>[],
     this.qualifications = const <Qualifications>[],
     this.services = const <ServiceElement>[],
+    this.governorate,
+    this.governorateCity,
+    this.hasActiveOffer = false,
   });
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
@@ -206,6 +265,13 @@ class Doctor {
       reviews: json['reviews'] is List ? List<DoctorReviewData>.from(json['reviews'].map((x) => DoctorReviewData.fromJson(x))) : [],
       qualifications: json['qualifications'] is List ? List<Qualifications>.from(json['qualifications'].map((x) => Qualifications.fromJson(x))) : [],
       services: json['services'] is List ? List<ServiceElement>.from(json['services'].map((x) => ServiceElement.fromJson(x))) : [],
+      governorate: json['governorate'] is Map
+          ? Governorate.fromJson(Map<String, dynamic>.from(json['governorate']))
+          : null,
+      governorateCity: json['city'] is Map
+          ? City.fromJson(Map<String, dynamic>.from(json['city']))
+          : null,
+      hasActiveOffer: json['has_active_offer'] is bool ? json['has_active_offer'] : false,
     );
   }
 
@@ -256,6 +322,7 @@ class Doctor {
       'reviews': reviews.map((e) => e.toJson()).toList(),
       'qualifications': qualifications.map((e) => e.toJson()).toList(),
       'services': services.map((e) => e.toJson()).toList(),
+      'has_active_offer': hasActiveOffer,
     };
   }
 }

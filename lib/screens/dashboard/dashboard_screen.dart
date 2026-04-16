@@ -31,80 +31,72 @@ class DashboardScreen extends StatelessWidget {
             Obx(
               () => Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          // Glassmorphism: semi-transparent background
-                          color: isDarkMode.value
-                              ? fullDarkCanvasColor.withValues(alpha: 0.82)
-                              : canvasColor.withValues(alpha: 0.85),
-                          borderRadius: const BorderRadius.all(Radius.circular(50)),
-                          // Subtle glass border on top
-                          border: Border(
-                            top: BorderSide(
-                              color: isDarkMode.value ? glassStrokeDark : glassStrokeLight,
-                              width: 0.5,
-                            ),
+                child: ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        // Frosted glass background
+                        color: isDarkMode.value
+                            ? Colors.black.withValues(alpha: 0.4)
+                            : Colors.white.withValues(alpha: 0.75),
+                        // Subtle top border
+                        border: Border(
+                          top: BorderSide(
+                            color: isDarkMode.value
+                                ? Colors.white.withValues(alpha: 0.1)
+                                : appColorPrimary.withValues(alpha: 0.08),
+                            width: 0.5,
                           ),
-                          boxShadow: [
-                            // Primary upward shadow for depth
-                            BoxShadow(
-                              color: isDarkMode.value
-                                  ? softShadowColorDark
-                                  : softShadowColorMedium,
-                              offset: const Offset(0, -4),
-                              blurRadius: 16,
-                              spreadRadius: 0,
-                            ),
-                            // Soft ambient shadow beneath
-                            BoxShadow(
-                              color: isDarkMode.value
-                                  ? Colors.transparent
-                                  : softShadowColor,
-                              offset: const Offset(0, 8),
-                              blurRadius: 24,
-                              spreadRadius: -2,
-                            ),
-                          ],
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ...List.generate(
-                              bottomNavItems.length,
-                              (index) {
-                                BottomBarItem navBar = bottomNavItems[index];
-                                return Obx(
-                                  () => BtmNavItem(
-                                    navBar: navBar,
-                                    isFirst: index == 0,
-                                    isLast: index == bottomNavItems.length - 1,
-                                    press: () {
-                                      if (!isLoggedIn.value && index == 1) {
-                                        doIfLoggedIn(() {
-                                          handleChangeTabIndex(index);
-                                        });
-                                      } else {
-                                        handleChangeTabIndex(index);
-                                      }
-                                    },
-                                    selectedNav: dashboardController.selectedBottomNav.value,
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ).fit(),
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDarkMode.value
+                                ? Colors.black.withValues(alpha: 0.3)
+                                : appColorPrimary.withValues(alpha: 0.08),
+                            offset: const Offset(0, -4),
+                            blurRadius: 16,
+                            spreadRadius: 0,
+                          ),
+                        ],
+                      ),
+                      padding: EdgeInsets.only(
+                        top: 10,
+                        bottom: MediaQuery.of(context).padding.bottom + 10,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        children: List.generate(
+                          bottomNavItems.length,
+                          (index) {
+                            BottomBarItem navBar = bottomNavItems[index];
+                            return Obx(
+                              () => BtmNavItem(
+                                navBar: navBar,
+                                isFirst: index == 0,
+                                isLast: index == bottomNavItems.length - 1,
+                                press: () {
+                                  if (!isLoggedIn.value && index == 1) {
+                                    doIfLoggedIn(() {
+                                      handleChangeTabIndex(index);
+                                    });
+                                  } else {
+                                    handleChangeTabIndex(index);
+                                  }
+                                },
+                                selectedNav:
+                                    dashboardController.selectedBottomNav.value,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ).paddingSymmetric(vertical: 15),
+              ),
             )
           ],
         ),

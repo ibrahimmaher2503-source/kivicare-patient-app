@@ -33,8 +33,22 @@ class PaymentScreen extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 80),
           physics: const AlwaysScrollableScrollPhysics(),
           child: Obx(
-            () => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            () => RadioGroup<String>(
+              groupValue: paymentController.paymentOption.value,
+              onChanged: (String? value) {
+                if (value == null) return;
+                if (value == PaymentMethods.PAYMENT_METHOD_WALLET) {
+                  if (userWalletData.value.walletAmount.toStringAsFixed(appCurrency.value.noOfDecimal).toDouble() >= paymentController.payAmount.toStringAsFixed(appCurrency.value.noOfDecimal).toDouble()) {
+                    paymentController.paymentOption(value);
+                  } else {
+                    toast(locale.value.youDontHaveEnoughBalanceToCompleteThePaymentU);
+                  }
+                } else {
+                  paymentController.paymentOption(value);
+                }
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "* ${locale.value.noteForCashPaymentPurposesDontUseThePayNowBut}",
@@ -52,7 +66,7 @@ class PaymentScreen extends StatelessWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     letterSpacing: -0.3,
-                    color: isDarkMode.value ? Colors.white : appColorPrimary,
+                    color: isDarkMode.value ? whiteTextColor : appColorPrimary,
                   ),
                 ),
                 8.height,
@@ -87,6 +101,7 @@ class PaymentScreen extends StatelessWidget {
                 ).visible(!isQuickBook)
               ],
             ).paddingSymmetric(horizontal: 16),
+            ),
           ),
         ).makeRefreshable,
       ),
@@ -108,7 +123,7 @@ class PaymentScreen extends StatelessWidget {
               ],
             ),
             child: Material(
-              color: Colors.transparent,
+              color: appTransparentColor,
               child: InkWell(
                 borderRadius: BorderRadius.circular(12),
                 onTap: () {
@@ -122,7 +137,7 @@ class PaymentScreen extends StatelessWidget {
                       style: GoogleFonts.outfit(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: whiteTextColor,
                         letterSpacing: -0.3,
                       ),
                     ),
@@ -168,7 +183,7 @@ class PaymentScreen extends StatelessWidget {
     return Obx(
       () => RadioListTile(
         contentPadding: const EdgeInsets.symmetric(vertical: 2),
-        tileColor: Colors.transparent,
+        tileColor: appTransparentColor,
         controlAffinity: ListTileControlAffinity.trailing,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         secondary: secondaryWidget,
@@ -179,14 +194,10 @@ class PaymentScreen extends StatelessWidget {
             fontSize: 14,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.1,
-            color: isDarkMode.value ? Colors.white : appColorPrimary,
+            color: isDarkMode.value ? whiteTextColor : appColorPrimary,
           ),
         ),
         value: value,
-        groupValue: paymentController.paymentOption.value,
-        onChanged: (val) {
-          paymentController.paymentOption(val.toString());
-        },
       ),
     );
   }
@@ -244,7 +255,7 @@ class PaymentScreen extends StatelessWidget {
       context: context,
       child: _buildPaymentRadioTile(
         context: context,
-        title: "PaysStack",
+        title: "PayStack",
         value: PaymentMethods.PAYMENT_METHOD_PAYSTACK,
         secondaryWidget: const Image(
           image: AssetImage(Assets.imagesPaystackLogo),
@@ -325,7 +336,7 @@ class PaymentScreen extends StatelessWidget {
       child: Obx(
         () => RadioListTile(
           contentPadding: const EdgeInsets.symmetric(vertical: 2),
-          tileColor: Colors.transparent,
+          tileColor: appTransparentColor,
           controlAffinity: ListTileControlAffinity.trailing,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           secondary: Image(
@@ -341,14 +352,10 @@ class PaymentScreen extends StatelessWidget {
               fontSize: 14,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.1,
-              color: isDarkMode.value ? Colors.white : appColorPrimary,
+              color: isDarkMode.value ? whiteTextColor : appColorPrimary,
             ),
           ),
           value: PaymentMethods.PAYMENT_METHOD_SADAD,
-          groupValue: paymentController.paymentOption.value,
-          onChanged: (value) {
-            paymentController.paymentOption(value.toString());
-          },
         ),
       ),
     );
@@ -377,7 +384,7 @@ class PaymentScreen extends StatelessWidget {
         () => RadioListTile(
           dense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: 2),
-          tileColor: Colors.transparent,
+          tileColor: appTransparentColor,
           controlAffinity: ListTileControlAffinity.trailing,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           secondary: Image(
@@ -393,14 +400,10 @@ class PaymentScreen extends StatelessWidget {
               fontSize: 14,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.1,
-              color: isDarkMode.value ? Colors.white : appColorPrimary,
+              color: isDarkMode.value ? whiteTextColor : appColorPrimary,
             ),
           ),
           value: PaymentMethods.PAYMENT_METHOD_CASH,
-          groupValue: paymentController.paymentOption.value,
-          onChanged: (value) {
-            paymentController.paymentOption(value.toString());
-          },
         ),
       ),
     );
@@ -413,7 +416,7 @@ class PaymentScreen extends StatelessWidget {
         () => RadioListTile(
           dense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: 2),
-          tileColor: Colors.transparent,
+          tileColor: appTransparentColor,
           controlAffinity: ListTileControlAffinity.trailing,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           secondary: Image(
@@ -431,7 +434,7 @@ class PaymentScreen extends StatelessWidget {
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.1,
-                  color: isDarkMode.value ? Colors.white : appColorPrimary,
+                  color: isDarkMode.value ? whiteTextColor : appColorPrimary,
                 ),
               ),
               8.width,
@@ -460,14 +463,6 @@ class PaymentScreen extends StatelessWidget {
             ],
           ),
           value: PaymentMethods.PAYMENT_METHOD_WALLET,
-          groupValue: paymentController.paymentOption.value,
-          onChanged: (value) {
-            if (userWalletData.value.walletAmount.toStringAsFixed(appCurrency.value.noOfDecimal).toDouble() >= paymentController.payAmount.toStringAsFixed(appCurrency.value.noOfDecimal).toDouble()) {
-              paymentController.paymentOption(value.toString());
-            } else {
-              toast(locale.value.youDontHaveEnoughBalanceToCompleteThePaymentU);
-            }
-          },
         ),
       ),
     );

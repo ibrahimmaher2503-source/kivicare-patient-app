@@ -46,6 +46,12 @@ const iconColorPrimaryDark = Color(0xFF5F6060);
 const appShadowColorDark = Color(0xFF333333);
 const cardBackgroundBlackDark = Color(0xFF1F1F1F);
 
+// Dark Mode Text Colors — layered opacity for visual hierarchy
+const textPrimaryDark = Color(0xFFF0F2F5); // Soft white, easy on eyes
+const textSecondaryDark = Color(0xFFB0B8C4); // Muted blue-grey
+const textTertiaryDark = Color(0xFF7A8494); // Subtle / disabled text
+const textHintDark = Color(0xFF5A6478); // Placeholder / hint text
+
 // Text Colors
 const appTransparentColor = Colors.transparent;
 const whiteTextColor = Color(0xFFFFFFFF);
@@ -59,6 +65,17 @@ const darkGrayTextColor = Color(0xff3F414D);
 //Text Colors
 const primaryTextColor = Color(0xFF08234F); // Dark navy
 const secondaryTextColor = Color(0xFF828A90);
+
+// Grayscale Colors
+const gray50 = Color(0xFFF9FAFB);   // Very light
+const gray100 = Color(0xFFF3F4F6);  // Light
+const gray200 = Color(0xFFE5E7EB);  // Lighter
+const gray300 = Color(0xFFD1D5DB);  // Light-medium
+const gray400 = Color(0xFF9CA3AF);  // Medium
+const gray500 = Color(0xFF6B7280);  // Medium-dark
+const gray600 = Color(0xFF4B5563);  // Dark
+const gray700 = Color(0xFF374151);  // Darker
+const gray800 = Color(0xFF1F2937);  // Very dark
 
 //Status Colors - Coordinated with brand
 const pendingStatusColor = Color(0xFFFF9F66); // Warm orange
@@ -115,3 +132,53 @@ const shimmerHighlightDark = Color(0xFF243046); // Shimmer highlight dark mode
 const inputFillColor = Color(0xFFF5F6FA); // Subtle fill for inputs
 const inputFillColorDark = Color(0xFF0F1D32); // Dark mode input fill
 const inputFocusGlow = Color(0x1A08234F); // Focus ring glow
+
+// Nurse Request Status Colors
+const nurseStatusPendingColor = Color(0xFFFF9800);
+const nurseStatusConfirmedColor = Color(0xFF037F7C);
+const nurseStatusInProgressColor = Color(0xFF2196F3);
+const nurseStatusCompletedColor = Color(0xFF13BAAA);
+const nurseStatusCancelledColor = Color(0xFFE53935);
+
+// Lab Test Order Status Colors
+const labStatusPendingColor = Color(0xFFFF9800);
+const labStatusConfirmedColor = Color(0xFF037F7C);
+const labStatusSampleCollectedColor = Color(0xFF7C4DFF);
+const labStatusProcessingColor = Color(0xFF2196F3);
+const labStatusCompletedColor = Color(0xFF13BAAA);
+const labStatusDeliveredColor = Color(0xFF4CAF50);
+const labStatusCancelledColor = Color(0xFFE53935);
+
+// Test Result Status Colors
+const resultNormalColor = Color(0xFF4CAF50);
+const resultAbnormalColor = Color(0xFFFF9800);
+const resultCriticalColor = Color(0xFFE53935);
+
+// Nurse Availability Colors
+const nurseAvailableColor = Color(0xFF4CAF50);
+const nurseBusyColor = Color(0xFFFF9800);
+const nurseOffDutyColor = Color(0xFF9E9E9E);
+
+// Service Request Status Colors
+const serviceStatusPendingColor = Color(0xFFFF9800);
+const serviceStatusAcceptColor = Color(0xFF4CAF50);
+const serviceStatusRejectColor = Color(0xFFE53935);
+
+// ICU Admission Status Colors
+const icuStatusPendingColor = Color(0xFFFF9800);     // Amber
+const icuStatusAcceptedColor = Color(0xFF4CAF50);    // Green
+const icuStatusRejectedColor = Color(0xFFE53935);    // Red
+const icuStatusInfoRequestedColor = Color(0xFF2196F3); // Blue
+const icuStatusCancelledColor = Color(0xFF9E9E9E);   // Grey
+
+// ICU Urgency Colors
+const urgencyCriticalColor = Color(0xFFE53935);      // Red
+const urgencyUrgentColor = Color(0xFFFF9800);        // Orange
+const urgencyStandardColor = Color(0xFF2196F3);      // Blue
+
+// Call Booking Colors
+const callTypeVideoColor = Color(0xFF5C6BC0);        // Indigo
+const callTypePhoneColor = Color(0xFF4CAF50);         // Green
+const callBookingConfirmedColor = Color(0xFF4CAF50);  // Green
+const callBookingCompletedColor = Color(0xFF13BAAA);  // Teal
+const callBookingCancelledColor = Color(0xFFE53935);  // Red

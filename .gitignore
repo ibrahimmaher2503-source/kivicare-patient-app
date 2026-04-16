@@ -18,6 +18,9 @@ nul
 # Generated
 *.g.dart
 
+# Android
+android/.gradle/
+
 # Misc
 .env
 *.log

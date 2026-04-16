@@ -29,6 +29,8 @@ class ClinicListController extends GetxController {
   RxString priceMin = ''.obs;
   RxString priceMax = ''.obs;
   RxInt clinicId = (-1).obs;
+  RxnInt selectedGovernorateId = RxnInt();
+  RxnInt selectedCityId = RxnInt();
 
   @override
   void onInit() {
@@ -57,18 +59,14 @@ class ClinicListController extends GetxController {
       isLoading(true);
     }
     await clinicsFuture(
-      CoreServiceApis.getClinics(
+      CoreServiceApis.searchClinics(
         page: page.value,
-        clinics: clinics,
-        serviceId: service.value.id,
-        search: searchClinicCont.text.trim(),
-        servicePriceMin: priceMin.value,
-        servicePriceMax: priceMax.value,
-        clinicId: clinicId.value,
-        isPopulars: isPopular.value,
-        lastPageCallBack: (p0) {
-          isLastPage(p0);
-        },
+        perPage: 20,
+        clinicList: clinics,
+        name: searchClinicCont.text.trim(),
+        governorateId: selectedGovernorateId.value,
+        cityId: selectedCityId.value,
+        lastPageCallBack: (p0) => isLastPage(p0),
       ),
     ).then((value) {
       log('value.length ==> ${value.length}');
@@ -76,6 +74,19 @@ class ClinicListController extends GetxController {
       isLoading(false);
       log("getClinics error $e");
     }).whenComplete(() => isLoading(false));
+  }
+
+  void onGovernorateChanged(int? id) {
+    selectedGovernorateId.value = id;
+    selectedCityId.value = null;
+    page(1);
+    getClinicList();
+  }
+
+  void onCityChanged(int? id) {
+    selectedCityId.value = id;
+    page(1);
+    getClinicList();
   }
 
   @override

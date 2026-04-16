@@ -5,12 +5,14 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../../components/app_scaffold.dart';
 import '../../../components/cached_image_widget.dart';
+import '../../../components/filter_count_badge.dart';
 import '../../../components/loader_widget.dart';
 import '../../../generated/assets.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/empty_error_state_widget.dart';
 import '../../booking/filter/filter_screen.dart';
+import '../../booking/filter/model/filter_params.dart';
 import '../../doctor/components/search_doctor_service.dart';
 import '../../doctor/doctor_list_controller.dart';
 import '../../doctor/model/doctor_list_res.dart';
@@ -48,55 +50,50 @@ class DoctorViewListScreen extends StatelessWidget {
                   onTap: () {
                     doctorListCont.searchDoctorCont.clear();
                     doctorListCont.page(1);
-                    Get.to(() => FilterScreen(filterType: "doctor",displayName: "doctor",), arguments: [
-                      doctorListCont.clinicId.value,
-                      doctorListCont.serviceType.value,
-                      doctorListCont.ratingMin,
-                      doctorListCont.ratingMax,
-                      "doctor"
-                    ], binding: BindingsBuilder(() {
-                      setStatusBarColor(
-                        transparentColor,
-                        statusBarIconBrightness: Brightness.light,
-                        statusBarBrightness: Brightness.light,
-                        systemNavigationBarColor: whiteTextColor,
-                      );
-                    }));
+
+                    // Create FilterParams with current filter values
+                    final params = FilterParams(
+                      moduleType: "doctor",
+                      clinicId: doctorListCont.clinicId.value,
+                      serviceType: doctorListCont.serviceType.value,
+                      ratingMin: doctorListCont.ratingMin.value,
+                      ratingMax: doctorListCont.ratingMax.value,
+                      governorateId: doctorListCont.selectedGovernorateId.value,
+                      cityId: doctorListCont.selectedCityId.value,
+                    );
+
+                    Get.to(() => FilterScreen(filterType: "doctor", displayName: "doctor"),
+                      arguments: params,
+                      binding: BindingsBuilder(() {
+                        setStatusBarColor(
+                          transparentColor,
+                          statusBarIconBrightness: Brightness.light,
+                          statusBarBrightness: Brightness.light,
+                          systemNavigationBarColor: whiteTextColor,
+                        );
+                      }));
                   },
-                  child: Stack(
-                    alignment: Alignment.topRight,
-                    children: [
-                      Container(
-                        height: 46,
-                        width: 46,
-                        alignment: Alignment.center,
-                        decoration: boxDecorationDefault(
-                          color: appColorPrimary,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const CachedImageWidget(
-                          url: Assets.iconsIcFilter,
-                          height: 28,
-                          color: white,
-                        ),
-                      ),
-                       if (filterController.totalDoctorCount.value > 0)
-                        Positioned(
-                          top: -4,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              '${filterController.totalDoctorCount.value }',
-                              style: const TextStyle(color: Colors.white, fontSize: 10),
-                            ),
+                  child: Obx(
+                    () => Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          height: 46,
+                          width: 46,
+                          alignment: Alignment.center,
+                          decoration: boxDecorationDefault(
+                            color: appColorPrimary,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const CachedImageWidget(
+                            url: Assets.iconsIcFilter,
+                            height: 28,
+                            color: white,
                           ),
                         ),
-                    ],
+                        FilterCountBadge(count: filterController.activeFilterCount),
+                      ],
+                    ),
                   ),
                 ),
               ],

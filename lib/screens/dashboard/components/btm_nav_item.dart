@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import '../../../components/app_shader_widget.dart';
+import '../../../utils/app_common.dart';
 import 'menu.dart';
 
 class BtmNavItem extends StatefulWidget {
@@ -75,19 +76,25 @@ class _BtmNavItemState extends State<BtmNavItem> with SingleTickerProviderStateM
         width: isActive ? (Get.width / 3.2) : 50,
         decoration: isActive
             ? BoxDecoration(
-                // Gradient pill background for active state
+                // Vibrant teal gradient for active state
                 gradient: const LinearGradient(
-                  colors: [gradientStart, gradientEnd],
+                  colors: [gradientSecondaryStart, gradientSecondaryEnd],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: const BorderRadius.all(Radius.circular(50)),
                 boxShadow: [
                   BoxShadow(
-                    color: gradientStart.withValues(alpha: 0.3),
+                    color: gradientSecondaryStart.withValues(alpha: 0.5),
                     offset: const Offset(0, 4),
-                    blurRadius: 12,
+                    blurRadius: 16,
                     spreadRadius: -2,
+                  ),
+                  BoxShadow(
+                    color: gradientSecondaryEnd.withValues(alpha: 0.3),
+                    offset: const Offset(0, 0),
+                    blurRadius: 20,
+                    spreadRadius: 2,
                   ),
                 ],
               )
@@ -127,11 +134,13 @@ class _BtmNavItemState extends State<BtmNavItem> with SingleTickerProviderStateM
                 ).paddingSymmetric(horizontal: 8),
               )
             : AppShaderWidget(
-                color: white.withValues(alpha: 0.45),
+                color: isDarkMode.value
+                    ? white.withValues(alpha: 0.5)
+                    : appColorPrimary.withValues(alpha: 0.45),
                 child: Image.asset(
                   widget.navBar.icon,
-                  height: 22,
-                  width: 22,
+                  height: 24,
+                  width: 24,
                   fit: BoxFit.cover,
                 ),
               ).paddingOnly(left: widget.isFirst ? 10 : 0, right: widget.isLast ? 10 : 0),

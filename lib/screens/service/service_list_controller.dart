@@ -25,6 +25,8 @@ class ServiceListController extends GetxController {
   RxString serviceType = "".obs;
   RxString priceMin = ''.obs;
   RxString priceMax = ''.obs;
+  RxnInt selectedGovernorateId = RxnInt();
+  RxnInt selectedCityId = RxnInt();
 
   ///Search
   TextEditingController searchCont = TextEditingController();

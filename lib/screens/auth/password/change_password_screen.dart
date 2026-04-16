@@ -131,42 +131,46 @@ class ChangePassword extends StatelessWidget {
               Obx(
                 () => AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  child: Container(
-                    padding: changePassController.newPasshasFocus.value ? const EdgeInsets.all(16) : EdgeInsets.zero,
-                    decoration: changePassController.newPasshasFocus.value
-                        ? BoxDecoration(
-                            color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                                blurRadius: 16,
-                                offset: const Offset(0, 4),
+                  padding: changePassController.newPasshasFocus.value ? const EdgeInsets.all(16) : EdgeInsets.zero,
+                  decoration: changePassController.newPasshasFocus.value
+                      ? BoxDecoration(
+                          color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: isDarkMode.value ? softShadowColorDark : softShadowColor,
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        )
+                      : null,
+                  child: AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    child: changePassController.newPasshasFocus.value
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              PasswordRuleItem(
+                                isValid: changePassController.hasUppercase.value,
+                                text: locale.value.passwordMustIncludeAtLeastOneCapitalCharacter,
+                              ),
+                              PasswordRuleItem(
+                                isValid: changePassController.hasLetter.value,
+                                text: locale.value.passwordMustIncludeAtLeastOneLowercaseCharacter,
+                              ),
+                              PasswordRuleItem(
+                                isValid: changePassController.hasNumber.value,
+                                text: locale.value.passwordMustIncludeAtLeastOneNumber,
+                              ),
+                              PasswordRuleItem(
+                                isValid: changePassController.hasSpecial.value,
+                                text: locale.value.passwordMustIncludeSpacialCharacter,
                               ),
                             ],
                           )
-                        : null,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        PasswordRuleItem(
-                          isValid: changePassController.hasUppercase.value,
-                          text: locale.value.passwordMustIncludeAtLeastOneCapitalCharacter,
-                        ),
-                        PasswordRuleItem(
-                          isValid: changePassController.hasLetter.value,
-                          text: locale.value.passwordMustIncludeAtLeastOneLowercaseCharacter,
-                        ),
-                        PasswordRuleItem(
-                          isValid: changePassController.hasNumber.value,
-                          text: locale.value.passwordMustIncludeAtLeastOneNumber,
-                        ),
-                        PasswordRuleItem(
-                          isValid: changePassController.hasSpecial.value,
-                          text: locale.value.passwordMustIncludeSpacialCharacter,
-                        ),
-                      ],
-                    ).visible(changePassController.newPasshasFocus.value),
+                        : const SizedBox.shrink(),
                   ),
                 ),
               ),

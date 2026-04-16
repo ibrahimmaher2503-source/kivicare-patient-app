@@ -1,4 +1,5 @@
 import '../../clinic/model/clinics_res_model.dart';
+import '../../offers/model/active_offer_model.dart';
 
 class ServiceListRes {
   bool status;
@@ -121,8 +122,13 @@ class ServiceElement {
   List<String> clinicName;
 
   num totalInclusiveTax;
+  List<ActiveOffer> activeOffers;
 
   bool get isInclusiveTaxesAvailable => totalInclusiveTax > 0;
+
+  ActiveOffer? get bestOffer => activeOffers.isEmpty
+      ? null
+      : activeOffers.reduce((a, b) => a.discountValue > b.discountValue ? a : b);
 
   ServiceElement({
     this.id = -1,
@@ -156,6 +162,7 @@ class ServiceElement {
     this.totalAppointments = -1,
     this.clinicName = const <String>[],
     this.totalInclusiveTax = 0,
+    this.activeOffers = const <ActiveOffer>[],
   });
 
   factory ServiceElement.fromJson(Map<String, dynamic> json) {
@@ -191,6 +198,9 @@ class ServiceElement {
       totalAppointments: json['total_appointments'] is int ? json['total_appointments'] : -1,
       clinicName: json['clinic_name'] is List ? List<String>.from(json['clinic_name'].map((x) => x)) : [],
       totalInclusiveTax: json['total_inclusive_tax'] is num ? json['total_inclusive_tax'] : 0,
+      activeOffers: json['active_offers'] is List
+          ? List<ActiveOffer>.from(json['active_offers'].map((x) => ActiveOffer.fromJson(x)))
+          : [],
     );
   }
 
@@ -227,6 +237,7 @@ class ServiceElement {
       'total_appointments': totalAppointments,
       'clinic_name': clinicName.map((e) => e).toList(),
       'total_inclusive_tax': totalInclusiveTax,
+      'active_offers': activeOffers.map((e) => e.toJson()).toList(),
     };
   }
 }

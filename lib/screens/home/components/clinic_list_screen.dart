@@ -6,12 +6,14 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../../components/app_scaffold.dart';
 import '../../../components/cached_image_widget.dart';
+import '../../../components/filter_count_badge.dart';
 import '../../../components/loader_widget.dart';
 import '../../../generated/assets.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/empty_error_state_widget.dart';
 import '../../booking/filter/filter_screen.dart';
+import '../../booking/filter/model/filter_params.dart';
 import '../../clinic/clinic_list_controller.dart';
 import '../../clinic/components/search_clinic_widget.dart';
 import '../../clinic/model/clinics_res_model.dart';
@@ -50,58 +52,52 @@ class ClinicListComponent extends StatelessWidget {
                   onTap: () {
                     clinicListCont.searchClinicCont.clear();
                     clinicListCont.page(1);
-                    Get.to(() => FilterScreen(filterType: "clinic",displayName: "clinic",), arguments: [
 
-                      clinicListCont.clinicId.value,
-                      clinicListCont.serviceType.value,
-                      clinicListCont.priceMin,
-                      clinicListCont.priceMax,
-                      "clinic"
-                    ], binding: BindingsBuilder(() {
-                      setStatusBarColor(
-                        transparentColor,
-                        statusBarIconBrightness: Brightness.light,
-                        statusBarBrightness: Brightness.light,
-                        systemNavigationBarColor: whiteTextColor,
-                      );
-                    }));
+                    // Create FilterParams with current filter values
+                    final params = FilterParams(
+                      moduleType: "clinic",
+                      clinicId: clinicListCont.clinicId.value,
+                      serviceType: clinicListCont.serviceType.value,
+                      priceMin: clinicListCont.priceMin.toString(),
+                      priceMax: clinicListCont.priceMax.toString(),
+                      governorateId: clinicListCont.selectedGovernorateId.value,
+                      cityId: clinicListCont.selectedCityId.value,
+                    );
+
+                    Get.to(() => FilterScreen(filterType: "clinic", displayName: "clinic"),
+                      arguments: params,
+                      binding: BindingsBuilder(() {
+                        setStatusBarColor(
+                          transparentColor,
+                          statusBarIconBrightness: Brightness.light,
+                          statusBarBrightness: Brightness.light,
+                          systemNavigationBarColor: whiteTextColor,
+                        );
+                      }));
                   },
-                  child: Stack(
-                    alignment: Alignment.topRight,
-                    children: [
-                      Container(
-                        height: 46,
-                        width: 46,
-                        alignment: Alignment.center,
-                        decoration: boxDecorationDefault(
-                          color: appColorPrimary,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const CachedImageWidget(
-                          url: Assets.iconsIcFilter,
-                          height: 28,
-                          color: white,
-                        ),
-                      ),
-                       if (filterController.seleFilterCount.value > 0)
-                        Positioned(
-                          top: -4,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              '${filterController.seleFilterCount.value }',
-                              style: const TextStyle(color: Colors.white, fontSize: 10),
-                            ),
+                  child: Obx(
+                    () => Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          height: 46,
+                          width: 46,
+                          alignment: Alignment.center,
+                          decoration: boxDecorationDefault(
+                            color: appColorPrimary,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const CachedImageWidget(
+                            url: Assets.iconsIcFilter,
+                            height: 28,
+                            color: white,
                           ),
                         ),
+                        FilterCountBadge(count: filterController.activeFilterCount),
                     ],
                   ),
                 ),
+              ),
               ],
             ).paddingAll(16),
             SnapHelperWidget(

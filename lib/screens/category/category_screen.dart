@@ -66,14 +66,14 @@ class CategoryScreen extends StatelessWidget {
               children: [
                 // Section heading
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 16, left: 4),
+                  padding: const EdgeInsetsDirectional.only(bottom: 16, start: 4),
                   child: Text(
                     locale.value.category,
                     style: GoogleFonts.outfit(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                       letterSpacing: -0.3,
-                      color: isDarkMode.value ? Colors.white : primaryTextColor,
+                      color: isDarkMode.value ? whiteTextColor : primaryTextColor,
                     ),
                   ),
                 ),

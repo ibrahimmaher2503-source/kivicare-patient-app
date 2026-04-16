@@ -28,7 +28,7 @@ class FilterSearchClinicComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Obx(() => Container(
       decoration: BoxDecoration(
         color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
         borderRadius: BorderRadius.circular(12),
@@ -40,7 +40,7 @@ class FilterSearchClinicComponent extends StatelessWidget {
         textInputAction: TextInputAction.done,
         textStyle: GoogleFonts.plusJakartaSans(
           fontSize: 13,
-          color: isDarkMode.value ? Colors.white : appColorPrimary,
+          color: isDarkMode.value ? whiteTextColor : appColorPrimary,
           decorationColor: appColorPrimary,
         ),
         onTap: onTap,
@@ -81,6 +81,6 @@ class FilterSearchClinicComponent extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 }

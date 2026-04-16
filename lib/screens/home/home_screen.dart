@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
+import 'package:kivicare_patient/utils/colors.dart';
 
 import '../../components/app_scaffold.dart';
 import '../../main.dart';
@@ -9,7 +10,8 @@ import '../../utils/empty_error_state_widget.dart';
 
 import 'components/choose_category_components.dart';
 import 'components/greetings_component.dart';
-import 'components/quick_book_component.dart';
+import 'components/doctor_quick_book_component.dart';
+import 'components/quick_services_component.dart';
 import 'components/perfect_clinic_list.dart';
 import '../service/components/popular_service_component.dart';
 import 'components/slider_component.dart';
@@ -17,12 +19,67 @@ import '../doctor/components/popular_doctor_component.dart';
 import 'components/upcoming_appointment_components.dart';
 import 'home_controller.dart';
 import 'model/dashboard_res_model.dart';
-import 'package:kivicare_patient/screens/home/components/quick_book_controller.dart';
+import 'components/doctor_quick_book_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final HomeController homeScreenController = Get.find();
+
+  /// Staggered fade-in + slide-up for each home section
+  Widget _staggeredSection({required Widget child, required int index}) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 480 + (index * 90)),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) {
+        return Transform.translate(
+          offset: Offset(0, 20 * (1 - value)),
+          child: Opacity(opacity: value, child: child),
+        );
+      },
+      child: child,
+    );
+  }
+
+  /// Reactive top spacer: minimal padding when categories+slider are both empty,
+  /// full 28px+divider+20px when content exists above QuickBook.
+  Widget _conditionalTopSpacer() {
+    return Obx(() {
+      final hasAbove = homeScreenController.dashboardData.value.categories.isNotEmpty ||
+          homeScreenController.dashboardData.value.slider.isNotEmpty;
+      if (!hasAbove) return const SizedBox(height: 8);
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 28),
+          _sectionDivider(),
+          const SizedBox(height: 20),
+        ],
+      );
+    });
+  }
+
+  /// Thin gradient divider between sections
+  Widget _sectionDivider() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Container(
+        height: 1,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              appColorPrimary.withValues(alpha: 0.0),
+              appColorPrimary.withValues(alpha: 0.07),
+              appColorSecondary.withValues(alpha: 0.07),
+              appColorPrimary.withValues(alpha: 0.0),
+            ],
+            stops: const [0.0, 0.3, 0.7, 1.0],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +87,13 @@ class HomeScreen extends StatelessWidget {
       hasLeadingWidget: false,
       isBlurBackgroundinLoader: true,
       isLoading: homeScreenController.isLoading,
-      appBarVerticalSize: Get.height * 0.14,
+      appBarVerticalSize: Get.height * 0.21,
       appBarChild: const GreetingsComponent(),
       body: RefreshIndicator(
         onRefresh: () async {
-          Get.find<QuickBookController>().resetFields();
+          if (Get.isRegistered<DoctorQuickBookController>()) {
+            Get.find<DoctorQuickBookController>().reset();
+          }
           return await homeScreenController.getDashboardDetail(isFromSwipeRefresh: true);
         },
         child: Obx(
@@ -60,20 +119,33 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ChooseCategoryComponents(),
-                    const SizedBox(height: 8),
-                    SliderComponent(),
-                    const SizedBox(height: 24),
-                    QuickBookComponent(),
-                    const SizedBox(height: 24),
-                    UpcomingAppointmentComponents(),
-                    const SizedBox(height: 24),
-                    // FeaturedServiceComponent(),
-                    PopularServiceComponent(),
-                    const SizedBox(height: 24),
-                    PerfectClinicComponent(),
-                    const SizedBox(height: 24),
-                    PopularDoctorComponent(),
+                    _staggeredSection(index: 0, child: ChooseCategoryComponents()),
+                    Obx(() => homeScreenController.dashboardData.value.categories.isNotEmpty
+                        ? const SizedBox(height: 8)
+                        : const SizedBox.shrink()),
+                    _staggeredSection(index: 1, child: SliderComponent()),
+                    _conditionalTopSpacer(),
+                    _staggeredSection(index: 2, child: DoctorQuickBookComponent()),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
+                    _staggeredSection(index: 3, child: const QuickServicesComponent()),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
+                    _staggeredSection(index: 4, child: UpcomingAppointmentComponents()),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
+                    _staggeredSection(index: 5, child: PopularDoctorComponent()),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
+                    _staggeredSection(index: 6, child: PopularServiceComponent()),
+                    const SizedBox(height: 28),
+                    _sectionDivider(),
+                    const SizedBox(height: 20),
+                    _staggeredSection(index: 7, child: PerfectClinicComponent()),
                   ],
                 ),
               );

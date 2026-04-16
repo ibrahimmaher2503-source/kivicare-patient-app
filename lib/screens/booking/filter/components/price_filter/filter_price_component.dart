@@ -27,7 +27,7 @@ class FilterPriceComponent extends StatelessWidget {
                 style: GoogleFonts.outfit(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: isDarkMode.value ? Colors.white : appColorPrimary,
+                  color: isDarkMode.value ? whiteTextColor : appColorPrimary,
                 ),
               ).paddingAll(16),
               Obx(
@@ -43,7 +43,7 @@ class FilterPriceComponent extends StatelessWidget {
                   child: RangeSlider(
                     min: 1,
                     max: 5000,
-                    divisions: (5000 ~/ 10).toInt(),
+                    divisions: 5000 ~/ 10,
                     labels: RangeLabels(filterCont.rangeValues.value.start.toInt().toString(), filterCont.rangeValues.value.end.toInt().toString()),
                     values: filterCont.rangeValues.value,
                     onChanged: (values) {
