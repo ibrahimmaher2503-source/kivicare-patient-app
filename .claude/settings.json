@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter analyze:*)",
+      "Bash(dart analyze:*)",
+      "Bash(git fetch:*)",
+      "Bash(findstr:*)",
+      "mcp__mobile-mcp__mobile_take_screenshot"
+    ]
+  }
+}

@@ -1,0 +1,110 @@
+<h2>Homepage Layout Structure</h2>
+<p class="subtitle">How should the top portion of the homepage feel? The header sets the tone for the entire screen.</p>
+
+<div class="cards">
+  <!-- Option A: Vezeeta Classic -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background: linear-gradient(135deg, #08234F 0%, #0D3B7A 100%); border-radius: 8px; padding: 20px; color: white; min-height: 280px;">
+        <!-- Status bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2);"></div>
+            <div>
+              <div style="font-size: 10px; opacity: 0.6;">Good Morning</div>
+              <div style="font-size: 15px; font-weight: 700;">Ibrahim</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 14px;">🔔</div>
+          </div>
+        </div>
+        <!-- Search bar -->
+        <div style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+          <span style="opacity: 0.6;">🔍</span>
+          <span style="opacity: 0.5; font-size: 14px;">Search doctors, specialties...</span>
+        </div>
+        <!-- Location chip -->
+        <div style="display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.1); border-radius: 16px; padding: 6px 12px; font-size: 11px; opacity: 0.75;">
+          📍 Cairo, Egypt ▾
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. Vezeeta Classic</h3>
+      <p>Navy gradient header with greeting, search bar inside the gradient, location below. Header collapses on scroll. Clean and familiar.</p>
+    </div>
+  </div>
+
+  <!-- Option B: Flat & Airy -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background: #F8FAFB; border-radius: 8px; padding: 20px; min-height: 280px;">
+        <!-- Status bar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <div style="font-size: 11px; color: #828A90;">Good Morning 👋</div>
+            <div style="font-size: 20px; font-weight: 700; color: #08234F;">Ibrahim</div>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="display: inline-flex; align-items: center; gap: 4px; background: white; border: 1px solid #E5E7EB; border-radius: 16px; padding: 6px 12px; font-size: 11px; color: #08234F;">
+              📍 Cairo ▾
+            </div>
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: #F0F2F5; display: flex; align-items: center; justify-content: center; font-size: 14px;">🔔</div>
+          </div>
+        </div>
+        <!-- Search bar -->
+        <div style="background: white; border: 1.5px solid #E5E7EB; border-radius: 14px; padding: 15px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(8,35,79,0.06);">
+          <span style="color: #037F7C;">🔍</span>
+          <span style="color: #9CA3AF; font-size: 14px;">Search doctors, specialties...</span>
+        </div>
+        <!-- Quick filters -->
+        <div style="display: flex; gap: 8px; margin-top: 14px;">
+          <div style="background: #E0F5F4; color: #037F7C; border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 600;">Doctors</div>
+          <div style="background: white; border: 1px solid #E5E7EB; color: #6B7280; border-radius: 20px; padding: 6px 14px; font-size: 12px;">Labs</div>
+          <div style="background: white; border: 1px solid #E5E7EB; color: #6B7280; border-radius: 20px; padding: 6px 14px; font-size: 12px;">Pharmacy</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. Flat & Airy</h3>
+      <p>No gradient header — white/light background throughout. Search bar is a prominent white card with soft shadow. Quick filter chips below search. Modern, minimal, Apple Health-inspired.</p>
+    </div>
+  </div>
+
+  <!-- Option C: Compact Gradient + Prominent Search -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="border-radius: 8px; overflow: hidden; min-height: 280px;">
+        <!-- Compact gradient top -->
+        <div style="background: linear-gradient(135deg, #08234F 0%, #0D3B7A 100%); padding: 16px 20px 32px; color: white;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.2);"></div>
+              <div>
+                <div style="font-size: 10px; opacity: 0.6;">Good Morning</div>
+                <div style="font-size: 15px; font-weight: 700;">Ibrahim</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <div style="display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.12); border-radius: 16px; padding: 5px 10px; font-size: 10px;">📍 Cairo ▾</div>
+              <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 13px;">🔔</div>
+            </div>
+          </div>
+        </div>
+        <!-- Search overlaps gradient/white boundary -->
+        <div style="background: #F8FAFB; padding: 0 20px 16px; margin-top: -18px;">
+          <div style="background: white; border: 1px solid #E5E7EB; border-radius: 14px; padding: 15px 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 16px rgba(8,35,79,0.08);">
+            <span style="color: #037F7C;">🔍</span>
+            <span style="color: #9CA3AF; font-size: 14px;">Search doctors, specialties...</span>
+            <span style="margin-left: auto; background: #08234F; color: white; border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 600;">Search</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. Compact Gradient + Floating Search</h3>
+      <p>Short navy gradient for branding (greeting + nav only), then a floating search card that bridges the gradient and white content area. Best of both: brand presence without dominating the screen.</p>
+    </div>
+  </div>
+</div>
