@@ -31,7 +31,13 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Platform Parity**: Does this feature work on Android, iOS, and Web?
+- [ ] **Patient Data Security**: Are all API calls HTTPS? No sensitive keys hardcoded?
+- [ ] **GetX Consistency**: Does it use GetX for state/nav/DI? Correct state location?
+- [ ] **Backend Fidelity**: Does it follow the Laravel API contract and network patterns?
+- [ ] **Localization**: Are all strings in `language_en.dart` and `language_ar.dart`? RTL support?
+- [ ] **Uniformity**: For service modules: Hub -> Discovery -> Booking -> Tracking?
+- [ ] **Simplicity**: Is it the simplest possible implementation? No speculative abstractions?
 
 ## Project Structure
 
