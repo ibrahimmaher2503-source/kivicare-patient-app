@@ -24,3 +24,4 @@ android/.gradle/
 # Misc
 .env
 *.log
+.worktrees/
