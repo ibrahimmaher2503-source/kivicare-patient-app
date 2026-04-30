@@ -20,8 +20,8 @@ class UpcomingAppointmentComponents extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        16.height,
-        ViewAllLabel(label: locale.value.upcomingAppointments, isShowAll: false),
+        24.height,
+        ViewAllLabel(label: locale.value.upcomingAppointments, isShowAll: false, labelSize: 18),
         AppointmentCard(appointment: homeScreenController.dashboardData.value.upcomingAppointment.first),
       ],
     ).paddingSymmetric(horizontal: 16);

@@ -1,9 +1,8 @@
 {
-  "ai": "codex",
-  "ai_skills": true,
+  "ai": "gemini",
   "branch_numbering": "sequential",
   "here": true,
-  "integration": "codex",
+  "integration": "gemini",
   "preset": null,
   "script": "ps",
   "speckit_version": "0.5.2.dev0"

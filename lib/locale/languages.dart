@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseLanguage {
-  static BaseLanguage of(BuildContext context) => Localizations.of<BaseLanguage>(context, BaseLanguage)!;
+  static BaseLanguage of(BuildContext context) =>
+      Localizations.of<BaseLanguage>(context, BaseLanguage)!;
 
   String get language;
 
@@ -72,6 +73,10 @@ abstract class BaseLanguage {
   String get yes;
 
   String get submit;
+
+  String get select;
+
+  String get chooseAnother;
 
   String get firstName;
 
@@ -877,13 +882,15 @@ abstract class BaseLanguage {
 
   String get appliedTaxes;
 
-  String cancellationChargesWillBeAppliedForCancellationWithin(String amount, String hours);
+  String cancellationChargesWillBeAppliedForCancellationWithin(
+      String amount, String hours);
 
   String get cancelAppointment;
 
   String get goBack;
 
-  String cancellationFeesWillBeAppliedIfYouCancelWithinHoursOfScheduledTime(String hours, bool isCancellationChargesEnabled);
+  String cancellationFeesWillBeAppliedIfYouCancelWithinHoursOfScheduledTime(
+      String hours, bool isCancellationChargesEnabled);
 
   String get reason;
 
@@ -1095,6 +1102,117 @@ abstract class BaseLanguage {
   String get unknownSubmitOutcomeBanner;
   String get quickServiceHomeNursing;
 
+  // Pharmacy
+  String get pharmacyHome;
+  String get searchProducts;
+  String get categories;
+  String get brands;
+  String get productTypes;
+  String get featuredProducts;
+  String get addToCart;
+  String get viewCart;
+  String get cart;
+  String get cartEmpty;
+  String get checkout;
+  String get placeOrder;
+  String get orderSuccess;
+  String get orderFailed;
+  String get availablePharmacies;
+  String get selectPharmacy;
+  String get deliveryAddress;
+  String get paymentMethod;
+  String get applyCoupon;
+  String get couponCode;
+  String get deliveryFee;
+  String get orders;
+  String get orderDetail;
+  String get orderStatus;
+  String get trackOrder;
+  String get cancelOrder;
+  String get requestRefund;
+  String get refundReason;
+  String get prescriptions;
+  String get uploadPrescription;
+  String get prescriptionRequired;
+  String get uploadPrescriptionInstructions;
+  String get takePhoto;
+  String get chooseFromGallery;
+  String get maxImageLimitReached;
+  String get maximumQuantityReached;
+  String get markAllAsRead;
+  String get noProductsFound;
+  String get filter;
+  String get sort;
+
+  // Pharmacy Sorting
+  String get sortNewest;
+  String get sortPriceAsc;
+  String get sortPriceDesc;
+  String get sortRating;
+
+  // Pharmacy Details
+  String get productInfo;
+  String get manufacturer;
+  String get dosage;
+  String get unit;
+  String get inStock;
+  String get outOfStock;
+
+  // Pharmacy Prescription
+  String get notesOptional;
+  String get submitPrescription;
+  String get chooseImageSource;
+
+  // Pharmacy Orders
+  String get placedOn;
+  String get items;
+  String get orderNumber;
+  String get fulfillFullCart;
+  String get fulfillPartialCart;
+  String get partialFulfillWarning;
+
+  // Pharmacy Refunds
+  String get refundRequests;
+  String get damagedProduct;
+  String get wrongProductReceived;
+  String get expiredProduct;
+  String get qualityIssue;
+  String get submitRequest;
+
+  // Pharmacy Localized Strings
+  String get pharmacyCouponApplied;
+  String get pharmacyInvalidCoupon;
+  String get pharmacyDeliveryAddressRequired;
+  String get pharmacyPrescriptionRequired;
+  String get pharmacySelectDeliveryAddress;
+  String get pharmacyCartPrescriptionWarning;
+  String get pharmacyPrescriptionLabel;
+  String get pharmacySelectPrescription;
+  String get pharmacyUploadNewPrescription;
+  String get pharmacyCashOnDelivery;
+  String get pharmacyWallet;
+  String get pharmacyCancelOrderConfirm;
+  String get pharmacyYesCancel;
+  String get pharmacyQty;
+  String get pharmacyNoOrders;
+  String get pharmacyOrderSuccess;
+  String get pharmacyBackToHome;
+  String get pharmacyNoPharmaciesAvailable;
+  String get pharmacyNoPrescriptions;
+  String get pharmacyPrescriptionImages;
+  String get pharmacyRejectionReason;
+  String get pharmacyUploadedOn;
+  String get pharmacySelectReason;
+  String get pharmacyRefundSubmitted;
+  String get pharmacyAdditionalNotes;
+  String get pharmacyDescribeIssue;
+  String get pharmacyNoRefunds;
+  String get pharmacyReason;
+  String get pharmacyRefundAmount;
+  String get pharmacyNoNotifications;
+  String get pharmacyNotesForPharmacy;
+  String get pharmacyNoDescription;
+
   // Location filter
   String get selectGovernorate;
   String get selectCity;
@@ -1144,7 +1262,6 @@ abstract class BaseLanguage {
   String get additionalNotesOptional;
   String get additionalNotesHint;
   String get additionalNotesTooLong;
-  String get submitRequest;
   String get requestSubmittedSuccessfully;
   String get referenceCopied;
   String get weWillGetBackToYouSoon;
@@ -1167,4 +1284,81 @@ abstract class BaseLanguage {
   String get bookAppointment;
   String get noUpcomingAppointments;
   String get bookYourFirstAppointment;
+
+  // ICU Admission Module
+  String get icuAdmission;
+  String get icuHospitals;
+  String get searchHospitals;
+  String get hospitalsFound;
+  String get noHospitalsFound;
+  String get hasAvailableBeds;
+  String get noBedsAvailable;
+  String get hospitalDetail;
+  String get aboutHospital;
+  String get departments;
+  String get availableBeds;
+  String get totalBeds;
+  String get callHospital;
+  String get callEmergency;
+  String get openInMaps;
+  String get requestIcuAdmissionHere;
+  String get icuDepartments;
+  String get browseByDepartment;
+  String get departmentDescription;
+  String get patientName;
+  String get patientAge;
+  String get patientGender;
+  String get diagnosis;
+  String get urgencyLevel;
+  String get accompanyingName;
+  String get accompanyingRelation;
+  String get accompanyingPhone;
+  String get nationalId;
+  String get currentCondition;
+  String get attendingDoctor;
+  String get currentMedications;
+  String get allergies;
+  String get selectHospital;
+  String get selectDepartment;
+  String get changeHospital;
+  String get routine;
+  String get urgent;
+  String get critical;
+  String get criticalUrgencyAlertTitle;
+  String get criticalUrgencyAlertMessage;
+  String get callEmergencyHotline;
+  String get continueForm;
+  String get underReview;
+  String get approved;
+  String get admitted;
+  String get discharged;
+  String get status;
+  String get fieldRequired;
+  String get invalidPhone;
+  String get maxCharsReached;
+  String get invalidDate;
+  String get pleaseSelectHospital;
+  String get pleaseSelectDepartment;
+  String get copyReference;
+  String get trackRequest;
+  String get lastReference;
+  String get goBackToHome;
+  String get cancelRequest;
+  String get cancelConfirmation;
+  String get cancelReason;
+  String get confirmCancellation;
+  String get keepRequest;
+  String get requestCancelled;
+  String get emergencyHotline;
+  String get callNow;
+  String get myAdmissionRequests;
+  String get statusTimeline;
+  String get admissionDetails;
+  String get room;
+  String get bed;
+  String get admittedAt;
+  String get dischargeDetails;
+  String get dischargedAt;
+  String get dischargeSummary;
+  String get rejectionReason;
 }

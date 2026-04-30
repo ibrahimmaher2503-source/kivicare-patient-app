@@ -23,7 +23,7 @@ class PopularServiceComponent extends StatelessWidget {
       width: Get.width,
       child: Column(
         children: [
-          16.height,
+          24.height,
           ViewAllLabel(
             label: homeController.dashboardData.value.popularService.subTitle,
             onTap: () {

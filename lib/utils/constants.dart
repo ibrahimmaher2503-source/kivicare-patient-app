@@ -94,6 +94,7 @@ class SharedPreferenceConst {
   // static const ONE_TIME_PASSWORD = 'ONE_TIME_PASSWORD';
   static const IS_GOOGLE_AUTHENTICATION = 'IS_GOOGLE_AUTHENTICATION';
   static const GOOGLE_AUTHENTICATION_TYPE = 'IS_GOOGLE_AUTHENTICATION_TYPE';
+  static const lastIcuRequestReferenceKey = 'lastIcuRequestReference';
 }
 //endregion
 

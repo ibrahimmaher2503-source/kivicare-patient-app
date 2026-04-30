@@ -15,6 +15,9 @@ import '../../category/model/category_list_model.dart';
 import '../../clinic/model/clinic_detail_model.dart';
 import '../../clinic/model/clinics_res_model.dart';
 import '../../doctor/doctor_list_controller.dart';
+import '../../location_filter/models/city_model.dart';
+import '../../location_filter/models/governorate_model.dart';
+import '../../location_filter/service/location_cache_service.dart';
 import '../../service/service_list_controller.dart';
 import 'components/clinic_filter/filter_clinic_component.dart';
 import 'components/filter_category.dart';
@@ -81,8 +84,45 @@ class FilterController extends GetxController {
   ].obs;
   RxString selectedServiceType = "".obs;
 
+  // Location filter fields — added for the location filter module
+  final Rxn<int> selectedGovernorateId = Rxn<int>();
+  final Rxn<int> selectedCityId = Rxn<int>();
+  final Rxn<GovernorateModel> selectedGovernorate = Rxn<GovernorateModel>();
+  final Rxn<CityModel> selectedCity = Rxn<CityModel>();
+
+  int get locationFilterCount => selectedGovernorateId.value != null ? 1 : 0;
+
+  Future<void> applyLocationSelection({
+    required int? governorateId,
+    required int? cityId,
+    GovernorateModel? governorate,
+    CityModel? city,
+  }) async {
+    selectedGovernorateId.value = governorateId;
+    selectedCityId.value = cityId;
+    selectedGovernorate.value = governorate;
+    selectedCity.value = city;
+    await LocationCacheService().saveLastSelection(
+      governorateId: governorateId,
+      cityId: cityId,
+    );
+  }
+
+  Future<void> clearLocationSelection() async {
+    selectedGovernorateId.value = null;
+    selectedCityId.value = null;
+    selectedGovernorate.value = null;
+    selectedCity.value = null;
+    await LocationCacheService().clearLastSelection();
+  }
+
   @override
   void onInit() {
+    // Hydrate persisted location selection
+    final locationCache = LocationCacheService();
+    selectedGovernorateId.value = locationCache.getLastSelectedGovernorateId();
+    selectedCityId.value = locationCache.getLastSelectedCityId();
+
     if (Get.arguments is List) {
       if (Get.arguments[0] is int) {
         selectedClinicData(Clinic(id: Get.arguments[0], clinicSession: ClinicSession()));
@@ -112,9 +152,10 @@ class FilterController extends GetxController {
       } else {
         filterType(filterList[0]);
       }
-    }
-    if (Get.arguments[5] is int) {
-      selectedCategoryData(CategoryElement(id: Get.arguments[5]));
+
+      if (Get.arguments[5] is int) {
+        selectedCategoryData(CategoryElement(id: Get.arguments[5]));
+      }
     }
 
     getClinic();

@@ -9,11 +9,16 @@ import '../../../generated/assets.dart';
 import '../../../utils/colors.dart';
 import '../../auth/other/notification_screen.dart';
 
+import '../../pharmacy/cart/cart_screen.dart';
+import '../../pharmacy/pharmacy_controller.dart';
+
 class GreetingsComponent extends StatelessWidget {
   const GreetingsComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
+    PharmacyController pharmacyController = Get.isRegistered<PharmacyController>() ? Get.find() : Get.put(PharmacyController());
+
     return SizedBox(
       width: Get.width,
       child: Row(
@@ -57,6 +62,32 @@ class GreetingsComponent extends StatelessWidget {
             ],
           ).expand(),
           16.width,
+          GestureDetector(
+            onTap: () {
+              doIfLoggedIn(() => Get.to(() => CartScreen()));
+            },
+            behavior: HitTestBehavior.translucent,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                const Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 24),
+                Positioned(
+                  top: -6,
+                  right: -6,
+                  child: Obx(
+                    () => Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: boxDecorationDefault(color: appColorSecondary, shape: BoxShape.circle),
+                      child: Text(
+                        pharmacyController.cartCount.value > 99 ? '99+' : pharmacyController.cartCount.value.toString(),
+                        style: secondaryTextStyle(color: white, size: 10),
+                      ),
+                    ).visible(pharmacyController.cartCount.value > 0),
+                  ),
+                )
+              ],
+            ),
+          ).paddingRight(12),
           GestureDetector(
             onTap: () {
               doIfLoggedIn(() {

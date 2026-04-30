@@ -20,6 +20,7 @@ const INQUIRY_SUPPORT_EMAIL = 'demo@gmail.com';
 
 /// You can add help line number here for contact. It's demo number
 const HELP_LINE_NUMBER = '+15265897485';
+const EMERGENCY_HOTLINE = '+20XXXXXXXXXX';
 
 //region Payment Gateway
 //region STRIPE

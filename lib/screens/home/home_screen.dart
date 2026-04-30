@@ -5,17 +5,17 @@ import 'package:kivicare_patient/components/loader_widget.dart';
 
 import '../../components/app_scaffold.dart';
 import '../../main.dart';
+import '../../utils/colors.dart';
+import '../../utils/common_base.dart';
 import '../../utils/empty_error_state_widget.dart';
 
 import 'components/choose_category_components.dart';
 import 'components/greetings_component.dart';
 import 'components/quick_book_component.dart';
-import 'components/quick_service_section.dart';
 import 'components/perfect_clinic_list.dart';
 import '../service/components/popular_service_component.dart';
 import 'components/slider_component.dart';
 import '../doctor/components/popular_doctor_component.dart';
-import 'components/quick_service_card.dart';
 import 'components/upcoming_appointment_components.dart';
 import 'home_controller.dart';
 import 'model/dashboard_res_model.dart';
@@ -36,7 +36,9 @@ class HomeScreen extends StatelessWidget {
       appBarChild: const GreetingsComponent(),
       body: RefreshIndicator(
         onRefresh: () async {
-          Get.find<QuickBookController>().resetFields();
+          if (Get.isRegistered<QuickBookController>()) {
+            Get.find<QuickBookController>().resetFields();
+          }
           return await homeScreenController.getDashboardDetail(isFromSwipeRefresh: true);
         },
         child: Obx(
@@ -63,9 +65,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     UpcomingAppointmentComponents(),
-                    _BookNowButton(context: context),
-                    const QuickServiceSection(),
-                    const QuickServicesComponent(),
+                    const _BookNowButton(),
                     ChooseCategoryComponents(),
                     SliderComponent(),
                     PopularServiceComponent(),
@@ -83,8 +83,7 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _BookNowButton extends StatelessWidget {
-  const _BookNowButton({required this.context});
-  final BuildContext context;
+  const _BookNowButton();
 
   @override
   Widget build(BuildContext context) {
@@ -92,55 +91,58 @@ class _BookNowButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: GestureDetector(
         onTap: () {
-          final qbc = Get.find<QuickBookController>();
-          qbc.resetFields();
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (_) => DraggableScrollableSheet(
-              initialChildSize: 0.88,
-              minChildSize: 0.5,
-              maxChildSize: 0.95,
-              builder: (_, scrollController) => Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                ),
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 12, bottom: 4),
-                        width: 40,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(2),
+          doIfLoggedIn(() {
+            if (Get.isRegistered<QuickBookController>()) {
+              Get.find<QuickBookController>().resetFields();
+            }
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (_) => DraggableScrollableSheet(
+                initialChildSize: 0.88,
+                minChildSize: 0.5,
+                maxChildSize: 0.95,
+                builder: (_, scrollController) => Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  ),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 12, bottom: 4),
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
                         ),
-                      ),
-                      QuickBookComponent(),
-                    ],
+                        QuickBookComponent(),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
+            );
+          });
         },
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF037F7C), Color(0xFF13BAAA)],
+              colors: [appColorSecondary, appColorAccent],
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF037F7C).withValues(alpha: 0.3),
+                color: appColorSecondary.withValues(alpha: 0.3),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),

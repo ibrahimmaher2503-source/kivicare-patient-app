@@ -83,4 +83,34 @@ class APIEndPoints {
   // DOCTOR VISIT MODULE
   // ============================================
   static const String doctorVisitRequests = 'v1/doctor-visit/requests';
+
+  // ============================================
+  // PHARMACY MODULE
+  // ============================================
+  static const String pharmacyCategories = 'v1/pharmacy/categories';
+  static const String pharmacyProducts = 'v1/pharmacy/products';
+  static const String pharmacyBrands = 'v1/pharmacy/filters/brands';
+  static const String pharmacyProductTypes = 'v1/pharmacy/filters/product-types';
+  static const String pharmacyCart = 'v1/pharmacy/cart';
+  static const String pharmacyCartItems = 'v1/pharmacy/cart/items';
+  static const String pharmacyAvailablePharmacies = 'v1/pharmacy/cart/available-pharmacies';
+  static const String pharmacyOrders = 'v1/pharmacy/orders';
+  static const String pharmacyPrescriptions = 'v1/pharmacy/prescriptions';
+  static const String pharmacyValidateCoupon = 'v1/pharmacy/coupons/validate';
+  static const String pharmacyRefunds = 'v1/pharmacy/refunds';
+  static const String pharmacyNotifications = 'v1/pharmacy/notifications';
+  static const String pharmacyUnreadNotificationsCount = 'v1/pharmacy/notifications/unread-count';
+  static const String pharmacyReadAllNotifications = 'v1/pharmacy/notifications/read-all';
+
+  // ============================================
+  // ICU ADMISSION MODULE
+  // ============================================
+  static const String icuHospitals = 'icu-hospitals';
+  static const String icuDepartments = 'icu-departments';
+  static const String icuAdmissionRequests = 'icu-admission-requests';
+
+  static String icuHospitalDetail(int id) => 'icu-hospitals/$id';
+  static String icuHospitalDepartments(int id) => 'icu-hospitals/$id/departments';
+  static String icuAdmissionRequestDetail(int id) => 'icu-admission-requests/$id';
+  static String cancelIcuAdmissionRequest(int id) => 'icu-admission-requests/$id/cancel';
 }

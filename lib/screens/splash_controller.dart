@@ -38,16 +38,16 @@ class SplashScreenController extends GetxController {
 
   ///Get ChooseService List
   Future<void> getAppConfigurations() async {
-    await AuthServiceApis.getAppConfigurations().then((value) {
+    await AuthServiceApis.getAppConfigurations()
+        .timeout(const Duration(seconds: 15))
+        .then((value) {
       appCurrency(value.currency);
       appConfigs(value);
 
       ///Navigation logic
       navigationLogic();
     }).onError((error, stackTrace) {
-      toast(error.toString());
-
-      ///Navigation logic
+      log('getAppConfigurations E: $error');
       navigationLogic();
     });
   }

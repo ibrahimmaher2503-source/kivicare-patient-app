@@ -188,6 +188,14 @@ class QuickBookComponent extends StatelessWidget {
                 child: AppTextField(
                   readOnly: true,
                   onTap: () async {
+                    if (quickBookController.selectedServiceId.value <= 0) {
+                      toast(locale.value.selectService);
+                      return;
+                    }
+                    if (quickBookController.selectedClinicId.value <= 0) {
+                      toast(locale.value.selectClinic);
+                      return;
+                    }
                     DateTime? selectedDate = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
@@ -222,6 +230,14 @@ class QuickBookComponent extends StatelessWidget {
                 height: 40,
                 child: AppTextField(
                   onTap: () {
+                    if (quickBookController.selectedServiceId.value <= 0) {
+                      toast(locale.value.selectService);
+                      return;
+                    }
+                    if (quickBookController.selectedDate.value.isEmpty) {
+                      toast(locale.value.dateIsNotSelected);
+                      return;
+                    }
                     quickBookController.getTimeSlot(showLoader: true);
                   },
                   readOnly: true,

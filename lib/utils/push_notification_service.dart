@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/screens/booking/appointment_detail_screen.dart';
+import 'package:kivicare_patient/screens/icu_admission/requests/admission_request_detail_screen.dart';
 import 'package:kivicare_patient/screens/nurse_request/detail/nurse_request_detail_screen.dart';
 
 import '../main.dart';
@@ -103,6 +104,12 @@ class PushNotificationService {
           final requestId = rawId is int ? rawId : int.tryParse(rawId?.toString() ?? '') ?? 0;
           if (requestId > 0) {
             Get.to(() => NurseRequestDetailScreen(requestId: requestId));
+          }
+        } else if (notificationType == 'icu_admission_status_changed') {
+          final rawId = additionalData['request_id'];
+          final requestId = rawId is int ? rawId : int.tryParse(rawId?.toString() ?? '') ?? 0;
+          if (requestId > 0) {
+            Get.to(() => AdmissionRequestDetailScreen(requestId: requestId));
           }
         } else if (additionalData.isNotEmpty) {
           int? notId = additionalData[FirebaseTopicConst.idKey];

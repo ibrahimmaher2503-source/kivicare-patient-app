@@ -9,6 +9,8 @@ import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:kivicare_patient/utils/constants.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../../main.dart';
+
 import '../../../api/core_apis.dart';
 
 class QuickBookController extends GetxController {
@@ -75,6 +77,9 @@ class QuickBookController extends GetxController {
     clinicList.clear();
     slots.clear();
 
+    serviceData = null;
+    selectedClinicData = null;
+
     hasErrorFetchingServices.value = false;
     hasErrorFetchingClinic.value = false;
     isLoading.value = false;
@@ -114,6 +119,7 @@ class QuickBookController extends GetxController {
   }
 
   Future<void> getTimeSlot({bool showLoader = true}) async {
+    if (serviceData == null) return;
     if (showLoader) isLoading(true);
     try {
       if (serviceData != null && serviceData!.assignDoctor.isNotEmpty) {
@@ -155,6 +161,14 @@ class QuickBookController extends GetxController {
   }
 
   void bookAppointment() {
+    if (serviceData == null) {
+      toast(locale.value.selectService);
+      return;
+    }
+    if (selectedClinicData == null) {
+      toast(locale.value.selectClinic);
+      return;
+    }
     //BookingReq
     bookingReq.clinicId = selectedClinicId.value.toString();
     bookingReq.serviceId = selectedServiceId.value.toString();
@@ -197,6 +211,8 @@ class QuickBookController extends GetxController {
     selectedServiceId(-1);
     selectedClinicId(-1);
     selectedDoctorId(-1);
+    serviceData = null;
+    selectedClinicData = null;
     currentPage(1);
     hasMoreData(false);
     super.dispose();
