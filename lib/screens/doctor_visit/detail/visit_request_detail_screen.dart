@@ -121,7 +121,7 @@ class VisitRequestDetailScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Status timeline
-              _SectionHeader(title: locale.value.statusHistory),
+              _SectionHeader(title: locale.value.statusTimeline),
               const SizedBox(height: 12),
               VisitStatusTimeline(request: req),
 
@@ -133,14 +133,14 @@ class VisitRequestDetailScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   margin: const EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
-                    color: Colors.red.shade50,
+                    color: cancelStatusColor.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.red.shade200),
+                    border: Border.all(color: cancelStatusColor.withValues(alpha: 0.28)),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.info_outline, color: Colors.red.shade600, size: 20),
+                      const Icon(Icons.info_outline, color: cancelStatusColor, size: 20),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
@@ -148,7 +148,7 @@ class VisitRequestDetailScreen extends StatelessWidget {
                           children: [
                             Text(
                               locale.value.cancellationReason,
-                              style: boldTextStyle(size: 13, color: Colors.red.shade700),
+                              style: boldTextStyle(size: 13, color: cancelStatusColor),
                             ),
                             const SizedBox(height: 4),
                             Text(req.cancellationReason!, style: primaryTextStyle(size: 13)),
@@ -227,17 +227,17 @@ class VisitRequestDetailScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.green.shade50,
+                    color: completedStatusColor.withValues(alpha: 0.09),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.green.shade200),
+                    border: Border.all(color: completedStatusColor.withValues(alpha: 0.28)),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.task_alt, color: Colors.green.shade600, size: 20),
+                      const Icon(Icons.task_alt, color: completedStatusColor, size: 20),
                       const SizedBox(width: 10),
                       Text(
                         '${locale.value.visitCompletedAt}: ${DateFormat('d MMM yyyy').format(req.completedAt!.toLocal())}',
-                        style: boldTextStyle(size: 13, color: Colors.green.shade700),
+                        style: boldTextStyle(size: 13, color: completedStatusColor),
                       ),
                     ],
                   ),

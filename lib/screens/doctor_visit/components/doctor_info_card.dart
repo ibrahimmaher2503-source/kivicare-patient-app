@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../components/cached_image_widget.dart';
+import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../models/visit_doctor_model.dart';
 
@@ -13,18 +14,22 @@ class DoctorInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = isDarkMode.value;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: context.cardColor,
+        color: dark ? surfaceElevatedDark : surfaceElevated,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: softShadowColor,
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: dark ? borderColorDark : whiteBorderColor),
+        boxShadow: dark
+            ? const []
+            : [
+                BoxShadow(
+                  color: softShadowColor,
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       child: Row(
         children: [
@@ -37,14 +42,17 @@ class DoctorInfoCard extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(width: 12),
+          12.width,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(doctor.name, style: boldTextStyle(size: 14)),
                 if (doctor.specialty != null && doctor.specialty!.isNotEmpty)
-                  Text(doctor.specialty!, style: secondaryTextStyle(size: 12)),
+                  Text(
+                    doctor.specialty!,
+                    style: secondaryTextStyle(size: 12),
+                  ),
                 if (subtitle != null)
                   Text(
                     subtitle!,
@@ -60,8 +68,8 @@ class DoctorInfoCard extends StatelessWidget {
           if (doctor.rating != null)
             Row(
               children: [
-                const Icon(Icons.star_rounded, color: Colors.amber, size: 16),
-                const SizedBox(width: 4),
+                const Icon(Icons.star_rounded, color: ratingColor, size: 16),
+                4.width,
                 Text(
                   doctor.rating!.toStringAsFixed(1),
                   style: boldTextStyle(size: 12),

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../main.dart';
+import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../models/status_history_model.dart';
 
@@ -13,13 +14,16 @@ class StatusHistoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = isDarkMode.value;
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: context.cardColor,
+        color: dark ? surfaceElevatedDark : surfaceElevated,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.dividerColor.withValues(alpha: 0.3)),
+        border: Border.all(
+          color: (dark ? borderColorDark : whiteBorderColor),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,29 +34,31 @@ class StatusHistoryTile extends StatelessWidget {
                 _StatusBadge(label: history.oldStatus!.name),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Icon(Icons.arrow_forward, size: 14, color: appColorSecondary),
+                  child: Icon(
+                    Icons.arrow_forward,
+                    size: 14,
+                    color: appColorSecondary,
+                  ),
                 ),
               ],
               _StatusBadge(label: history.newStatus.name, isNew: true),
             ],
           ),
           if (history.changedBy != null) ...[
-            const SizedBox(height: 6),
+            6.height,
             Text(
               '${locale.value.visitChangedBy}: ${history.changedBy!.name}',
               style: secondaryTextStyle(size: 11),
             ),
           ],
           if (history.note != null && history.note!.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Text(
-              history.note!,
-              style: primaryTextStyle(size: 12),
-            ),
+            4.height,
+            Text(history.note!, style: primaryTextStyle(size: 12)),
           ],
-          const SizedBox(height: 4),
+          4.height,
           Text(
-            DateFormat('d MMM yyyy, hh:mm a').format(history.changedAt.toLocal()),
+            DateFormat('d MMM yyyy, hh:mm a')
+                .format(history.changedAt.toLocal()),
             style: secondaryTextStyle(size: 11),
           ),
         ],
@@ -69,12 +75,13 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = isDarkMode.value;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: isNew
-            ? gradientSecondaryStart.withValues(alpha: 0.1)
-            : Colors.grey.shade100,
+            ? gradientSecondaryStart.withValues(alpha: dark ? 0.2 : 0.1)
+            : (dark ? borderColorDark : inputFillColor),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
@@ -82,7 +89,9 @@ class _StatusBadge extends StatelessWidget {
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w600,
-          color: isNew ? gradientSecondaryStart : Colors.grey.shade600,
+          color: isNew
+              ? gradientSecondaryStart
+              : (dark ? textSecondaryDark : secondaryTextColor),
         ),
       ),
     );

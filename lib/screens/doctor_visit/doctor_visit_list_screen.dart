@@ -4,6 +4,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/app_scaffold.dart';
 import '../../main.dart';
+import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import 'components/visit_request_card.dart';
 import 'detail/visit_request_detail_screen.dart';
@@ -37,7 +38,8 @@ class DoctorVisitListScreen extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (controller.error.value.isNotEmpty && controller.requests.isEmpty) {
+              if (controller.error.value.isNotEmpty &&
+                  controller.requests.isEmpty) {
                 return _ErrorState(controller: controller);
               }
 
@@ -50,7 +52,8 @@ class DoctorVisitListScreen extends StatelessWidget {
                 child: ListView.builder(
                   controller: controller.scrollController,
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  itemCount: controller.requests.length + (controller.isLoadingMore.value ? 1 : 0),
+                  itemCount: controller.requests.length +
+                      (controller.isLoadingMore.value ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index == controller.requests.length) {
                       return const Padding(
@@ -80,11 +83,13 @@ class DoctorVisitListScreen extends StatelessWidget {
           controller.refresh();
         },
         backgroundColor: gradientStart,
-        icon: const Icon(Icons.add, color: Colors.white),
+        foregroundColor: whiteTextColor,
+        icon: const Icon(Icons.add, size: 22),
         label: Text(
           locale.value.newRequest,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          style: boldTextStyle(color: whiteTextColor, size: 14),
         ),
+        elevation: 3,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
@@ -114,38 +119,49 @@ class _FilterChipsRow extends StatelessWidget {
       VisitStatus.cancelled: locale.value.cancelled,
     };
 
-    return Obx(() => SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: filters.map((status) {
-              final isSelected = controller.statusFilter.value == status;
-              return GestureDetector(
-                onTap: () => controller.setFilter(status),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.only(right: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: isSelected ? gradientStart : context.cardColor,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isSelected ? gradientStart : context.dividerColor,
-                    ),
-                  ),
-                  child: Text(
-                    labels[status] ?? locale.value.all,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                      color: isSelected ? Colors.white : Theme.of(context).iconTheme.color,
-                    ),
+    return Obx(() {
+      final dark = isDarkMode.value;
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: filters.map((status) {
+            final isSelected = controller.statusFilter.value == status;
+            return GestureDetector(
+              onTap: () => controller.setFilter(status),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                margin: const EdgeInsets.only(right: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? gradientStart
+                      : (dark ? surfaceElevatedDark : surfaceSubtle),
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(
+                    color: isSelected
+                        ? gradientStart
+                        : (dark ? borderColorDark : whiteBorderColor),
                   ),
                 ),
-              );
-            }).toList(),
-          ),
-        ));
+                child: Text(
+                  labels[status] ?? locale.value.all,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight:
+                        isSelected ? FontWeight.w600 : FontWeight.w400,
+                    color: isSelected
+                        ? whiteTextColor
+                        : (dark ? textSecondaryDark : secondaryTextColor),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      );
+    });
   }
 }
 
@@ -155,24 +171,41 @@ class _EmptyState extends StatelessWidget {
     return Center(
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.medical_services_outlined, size: 64, color: appColorSecondary),
-            const SizedBox(height: 16),
+            Container(
+              width: 72,
+              height: 72,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.medical_services_outlined,
+                size: 36,
+                color: whiteTextColor,
+              ),
+            ),
+            18.height,
             Text(
               locale.value.noVisitRequestsTitle,
               style: boldTextStyle(size: 16),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            8.height,
             Text(
               locale.value.requestYourFirstVisit,
               style: secondaryTextStyle(size: 13),
               textAlign: TextAlign.center,
             ),
           ],
-        ).paddingSymmetric(horizontal: 32),
+        ),
       ),
     );
   }
@@ -189,13 +222,20 @@ class _ErrorState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 48, color: cancelStatusColor),
-          const SizedBox(height: 12),
+          const Icon(
+            Icons.error_outline,
+            size: 48,
+            color: cancelStatusColor,
+          ),
+          12.height,
           Text(locale.value.somethingWentWrong, style: boldTextStyle()),
-          const SizedBox(height: 8),
+          8.height,
           TextButton(
             onPressed: controller.fetchRequests,
-            child: Text(locale.value.retry),
+            child: Text(
+              locale.value.retry,
+              style: TextStyle(color: gradientStart),
+            ),
           ),
         ],
       ),

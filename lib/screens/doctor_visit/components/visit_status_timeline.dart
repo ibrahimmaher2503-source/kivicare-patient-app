@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../main.dart';
+import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../models/visit_request_model.dart';
 import '../models/visit_status.dart';
@@ -16,14 +17,16 @@ class VisitStatusTimeline extends StatelessWidget {
   Widget build(BuildContext context) {
     final steps = _buildSteps(request);
     return Column(
-      children: List.generate(steps.length, (i) {
-        return _TimelineRow(step: steps[i], isLast: i == steps.length - 1);
-      }),
+      children: List.generate(
+        steps.length,
+        (i) => _TimelineRow(step: steps[i], isLast: i == steps.length - 1),
+      ),
     );
   }
 
   List<_Step> _buildSteps(VisitRequestModel r) {
-    bool reached(VisitStatus s) => r.statusHistories.any((h) => h.newStatus == s);
+    bool reached(VisitStatus s) =>
+        r.statusHistories.any((h) => h.newStatus == s);
     DateTime? at(VisitStatus s) {
       for (final h in r.statusHistories) {
         if (h.newStatus == s) return h.changedAt;
@@ -91,13 +94,22 @@ class _TimelineRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = isDarkMode.value;
     final dotColor = step.cancelled
-        ? Colors.red.shade600
+        ? cancelStatusColor
         : step.reached
             ? gradientSecondaryStart
-            : Colors.grey.shade300;
+            : (dark ? borderColorDark : shimmerBase);
 
-    final lineColor = step.reached ? gradientSecondaryStart : Colors.grey.shade200;
+    final lineColor = step.reached
+        ? gradientSecondaryStart
+        : (dark ? borderColorDark : whiteBorderColor);
+
+    final labelColor = step.active
+        ? (step.cancelled ? cancelStatusColor : gradientSecondaryStart)
+        : step.reached
+            ? gradientStart
+            : (dark ? textSecondaryDark : secondaryTextColor);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,13 +122,16 @@ class _TimelineRow extends StatelessWidget {
               decoration: BoxDecoration(
                 color: dotColor,
                 shape: BoxShape.circle,
-                border: Border.all(color: dotColor.withValues(alpha: 0.3), width: 3),
+                border: Border.all(
+                  color: dotColor.withValues(alpha: 0.3),
+                  width: 3,
+                ),
               ),
               child: step.reached
                   ? Icon(
                       step.cancelled ? Icons.close : Icons.check,
                       size: 10,
-                      color: Colors.white,
+                      color: whiteTextColor,
                     )
                   : null,
             ),
@@ -128,7 +143,7 @@ class _TimelineRow extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(width: 12),
+        12.width,
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(bottom: isLast ? 0 : 20),
@@ -137,18 +152,12 @@ class _TimelineRow extends StatelessWidget {
               children: [
                 Text(
                   step.label,
-                  style: boldTextStyle(
-                    size: 13,
-                    color: step.active
-                        ? (step.cancelled ? Colors.red.shade700 : gradientSecondaryStart)
-                        : step.reached
-                            ? appColorPrimary
-                            : Colors.grey.shade400,
-                  ),
+                  style: boldTextStyle(size: 13, color: labelColor),
                 ),
                 if (step.time != null)
                   Text(
-                    DateFormat('d MMM yyyy, hh:mm a').format(step.time!.toLocal()),
+                    DateFormat('d MMM yyyy, hh:mm a')
+                        .format(step.time!.toLocal()),
                     style: secondaryTextStyle(size: 11),
                   ),
               ],

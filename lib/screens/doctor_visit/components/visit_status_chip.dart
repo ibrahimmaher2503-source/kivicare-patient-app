@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../main.dart';
+import '../../../utils/app_common.dart';
+import '../../../utils/colors.dart';
 import '../models/visit_status.dart';
 
 class VisitStatusChip extends StatelessWidget {
@@ -10,23 +12,28 @@ class VisitStatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cfg = _configFor(status);
+    final base = _colorFor(status);
+    final dark = isDarkMode.value;
+    final bg = base.withValues(alpha: dark ? 0.18 : 0.11);
+    final border = base.withValues(alpha: dark ? 0.42 : 0.22);
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      constraints: const BoxConstraints(minHeight: 28),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
       decoration: BoxDecoration(
-        color: cfg.bg,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: cfg.border, width: 0.5),
+        color: bg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: border),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(cfg.icon, size: 14, color: cfg.fg),
-          const SizedBox(width: 6),
+          Icon(_iconFor(status), size: 13, color: base),
+          const SizedBox(width: 5),
           Text(
-            cfg.label,
+            _labelFor(status),
             style: TextStyle(
-              color: cfg.fg,
+              color: base,
               fontWeight: FontWeight.w600,
               fontSize: 12,
             ),
@@ -36,54 +43,42 @@ class VisitStatusChip extends StatelessWidget {
     );
   }
 
-  _ChipConfig _configFor(VisitStatus s) {
+  Color _colorFor(VisitStatus s) {
     switch (s) {
       case VisitStatus.pending:
-        return _ChipConfig(
-          label: locale.value.pending,
-          icon: Icons.hourglass_empty,
-          bg: Colors.amber.shade50,
-          fg: Colors.amber.shade700,
-          border: Colors.amber.shade200,
-        );
+        return pendingStatusColor;
       case VisitStatus.confirmed:
-        return _ChipConfig(
-          label: locale.value.confirmed,
-          icon: Icons.check_circle_outline,
-          bg: Colors.blue.shade50,
-          fg: Colors.blue.shade700,
-          border: Colors.blue.shade200,
-        );
+        return confirmedStatusColor;
       case VisitStatus.completed:
-        return _ChipConfig(
-          label: locale.value.completed,
-          icon: Icons.task_alt,
-          bg: Colors.green.shade50,
-          fg: Colors.green.shade700,
-          border: Colors.green.shade200,
-        );
+        return completedStatusColor;
       case VisitStatus.cancelled:
-        return _ChipConfig(
-          label: locale.value.cancelled,
-          icon: Icons.cancel_outlined,
-          bg: Colors.red.shade50,
-          fg: Colors.red.shade700,
-          border: Colors.red.shade200,
-        );
+        return cancelStatusColor;
     }
   }
-}
 
-class _ChipConfig {
-  final String label;
-  final IconData icon;
-  final Color bg, fg, border;
+  IconData _iconFor(VisitStatus s) {
+    switch (s) {
+      case VisitStatus.pending:
+        return Icons.hourglass_empty;
+      case VisitStatus.confirmed:
+        return Icons.check_circle_outline;
+      case VisitStatus.completed:
+        return Icons.task_alt;
+      case VisitStatus.cancelled:
+        return Icons.cancel_outlined;
+    }
+  }
 
-  _ChipConfig({
-    required this.label,
-    required this.icon,
-    required this.bg,
-    required this.fg,
-    required this.border,
-  });
+  String _labelFor(VisitStatus s) {
+    switch (s) {
+      case VisitStatus.pending:
+        return locale.value.pending;
+      case VisitStatus.confirmed:
+        return locale.value.confirmed;
+      case VisitStatus.completed:
+        return locale.value.completed;
+      case VisitStatus.cancelled:
+        return locale.value.cancelled;
+    }
+  }
 }

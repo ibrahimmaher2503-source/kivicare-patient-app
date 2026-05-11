@@ -6,6 +6,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../components/app_scaffold.dart';
 import '../../../components/cached_image_widget.dart';
 import '../../../main.dart';
+import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import 'visit_request_form_controller.dart';
 
@@ -41,10 +42,12 @@ class VisitRequestFormScreen extends StatelessWidget {
                   24.height,
                   _SectionLabel(locale.value.preferredDoctorOptional),
                   8.height,
-                  Obx(() => _DoctorPickerField(
-                        controller: controller,
-                        onTap: () => _showDoctorPicker(context, controller),
-                      )),
+                  Obx(
+                    () => _DoctorPickerField(
+                      controller: controller,
+                      onTap: () => _showDoctorPicker(context, controller),
+                    ),
+                  ),
                   24.height,
                   _SectionLabel(locale.value.additionalNotesOptional),
                   8.height,
@@ -54,41 +57,61 @@ class VisitRequestFormScreen extends StatelessWidget {
               ),
             ),
           ),
-          Obx(() => SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed:
-                          controller.isSubmitting.value ? null : controller.submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: gradientStart,
-                        disabledBackgroundColor: Colors.grey.shade300,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: controller.isSubmitting.value
-                          ? const CircularProgressIndicator(
-                              strokeWidth: 2, color: Colors.white)
-                          : Text(
-                              locale.value.submitRequest,
-                              style: boldTextStyle(color: Colors.white, size: 16),
-                            ),
+          Obx(
+            () => SafeArea(
+              top: false,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                  border: Border(
+                    top: BorderSide(
+                      color: isDarkMode.value ? borderColorDark : whiteBorderColor,
                     ),
                   ),
                 ),
-              )),
+                padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: controller.isSubmitting.value
+                        ? null
+                        : controller.submit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: gradientStart,
+                      disabledBackgroundColor: gray400.withValues(alpha: 0.28),
+                      foregroundColor: whiteTextColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: controller.isSubmitting.value
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: whiteTextColor,
+                            ),
+                          )
+                        : Text(
+                            locale.value.submitRequest,
+                            style: boldTextStyle(color: whiteTextColor, size: 16),
+                          ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   void _showDoctorPicker(
-      BuildContext context, VisitRequestFormController controller) {
+    BuildContext context,
+    VisitRequestFormController controller,
+  ) {
     controller.loadDoctors();
     final searchController = TextEditingController();
 
@@ -101,95 +124,130 @@ class VisitRequestFormScreen extends StatelessWidget {
           initialChildSize: 0.75,
           maxChildSize: 0.95,
           minChildSize: 0.5,
-          builder: (_, scrollController) => Container(
-            decoration: BoxDecoration(
-              color: context.scaffoldBackgroundColor,
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            child: Column(
-              children: [
-                const SizedBox(height: 12),
-                Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    locale.value.selectPreferredDoctor,
-                    style: boldTextStyle(size: 16),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: TextField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      hintText: locale.value.searchHere,
-                      prefixIcon: const Icon(Icons.search, size: 20),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 10),
+          builder: (_, scrollController) {
+            final dark = isDarkMode.value;
+            return Container(
+              decoration: BoxDecoration(
+                color: dark ? surfaceElevatedDark : surfaceElevated,
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: Column(
+                children: [
+                  12.height,
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: dark ? borderColorDark : whiteBorderColor,
+                      borderRadius: BorderRadius.circular(2),
                     ),
-                    onChanged: (val) => controller.loadDoctors(search: val),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Expanded(
-                  child: Obx(() {
-                    if (controller.isDoctorSearching.value &&
-                        controller.doctorSearchResults.isEmpty) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (controller.doctorSearchResults.isEmpty) {
-                      return Center(
-                        child: Text(
-                          locale.value.noDoctorAssignedYet,
-                          style: secondaryTextStyle(),
+                  16.height,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      locale.value.selectPreferredDoctor,
+                      style: boldTextStyle(size: 16),
+                    ),
+                  ),
+                  12.height,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: TextField(
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: locale.value.searchHere,
+                        hintStyle: TextStyle(
+                          color: dark ? textSecondaryDark : secondaryTextColor,
                         ),
-                      );
-                    }
-                    return ListView.builder(
-                      controller: scrollController,
-                      itemCount: controller.doctorSearchResults.length,
-                      itemBuilder: (_, i) {
-                        final doc = controller.doctorSearchResults[i];
-                        return ListTile(
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(24),
-                            child: CachedImageWidget(
-                              url: doc.avatar ?? '',
-                              height: 48,
-                              width: 48,
-                              fit: BoxFit.cover,
-                            ),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          size: 20,
+                          color: dark ? textSecondaryDark : secondaryTextColor,
+                        ),
+                        filled: true,
+                        fillColor: dark ? inputFillColorDark : inputFillColor,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: dark ? borderColorDark : whiteBorderColor,
                           ),
-                          title: Text(doc.name, style: boldTextStyle(size: 14)),
-                          subtitle: doc.specialty != null
-                              ? Text(doc.specialty!,
-                                  style: secondaryTextStyle(size: 12))
-                              : null,
-                          onTap: () {
-                            controller.selectedDoctor.value = doc;
-                            Get.back();
-                          },
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: dark ? borderColorDark : whiteBorderColor,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: gradientSecondaryStart,
+                            width: 1.4,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                      ),
+                      onChanged: (val) => controller.loadDoctors(search: val),
+                    ),
+                  ),
+                  8.height,
+                  Expanded(
+                    child: Obx(() {
+                      if (controller.isDoctorSearching.value &&
+                          controller.doctorSearchResults.isEmpty) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      },
-                    );
-                  }),
-                ),
-              ],
-            ),
-          ),
+                      }
+                      if (controller.doctorSearchResults.isEmpty) {
+                        return Center(
+                          child: Text(
+                            locale.value.noDoctorAssignedYet,
+                            style: secondaryTextStyle(),
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                        controller: scrollController,
+                        itemCount: controller.doctorSearchResults.length,
+                        itemBuilder: (_, i) {
+                          final doc = controller.doctorSearchResults[i];
+                          return ListTile(
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(24),
+                              child: CachedImageWidget(
+                                url: doc.avatar ?? '',
+                                height: 48,
+                                width: 48,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            title:
+                                Text(doc.name, style: boldTextStyle(size: 14)),
+                            subtitle: doc.specialty != null
+                                ? Text(
+                                    doc.specialty!,
+                                    style: secondaryTextStyle(size: 12),
+                                  )
+                                : null,
+                            onTap: () {
+                              controller.selectedDoctor.value = doc;
+                              Get.back();
+                            },
+                          );
+                        },
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     ).whenComplete(searchController.dispose);
@@ -202,7 +260,7 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: boldTextStyle(size: 14, color: appColorPrimary));
+    return Text(title, style: boldTextStyle(size: 14, color: gradientStart));
   }
 }
 
@@ -212,7 +270,20 @@ class _ReasonField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = isDarkMode.value;
     final errorText = controller.fieldErrors['reason'];
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: BorderSide(color: dark ? borderColorDark : whiteBorderColor),
+    );
+    final focusedBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: const BorderSide(color: gradientSecondaryStart, width: 1.4),
+    );
+    final errorBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: BorderSide(color: cancelStatusColor.withValues(alpha: 0.62)),
+    );
     return TextField(
       controller: controller.reasonController,
       maxLines: 4,
@@ -220,9 +291,21 @@ class _ReasonField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: locale.value.visitReasonHint,
         errorText: errorText,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        counterText: '',
+        filled: true,
+        fillColor: dark ? inputFillColorDark : inputFillColor,
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        hintStyle: TextStyle(
+          color: dark ? textSecondaryDark : secondaryTextColor,
+          fontSize: 14,
+        ),
+        errorStyle: const TextStyle(color: cancelStatusColor, fontSize: 12),
+        border: border,
+        enabledBorder: border,
+        focusedBorder: focusedBorder,
+        errorBorder: errorBorder,
+        focusedErrorBorder: errorBorder,
       ),
     );
   }
@@ -234,6 +317,7 @@ class _DatePickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = isDarkMode.value;
     final errorText = controller.fieldErrors['date'];
     final selected = controller.preferredDate.value;
 
@@ -248,6 +332,15 @@ class _DatePickerField extends StatelessWidget {
               initialDate: selected ?? now,
               firstDate: now,
               lastDate: now.add(const Duration(days: 365)),
+              builder: (ctx, child) => Theme(
+                data: Theme.of(ctx).copyWith(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: gradientStart,
+                    brightness: dark ? Brightness.dark : Brightness.light,
+                  ),
+                ),
+                child: child!,
+              ),
             );
             if (picked != null) {
               controller.preferredDate.value = picked;
@@ -255,22 +348,26 @@ class _DatePickerField extends StatelessWidget {
             }
           },
           child: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
             decoration: BoxDecoration(
+              color: dark ? inputFillColorDark : inputFillColor,
               border: Border.all(
-                color: errorText != null ? Colors.red : Colors.grey.shade400,
+                color: errorText != null
+                    ? cancelStatusColor.withValues(alpha: 0.62)
+                    : (dark ? borderColorDark : whiteBorderColor),
               ),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.calendar_today_outlined,
                   size: 18,
-                  color: errorText != null ? Colors.red : appColorSecondary,
+                  color: errorText != null
+                      ? cancelStatusColor
+                      : appColorSecondary,
                 ),
-                const SizedBox(width: 10),
+                12.width,
                 Expanded(
                   child: Text(
                     selected != null
@@ -281,19 +378,21 @@ class _DatePickerField extends StatelessWidget {
                         : secondaryTextStyle(size: 14),
                   ),
                 ),
-                Icon(Icons.arrow_drop_down,
-                    color: Colors.grey.shade500),
+                Icon(
+                  Icons.arrow_drop_down,
+                  color: dark ? textSecondaryDark : secondaryTextColor,
+                ),
               ],
             ),
           ),
         ),
         if (errorText != null) ...[
-          const SizedBox(height: 4),
+          4.height,
           Padding(
             padding: const EdgeInsets.only(left: 4),
             child: Text(
               errorText,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
+              style: const TextStyle(color: cancelStatusColor, fontSize: 12),
             ),
           ),
         ],
@@ -308,19 +407,41 @@ class _PhoneField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = isDarkMode.value;
     final errorText = controller.fieldErrors['phone'];
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: BorderSide(color: dark ? borderColorDark : whiteBorderColor),
+    );
+    final focusedBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: const BorderSide(color: gradientSecondaryStart, width: 1.4),
+    );
+    final errorBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: BorderSide(color: cancelStatusColor.withValues(alpha: 0.62)),
+    );
     return TextField(
       controller: controller.phoneController,
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
-        prefixIcon:
-            const Icon(Icons.phone_outlined, size: 20),
+        prefixIcon: const Icon(Icons.phone_outlined, size: 20, color: appColorSecondary),
         hintText: '+201001234567',
         errorText: errorText,
-        border:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        filled: true,
+        fillColor: dark ? inputFillColorDark : inputFillColor,
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        hintStyle: TextStyle(
+          color: dark ? textSecondaryDark : secondaryTextColor,
+          fontSize: 14,
+        ),
+        errorStyle: const TextStyle(color: cancelStatusColor, fontSize: 12),
+        border: border,
+        enabledBorder: border,
+        focusedBorder: focusedBorder,
+        errorBorder: errorBorder,
+        focusedErrorBorder: errorBorder,
       ),
     );
   }
@@ -337,31 +458,36 @@ class _DoctorPickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = isDarkMode.value;
     final selected = controller.selectedDoctor.value;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade400),
-          borderRadius: BorderRadius.circular(12),
+          color: dark ? inputFillColorDark : inputFillColor,
+          border: Border.all(color: dark ? borderColorDark : whiteBorderColor),
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
           children: [
-            const Icon(Icons.person_search_outlined,
-                size: 20, color: appColorSecondary),
-            const SizedBox(width: 10),
+            const Icon(
+              Icons.person_search_outlined,
+              size: 20,
+              color: appColorSecondary,
+            ),
+            12.width,
             Expanded(
               child: selected != null
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(selected.name,
-                            style: primaryTextStyle(size: 14)),
+                        Text(selected.name, style: primaryTextStyle(size: 14)),
                         if (selected.specialty != null)
-                          Text(selected.specialty!,
-                              style: secondaryTextStyle(size: 12)),
+                          Text(
+                            selected.specialty!,
+                            style: secondaryTextStyle(size: 12),
+                          ),
                       ],
                     )
                   : Text(
@@ -372,10 +498,17 @@ class _DoctorPickerField extends StatelessWidget {
             if (selected != null)
               GestureDetector(
                 onTap: () => controller.selectedDoctor.value = null,
-                child: Icon(Icons.clear, size: 18, color: Colors.grey.shade500),
+                child: Icon(
+                  Icons.clear,
+                  size: 18,
+                  color: dark ? textSecondaryDark : secondaryTextColor,
+                ),
               )
             else
-              Icon(Icons.arrow_drop_down, color: Colors.grey.shade500),
+              Icon(
+                Icons.arrow_drop_down,
+                color: dark ? textSecondaryDark : secondaryTextColor,
+              ),
           ],
         ),
       ),
@@ -389,7 +522,20 @@ class _NotesField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = isDarkMode.value;
     final errorText = controller.fieldErrors['notes'];
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: BorderSide(color: dark ? borderColorDark : whiteBorderColor),
+    );
+    final focusedBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: const BorderSide(color: gradientSecondaryStart, width: 1.4),
+    );
+    final errorBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: BorderSide(color: cancelStatusColor.withValues(alpha: 0.62)),
+    );
     return TextField(
       controller: controller.notesController,
       maxLines: 3,
@@ -397,10 +543,21 @@ class _NotesField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: locale.value.additionalNotesHint,
         errorText: errorText,
-        border:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        counterText: '',
+        filled: true,
+        fillColor: dark ? inputFillColorDark : inputFillColor,
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        hintStyle: TextStyle(
+          color: dark ? textSecondaryDark : secondaryTextColor,
+          fontSize: 14,
+        ),
+        errorStyle: const TextStyle(color: cancelStatusColor, fontSize: 12),
+        border: border,
+        enabledBorder: border,
+        focusedBorder: focusedBorder,
+        errorBorder: errorBorder,
+        focusedErrorBorder: errorBorder,
       ),
     );
   }
