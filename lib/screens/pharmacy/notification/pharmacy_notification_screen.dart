@@ -4,13 +4,13 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../api/pharmacy_apis.dart';
 import '../../../components/app_scaffold.dart';
 import '../../../models/base_response_model.dart';
-import '../../../utils/empty_error_state_widget.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
 import '../model/pharmacy_notification_model.dart';
 import '../model/pharmacy_parsers.dart';
 import '../order/pharmacy_order_detail_screen.dart';
 import '../pharmacy_controller.dart';
+import '../utils/pharmacy_empty_state.dart';
 
 class PharmacyNotificationController extends GetxController {
   RxBool isLoading = false.obs;
@@ -127,20 +127,20 @@ class PharmacyNotificationScreen extends StatelessWidget {
     return AppScaffoldNew(
       appBartitleText: locale.value.notifications,
       isLoading: controller.isLoading,
+      scaffoldBackgroundColor: appLayoutBackground,
       actions: [
         TextButton(
           onPressed: controller.markAllAsRead,
           child: Text(locale.value.markAllAsRead,
-              style: boldTextStyle(color: appColorSecondary, size: 12)),
+              style: boldTextStyle(color: appColorSecondary, size: 13)),
         ),
       ],
       body: Obx(
           () => controller.notifications.isEmpty && !controller.isLoading.value
-              ? NoDataWidget(
+              ? PharmacyEmptyState(
+                  icon: Icons.notifications_none_outlined,
                   title: locale.value.pharmacyNoNotifications,
-                  imageWidget: const ErrorStateWidget(),
-                  onRetry: () => controller.refresh(),
-                ).center()
+                )
               : AnimatedScrollView(
                   padding: const EdgeInsets.all(16),
                   onSwipeRefresh: () => controller.refresh(),
@@ -165,37 +165,36 @@ class _NotificationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool unread = !(notification.isRead ?? false);
     return GestureDetector(
       onTap: () => controller.handleNotificationClick(notification),
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
-        decoration: boxDecorationDefault(
-          color: (notification.isRead ?? false)
-              ? context.cardColor
-              : appColorSecondary.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color: (notification.isRead ?? false)
-                  ? context.dividerColor
-                  : appColorSecondary.withValues(alpha: 0.2)),
+        decoration: BoxDecoration(
+          color: surfaceElevated,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+                color: softShadowColor,
+                blurRadius: 16,
+                offset: const Offset(0, 6))
+          ],
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
-              decoration: boxDecorationDefault(
-                  color: (notification.isRead ?? false)
-                      ? gray100
-                      : appColorSecondary.withValues(alpha: 0.1),
-                  shape: BoxShape.circle),
+              height: 44,
+              width: 44,
+              decoration: BoxDecoration(
+                color: unread ? lightSecondaryColor : surfaceSubtle,
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Icon(
                 _getIconForType(notification.type),
-                color: (notification.isRead ?? false)
-                    ? gray500
-                    : appColorSecondary,
-                size: 20,
+                color: appColorSecondary,
+                size: 22,
               ),
             ),
             const SizedBox(width: 12),
@@ -204,23 +203,30 @@ class _NotificationWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(notification.title ?? '',
-                      style: boldTextStyle(size: 14)),
+                      style: boldTextStyle(
+                          size: 14, color: appColorPrimary)),
                   const SizedBox(height: 4),
-                  Text(notification.body ?? '',
-                      style: secondaryTextStyle(size: 12)),
+                  Text(
+                    notification.body ?? '',
+                    style: primaryTextStyle(size: 13, color: gray500),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   const SizedBox(height: 8),
                   Text(notification.createdAt ?? '',
-                      style: secondaryTextStyle(size: 10)),
+                      style: secondaryTextStyle(size: 11)),
                 ],
               ),
             ),
-            if (!(notification.isRead ?? false))
+            if (unread) ...[
+              const SizedBox(width: 8),
               Container(
                 height: 8,
                 width: 8,
                 decoration: const BoxDecoration(
                     color: appColorSecondary, shape: BoxShape.circle),
               ),
+            ],
           ],
         ),
       ),

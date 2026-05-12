@@ -127,13 +127,6 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
   Widget build(BuildContext context) {
     return AppScaffoldNew(
       appBartitleText: locale.value.filter,
-      actions: [
-        TextButton(
-          onPressed: controller.reset,
-          child:
-              Text(locale.value.reset, style: boldTextStyle(color: Colors.red)),
-        ),
-      ],
       body: Obx(() {
         if (controller.isLoadingFilters.value) {
           return const LoaderWidget().center();
@@ -155,86 +148,201 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
           ).center();
         }
 
-        return Stack(
-          children: [
-            SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle(locale.value.priceRange),
-                  _buildPriceSlider(context),
-                  const SizedBox(height: 24),
-                  _buildSectionTitle(locale.value.brands),
-                  _buildBrandsGrid(context),
-                  const SizedBox(height: 24),
-                  _buildSectionTitle(locale.value.productTypes),
-                  _buildProductTypesList(context),
-                  const SizedBox(height: 24),
-                  _buildPrescriptionToggle(context),
-                ],
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: boxDecorationDefault(
-                    color: context.cardColor,
-                    boxShadow: [
-                      BoxShadow(
-                          color: softShadowColor,
-                          blurRadius: 10,
-                          offset: const Offset(0, -4))
-                    ]),
-                child: AppButton(
-                  text: locale.value.apply,
-                  color: appColorPrimary,
-                  textColor: Colors.white,
-                  width: Get.width,
-                  onTap: controller.apply,
+        return Container(
+          color: appLayoutBackground,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSectionTitle(locale.value.priceRange),
+                    _buildPriceSlider(context),
+                    const SizedBox(height: 24),
+                    _buildSectionTitle(locale.value.brands),
+                    _buildBrandsGrid(context),
+                    const SizedBox(height: 24),
+                    _buildSectionTitle(locale.value.productTypes),
+                    _buildProductTypesList(context),
+                    const SizedBox(height: 24),
+                    _buildPrescriptionToggle(context),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(
+                      16, 16, 16, 16 + MediaQuery.paddingOf(context).bottom),
+                  decoration: BoxDecoration(
+                      color: surfaceElevated,
+                      boxShadow: [
+                        BoxShadow(
+                            color: softShadowColor,
+                            blurRadius: 16,
+                            offset: const Offset(0, -4))
+                      ]),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: controller.reset,
+                          child: Container(
+                            height: 52,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: surfaceElevated,
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                  color: appColorPrimary, width: 1.4),
+                            ),
+                            child: Text(
+                              locale.value.reset,
+                              style: boldTextStyle(
+                                  color: appColorPrimary, size: 15),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: controller.apply,
+                          child: Container(
+                            height: 52,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: [
+                                  gradientSecondaryStart,
+                                  gradientSecondaryEnd
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(14),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: softShadowColor,
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Text(
+                              locale.value.apply,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       }),
     );
   }
 
   Widget _buildSectionTitle(String title) {
-    return Text(title, style: boldTextStyle(size: 16)).paddingOnly(bottom: 12);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Text(title,
+          style: boldTextStyle(size: 16, color: appColorPrimary)),
+    );
   }
 
   Widget _buildPriceSlider(BuildContext context) {
-    return Obx(() => Column(
-          children: [
-            RangeSlider(
-              values: controller.priceRange.value,
-              min: 0,
-              max: 5000,
-              divisions: 50,
-              activeColor: appColorSecondary,
-              inactiveColor: gray200,
-              labels: RangeLabels(
-                '${controller.priceRange.value.start.toInt()} LE',
-                '${controller.priceRange.value.end.toInt()} LE',
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      decoration: BoxDecoration(
+        color: surfaceElevated,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: softShadowColor,
+              blurRadius: 16,
+              offset: const Offset(0, 6)),
+        ],
+      ),
+      child: Obx(() => Column(
+            children: [
+              SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor: appColorSecondary,
+                  inactiveTrackColor: lightSecondaryColor,
+                  thumbColor: appColorSecondary,
+                  overlayColor: appColorSecondary.withValues(alpha: 0.12),
+                  trackHeight: 4,
+                  rangeThumbShape: const RoundRangeSliderThumbShape(
+                      enabledThumbRadius: 9,
+                      elevation: 2),
+                ),
+                child: RangeSlider(
+                  values: controller.priceRange.value,
+                  min: 0,
+                  max: 5000,
+                  divisions: 50,
+                  labels: RangeLabels(
+                    '${controller.priceRange.value.start.toInt()} LE',
+                    '${controller.priceRange.value.end.toInt()} LE',
+                  ),
+                  onChanged: (val) => controller.priceRange(val),
+                ),
               ),
-              onChanged: (val) => controller.priceRange(val),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('${controller.priceRange.value.start.toInt()} LE',
-                    style: secondaryTextStyle()),
-                Text('${controller.priceRange.value.end.toInt()} LE',
-                    style: secondaryTextStyle()),
-              ],
-            ),
-          ],
-        ));
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${controller.priceRange.value.start.toInt()} LE',
+                        style: boldTextStyle(
+                            size: 13, color: appColorSecondary)),
+                    Text('${controller.priceRange.value.end.toInt()} LE',
+                        style: boldTextStyle(
+                            size: 13, color: appColorSecondary)),
+                  ],
+                ),
+              ),
+            ],
+          )),
+    );
+  }
+
+  Widget _buildPillChip({
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected ? lightSecondaryColor : surfaceElevated,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+              color: selected ? appColorSecondary : whiteBorderColor, width: 1),
+        ),
+        child: Text(
+          label,
+          style: selected
+              ? boldTextStyle(size: 13, color: appColorSecondary)
+              : primaryTextStyle(size: 13),
+        ),
+      ),
+    );
   }
 
   Widget _buildBrandsGrid(BuildContext context) {
@@ -242,13 +350,13 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
           spacing: 8,
           runSpacing: 8,
           children: controller.brands.map((brand) {
-            bool isSelected = controller.selectedBrandIds.contains(brand['id']);
-            return ChoiceChip(
-              label: Text(brand['name'] ?? ''),
+            bool isSelected =
+                controller.selectedBrandIds.contains(brand['id']);
+            return _buildPillChip(
+              label: brand['name'] ?? '',
               selected: isSelected,
-              selectedColor: appColorSecondary.withValues(alpha: 0.2),
-              onSelected: (val) {
-                if (val) {
+              onTap: () {
+                if (!isSelected) {
                   controller.selectedBrandIds.add(brand['id']);
                 } else {
                   controller.selectedBrandIds.remove(brand['id']);
@@ -264,13 +372,13 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
           spacing: 8,
           runSpacing: 8,
           children: controller.productTypes.map((type) {
-            bool isSelected = controller.selectedProductTypes.contains(type);
-            return ChoiceChip(
-              label: Text(type.toString().capitalizeFirstLetter()),
+            bool isSelected =
+                controller.selectedProductTypes.contains(type);
+            return _buildPillChip(
+              label: type.toString().capitalizeFirstLetter(),
               selected: isSelected,
-              selectedColor: appColorSecondary.withValues(alpha: 0.2),
-              onSelected: (val) {
-                if (val) {
+              onTap: () {
+                if (!isSelected) {
                   controller.selectedProductTypes.add(type);
                 } else {
                   controller.selectedProductTypes.remove(type);
@@ -282,12 +390,28 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
   }
 
   Widget _buildPrescriptionToggle(BuildContext context) {
-    return Obx(() => SwitchListTile(
-          title: Text(locale.value.prescriptionRequired,
-              style: primaryTextStyle()),
-          value: controller.prescriptionRequired.value,
-          onChanged: (val) => controller.prescriptionRequired(val),
-          activeColor: appColorSecondary,
-        ));
+    return Container(
+      decoration: BoxDecoration(
+        color: surfaceElevated,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: softShadowColor,
+              blurRadius: 16,
+              offset: const Offset(0, 6)),
+        ],
+      ),
+      child: Obx(() => SwitchListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            title: Text(locale.value.prescriptionRequired,
+                style: boldTextStyle(size: 14, color: appColorPrimary)),
+            value: controller.prescriptionRequired.value,
+            onChanged: (val) => controller.prescriptionRequired(val),
+            activeColor: appColorSecondary,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16)),
+          )),
+    );
   }
 }

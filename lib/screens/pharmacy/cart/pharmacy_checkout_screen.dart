@@ -196,26 +196,63 @@ class PharmacyCheckoutScreen extends StatelessWidget {
             right: 0,
             bottom: 0,
             child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: boxDecorationDefault(
+              padding: EdgeInsets.fromLTRB(
+                  16, 16, 16, 16 + MediaQuery.of(context).padding.bottom),
+              decoration: BoxDecoration(
                   color: context.cardColor,
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(24),
                       topRight: Radius.circular(24)),
                   boxShadow: [
                     BoxShadow(
-                        color: softShadowColor,
-                        blurRadius: 10,
-                        offset: const Offset(0, -4))
+                        color: softShadowColorMedium,
+                        blurRadius: 20,
+                        offset: const Offset(0, -6))
                   ]),
-              child: AppButton(
-                text: locale.value.placeOrder,
-                color: appColorSecondary,
-                textColor: Colors.white,
+              child: Container(
                 width: Get.width,
-                shapeBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                onTap: controller.placeOrder,
+                height: 52,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  gradient: const LinearGradient(
+                    colors: [
+                      gradientSecondaryStart,
+                      gradientSecondaryEnd
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                        color: softShadowColorMedium,
+                        blurRadius: 16,
+                        offset: const Offset(0, 6)),
+                  ],
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(14),
+                    onTap: controller.placeOrder,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            locale.value.placeOrder,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward_rounded,
+                              color: Colors.white, size: 18),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -225,7 +262,22 @@ class PharmacyCheckoutScreen extends StatelessWidget {
   }
 
   Widget _buildSectionTitle(String title) {
-    return Text(title, style: boldTextStyle(size: 16)).paddingOnly(bottom: 12);
+    return Text(title,
+            style: boldTextStyle(size: 16, color: appColorPrimary))
+        .paddingOnly(bottom: 12);
+  }
+
+  BoxDecoration _cardDecoration() {
+    return BoxDecoration(
+      color: surfaceElevated,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+            color: softShadowColor,
+            blurRadius: 16,
+            offset: const Offset(0, 6))
+      ],
+    );
   }
 
   Widget _buildAddressSection(
@@ -235,10 +287,7 @@ class PharmacyCheckoutScreen extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: boxDecorationDefault(
-              color: context.cardColor,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: context.dividerColor)),
+          decoration: _cardDecoration(),
           child: Row(
             children: [
               const Icon(Icons.location_on_outlined, color: appColorSecondary),
@@ -265,7 +314,7 @@ class PharmacyCheckoutScreen extends StatelessWidget {
               padding: const EdgeInsets.only(top: 6, left: 4),
               child: Text(
                 locale.value.pharmacyDeliveryAddressRequired,
-                style: primaryTextStyle(size: 12, color: Colors.red),
+                style: primaryTextStyle(size: 12, color: cancelStatusColor),
               ),
             );
           }
@@ -313,23 +362,20 @@ class PharmacyCheckoutScreen extends StatelessWidget {
   Widget _buildPharmacySummary(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: boxDecorationDefault(
-          color: context.cardColor,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: context.dividerColor)),
+      decoration: _cardDecoration(),
       child: Row(
         children: [
           Container(
             height: 40,
             width: 40,
             decoration: boxDecorationDefault(
-                color: lightPrimaryColor, shape: BoxShape.circle),
+                color: lightSecondaryColor, shape: BoxShape.circle),
             child: pharmacy.image != null
                 ? CachedNetworkImage(
                         imageUrl: pharmacy.image!, fit: BoxFit.cover)
                     .cornerRadiusWithClipRRect(20)
                 : const Icon(Icons.local_pharmacy_outlined,
-                    color: appColorPrimary, size: 20),
+                    color: appColorSecondary, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -355,10 +401,11 @@ class PharmacyCheckoutScreen extends StatelessWidget {
       if (controller.prescriptions.isEmpty) {
         return Container(
           padding: const EdgeInsets.all(16),
-          decoration: boxDecorationDefault(
-              color: Colors.orange.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.orange.withValues(alpha: 0.2))),
+          decoration: BoxDecoration(
+              color: pendingStatusColor.withValues(alpha: 0.06),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                  color: pendingStatusColor.withValues(alpha: 0.25))),
           child: Column(
             children: [
               Text(locale.value.pharmacyCartPrescriptionWarning,
@@ -366,7 +413,7 @@ class PharmacyCheckoutScreen extends StatelessWidget {
               const SizedBox(height: 12),
               AppButton(
                 text: locale.value.uploadPrescription,
-                color: Colors.orange,
+                color: pendingStatusColor,
                 textColor: Colors.white,
                 onTap: () => Get.to(() => PrescriptionUploadScreen()),
                 padding:
@@ -378,10 +425,7 @@ class PharmacyCheckoutScreen extends StatelessWidget {
       }
       return Container(
         padding: const EdgeInsets.all(16),
-        decoration: boxDecorationDefault(
-            color: context.cardColor,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: context.dividerColor)),
+        decoration: _cardDecoration(),
         child: Column(
           children: [
             DropdownButtonFormField<PharmacyPrescription>(
@@ -462,41 +506,58 @@ class PharmacyCheckoutScreen extends StatelessWidget {
       String value,
       String label,
       IconData icon) {
-    return Obx(() => Container(
-          decoration: boxDecorationDefault(
-              color: context.cardColor,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                  color: controller.selectedPaymentMethod.value == value
-                      ? appColorSecondary
-                      : context.dividerColor)),
+    return Obx(() {
+      final selected = controller.selectedPaymentMethod.value == value;
+      return Container(
+        decoration: BoxDecoration(
+            color: selected ? lightSecondaryColor : surfaceSubtle,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+                color: selected ? appColorSecondary : whiteBorderColor,
+                width: selected ? 1.5 : 1)),
+        child: Material(
+          color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
             onTap: () => controller.selectedPaymentMethod(value),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Row(
-              children: [
-                Icon(icon,
-                    size: 20,
-                    color: controller.selectedPaymentMethod.value == value
-                        ? appColorSecondary
-                        : secondaryTextColor),
-                const SizedBox(width: 12),
-                Expanded(child: Text(label, style: primaryTextStyle(size: 14))),
-                Icon(
-                  controller.selectedPaymentMethod.value == value
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                  color: controller.selectedPaymentMethod.value == value
-                      ? appColorSecondary
-                      : secondaryTextColor,
-                ),
-              ],
-            ),
+                children: [
+                  Icon(icon,
+                      size: 20,
+                      color: selected
+                          ? appColorSecondary
+                          : secondaryTextColor),
+                  const SizedBox(width: 12),
+                  Expanded(
+                      child: Text(label, style: primaryTextStyle(size: 14))),
+                  Container(
+                    width: 22,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                          selected ? appColorSecondary : Colors.transparent,
+                      border: Border.all(
+                          color: selected
+                              ? appColorSecondary
+                              : gray400,
+                          width: 1.5),
+                    ),
+                    child: selected
+                        ? const Icon(Icons.check,
+                            size: 14, color: Colors.white)
+                        : const SizedBox.shrink(),
+                  ),
+                ],
+              ),
             ),
           ),
-        ));
+        ),
+      );
+    });
   }
 
   Widget _buildOrderSummary(
@@ -505,29 +566,23 @@ class PharmacyCheckoutScreen extends StatelessWidget {
       final cart = controller.cart.value;
       if (cart == null) return const Offstage();
       return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: boxDecorationDefault(
-            color: context.cardColor,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                  color: softShadowColor,
-                  blurRadius: 10,
-                  offset: const Offset(0, 4))
-            ]),
+        padding: const EdgeInsets.all(20),
+        decoration: _cardDecoration(),
         child: Column(
           children: [
             _buildSummaryRow(locale.value.subtotal, '${cart.subtotal} LE'),
             if (controller.discount.value > 0)
               _buildSummaryRow(
                   locale.value.discount, '- ${controller.discount.value} LE',
-                  color: Colors.green),
+                  color: completedStatusColor),
             _buildSummaryRow(
                 locale.value.deliveryFee, '${pharmacy.deliveryFee} LE'),
-            const Divider(height: 24),
+            const SizedBox(height: 12),
+            Container(height: 1, color: whiteBorderColor),
+            const SizedBox(height: 12),
             _buildSummaryRow(locale.value.total,
                 '${cart.subtotal! - controller.discount.value + (pharmacy.deliveryFee ?? 0)} LE',
-                isBold: true, size: 18, color: appColorSecondary),
+                isBold: true, size: 22, color: appColorPrimary, labelSize: 15),
           ],
         ),
       );
@@ -535,7 +590,11 @@ class PharmacyCheckoutScreen extends StatelessWidget {
   }
 
   Widget _buildSummaryRow(String label, String value,
-      {bool isBold = false, double size = 14, Color? color}) {
+      {bool isBold = false,
+      double size = 14,
+      Color? color,
+      double? labelSize}) {
+    final lblSize = labelSize ?? (isBold ? size : 13);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -543,8 +602,8 @@ class PharmacyCheckoutScreen extends StatelessWidget {
         children: [
           Text(label,
               style: isBold
-                  ? boldTextStyle(size: size.toInt())
-                  : secondaryTextStyle(size: size.toInt())),
+                  ? boldTextStyle(size: lblSize.toInt())
+                  : secondaryTextStyle(size: lblSize.toInt())),
           Text(value, style: boldTextStyle(size: size.toInt(), color: color)),
         ],
       ),

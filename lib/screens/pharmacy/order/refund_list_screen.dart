@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../api/pharmacy_apis.dart';
 import '../../../components/app_scaffold.dart';
-import '../../../utils/empty_error_state_widget.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
 import '../model/pharmacy_refund_model.dart';
 import '../utils/pharmacy_constants.dart';
+import '../utils/pharmacy_empty_state.dart';
 
 class RefundListController extends GetxController {
   RxBool isLoading = false.obs;
@@ -71,11 +71,10 @@ class RefundListScreen extends StatelessWidget {
       appBartitleText: locale.value.refundRequests,
       isLoading: controller.isLoading,
       body: Obx(() => controller.refunds.isEmpty && !controller.isLoading.value
-          ? NoDataWidget(
+          ? PharmacyEmptyState(
+              icon: Icons.assignment_return_outlined,
               title: locale.value.pharmacyNoRefunds,
-              imageWidget: const ErrorStateWidget(),
-              onRetry: () => controller.refresh(),
-            ).center()
+            )
           : AnimatedScrollView(
               padding: const EdgeInsets.all(16),
               onSwipeRefresh: () => controller.refresh(),
@@ -96,17 +95,19 @@ class _RefundWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color statusColor =
+        PharmacyConstants.getRefundStatusColor(refund.status ?? '');
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
-      decoration: boxDecorationDefault(
-        color: context.cardColor,
+      decoration: BoxDecoration(
+        color: surfaceElevated,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
               color: softShadowColor,
-              blurRadius: 10,
-              offset: const Offset(0, 4))
+              blurRadius: 16,
+              offset: const Offset(0, 6))
         ],
       ),
       child: Column(
@@ -114,14 +115,29 @@ class _RefundWidget extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('${locale.value.orderNumber} #${refund.orderNumber}',
-                  style: boldTextStyle()),
-              _buildStatusBadge(refund.status ?? ''),
+              Expanded(
+                child: Text(
+                  '${locale.value.orderNumber} #${refund.orderNumber}',
+                  style: boldTextStyle(size: 14, color: appColorPrimary),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 8),
+              _RefundStatusPill(
+                color: statusColor,
+                label: refund.status.validate().capitalizeFirstLetter(),
+              ),
             ],
           ),
-          const SizedBox(height: 8),
-          Text('${locale.value.pharmacyReason}: ${refund.reason}', style: primaryTextStyle(size: 14)),
+          const SizedBox(height: 10),
+          Text(
+            '${locale.value.pharmacyReason}: ${refund.reason}',
+            style: primaryTextStyle(size: 13),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
           if (refund.notes.validate().isNotEmpty) ...[
             const SizedBox(height: 4),
             Text('${locale.value.notes}: ${refund.notes}',
@@ -129,26 +145,35 @@ class _RefundWidget extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis),
           ],
-          const Divider(height: 24),
+          const SizedBox(height: 14),
+          Container(height: 1, color: whiteBorderColor),
+          const SizedBox(height: 14),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(locale.value.placedOn,
-                      style: secondaryTextStyle(size: 10)),
-                  Text(refund.createdAt ?? '',
-                      style: primaryTextStyle(size: 12)),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(locale.value.placedOn,
+                        style: secondaryTextStyle(size: 12)),
+                    const SizedBox(height: 2),
+                    Text(refund.createdAt ?? '',
+                        style: primaryTextStyle(size: 12)),
+                  ],
+                ),
               ),
               if (refund.refundAmount != null)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(locale.value.pharmacyRefundAmount, style: secondaryTextStyle(size: 10)),
+                    Text(locale.value.pharmacyRefundAmount,
+                        style: secondaryTextStyle(size: 12)),
+                    const SizedBox(height: 2),
                     Text('${refund.refundAmount} LE',
-                        style: boldTextStyle(color: Colors.green)),
+                        style: boldTextStyle(
+                            size: 15, color: appColorSecondary)),
                   ],
                 ),
             ],
@@ -157,17 +182,34 @@ class _RefundWidget extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildStatusBadge(String status) {
-    final Color color = PharmacyConstants.getRefundStatusColor(status);
+class _RefundStatusPill extends StatelessWidget {
+  final Color color;
+  final String label;
 
+  const _RefundStatusPill({required this.color, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: boxDecorationDefault(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8)),
-      child: Text(status.capitalizeFirstLetter(),
-          style: boldTextStyle(color: color, size: 12)),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 6),
+          Text(label, style: boldTextStyle(color: color, size: 11)),
+        ],
+      ),
     );
   }
 }

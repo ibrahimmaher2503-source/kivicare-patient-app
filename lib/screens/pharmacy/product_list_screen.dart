@@ -174,28 +174,62 @@ class ProductListScreen extends StatelessWidget {
       appBartitleText: title ?? locale.value.pharmacy,
       isLoading: controller.isLoading,
       actions: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.filter_list),
-              onPressed: controller.openFilters,
-            ),
-            Obx(() => controller.activeFilterCount.value > 0
-                ? Positioned(
-                    right: 8,
-                    top: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                          color: appColorSecondary, shape: BoxShape.circle),
-                      child: Text('${controller.activeFilterCount.value}',
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 8)),
-                    ),
-                  )
-                : const Offstage()),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(right: 12, top: 6, bottom: 6),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: surfaceElevated,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                        color: softShadowColor,
+                        blurRadius: 10,
+                        offset: const Offset(0, 4)),
+                  ],
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.tune_rounded,
+                      color: appColorSecondary, size: 20),
+                  onPressed: controller.openFilters,
+                ),
+              ),
+              Obx(() => controller.activeFilterCount.value > 0
+                  ? Positioned(
+                      right: -4,
+                      top: -4,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        constraints:
+                            const BoxConstraints(minWidth: 18, minHeight: 18),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(colors: [
+                            gradientSecondaryStart,
+                            gradientSecondaryEnd,
+                          ]),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                                color: softShadowColor,
+                                blurRadius: 6,
+                                offset: const Offset(0, 2)),
+                          ],
+                        ),
+                        alignment: Alignment.center,
+                        child: Text('${controller.activeFilterCount.value}',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700)),
+                      ),
+                    )
+                  : const Offstage()),
+            ],
+          ),
         ),
       ],
       body: Column(
@@ -210,7 +244,7 @@ class ProductListScreen extends StatelessWidget {
                         onRetry: () => controller.init(),
                       ).paddingAll(16)
                     : AnimatedScrollView(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
                         onSwipeRefresh: () => controller.init(),
                         onNextPage: () => controller.loadMore(),
                         children: [
@@ -234,42 +268,107 @@ class ProductListScreen extends StatelessWidget {
   Widget _buildSearchAndSort(
       ProductListController controller, BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppTextField(
-            controller: controller.searchController,
-            textFieldType: TextFieldType.NAME,
-            decoration: inputDecoration(
-              context,
-              hintText: locale.value.searchProducts,
-              prefixIcon: const Icon(Icons.search, color: secondaryTextColor),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.clear, color: secondaryTextColor),
-                onPressed: () {
-                  controller.searchController.clear();
-                },
+          Container(
+            decoration: BoxDecoration(
+              color: surfaceElevated,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                    color: softShadowColor,
+                    blurRadius: 10,
+                    offset: const Offset(0, 4)),
+              ],
+            ),
+            child: AppTextField(
+              controller: controller.searchController,
+              textFieldType: TextFieldType.NAME,
+              decoration: InputDecoration(
+                hintText: locale.value.searchProducts,
+                hintStyle: secondaryTextStyle(size: 14),
+                prefixIcon: const Icon(Icons.search_rounded,
+                    color: appColorSecondary, size: 20),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear_rounded,
+                      color: secondaryTextColor, size: 18),
+                  onPressed: () {
+                    controller.searchController.clear();
+                  },
+                ),
+                filled: true,
+                fillColor: Colors.transparent,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(locale.value.sort, style: boldTextStyle(size: 14)),
-              Obx(() => DropdownButton<String>(
-                    value: controller.currentSort.value,
-                    underline: const Offstage(),
-                    items: controller.sortOptions
-                        .map((e) => DropdownMenuItem(
-                              value: e['value'],
-                              child: Text(e['label']!,
-                                  style: primaryTextStyle(size: 14)),
-                            ))
-                        .toList(),
-                    onChanged: controller.changeSort,
-                  )),
-            ],
+          const SizedBox(height: 14),
+          Obx(() {
+            final int count = controller.products.length;
+            final bool loading = controller.isLoading.value;
+            if (count == 0 && loading) return const SizedBox.shrink();
+            return Padding(
+              padding: const EdgeInsets.only(left: 4, bottom: 10),
+              child: Text(
+                '$count ${locale.value.items}',
+                style: secondaryTextStyle(size: 12),
+              ),
+            );
+          }),
+          SizedBox(
+            height: 38,
+            child: Obx(() => ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.sortOptions.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  itemBuilder: (context, i) {
+                    final opt = controller.sortOptions[i];
+                    final bool selected =
+                        controller.currentSort.value == opt['value'];
+                    return GestureDetector(
+                      onTap: () => controller.changeSort(opt['value']),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 180),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? lightSecondaryColor
+                              : surfaceElevated,
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(
+                              color: selected
+                                  ? appColorSecondary
+                                  : whiteBorderColor,
+                              width: 1),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          opt['label']!,
+                          style: selected
+                              ? boldTextStyle(
+                                  size: 13, color: appColorSecondary)
+                              : primaryTextStyle(size: 13),
+                        ),
+                      ),
+                    );
+                  },
+                )),
           ),
         ],
       ),
@@ -289,14 +388,14 @@ class _ProductCard extends StatelessWidget {
       onTap: () => Get.to(() => ProductDetailScreen(product: product)),
       child: Container(
         width: width,
-        decoration: boxDecorationDefault(
-          color: context.cardColor,
+        decoration: BoxDecoration(
+          color: surfaceElevated,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
                 color: softShadowColor,
-                blurRadius: 10,
-                offset: const Offset(0, 4))
+                blurRadius: 16,
+                offset: const Offset(0, 6))
           ],
         ),
         child: Column(
@@ -315,9 +414,9 @@ class _ProductCard extends StatelessWidget {
                   Container(
                           height: 140,
                           width: width,
-                          color: gray100,
-                          child:
-                              const Icon(Icons.image_outlined, color: gray400))
+                          color: surfaceSubtle,
+                          child: const Icon(Icons.medication_outlined,
+                              color: gray400, size: 32))
                       .cornerRadiusWithClipRRectOnly(topLeft: 16, topRight: 16),
                 if (product.isPrescriptionRequired ?? false)
                   Positioned(
@@ -325,38 +424,66 @@ class _ProductCard extends StatelessWidget {
                     left: 8,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
-                      decoration: boxDecorationDefault(
-                          color: Colors.orange.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(4)),
-                      child: const Icon(Icons.assignment_outlined,
-                          color: Colors.white, size: 14),
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: appColorSecondary.withValues(alpha: 0.95),
+                        borderRadius: BorderRadius.circular(999),
+                        boxShadow: [
+                          BoxShadow(
+                              color: softShadowColor,
+                              blurRadius: 6,
+                              offset: const Offset(0, 2)),
+                        ],
+                      ),
+                      child: const Text(
+                        'Rx',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
                     ),
                   ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(product.name ?? '',
-                      style: boldTextStyle(size: 14),
+                      style: boldTextStyle(size: 14, color: appColorPrimary),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 2),
                   Text(product.brandName ?? '',
-                      style: secondaryTextStyle(size: 12)),
-                  const SizedBox(height: 4),
+                      style: secondaryTextStyle(size: 12),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 8),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('${product.price} LE',
-                          style: boldTextStyle(color: appColorSecondary)),
+                      Flexible(
+                        child: Text('${product.price} LE',
+                            style: boldTextStyle(
+                                size: 15, color: appColorPrimary),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis),
+                      ),
                       if (product.referencePrice != null) ...[
-                        const SizedBox(width: 4),
-                        Text('${product.referencePrice} LE',
-                            style: secondaryTextStyle(
-                                decoration: TextDecoration.lineThrough,
-                                size: 10)),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text('${product.referencePrice} LE',
+                              style: secondaryTextStyle(
+                                  decoration: TextDecoration.lineThrough,
+                                  size: 11,
+                                  color: gray400),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis),
+                        ),
                       ],
                     ],
                   ),

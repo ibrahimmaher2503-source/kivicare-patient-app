@@ -20,22 +20,30 @@ class PharmacyConstants {
   static const String prescriptionApproved = 'approved';
   static const String prescriptionRejected = 'rejected';
 
+  static const Color _statusAmber = Color(0xFFF59E0B);
+  static const Color _statusGreen = Color(0xFF16A34A);
+  static const Color _statusRed = Color(0xFFDC2626);
+  static const Color _statusBlue = Color(0xFF2563EB);
+  static const Color _statusPurple = Color(0xFF7C3AED);
+  static const Color _statusIndigo = Color(0xFF4338CA);
+  static const Color _statusGray = Color(0xFF6B7280);
+
   static Color getStatusColor(String status) {
     switch (status) {
       case statusPending:
-        return Colors.orange;
+        return _statusAmber;
       case statusConfirmed:
-        return Colors.blue;
+        return _statusBlue;
       case statusPreparing:
-        return Colors.purple;
+        return _statusPurple;
       case statusOutForDelivery:
-        return Colors.indigo;
+        return _statusIndigo;
       case statusDelivered:
-        return Colors.green;
+        return _statusGreen;
       case statusCancelled:
-        return Colors.red;
+        return _statusRed;
       case statusRefunded:
-        return Colors.grey;
+        return _statusGray;
       default:
         return appColorPrimary;
     }
@@ -44,13 +52,13 @@ class PharmacyConstants {
   static Color getPrescriptionStatusColor(String status) {
     switch (status) {
       case prescriptionPending:
-        return Colors.orange;
+        return _statusAmber;
       case prescriptionReviewed:
-        return Colors.blue;
+        return _statusBlue;
       case prescriptionApproved:
-        return Colors.green;
+        return _statusGreen;
       case prescriptionRejected:
-        return Colors.red;
+        return _statusRed;
       default:
         return appColorPrimary;
     }
@@ -66,12 +74,12 @@ class PharmacyConstants {
     switch (status) {
       case refundApproved:
       case refundProcessed:
-        return Colors.green;
+        return _statusGreen;
       case refundRejected:
-        return Colors.red;
+        return _statusRed;
       case refundPending:
       default:
-        return Colors.orange;
+        return _statusAmber;
     }
   }
 }

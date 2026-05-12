@@ -968,7 +968,7 @@ class LanguageAr extends BaseLanguage {
   String get clinicDetail => "تفاصيل العيادة";
 
   @override
-  String get pincode => "pincode";
+  String get pincode => "الرمز البريدي";
 
   @override
   String get readMore => "اقرأ أكثر";
@@ -1615,7 +1615,6 @@ class LanguageAr extends BaseLanguage {
   @override
   String get radiology => "أشعة";
 
-
   @override
   String get homeCare => "رعاية";
 
@@ -1860,6 +1859,16 @@ class LanguageAr extends BaseLanguage {
   String get cart => 'السلة';
   @override
   String get cartEmpty => 'سلة التسوق فارغة';
+  @override
+  String get cartEmptyHint =>
+      'لا يوجد شيء هنا بعد. تصفح المنتجات أو ارفع روشتتك.';
+  @override
+  String get browsePharmacy => 'تصفح الصيدلية';
+  @override
+  String get deliveryAtCheckout => 'يتم احتساب التوصيل عند الدفع';
+  @override
+  String get needHelpUploadPrescription =>
+      'تحتاج مساعدة في الاختيار؟ ارفع روشتتك.';
   @override
   String get checkout => 'الدفع';
   @override
@@ -2188,165 +2197,167 @@ class LanguageAr extends BaseLanguage {
 
   // ICU Admission Module
   @override
-  String get icuAdmission => 'ICU Admission'; // TODO: translate
+  String get icuAdmission => 'قسم العناية المركزة';
   @override
-  String get icuHospitals => 'ICU Hospitals'; // TODO: translate
+  String get icuHospitals => 'مستشفيات العناية المركزة';
   @override
-  String get searchHospitals => 'Search hospitals...'; // TODO: translate
+  String get searchHospitals => 'ابحث عن مستشفيات...';
   @override
-  String get hospitalsFound => 'hospitals found'; // TODO: translate
+  String get hospitalsFound => 'مستشفى موجود';
   @override
-  String get noHospitalsFound => 'No hospitals found'; // TODO: translate
+  String get noHospitalsFound => 'لم يتم العثور على مستشفيات';
   @override
-  String get hasAvailableBeds => 'Has available beds'; // TODO: translate
+  String get hasAvailableBeds => 'يوجد أسرة متاحة';
   @override
-  String get noBedsAvailable => 'No beds available'; // TODO: translate
+  String get noBedsAvailable => 'لا توجد أسرة متاحة';
   @override
-  String get hospitalDetail => 'Hospital Detail'; // TODO: translate
+  String get hospitalDetail => 'تفاصيل المستشفى';
   @override
-  String get aboutHospital => 'About Hospital'; // TODO: translate
+  String get aboutHospital => 'عن المستشفى';
   @override
-  String get departments => 'Departments'; // TODO: translate
+  String get departments => 'الأقسام';
   @override
-  String get availableBeds => 'Available Beds'; // TODO: translate
+  String get availableBeds => 'أسرة متاحة';
   @override
-  String get totalBeds => 'Total Beds'; // TODO: translate
+  String get totalBeds => 'إجمالي الأسرة';
   @override
-  String get callHospital => 'Call Hospital'; // TODO: translate
+  String get callHospital => 'اتصل بالمستشفى';
   @override
-  String get callEmergency => 'Call Emergency'; // TODO: translate
+  String get callEmergency => 'اتصل بالطوارئ';
   @override
-  String get openInMaps => 'Open in Maps'; // TODO: translate
+  String get openInMaps => 'فتح في الخرائط';
   @override
-  String get requestIcuAdmissionHere => 'Request ICU Admission Here'; // TODO: translate
+  String get requestIcuAdmissionHere => 'اطلب دخول العناية المركزة هنا';
   @override
-  String get icuDepartments => 'ICU Departments'; // TODO: translate
+  String get icuDepartments => 'أقسام العناية المركزة';
   @override
-  String get browseByDepartment => 'Browse by ICU Department'; // TODO: translate
+  String get browseByDepartment => 'تصفح حسب قسم العناية المركزة';
   @override
-  String get departmentDescription => 'Department Description'; // TODO: translate
+  String get departmentDescription => 'وصف القسم';
   @override
-  String get patientName => 'Patient Name'; // TODO: translate
+  String get patientName => 'اسم المريض';
   @override
-  String get patientAge => 'Patient Age'; // TODO: translate
+  String get patientAge => 'عمر المريض';
   @override
-  String get patientGender => 'Patient Gender'; // TODO: translate
+  String get patientGender => 'جنس المريض';
   @override
-  String get diagnosis => 'Diagnosis'; // TODO: translate
+  String get diagnosis => 'التشخيص';
   @override
-  String get urgencyLevel => 'Urgency Level'; // TODO: translate
+  String get urgencyLevel => 'درجة الإلحاح';
   @override
-  String get accompanyingName => 'Accompanying Person Name'; // TODO: translate
+  String get accompanyingName => 'اسم المرافق';
   @override
-  String get accompanyingRelation => 'Relation to Patient'; // TODO: translate
+  String get accompanyingRelation => 'صلة القرابة بالمريض';
   @override
-  String get accompanyingPhone => 'Accompanying Person Phone'; // TODO: translate
+  String get accompanyingPhone => 'هاتف المرافق';
   @override
-  String get nationalId => 'National ID (Optional)'; // TODO: translate
+  String get nationalId => 'الرقم القومي (اختياري)';
   @override
-  String get currentCondition => 'Current Condition (Optional)'; // TODO: translate
+  String get currentCondition => 'الحالة الراهنة (اختياري)';
   @override
-  String get attendingDoctor => 'Attending Doctor (Optional)'; // TODO: translate
+  String get attendingDoctor => 'الطبيب المعالج (اختياري)';
   @override
   @override
-  String get currentMedications => 'Current Medications (Optional)'; // TODO: translate
+  String get currentMedications => 'الأدوية الحالية (اختياري)';
   @override
-  String get allergies => 'Allergies (Optional)'; // TODO: translate
+  String get allergies => 'الحساسية (اختياري)';
   @override
   @override
   @override
-  String get selectHospital => 'Select Hospital'; // TODO: translate
+  String get selectHospital => 'اختر المستشفى';
   @override
-  String get selectDepartment => 'Select Department'; // TODO: translate
+  String get selectDepartment => 'اختر القسم';
   @override
-  String get changeHospital => 'Change'; // TODO: translate
+  String get changeHospital => 'تغيير';
   @override
-  String get routine => 'Routine'; // TODO: translate
+  String get routine => 'اعتيادي';
   @override
-  String get urgent => 'Urgent'; // TODO: translate
+  String get urgent => 'عاجل';
   @override
-  String get critical => 'Critical'; // TODO: translate
+  String get critical => 'حرج';
   @override
-  String get criticalUrgencyAlertTitle => 'Critical Urgency!'; // TODO: translate
+  String get criticalUrgencyAlertTitle => 'درجة إلحاح حرجة!';
   @override
-  String get criticalUrgencyAlertMessage => 'You have selected Critical urgency. For life-threatening emergencies, please call the emergency hotline immediately.'; // TODO: translate
+  String get criticalUrgencyAlertMessage =>
+      'لقد اخترت درجة الإلحاح الحرج. للحالات الطارئة التي تهدد الحياة، يرجى الاتصال بخط الطوارئ فوراً.';
   @override
-  String get callEmergencyHotline => 'Call Emergency Hotline'; // TODO: translate
+  String get callEmergencyHotline => 'اتصل بخط الطوارئ';
   @override
-  String get continueForm => 'Continue with Form'; // TODO: translate
+  String get continueForm => 'متابعة النموذج';
   @override
   @override
-  String get underReview => 'Under Review'; // TODO: translate
+  String get underReview => 'قيد المراجعة';
   @override
-  String get approved => 'Approved'; // TODO: translate
+  String get approved => 'موافق عليه';
   @override
-  String get admitted => 'Admitted'; // TODO: translate
+  String get admitted => 'تم الدخول';
   @override
-  String get discharged => 'Discharged'; // TODO: translate
+  String get discharged => 'تم الخروج';
   @override
   @override
   @override
-  String get status => 'Status'; // TODO: translate
+  String get status => 'الحالة';
   @override
   @override
-  String get fieldRequired => 'This field is required'; // TODO: translate
+  String get fieldRequired => 'هذا الحقل مطلوب';
   @override
-  String get invalidPhone => 'Invalid phone format'; // TODO: translate
+  String get invalidPhone => 'صيغة الهاتف غير صالحة';
   @override
-  String get maxCharsReached => 'Maximum characters reached'; // TODO: translate
+  String get maxCharsReached => 'تم الوصول إلى الحد الأقصى من الأحرف';
   @override
-  String get invalidDate => 'Invalid date'; // TODO: translate
+  String get invalidDate => 'تاريخ غير صالح';
   @override
-  String get pleaseSelectHospital => 'Please select a hospital'; // TODO: translate
+  String get pleaseSelectHospital => 'الرجاء اختيار مستشفى';
   @override
-  String get pleaseSelectDepartment => 'Please select a department'; // TODO: translate
+  String get pleaseSelectDepartment => 'الرجاء اختيار قسم';
   @override
   @override
   @override
-  String get copyReference => 'Copy Reference'; // TODO: translate
+  String get copyReference => 'نسخ الرقم المرجعي';
   @override
   @override
-  String get trackRequest => 'Track this request'; // TODO: translate
+  String get trackRequest => 'تتبع هذا الطلب';
   @override
-  String get lastReference => 'Last reference'; // TODO: translate
+  String get lastReference => 'آخر رقم مرجعي';
   @override
-  String get goBackToHome => 'Go back to Home'; // TODO: translate
+  String get goBackToHome => 'العودة إلى الرئيسية';
   @override
-  String get cancelRequest => 'Cancel Request'; // TODO: translate
+  String get cancelRequest => 'إلغاء الطلب';
   @override
-  String get cancelConfirmation => 'Are you sure you want to cancel this admission request?'; // TODO: translate
+  String get cancelConfirmation =>
+      'هل أنت متأكد من إلغاء طلب الدخول هذا؟';
   @override
-  String get cancelReason => 'Cancellation Reason (Optional)'; // TODO: translate
+  String get cancelReason => 'سبب الإلغاء (اختياري)';
   @override
-  String get confirmCancellation => 'Confirm Cancellation'; // TODO: translate
+  String get confirmCancellation => 'تأكيد الإلغاء';
   @override
-  String get keepRequest => 'Keep Request'; // TODO: translate
+  String get keepRequest => 'الإبقاء على الطلب';
   @override
-  String get requestCancelled => 'Request cancelled successfully'; // TODO: translate
+  String get requestCancelled => 'تم إلغاء الطلب بنجاح';
   @override
-  String get emergencyHotline => 'Emergency Hotline'; // TODO: translate
+  String get emergencyHotline => 'خط الطوارئ';
   @override
-  String get callNow => 'Call Now'; // TODO: translate
+  String get callNow => 'اتصل الآن';
   @override
-  String get myAdmissionRequests => 'My Admission Requests'; // TODO: translate
+  String get myAdmissionRequests => 'طلبات الدخول';
   @override
-  String get statusTimeline => 'Status Timeline'; // TODO: translate
+  String get statusTimeline => 'تسلسل الحالة';
   @override
-  String get admissionDetails => 'Admission Details'; // TODO: translate
+  String get admissionDetails => 'تفاصيل الدخول';
   @override
-  String get room => 'Room'; // TODO: translate
+  String get room => 'غرفة';
   @override
-  String get bed => 'Bed'; // TODO: translate
+  String get bed => 'سرير';
   @override
-  String get admittedAt => 'Admitted At'; // TODO: translate
+  String get admittedAt => 'تاريخ الدخول';
   @override
-  String get dischargeDetails => 'Discharge Details'; // TODO: translate
+  String get dischargeDetails => 'تفاصيل الخروج';
   @override
-  String get dischargedAt => 'Discharged At'; // TODO: translate
+  String get dischargedAt => 'تاريخ الخروج';
   @override
-  String get dischargeSummary => 'Discharge Summary'; // TODO: translate
+  String get dischargeSummary => 'ملخص الخروج';
   @override
-  String get rejectionReason => 'Rejection Reason'; // TODO: translate
+  String get rejectionReason => 'سبب الرفض';
   @override
 
   // Pharmacy Localized Strings
@@ -2375,8 +2386,7 @@ class LanguageAr extends BaseLanguage {
   @override
   String get pharmacyWallet => 'المحفظة';
   @override
-  String get pharmacyCancelOrderConfirm =>
-      'هل أنت متأكد من إلغاء هذا الطلب؟';
+  String get pharmacyCancelOrderConfirm => 'هل أنت متأكد من إلغاء هذا الطلب؟';
   @override
   String get pharmacyYesCancel => 'نعم، إلغاء';
   @override
@@ -2384,8 +2394,7 @@ class LanguageAr extends BaseLanguage {
   @override
   String get pharmacyNoOrders => 'لم تقم بأي طلبات بعد';
   @override
-  String get pharmacyOrderSuccess =>
-      'تم تقديم طلبك رقم #{orderNumber} بنجاح';
+  String get pharmacyOrderSuccess => 'تم تقديم طلبك رقم #{orderNumber} بنجاح';
   @override
   String get pharmacyBackToHome => 'العودة إلى الصيدلية';
   @override
@@ -2419,4 +2428,161 @@ class LanguageAr extends BaseLanguage {
   String get pharmacyNotesForPharmacy => 'أضف ملاحظات للصيدلية...';
   @override
   String get pharmacyNoDescription => 'لا يوجد وصف متاح';
+
+  // LABS & RADIOLOGY MODULE
+  @override
+  String get labsAndRadiology => 'المختبرات والأشعة';
+  @override
+  String get bookDiagnosticTestsSubtitle => 'احجز الفحوصات التشخيصية واستعرض التقارير';
+  @override
+  String get orderMedicinesSubtitle => 'اطلب الأدوية ومستلزمات الرعاية الصحية';
+  @override
+  String get radiologyCenters => 'مراكز الأشعة';
+  @override
+  String get searchLabs => 'البحث عن مختبرات';
+  @override
+  String get searchRadiologyCenters => 'البحث عن مراكز أشعة';
+  @override
+  String get viewTests => 'عرض التحاليل';
+  @override
+  String get startingFrom => 'يبدأ من';
+  @override
+  String xReviews(int n) => Intl.plural(n,
+      locale: 'ar',
+      zero: 'لا توجد تقييمات',
+      one: 'تقييم واحد',
+      two: 'تقييمان',
+      few: '$n تقييمات',
+      many: '$n تقييماً',
+      other: '$n تقييم');
+  @override
+  String get nearby => 'بالقرب مني';
+  @override
+  String get browseTestCategories => 'تصفح فئات التحاليل';
+  @override
+  String get allTests => 'كل التحاليل';
+  @override
+  String get myTestOrders => 'طلباتي';
+  @override
+  String get noFacilitiesFound => 'لم يتم العثور على مرافق';
+  @override
+  String get testCategories => 'فئات التحاليل';
+  @override
+  String xTests(int n) => Intl.plural(n,
+      locale: 'ar',
+      zero: 'لا توجد تحاليل',
+      one: 'تحليل واحد',
+      two: 'تحليلان',
+      few: '$n تحاليل',
+      many: '$n تحليلاً',
+      other: '$n تحليل');
+  @override
+  String get noCategoriesFound => 'لم يتم العثور على فئات';
+  @override
+  String get tests => 'تحاليل';
+  @override
+  String get allTestsTitle => 'التحاليل التشخيصية';
+  @override
+  String get testDetails => 'تفاصيل التحليل';
+  @override
+  String get preparationInstructions => 'تعليمات التحضير';
+  @override
+  String get turnaroundTime => 'وقت الاستلام';
+  @override
+  String xHoursTurnaround(int n) => 'النتائج خلال $n ساعة';
+  @override
+  String get imaging => 'أشعة';
+  @override
+  String get bookTest => 'حجز تحليل';
+  @override
+  String get bookThisTest => 'احجز هذا التحليل';
+  @override
+  String get testCategoryLabel => 'الفئة';
+  @override
+  String get priceLabel => 'السعر';
+  @override
+  String get servicesOffered => 'الخدمات المقدمة';
+  @override
+  String get availableTests => 'التحاليل المتاحة';
+  @override
+  String get facilityAddress => 'عنوان المرفق';
+  @override
+  String get contactFacility => 'اتصل بالمرفق';
+  @override
+  String get selectTime => 'اختر الوقت';
+  @override
+  String get selectDate => 'اختر التاريخ';
+  @override
+  String get availableSlots => 'المواعيد المتاحة';
+  @override
+  String get noSlotsAvailable => 'لا توجد مواعيد متاحة';
+  @override
+  String get tryAnotherDate => 'جرب تاريخاً آخر';
+  @override
+  String get continueToConfirm => 'المتابعة للتأكيد';
+  @override
+  String get selectASlot => 'يرجى اختيار موعد';
+  @override
+  String get slotConflictTitle => 'تعارض في الموعد';
+  @override
+  String get slotConflictBody =>
+      'هذا الموعد تم حجزه للتو. يرجى اختيار موعد آخر.';
+  @override
+  String get confirmBooking => 'تأكيد الحجز';
+  @override
+  String get bookingSummary => 'ملخص الحجز';
+  @override
+  String get testPrice => 'سعر التحليل';
+  @override
+  String get patientNotesOptional => 'ملاحظات إضافية (اختياري)';
+  @override
+  String get patientNotesHint => 'أي تعليمات خاصة للمرفق...';
+  @override
+  String get confirmAndBook => 'تأكيد وحجز';
+  @override
+  String get bookingSubmitted => 'تم إرسال الطلب بنجاح';
+  @override
+  String get yourTestIsBooked => 'تم حجز تحليلك التشخيصي بنجاح';
+  @override
+  String get backToLabs => 'العودة للمختبرات والأشعة';
+  @override
+  String get myOrders => 'طلباتي';
+  @override
+  String get orderRef => 'رقم الطلب';
+  @override
+  String get bookedOn => 'حجز في';
+  @override
+  String get slotDate => 'تاريخ الموعد';
+  @override
+  String get slotTime => 'وقت الموعد';
+  @override
+  String get pricing => 'التسعير';
+  @override
+  String get downloadingReport => 'جارٍ تحميل التقرير...';
+  @override
+  String get downloadFailed => 'فشل التحميل. يرجى المحاولة مرة أخرى.';
+  @override
+  String get reportNotReady => 'التقرير غير جاهز للتحميل بعد.';
+  @override
+  String get cancelOrderTitle => 'إلغاء طلب التحليل';
+  @override
+  String get cancelOrderConfirm => 'هل أنت متأكد من إلغاء هذا الطلب؟';
+  @override
+  String get cancelReasonOptional => 'سبب الإلغاء (اختياري)';
+  @override
+  String get keepOrder => 'الاحتفاظ بالطلب';
+  @override
+  String get statusPending => 'قيد الانتظار';
+  @override
+  String get statusConfirmed => 'مؤكد';
+  @override
+  String get statusSampleCollected => 'تم سحب العينة';
+  @override
+  String get statusInProgress => 'قيد التنفيذ';
+  @override
+  String get statusCompleted => 'مكتمل';
+  @override
+  String get statusCancelled => 'ملغي';
+  @override
+  String get statusRejected => 'مرفوض';
 }

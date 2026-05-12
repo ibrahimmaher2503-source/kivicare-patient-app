@@ -104,21 +104,10 @@ class PharmacyDashboardScreen extends StatelessWidget {
             ),
             Obx(() => globalController.unreadNotificationsCount.value > 0
                 ? Positioned(
-                    right: 8,
-                    top: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(10)),
-                      constraints:
-                          const BoxConstraints(minWidth: 16, minHeight: 16),
-                      child: Text(
-                        '${globalController.unreadNotificationsCount.value}',
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 10),
-                        textAlign: TextAlign.center,
-                      ),
+                    right: 6,
+                    top: 6,
+                    child: _PharmacyCountBadge(
+                      count: globalController.unreadNotificationsCount.value,
                     ),
                   )
                 : const Offstage()),
@@ -133,21 +122,10 @@ class PharmacyDashboardScreen extends StatelessWidget {
             ),
             Obx(() => globalController.cartCount.value > 0
                 ? Positioned(
-                    right: 8,
-                    top: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                          color: appColorSecondary,
-                          borderRadius: BorderRadius.circular(10)),
-                      constraints:
-                          const BoxConstraints(minWidth: 16, minHeight: 16),
-                      child: Text(
-                        '${globalController.cartCount.value}',
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 10),
-                        textAlign: TextAlign.center,
-                      ),
+                    right: 6,
+                    top: 6,
+                    child: _PharmacyCountBadge(
+                      count: globalController.cartCount.value,
                     ),
                   )
                 : const Offstage()),
@@ -161,7 +139,9 @@ class PharmacyDashboardScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 12),
               _buildSearchBar(context),
+              _buildPrescriptionHint(),
               _buildPrescriptionCTA(),
               _buildCategories(),
               _buildFeaturedProducts(),
@@ -175,55 +155,141 @@ class PharmacyDashboardScreen extends StatelessWidget {
   }
 
   Widget _buildSearchBar(BuildContext context) {
-    return AppTextField(
-      textFieldType: TextFieldType.NAME,
-      readOnly: true,
-      onTap: () => Get.to(() => ProductListScreen()),
-      decoration: inputDecoration(
-        context,
-        hintText: locale.value.searchProducts,
-        prefixIcon: const Icon(Icons.search, color: secondaryTextColor),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: surfaceElevated,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: softShadowColor,
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-    ).paddingAll(16);
+      child: AppTextField(
+        textFieldType: TextFieldType.NAME,
+        readOnly: true,
+        onTap: () => Get.to(() => ProductListScreen()),
+        decoration: InputDecoration(
+          hintText: locale.value.searchProducts,
+          hintStyle: secondaryTextStyle(),
+          filled: true,
+          fillColor: surfaceElevated,
+          prefixIcon: const Icon(Icons.search, color: appColorSecondary),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPrescriptionHint() {
+    return GestureDetector(
+      onTap: () => Get.to(() => PrescriptionUploadScreen()),
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 6, 20, 2),
+        child: Row(
+          children: [
+            const Icon(Icons.medical_services_outlined,
+                size: 14, color: appColorSecondary),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                locale.value.needHelpUploadPrescription,
+                style: secondaryTextStyle(size: 12, color: appColorSecondary),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildPrescriptionCTA() {
     return GestureDetector(
       onTap: () => Get.to(() => PrescriptionUploadScreen()),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(16),
-        decoration: boxDecorationDefault(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
           gradient: const LinearGradient(
               colors: [gradientSecondaryStart, gradientSecondaryEnd]),
           borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: boxDecorationDefault(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12)),
-              child: const Icon(Icons.upload_file_outlined,
-                  color: Colors.white, size: 32),
+          boxShadow: [
+            BoxShadow(
+              color: softShadowColorMedium,
+              blurRadius: 18,
+              offset: const Offset(0, 8),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(locale.value.uploadPrescription,
-                      style: boldTextStyle(color: Colors.white)),
-                  const SizedBox(height: 4),
-                  Text(locale.value.uploadPrescriptionInstructions,
-                      style: secondaryTextStyle(
-                          color: Colors.white.withValues(alpha: 0.8), size: 12)),
-                ],
-              ),
-            ),
-            const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
           ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Stack(
+            children: [
+              Positioned(
+                right: -20,
+                top: -20,
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.08),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(18),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.upload_file_outlined,
+                          color: Colors.white, size: 32),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(locale.value.uploadPrescription,
+                              style: boldTextStyle(
+                                  color: Colors.white, size: 15)),
+                          const SizedBox(height: 4),
+                          Text(locale.value.uploadPrescriptionInstructions,
+                              style: secondaryTextStyle(
+                                  color:
+                                      Colors.white.withValues(alpha: 0.85),
+                                  size: 12)),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_forward_rounded,
+                        color: Colors.white, size: 18),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -238,15 +304,25 @@ class PharmacyDashboardScreen extends StatelessWidget {
           children: [
             Text(locale.value.categories, style: boldTextStyle(size: 18)),
             TextButton(
-                onPressed: () => Get.to(
-                    () => ProductListScreen(title: locale.value.pharmacy)),
-                child: Text(locale.value.viewAll,
-                    style: secondaryTextStyle(color: appColorSecondary))),
+              onPressed: () => Get.to(
+                  () => ProductListScreen(title: locale.value.pharmacy)),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(locale.value.viewAll,
+                      style: boldTextStyle(
+                          color: appColorSecondary, size: 13)),
+                  const Icon(Icons.chevron_right_rounded,
+                      size: 16, color: appColorSecondary),
+                ],
+              ),
+            ),
           ],
         ).paddingSymmetric(horizontal: 16),
         Obx(() => HorizontalList(
               itemCount: controller.categories.length,
               padding: const EdgeInsets.symmetric(horizontal: 16),
+              spacing: 12,
               itemBuilder: (context, index) {
                 final category = controller.categories[index];
                 return GestureDetector(
@@ -255,23 +331,30 @@ class PharmacyDashboardScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        width: 70,
-                        height: 70,
-                        decoration: boxDecorationDefault(
-                            color: lightPrimaryColor, shape: BoxShape.circle),
+                        width: 84,
+                        height: 84,
+                        decoration: BoxDecoration(
+                          color: surfaceSubtle,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: whiteBorderColor, width: 1),
+                        ),
+                        alignment: Alignment.center,
                         child: category.image != null
                             ? CachedNetworkImage(
                                     imageUrl: category.image!,
+                                    width: 84,
+                                    height: 84,
                                     fit: BoxFit.cover)
-                                .cornerRadiusWithClipRRect(35)
+                                .cornerRadiusWithClipRRect(42)
                             : const Icon(Icons.category_outlined,
-                                color: appColorPrimary),
+                                color: appColorSecondary, size: 28),
                       ),
                       const SizedBox(height: 8),
                       SizedBox(
-                          width: 80,
+                          width: 84,
                           child: Text(category.name ?? '',
-                              style: primaryTextStyle(size: 12),
+                              style: primaryTextStyle(
+                                  size: 12, weight: FontWeight.w600),
                               textAlign: TextAlign.center,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis)),
@@ -299,16 +382,18 @@ class PharmacyDashboardScreen extends StatelessWidget {
                   onTap: () =>
                       Get.to(() => ProductDetailScreen(product: product)),
                   child: Container(
-                    width: 160,
-                    decoration: boxDecorationDefault(
-                        color: context.cardColor,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                              color: softShadowColor,
-                              blurRadius: 10,
-                              offset: const Offset(0, 4))
-                        ]),
+                    width: 168,
+                    decoration: BoxDecoration(
+                      color: surfaceElevated,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: whiteBorderColor, width: 1),
+                      boxShadow: [
+                        BoxShadow(
+                            color: softShadowColor,
+                            blurRadius: 16,
+                            offset: const Offset(0, 6)),
+                      ],
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -317,15 +402,15 @@ class PharmacyDashboardScreen extends StatelessWidget {
                             if (product.images.validate().isNotEmpty)
                               CachedNetworkImage(
                                       imageUrl: product.images![0],
-                                      height: 120,
-                                      width: 160,
+                                      height: 132,
+                                      width: 168,
                                       fit: BoxFit.cover)
                                   .cornerRadiusWithClipRRectOnly(
                                       topLeft: 16, topRight: 16)
                             else
                               Container(
-                                      height: 120,
-                                      width: 160,
+                                      height: 132,
+                                      width: 168,
                                       color: gray100,
                                       child: const Icon(Icons.image_outlined,
                                           color: gray400))
@@ -337,18 +422,32 @@ class PharmacyDashboardScreen extends StatelessWidget {
                                 left: 8,
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 2),
-                                  decoration: boxDecorationDefault(
-                                      color: Colors.orange.withValues(alpha: 0.9),
-                                      borderRadius: BorderRadius.circular(4)),
-                                  child: const Icon(Icons.assignment_outlined,
-                                      color: Colors.white, size: 14),
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: appColorSecondary
+                                        .withValues(alpha: 0.95),
+                                    borderRadius: BorderRadius.circular(999),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.assignment_outlined,
+                                          color: Colors.white, size: 12),
+                                      const SizedBox(width: 3),
+                                      Text('Rx',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w700,
+                                              height: 1.0)),
+                                    ],
+                                  ),
                                 ),
                               ),
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -356,21 +455,24 @@ class PharmacyDashboardScreen extends StatelessWidget {
                                   style: boldTextStyle(size: 14),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis),
+                              const SizedBox(height: 2),
                               Text(product.brandName ?? '',
                                   style: secondaryTextStyle(size: 12)),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: 6),
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text('${product.price} LE',
                                       style: boldTextStyle(
-                                          color: appColorSecondary)),
+                                          color: appColorPrimary, size: 15)),
                                   if (product.referencePrice != null) ...[
-                                    const SizedBox(width: 4),
+                                    const SizedBox(width: 6),
                                     Text('${product.referencePrice} LE',
                                         style: secondaryTextStyle(
                                             decoration:
                                                 TextDecoration.lineThrough,
-                                            size: 10)),
+                                            size: 11,
+                                            color: gray400)),
                                   ],
                                 ],
                               ),
@@ -404,19 +506,56 @@ class PharmacyDashboardScreen extends StatelessWidget {
                   onTap: () => Get.to(() => ProductListScreen(
                       brandId: brandId, title: brandName)),
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: boxDecorationDefault(
-                        color: context.cardColor,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: context.dividerColor)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: surfaceSubtle,
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(color: whiteBorderColor, width: 1),
+                    ),
                     child: Text(brandName,
-                        style: primaryTextStyle(size: 14)),
+                        style: primaryTextStyle(
+                            size: 13, weight: FontWeight.w600)),
                   ),
                 );
               },
             )),
       ],
     ).paddingSymmetric(vertical: 16);
+  }
+}
+
+class _PharmacyCountBadge extends StatelessWidget {
+  final int count;
+  const _PharmacyCountBadge({required this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+      constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+            colors: [gradientSecondaryStart, gradientSecondaryEnd]),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: Colors.white, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+              color: softShadowColor,
+              blurRadius: 6,
+              offset: const Offset(0, 2)),
+        ],
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        count > 99 ? '99+' : '$count',
+        style: const TextStyle(
+            color: Colors.white,
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            height: 1.1),
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 }
