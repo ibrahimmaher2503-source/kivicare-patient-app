@@ -1,3 +1,5 @@
+import '../../../utils/localized_field.dart';
+
 class TopDoctorDetailRes {
   bool status;
   List<TopDoctor> data;
@@ -94,7 +96,7 @@ class TopDoctor {
       mobile: json['mobile'] ?? '',
       playerId: json['player_id'],
       gender: json['gender'] ?? '',
-      expert: json['expert'] ?? '',
+      expert: pickLocalized(json, 'expert'),
       dateOfBirth: json['date_of_birth'] ?? '',
       emailVerifiedAt: json['email_verified_at'],
       status: json['status'] ?? 1,
@@ -185,7 +187,7 @@ class DoctorService {
       isEnableAdvancePayment: json['is_enable_advance_payment'] == 1,
       advancePaymentAmount: json['advance_payment_amount'],
       priceDetail: json['price_detail'] != null ? PriceDetail.fromJson(json['price_detail']) : PriceDetail(),
-      name: json['name'] ?? '',
+      name: pickLocalized(json, 'name'),
       doctorName: json['doctor_name'] ?? '',
       clinicName: json['clinic_name'] ?? '',
       topDoctor: json['doctor_profile'] ?? '',

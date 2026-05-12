@@ -1,3 +1,5 @@
+import '../../../utils/localized_field.dart';
+
 class DoctorServiceListRes {
   bool status;
   List<DoctorServiceElement> data;
@@ -68,8 +70,8 @@ class DoctorServiceElement {
   factory DoctorServiceElement.fromJson(Map<String, dynamic> json) {
     return DoctorServiceElement(
       id: json['id'] is int ? json['id'] : -1,
-      name: json['name'] is String ? json['name'] : "",
-      description: json['description'] is String ? json['description'] : "",
+      name: pickLocalized(json, 'name'),
+      description: pickLocalized(json, 'description'),
       charges: json['charges'] is num ? json['charges'] : 0,
       categoryId: json['category_id'] is String ? json['category_id'] : "",
       subCategoryId: json['sub_category_id'] is int ? json['sub_category_id'] : -1,

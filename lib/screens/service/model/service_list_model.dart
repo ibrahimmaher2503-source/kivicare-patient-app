@@ -1,3 +1,4 @@
+import '../../../utils/localized_field.dart';
 import '../../clinic/model/clinics_res_model.dart';
 
 class ServiceListRes {
@@ -161,9 +162,9 @@ class ServiceElement {
   factory ServiceElement.fromJson(Map<String, dynamic> json) {
     return ServiceElement(
       id: json['id'] is int ? json['id'] : -1,
-      name: json['name'] is String ? json['name'] : "",
+      name: pickLocalized(json, 'name'),
       slug: json['slug'] is String ? json['slug'] : "",
-      description: json['description'] is String ? json['description'] : "",
+      description: pickLocalized(json, 'description'),
       charges: json['charges'] is num ? json['charges'] : 0,
       status: json['status'] is int ? json['status'] : -1,
       categoryId: json['category_id'] is int ? json['category_id'] : -1,
@@ -263,7 +264,7 @@ class AssignDoctor {
       clinicId: json['clinic_id'] is int ? json['clinic_id'] : -1,
       doctorId: json['doctor_id'] is int ? json['doctor_id'] : -1,
       charges: json['charges'] is num ? json['charges'] : 0,
-      name: json['name'] is String ? json['name'] : "",
+      name: pickLocalized(json, 'name'),
       doctorName: json['doctor_name'] is String ? json['doctor_name'] : "",
       clinicName: json['clinic_name'] is String ? json['clinic_name'] : "",
       doctorProfile: json['doctor_profile'] is String ? json['doctor_profile'] : "",
