@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../components/cached_image_widget.dart';
 import '../../../generated/assets.dart';
-import '../../../main.dart';
+import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/common_base.dart';
 import '../../booking/model/employee_review_data.dart';
@@ -18,95 +16,148 @@ class DoctorReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: boxDecorationDefault(color: context.cardColor),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: Get.width,
-            child: Row(
+    return Obx(
+      () => Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isDarkMode.value
+                ? const Color(0xFF243046)
+                : const Color(0xFFEDF1F4),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: boxDecorationDefault(color: extraLightPrimaryColor, borderRadius: radius(22)),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                CachedImageWidget(
+                  url: doctorReviewData.profileImage,
+                  firstName: doctorReviewData.username,
+                  height: 38,
+                  width: 38,
+                  fit: BoxFit.cover,
+                  circle: true,
+                ),
+                10.width,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CachedImageWidget(
-                        url: Assets.iconsIcStarFilled,
-                        color: getRatingBarColor(doctorReviewData.rating),
-                        height: 12,
-                      ),
-                      5.width,
                       Text(
-                        doctorReviewData.rating.toString(),
+                        doctorReviewData.username,
+                        style: TextStyle(
+                          color: isDarkMode.value
+                              ? textPrimaryDark
+                              : appColorPrimary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          height: 1.2,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: boldTextStyle(size: 12, color: appColorPrimary),
-                      ).paddingTop(2),
+                      ),
+                      3.height,
+                      Text(
+                        doctorReviewData.createdAt.dateInyyyyMMddHHmmFormat
+                            .timeAgoWithLocalization,
+                        style: TextStyle(
+                          color: isDarkMode.value
+                              ? textTertiaryDark
+                              : const Color(0xFF75818A),
+                          fontSize: 11,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Text(
-                  doctorReviewData.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: boldTextStyle(size: 14),
-                ).paddingLeft(8).expand(),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: boxDecorationDefault(color: lightSecondaryColor, borderRadius: radius(22)),
-                  alignment: Alignment.center,
-                  child: Text(
-                    doctorReviewData.serviceName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: boldTextStyle(size: 12, color: appColorSecondary),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: isDarkMode.value
+                        ? const Color(0xFF223047)
+                        : const Color(0xFFFFF6E5),
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ).paddingLeft(16).expand().visible(doctorReviewData.serviceName.isNotEmpty),
-              ],
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CachedImageWidget(
-                url: doctorReviewData.profileImage,
-                firstName: doctorReviewData.username,
-                height: 35,
-                width: 35,
-                fit: BoxFit.cover,
-                circle: true,
-              ),
-              10.width,
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        "${locale.value.by} ${doctorReviewData.username}",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: primaryTextStyle(),
+                      const CachedImageWidget(
+                        url: Assets.iconsIcStarFilled,
+                        color: checkoutStatusColor,
+                        height: 12,
                       ),
-                      const CachedImageWidget(url: Assets.iconsIcVerified, width: 14, height: 14).paddingLeft(8),
+                      4.width,
+                      Text(
+                        doctorReviewData.rating.toString(),
+                        style: TextStyle(
+                          color: isDarkMode.value
+                              ? const Color(0xFFFFDCA2)
+                              : appColorPrimary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          height: 1,
+                        ),
+                      ),
                     ],
                   ),
-                  4.height,
-                  Text(
-                    doctorReviewData.createdAt.dateInyyyyMMddHHmmFormat.timeAgoWithLocalization,
-                    style: secondaryTextStyle(color: secondaryTextColor),
-                  ),
-                ],
+                ),
+              ],
+            ),
+            if (doctorReviewData.title.isNotEmpty) ...[
+              10.height,
+              Text(
+                doctorReviewData.title,
+                style: TextStyle(
+                  color: isDarkMode.value ? textPrimaryDark : appColorPrimary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
-          ).paddingTop(16).visible(doctorReviewData.username.isNotEmpty),
-          Text(doctorReviewData.reviewMsg, style: secondaryTextStyle()).paddingTop(16).visible(doctorReviewData.reviewMsg.isNotEmpty),
-        ],
+            if (doctorReviewData.reviewMsg.isNotEmpty) ...[
+              8.height,
+              Text(
+                doctorReviewData.reviewMsg,
+                style: TextStyle(
+                  color: isDarkMode.value
+                      ? textSecondaryDark
+                      : const Color(0xFF4E5B64),
+                  fontSize: 13,
+                  height: 1.5,
+                ),
+              ),
+            ],
+            if (doctorReviewData.serviceName.isNotEmpty) ...[
+              10.height,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                decoration: BoxDecoration(
+                  color: isDarkMode.value
+                      ? appColorSecondary.withValues(alpha: 0.12)
+                      : lightSecondaryColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  doctorReviewData.serviceName,
+                  style: const TextStyle(
+                    color: appColorSecondary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
