@@ -32,6 +32,7 @@ Map<String, String> buildHeaderTokens({
     'Access-Control-Allow-Headers': '*',
     'Access-Control-Allow-Origin': '*',
     'global-localization': selectedLanguageCode.value,
+    HttpHeaders.acceptLanguageHeader: selectedLanguageCode.value,
   };
 
   if (endPoint == APIEndPoints.register) {
