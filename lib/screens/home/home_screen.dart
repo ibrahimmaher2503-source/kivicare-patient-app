@@ -10,9 +10,11 @@ import '../../utils/common_base.dart';
 import '../../utils/empty_error_state_widget.dart';
 
 import 'components/choose_category_components.dart';
+import 'components/popular_specialties_component.dart';
 import 'components/greetings_component.dart';
 import 'components/quick_book_component.dart';
 import 'components/perfect_clinic_list.dart';
+import 'components/quick_service_section.dart';
 import '../service/components/popular_service_component.dart';
 import 'components/slider_component.dart';
 import '../doctor/components/popular_doctor_component.dart';
@@ -21,9 +23,14 @@ import 'home_controller.dart';
 import 'model/dashboard_res_model.dart';
 import 'package:kivicare_patient/screens/home/components/quick_book_controller.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final HomeController homeScreenController = Get.find();
 
   @override
@@ -66,6 +73,8 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     UpcomingAppointmentComponents(),
                     const _BookNowButton(),
+                    const QuickServiceSection(),
+                    const PopularSpecialtiesComponent(),
                     ChooseCategoryComponents(),
                     SliderComponent(),
                     PopularServiceComponent(),

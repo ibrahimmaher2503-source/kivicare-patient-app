@@ -6,7 +6,7 @@ import '../../api/pharmacy_apis.dart';
 import '../../components/app_scaffold.dart';
 import '../../main.dart';
 import '../../utils/colors.dart';
-import '../../utils/common_base.dart';
+import '../../utils/empty_error_state_widget.dart';
 import 'model/pharmacy_category_model.dart';
 import 'model/pharmacy_product_model.dart';
 import 'pharmacy_controller.dart';
@@ -15,6 +15,7 @@ import 'product_detail_screen.dart';
 import 'prescription/prescription_upload_screen.dart';
 import 'cart/cart_screen.dart';
 import 'notification/pharmacy_notification_screen.dart';
+import 'utils/pharmacy_icon_badge.dart';
 
 class PharmacyDashboardController extends GetxController {
   RxBool isLoading = false.obs;
@@ -82,8 +83,13 @@ class PharmacyDashboardController extends GetxController {
 class PharmacyDashboardScreen extends StatelessWidget {
   PharmacyDashboardScreen({super.key});
 
+  // Reuse the existing instance if already registered so the controller's
+  // onInit() (which fetches categories/products/brands) runs only once, even
+  // if GetX reconstructs this widget during the route transition.
   final PharmacyDashboardController controller =
-      Get.put(PharmacyDashboardController());
+      Get.isRegistered<PharmacyDashboardController>()
+          ? Get.find<PharmacyDashboardController>()
+          : Get.put(PharmacyDashboardController());
   // PharmacyController is registered as permanent via
   // PharmacyController.ensureRegistered() — safe to find directly.
   final PharmacyController globalController =
@@ -95,42 +101,18 @@ class PharmacyDashboardScreen extends StatelessWidget {
       appBartitleText: locale.value.pharmacy,
       isLoading: controller.isLoading,
       actions: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.notifications_none_outlined),
-              onPressed: () => Get.to(() => PharmacyNotificationScreen()),
-            ),
-            Obx(() => globalController.unreadNotificationsCount.value > 0
-                ? Positioned(
-                    right: 6,
-                    top: 6,
-                    child: _PharmacyCountBadge(
-                      count: globalController.unreadNotificationsCount.value,
-                    ),
-                  )
-                : const Offstage()),
-          ],
+        _AppBarActionIcon(
+          icon: Icons.notifications_none_outlined,
+          onTap: () => Get.to(() => PharmacyNotificationScreen()),
+          badgeCount: globalController.unreadNotificationsCount,
         ),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.shopping_cart_outlined),
-              onPressed: () => Get.to(() => CartScreen()),
-            ),
-            Obx(() => globalController.cartCount.value > 0
-                ? Positioned(
-                    right: 6,
-                    top: 6,
-                    child: _PharmacyCountBadge(
-                      count: globalController.cartCount.value,
-                    ),
-                  )
-                : const Offstage()),
-          ],
+        const SizedBox(width: 4),
+        _AppBarActionIcon(
+          icon: Icons.shopping_cart_outlined,
+          onTap: () => Get.to(() => CartScreen()),
+          badgeCount: globalController.cartCount,
         ),
+        const SizedBox(width: 8),
       ],
       body: RefreshIndicator(
         onRefresh: () => controller.init(),
@@ -143,9 +125,7 @@ class PharmacyDashboardScreen extends StatelessWidget {
               _buildSearchBar(context),
               _buildPrescriptionHint(),
               _buildPrescriptionCTA(),
-              _buildCategories(),
-              _buildFeaturedProducts(),
-              _buildBrands(),
+              _buildCatalogSections(),
               const SizedBox(height: 32),
             ],
           ),
@@ -177,7 +157,17 @@ class PharmacyDashboardScreen extends StatelessWidget {
           hintStyle: secondaryTextStyle(),
           filled: true,
           fillColor: surfaceElevated,
-          prefixIcon: const Icon(Icons.search, color: appColorSecondary),
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 12, right: 8),
+            child: const PharmacyIconBadge(
+              icon: Icons.search,
+              size: PharmacyIconSize.sm,
+              style: PharmacyIconStyle.tinted,
+              circular: true,
+            ),
+          ),
+          prefixIconConstraints:
+              const BoxConstraints(minWidth: 52, minHeight: 36),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
           border: OutlineInputBorder(
@@ -205,9 +195,18 @@ class PharmacyDashboardScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(20, 6, 20, 2),
         child: Row(
           children: [
-            const Icon(Icons.medical_services_outlined,
-                size: 14, color: appColorSecondary),
-            const SizedBox(width: 6),
+            Container(
+              width: 22,
+              height: 22,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: appColorSecondary.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: const Icon(Icons.medical_services_outlined,
+                  size: 12, color: appColorSecondary),
+            ),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
                 locale.value.needHelpUploadPrescription,
@@ -258,13 +257,28 @@ class PharmacyDashboardScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      width: 56,
+                      height: 56,
+                      alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.35),
+                          width: 1,
+                        ),
                       ),
-                      child: const Icon(Icons.upload_file_outlined,
-                          color: Colors.white, size: 32),
+                      child: Container(
+                        width: 38,
+                        height: 38,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.95),
+                          borderRadius: BorderRadius.circular(11),
+                        ),
+                        child: const Icon(Icons.upload_file_rounded,
+                            color: gradientSecondaryEnd, size: 22),
+                      ),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
@@ -291,6 +305,55 @@ class PharmacyDashboardScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// Renders the catalog (categories / featured products / brands).
+  /// Each section is hidden when its own data is empty, and a single
+  /// consolidated empty state is shown when the whole catalog is empty
+  /// (e.g. the backend has no pharmacy data seeded yet).
+  Widget _buildCatalogSections() {
+    return Obx(() {
+      final loading = controller.isLoading.value;
+      final hasCategories = controller.categories.isNotEmpty;
+      final hasProducts = controller.featuredProducts.isNotEmpty;
+      final hasBrands = controller.brands.isNotEmpty;
+
+      if (!loading && !hasCategories && !hasProducts && !hasBrands) {
+        return _buildEmptyCatalog();
+      }
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (hasCategories) _buildCategories(),
+          if (hasProducts) _buildFeaturedProducts(),
+          if (hasBrands) _buildBrands(),
+        ],
+      );
+    });
+  }
+
+  Widget _buildEmptyCatalog() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
+      child: Column(
+        children: [
+          const EmptyStateWidget(height: 160),
+          const SizedBox(height: 16),
+          Text(
+            locale.value.noProductsFound,
+            style: boldTextStyle(size: 16),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            locale.value.needHelpUploadPrescription,
+            style: secondaryTextStyle(size: 13),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
@@ -334,9 +397,26 @@ class PharmacyDashboardScreen extends StatelessWidget {
                         width: 84,
                         height: 84,
                         decoration: BoxDecoration(
-                          color: surfaceSubtle,
                           shape: BoxShape.circle,
-                          border: Border.all(color: whiteBorderColor, width: 1),
+                          gradient: LinearGradient(
+                            colors: [
+                              surfaceSubtle,
+                              appColorSecondary.withValues(alpha: 0.06),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          border: Border.all(
+                            color: appColorSecondary.withValues(alpha: 0.14),
+                            width: 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: softShadowColor,
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
                         alignment: Alignment.center,
                         child: category.image != null
@@ -346,8 +426,18 @@ class PharmacyDashboardScreen extends StatelessWidget {
                                     height: 84,
                                     fit: BoxFit.cover)
                                 .cornerRadiusWithClipRRect(42)
-                            : const Icon(Icons.category_outlined,
-                                color: appColorSecondary, size: 28),
+                            : Container(
+                                width: 44,
+                                height: 44,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: appColorSecondary
+                                      .withValues(alpha: 0.14),
+                                ),
+                                child: const Icon(Icons.category_rounded,
+                                    color: appColorSecondary, size: 24),
+                              ),
                       ),
                       const SizedBox(height: 8),
                       SizedBox(
@@ -409,36 +499,63 @@ class PharmacyDashboardScreen extends StatelessWidget {
                                       topLeft: 16, topRight: 16)
                             else
                               Container(
-                                      height: 132,
-                                      width: 168,
-                                      color: gray100,
-                                      child: const Icon(Icons.image_outlined,
-                                          color: gray400))
-                                  .cornerRadiusWithClipRRectOnly(
-                                      topLeft: 16, topRight: 16),
+                                height: 132,
+                                width: 168,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      surfaceSubtle,
+                                      appColorSecondary.withValues(alpha: 0.05),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
+                                child: const PharmacyIconBadge(
+                                  icon: Icons.medication_outlined,
+                                  size: PharmacyIconSize.lg,
+                                  style: PharmacyIconStyle.tinted,
+                                ),
+                              ).cornerRadiusWithClipRRectOnly(
+                                  topLeft: 16, topRight: 16),
                             if (product.isPrescriptionRequired ?? false)
                               Positioned(
                                 top: 8,
                                 left: 8,
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
+                                      horizontal: 9, vertical: 5),
                                   decoration: BoxDecoration(
-                                    color: appColorSecondary
-                                        .withValues(alpha: 0.95),
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        gradientSecondaryStart,
+                                        gradientSecondaryEnd,
+                                      ],
+                                    ),
                                     borderRadius: BorderRadius.circular(999),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: softShadowColorMedium,
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(Icons.assignment_outlined,
-                                          color: Colors.white, size: 12),
-                                      const SizedBox(width: 3),
+                                      const Icon(
+                                          Icons.medical_information_rounded,
+                                          color: Colors.white,
+                                          size: 12),
+                                      const SizedBox(width: 4),
                                       Text('Rx',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 10,
                                               fontWeight: FontWeight.w700,
+                                              letterSpacing: 0.4,
                                               height: 1.0)),
                                     ],
                                   ),
@@ -522,6 +639,56 @@ class PharmacyDashboardScreen extends StatelessWidget {
             )),
       ],
     ).paddingSymmetric(vertical: 16);
+  }
+}
+
+class _AppBarActionIcon extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  final RxInt badgeCount;
+
+  const _AppBarActionIcon({
+    required this.icon,
+    required this.onTap,
+    required this.badgeCount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkResponse(
+      radius: 26,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: appColorSecondary.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: appColorSecondary.withValues(alpha: 0.16),
+                  width: 1,
+                ),
+              ),
+              child: Icon(icon, size: 20, color: appColorSecondary),
+            ),
+            Obx(() => badgeCount.value > 0
+                ? Positioned(
+                    right: -4,
+                    top: -4,
+                    child: _PharmacyCountBadge(count: badgeCount.value),
+                  )
+                : const Offstage()),
+          ],
+        ),
+      ),
+    );
   }
 }
 

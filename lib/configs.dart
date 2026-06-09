@@ -7,7 +7,7 @@ const APP_LOGO_URL = '$DOMAIN_URL/img/logo/mini_logo.png';
 const DEFAULT_LANGUAGE = 'en';
 
 ///Live Url
-const DOMAIN_URL = "";
+const DOMAIN_URL = "https://espitalia.net";
 
 const BASE_URL = '$DOMAIN_URL/api/';
 
