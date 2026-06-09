@@ -27,6 +27,14 @@ Map<String, String> buildHeaderTokens({
     extraKeys.putIfAbsent('isFlutterWave', () => false);
     extraKeys.putIfAbsent('isAirtelMoney', () => false);
   }
+  // API LOCALIZATION (investigation conclusion: IMPLEMENTED).
+  // Every request carries the user's currently-selected locale so the Laravel
+  // backend returns localized data. `selectedLanguageCode` is the single source
+  // of truth (set in settings_screen.dart, also drives the app Locale in
+  // main.dart). Two headers are sent: `Accept-Language` (standard) and
+  // `global-localization` (backend-specific). For payloads that ship `<base>_ar`
+  // / `<base>_en` pairs, the client additionally resolves the right value via
+  // pickLocalized() in utils/localized_field.dart. No further change needed.
   Map<String, String> header = {
     HttpHeaders.cacheControlHeader: 'no-cache',
     'Access-Control-Allow-Headers': '*',

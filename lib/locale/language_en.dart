@@ -339,7 +339,7 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get doYouWantToClearAllNotification =>
-      'Do you want to clearall notification';
+      'Do you want to clear all notifications?';
 
   @override
   String get locationPermissionDenied => 'location permission denied';

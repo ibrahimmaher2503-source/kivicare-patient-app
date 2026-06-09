@@ -222,13 +222,13 @@ class LanguageAr extends BaseLanguage {
   String get eG => 'على سبيل المثال';
 
   @override
-  String get merry => 'مرح';
+  String get merry => 'ميري';
 
   @override
-  String get doe => 'ظبية';
+  String get doe => 'دو';
 
   @override
-  String get welcomeBackToThe => 'مرحبًا بك في';
+  String get welcomeBackToThe => 'مرحبًا بعودتك إلى';
 
   @override
   String get welcomeToThe => 'أهلا بك في';
@@ -277,7 +277,7 @@ class LanguageAr extends BaseLanguage {
   String get userCancelled => 'تم إلغاء المستخدم';
 
   @override
-  String get appleSigninIsNot => 'علامة Apple غير متوفرة لجهازك';
+  String get appleSigninIsNot => 'تسجيل الدخول عبر Apple غير متوفر لجهازك';
 
   @override
   String get eventStatus => 'حالة الحدث';
@@ -337,7 +337,7 @@ class LanguageAr extends BaseLanguage {
   String get doYouWantToRemoveNotification => 'هل تريد إزالة الإخطار';
 
   @override
-  String get doYouWantToClearAllNotification => 'هل تريد إلغاء الإخطار';
+  String get doYouWantToClearAllNotification => 'هل تريد مسح كل الإشعارات؟';
 
   @override
   String get locationPermissionDenied => 'تم رفض إذن الموقع';
@@ -541,10 +541,10 @@ class LanguageAr extends BaseLanguage {
   String get discount => "تخفيض";
 
   @override
-  String get off => "أقل";
+  String get off => "خصم";
 
   @override
-  String get subtotal => "نطاق فرعي";
+  String get subtotal => "المجموع الفرعي";
 
   @override
   String get tax => "ضريبة";
@@ -623,7 +623,7 @@ class LanguageAr extends BaseLanguage {
   String get otherInformation => "معلومات أخرى";
 
   @override
-  String get patientSoap => "صابون المريض";
+  String get patientSoap => "ملف SOAP للمريض";
 
   @override
   String get category => "فئة";
@@ -809,7 +809,7 @@ class LanguageAr extends BaseLanguage {
   String get refused => 'رفض';
 
   @override
-  String get doNotHonor => 'لا تتباهي';
+  String get doNotHonor => 'تم رفض العملية من البنك';
 
   @override
   String get transactionNotPermittedTo =>
@@ -1269,7 +1269,7 @@ class LanguageAr extends BaseLanguage {
   String get confirmed => 'مؤكد';
 
   @override
-  String get checkIn => 'تحقق في';
+  String get checkIn => 'تسجيل الوصول';
 
   @override
   String get cancelled => 'تم الإلغاء';
@@ -1332,7 +1332,7 @@ class LanguageAr extends BaseLanguage {
   String get spouse => 'زوج';
 
   @override
-  String get relative => 'نسبي';
+  String get relative => 'قريب';
 
   @override
   String get deleteConfirmation => 'حذف التأكيد';
@@ -1356,7 +1356,7 @@ class LanguageAr extends BaseLanguage {
   String get other => 'آخر';
 
   @override
-  String get others => 'آحرون';
+  String get others => 'آخرون';
 
   @override
   String get appliedInclusiveTaxes => "الضرائب الشاملة المطبقة";
@@ -2184,7 +2184,7 @@ class LanguageAr extends BaseLanguage {
   String get serviceDuration => 'المدة';
 
   @override
-  String get patientServed => 'مريض';
+  String get patientServed => 'المرضى';
 
   @override
   String get bookAppointment => 'حجز موعد';
