@@ -8,10 +8,10 @@ class LanguageAr extends BaseLanguage {
   String get language => 'لغة';
 
   @override
-  String get badRequest => '400 طلب سىء';
+  String get badRequest => '400: طلب خاطئ';
 
   @override
-  String get forbidden => '403 ممنوع';
+  String get forbidden => '403: ممنوع';
 
   @override
   String get pageNotFound => '404: الصفحة لم يتم العثور عليها';
@@ -23,13 +23,13 @@ class LanguageAr extends BaseLanguage {
   String get internalServerError => '500: خطأ الخادم الداخلي';
 
   @override
-  String get badGateway => '502 مدخل غير صالح';
+  String get badGateway => '502: بوابة خاطئة';
 
   @override
-  String get serviceUnavailable => '503 الخدمة غير متوفرة';
+  String get serviceUnavailable => '503: الخدمة غير متوفرة';
 
   @override
-  String get gatewayTimeout => 'البوابة 504 انتهى الزمن';
+  String get gatewayTimeout => '504: انتهت مهلة البوابة';
 
   @override
   String get hey => 'يا';
@@ -71,10 +71,10 @@ class LanguageAr extends BaseLanguage {
   String get invalidUrl => 'URL غير صالح';
 
   @override
-  String get cancel => 'يلغي';
+  String get cancel => 'إلغاء';
 
   @override
-  String get delete => 'يمسح';
+  String get delete => 'حذف';
 
   @override
   String get deleteAccountConfirmation =>
@@ -112,7 +112,7 @@ class LanguageAr extends BaseLanguage {
   String get yes => 'نعم';
 
   @override
-  String get submit => 'يُقدِّم';
+  String get submit => 'إرسال';
 
   @override
   String get select => 'اختيار';
@@ -163,7 +163,7 @@ class LanguageAr extends BaseLanguage {
   String get signIn => 'تسجيل الدخول';
 
   @override
-  String get explore => 'يستكشف';
+  String get explore => 'استكشاف';
 
   @override
   String get settings => 'إعدادات';
@@ -210,7 +210,7 @@ class LanguageAr extends BaseLanguage {
       'يمكنك الآن تسجيل الدخول إلى حسابك الجديد بكلمة مرورك الجديدة';
 
   @override
-  String get done => 'منتهي';
+  String get done => 'تم';
 
   @override
   String get pleaseAcceptTermsAnd => 'يرجى قبول الشروط والأحكام';
@@ -402,7 +402,7 @@ class LanguageAr extends BaseLanguage {
   String get sendCode => "إرسال الرمز";
 
   @override
-  String get edit => "يحرر";
+  String get edit => "تعديل";
 
   @override
   String get gender => "جنس";
@@ -439,13 +439,13 @@ class LanguageAr extends BaseLanguage {
   String get privacyPolicy => "سياسة الخصوصية";
 
   @override
-  String get appointment => "ميعاد";
+  String get appointment => 'موعد';
 
   @override
   String get doctor => "طبيب";
 
   @override
-  String get payment => "قسط";
+  String get payment => 'الدفع';
 
   @override
   String get doYouWantToCancelAppointment => "هل تريد إلغاء الموعد؟";
@@ -508,13 +508,13 @@ class LanguageAr extends BaseLanguage {
   String get encounterDetail => "مواجهة التفاصيل";
 
   @override
-  String get view => "منظر";
+  String get view => "عرض";
 
   @override
   String get doctorName => "اسم الطبيب";
 
   @override
-  String get active => "نشيط";
+  String get active => 'نشط';
 
   @override
   String get closed => "مغلق";
@@ -686,7 +686,7 @@ class LanguageAr extends BaseLanguage {
   String get clinic => "عيادة";
 
   @override
-  String get proceed => "يتابع";
+  String get proceed => "متابعة";
 
   @override
   String get video => "فيديو";
@@ -775,7 +775,7 @@ class LanguageAr extends BaseLanguage {
       "استكشف ، وإيجاد الحلول ، وتلقي المساعدة بسرعة ، شبكة الدعم الخاصة بك جاهزة في غضون 24 ساعة.";
 
   @override
-  String get transactionIsInProcess => 'الصفقة قيد التنفيذ...';
+  String get transactionIsInProcess => 'المعاملة قيد التنفيذ...';
 
   @override
   String get enterYourMsisdnHere => 'أدخل msisdn الخاص بك هنا';
@@ -863,7 +863,7 @@ class LanguageAr extends BaseLanguage {
       'لا تحتوي محفظة المستخدم على أموال كافية لتغطية المبلغ المستحق';
 
   @override
-  String get theTransactionWasRefused => 'تم رفض الصفقة';
+  String get theTransactionWasRefused => 'تم رفض المعاملة';
 
   @override
   String get encryptionKeyHasBeen => 'تم جلب مفتاح التشفير بنجاح';
@@ -876,7 +876,7 @@ class LanguageAr extends BaseLanguage {
       'لقد تم بالفعل بدء المستفيد في الإيقاف أو الحظر أو عدم التسجيل على منصة Airtel Money';
 
   @override
-  String get theTransactionWasNot => 'لم يتم العثور على الصفقة.';
+  String get theTransactionWasNot => 'لم يتم العثور على المعاملة.';
 
   @override
   String get thisIsAGeneric => 'هذا رفض عام له عدة أسباب محتملة';
@@ -931,10 +931,10 @@ class LanguageAr extends BaseLanguage {
   String get objective => "موضوعي";
 
   @override
-  String get assessment => "تقدير";
+  String get assessment => 'التقييم';
 
   @override
-  String get plan => "يخطط";
+  String get plan => 'الخطة';
 
   @override
   String get bodyChart => "مخطط الجسم";
@@ -943,7 +943,7 @@ class LanguageAr extends BaseLanguage {
   String get doctorsAvailable => "الأطباء المتاحين";
 
   @override
-  String get noDoctorsAvailable => "لا أطباء متاح";
+  String get noDoctorsAvailable => 'لا يوجد أطباء متاحون';
 
   @override
   String get photosAvailable => "الصور المتاحة";
@@ -956,10 +956,10 @@ class LanguageAr extends BaseLanguage {
       "يبدو أنه لا توجد خدمات مدرجة في هذه العيادة ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
 
   @override
-  String get session => "حصة";
+  String get session => 'جلسة';
 
   @override
-  String get unavailable => "غير متوفره";
+  String get unavailable => 'غير متوفرة';
 
   @override
   String get lblBreak => "استراحة";
@@ -1217,7 +1217,7 @@ class LanguageAr extends BaseLanguage {
   String get relation => 'علاقة';
 
   @override
-  String get save => 'يحفظ';
+  String get save => 'حفظ';
 
   @override
   String get managePatient => 'إدارة المريض';
@@ -1478,7 +1478,7 @@ class LanguageAr extends BaseLanguage {
   String get otp => 'كلمة المرور لمرة واحدة';
 
   @override
-  String get verify => 'يؤكد';
+  String get verify => 'تحقق';
 
   @override
   String get closedOn => 'مغلق في';
@@ -1506,7 +1506,7 @@ class LanguageAr extends BaseLanguage {
   String get noQueryYet => 'لا يوجد استفسار حتى الآن';
 
   @override
-  String get add => 'يضيف';
+  String get add => 'إضافة';
 
   @override
   String get toSubmitYourProblemsSimplyPressAddButtonAndExplainYourConcern =>
@@ -1523,10 +1523,10 @@ class LanguageAr extends BaseLanguage {
   String get otpFromAuthenticatorApp => 'OTP من تطبيق Authenticator';
 
   @override
-  String get open => 'يفتح';
+  String get open => 'فتح';
 
   @override
-  String get close => 'يغلق';
+  String get close => 'إغلاق';
 
   @override
   String get pleaseEnterValidEmail => 'الرجاء إدخال بريد إلكتروني صالح';
@@ -1591,7 +1591,7 @@ class LanguageAr extends BaseLanguage {
   String get incident => "حادث";
 
   @override
-  String get reject => 'يرفض';
+  String get reject => 'رفض';
 
   @override
   String get successfullyAdded => 'تمت الإضافة بنجاح';

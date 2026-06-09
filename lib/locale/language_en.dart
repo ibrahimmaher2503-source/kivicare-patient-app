@@ -1230,7 +1230,7 @@ class LanguageEn extends BaseLanguage {
   String get relation => 'Relation';
 
   @override
-  String get save => 'save';
+  String get save => 'Save';
 
   @override
   String get managePatient => 'Manage Patient';
