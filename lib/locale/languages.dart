@@ -154,6 +154,12 @@ abstract class BaseLanguage {
 
   String get appTheme;
 
+  String get themeSystem;
+
+  String get themeLight;
+
+  String get themeDark;
+
   String get guest;
 
   String get notifications;

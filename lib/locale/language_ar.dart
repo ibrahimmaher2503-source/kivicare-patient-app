@@ -237,7 +237,16 @@ class LanguageAr extends BaseLanguage {
   String get doYouWantToLogout => 'هل ترغب بالخروج؟';
 
   @override
-  String get appTheme => 'موضوع التطبيق';
+  String get appTheme => 'مظهر التطبيق';
+
+  @override
+  String get themeSystem => 'النظام';
+
+  @override
+  String get themeLight => 'فاتح';
+
+  @override
+  String get themeDark => 'داكن';
 
   @override
   String get guest => 'ضيف';

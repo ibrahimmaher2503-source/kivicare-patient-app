@@ -99,7 +99,14 @@ class SettingScreen extends StatelessWidget {
                       items: settingsController.themeModes.map((element) {
                         return DropdownMenuItem(
                           value: element,
-                          child: Text(element.mode, style: primaryTextStyle(size: 13)).paddingSymmetric(horizontal: 12),
+                          child: Text(
+                            element.mode == 'Light'
+                                ? locale.value.themeLight
+                                : element.mode == 'Dark'
+                                    ? locale.value.themeDark
+                                    : locale.value.themeSystem,
+                            style: primaryTextStyle(size: 13),
+                          ).paddingSymmetric(horizontal: 12),
                         );
                       }).toList(),
                       onChanged: (newValue) {
