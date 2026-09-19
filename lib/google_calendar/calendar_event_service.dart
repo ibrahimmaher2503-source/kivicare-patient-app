@@ -6,6 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'calendar_client.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../main.dart';
+import '../network/network_utils.dart';
 
 GoogleSignInAccount? _currentUser;
 
@@ -40,7 +42,7 @@ Future<bool> addToGoogleCalendar({
     // Retrieve an [auth.AuthClient] from the current [GoogleSignIn] instance.
     final auth.AuthClient? client = await _googleSignIn.authenticatedClient();
     if (client == null) {
-      toast("Something went wrong! Please try again!");
+      toast(locale.value.somethingWentWrongPleaseTryAgainLater);
     } else {
       cal.CalendarApi calsd = cal.CalendarApi(client);
       CalendarClient calendarClient = CalendarClient();
@@ -54,15 +56,15 @@ Future<bool> addToGoogleCalendar({
           attendeeEmailList: attendeeEmailList,
           shouldNotifyAttendees: shouldNotifyAttendees,
           hasConferenceSupport: hasConferenceSupport,
-          startTime: startTime.toUtc(),
-          endTime: endTime.toUtc(),
+          startTime: startTime,
+          endTime: endTime,
         )
             .then((value) {
           log('------> calendarClient.insert VALUE: $value');
           if (hasConferenceSupport) {
             if (value.isNotEmpty) {
               log('Event added to Google Calendar');
-              return value["link"];
+              isSuccess = true;
             } else {
               log("Unable to add event to Google Calendar +-+-+-+-+-+-+-");
             }
@@ -72,12 +74,14 @@ Future<bool> addToGoogleCalendar({
           }
         });
       } catch (e) {
-        toast(e.toString());
+        toast(sanitizeBackendMessage(
+            e, locale.value.somethingWentWrongPleaseTryAgainLater));
         log('Error creating event $e');
       }
     }
   }).catchError((e) {
-    toast(e.toString());
+    toast(sanitizeBackendMessage(
+        e, locale.value.somethingWentWrongPleaseTryAgainLater));
     log("=>>>>$e");
   });
   return isSuccess;

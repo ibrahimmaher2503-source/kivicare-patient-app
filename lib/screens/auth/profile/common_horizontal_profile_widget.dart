@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import '../../../components/cached_image_widget.dart';
-import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 
 class ProfilePicHorizotalWidget extends StatelessWidget {
@@ -35,106 +34,87 @@ class ProfilePicHorizotalWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-      decoration: BoxDecoration(
-        color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: boxDecorationDefault(color: context.cardColor),
+      child: Stack(
         children: [
-          GestureDetector(
-            onTap: onPicTap,
-            child: SizedBox(
-              height: picSize + 16,
-              width: picSize + 16,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  // Avatar with accent ring
-                  Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: appColorAccent, width: 2),
-                    ),
-                    child: Hero(
-                      tag: heroTag,
-                      child: CachedImageWidget(
-                        url: profileImage,
-                        firstName: firstName,
-                        lastName: lastName,
-                        height: picSize,
-                        width: picSize,
-                        fit: BoxFit.cover,
-                        circle: true,
-                      ),
-                    ),
-                  ),
-                  // Edit button
-                  Positioned(
-                    bottom: 0,
-                    right: -4,
-                    child: GestureDetector(
-                      onTap: onCameraTap,
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: appColorSecondary,
-                          border: Border.all(
-                            color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-                            width: 2,
+          Row(
+            children: [
+              16.width,
+              GestureDetector(
+                onTap: onPicTap,
+                child: SizedBox(
+                  height: picSize + 16,
+                  width: picSize + 16,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      CircularPercentIndicator(
+                        radius: (picSize * 0.5) + 8,
+                        lineWidth: 1.5,
+                        percent: 1,
+                        startAngle: 360 - 20,
+                        progressColor: appColorSecondary,
+                        fillColor: transparentColor,
+                        circularStrokeCap: CircularStrokeCap.round,
+                        backgroundColor: transparentColor,
+                        center: Hero(
+                          tag: heroTag,
+                          child: CachedImageWidget(
+                            url: profileImage,
+                            firstName: firstName,
+                            lastName: lastName,
+                            height: picSize,
+                            width: picSize,
+                            fit: BoxFit.cover,
+                            circle: true,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: appColorSecondary.withValues(alpha: 0.3),
-                              blurRadius: 6,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
                         ),
-                        child: const Icon(Icons.edit_outlined, color: Colors.white, size: 14),
                       ),
-                    ),
+                      Positioned(
+                        bottom: 0,
+                        right: -60,
+                        left: 0,
+                        child: Container(
+                          height: 26,
+                          alignment: Alignment.center,
+                          child: AppButton(
+                            height: 30,
+                            width: 30,
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                            elevation: 0,
+                            shapeBorder: RoundedRectangleBorder(borderRadius: radius(100)),
+                            color: appColorSecondary,
+                            onTap: onCameraTap,
+                            child: Icon(Icons.edit_outlined,color: Colors.white,size: 16,),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-          if (!showOnlyPhoto) ...[
-            16.width,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  userName,
-                  style: GoogleFonts.outfit(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: isDarkMode.value ? Colors.white : primaryTextColor,
-                    letterSpacing: -0.3,
+              if (!showOnlyPhoto) ...[
+                16.width,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(userName, style: boldTextStyle(size: 20)),
+                    4.height,
+                    Text(subInfo, style: primaryTextStyle(size: 14, color: secondaryTextColor)),
+                  ],
+                ).expand(),
+                /* IconButton(
+                  onPressed: onCameraTap,
+                  icon: const CachedImageWidget(
+                    url: Assets.iconsIcEditReview,
+                    height: 20,
+                    fit: BoxFit.fitHeight,
                   ),
-                ),
-                4.height,
-                Text(
-                  subInfo,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 14,
-                    color: secondaryTextColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
+                ), */
               ],
-            ).expand(),
-          ],
+            ],
+          ),
         ],
       ),
     );

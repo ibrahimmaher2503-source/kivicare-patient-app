@@ -11,7 +11,8 @@ class DoctorSelectionCardWidget extends StatelessWidget {
   final Doctor doctorData;
   final void Function()? onTap;
 
-  const DoctorSelectionCardWidget({super.key, required this.doctorData, this.onTap});
+  const DoctorSelectionCardWidget(
+      {super.key, required this.doctorData, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,10 @@ class DoctorSelectionCardWidget extends StatelessWidget {
                   width: Get.height * 0.12,
                   height: Get.height * 0.12,
                   decoration: boxDecorationDefault(),
-                  child: CachedImageWidget(url: doctorData.profileImage, fit: BoxFit.cover, radius: 6),
+                  child: CachedImageWidget(
+                      url: doctorData.profileImage,
+                      fit: BoxFit.cover,
+                      radius: 6),
                 ),
                 Positioned(
                   top: 8,
@@ -47,7 +51,9 @@ class DoctorSelectionCardWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(doctorData.fullName, overflow: TextOverflow.ellipsis, style: boldTextStyle(size: 16)),
+                Text(doctorData.fullName,
+                    overflow: TextOverflow.ellipsis,
+                    style: boldTextStyle(size: 16)),
                 if (doctorData.expert.isNotEmpty)
                   TextIcon(
                     text: doctorData.expert,
@@ -55,7 +61,11 @@ class DoctorSelectionCardWidget extends StatelessWidget {
                     expandedText: true,
                     edgeInsets: EdgeInsets.zero,
                     textStyle: secondaryTextStyle(size: 14),
-                    prefix: const CachedImageWidget(url: Assets.iconsIcQualification, color: secondaryTextColor, width: 14, height: 14),
+                    prefix: const CachedImageWidget(
+                        url: Assets.iconsIcQualification,
+                        color: secondaryTextColor,
+                        width: 14,
+                        height: 14),
                   ).paddingTop(12),
                 if (doctorData.email.isNotEmpty)
                   TextIcon(
@@ -64,7 +74,11 @@ class DoctorSelectionCardWidget extends StatelessWidget {
                     expandedText: true,
                     edgeInsets: EdgeInsets.zero,
                     textStyle: secondaryTextStyle(size: 14),
-                    prefix: const CachedImageWidget(url: Assets.iconsIcMail, color: secondaryTextColor, width: 14, height: 14),
+                    prefix: const CachedImageWidget(
+                        url: Assets.iconsIcMail,
+                        color: secondaryTextColor,
+                        width: 14,
+                        height: 14),
                   ).paddingTop(12),
                 if (doctorData.experience.isNotEmpty)
                   TextIcon(
@@ -73,7 +87,11 @@ class DoctorSelectionCardWidget extends StatelessWidget {
                     expandedText: true,
                     edgeInsets: EdgeInsets.zero,
                     textStyle: secondaryTextStyle(size: 14),
-                    prefix: const CachedImageWidget(url: Assets.iconsIcExperience, color: secondaryTextColor, width: 14, height: 14),
+                    prefix: const CachedImageWidget(
+                        url: Assets.iconsIcExperience,
+                        color: secondaryTextColor,
+                        width: 14,
+                        height: 14),
                   ).paddingTop(12),
               ],
             ).expand(),

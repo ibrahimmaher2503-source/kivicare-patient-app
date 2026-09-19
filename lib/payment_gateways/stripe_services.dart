@@ -7,29 +7,39 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
 import '../configs.dart';
+import '../main.dart';
 import '../network/network_utils.dart';
 import '../utils/app_common.dart';
 import '../utils/colors.dart';
 import '../utils/constants.dart';
 
 class StripeServices {
-  static Future<void> stripePaymentMethod({required num amount, required Function(bool) loderOnOFF, required Function(Map<String, dynamic>) onComplete}) async {
+  static Future<void> stripePaymentMethod(
+      {required num amount,
+      required Function(bool) loderOnOFF,
+      required Function(Map<String, dynamic>) onComplete}) async {
     loderOnOFF(true);
     try {
       Stripe.publishableKey = appConfigs.value.stripePay.stripePublickey;
       Stripe.merchantIdentifier = STRIPE_merchantIdentifier;
 
       await Stripe.instance.applySettings().catchError((e) {
-        toast(e.toString(), print: true);
+        toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong),
+            print: true);
         throw e.toString();
       });
-      final paysheetData = await getStripePaymentIntents(amount: amount, loderOnOFF: loderOnOFF);
-      String? clientSecret = paysheetData == null ? null : paysheetData["client_secret"];
-      String? tnxId = paysheetData == null ? null : paysheetData["transaction_id"];
-      SetupPaymentSheetParameters setupPaymentSheetParameters = SetupPaymentSheetParameters(
+      final paysheetData =
+          await getStripePaymentIntents(amount: amount, loderOnOFF: loderOnOFF);
+      String? clientSecret =
+          paysheetData == null ? null : paysheetData["client_secret"];
+      String? tnxId =
+          paysheetData == null ? null : paysheetData["transaction_id"];
+      SetupPaymentSheetParameters setupPaymentSheetParameters =
+          SetupPaymentSheetParameters(
         paymentIntentClientSecret: clientSecret,
         style: isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
-        appearance: const PaymentSheetAppearance(colors: PaymentSheetAppearanceColors(primary: appColorPrimary)),
+        appearance: const PaymentSheetAppearance(
+            colors: PaymentSheetAppearanceColors(primary: appColorPrimary)),
         merchantDisplayName: APP_NAME,
         customerId: loginUserData.value.email,
         // Note : removed because of Stripe package issue
@@ -49,26 +59,31 @@ class StripeServices {
         ),
       );
 
-      await Stripe.instance.initPaymentSheet(paymentSheetParameters: setupPaymentSheetParameters).then((value) async {
+      await Stripe.instance
+          .initPaymentSheet(paymentSheetParameters: setupPaymentSheetParameters)
+          .then((value) async {
         await Stripe.instance.presentPaymentSheet().then((val) async {
           onComplete.call({
             'transaction_id': tnxId,
           });
         }).catchError((e) {
-          toast(e.toString().splitBetween("localizedMessage:", ", message:"));
+          toast(sanitizeBackendMessage(
+              e.toString().splitBetween("localizedMessage:", ", message:"),
+              locale.value.transactionFailed));
           log('Stripe present sheet method: $e');
         });
       }).catchError((e) {
-        toast(e.toString());
+        toast(sanitizeBackendMessage(e, locale.value.transactionFailed));
         log('Stripe init sheet method: $e');
       });
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.transactionFailed));
       log('stripePaymentMethod catch: $e');
     }
   }
 
-  static Future<Map<String, dynamic>?> getStripePaymentIntents({required num amount, required Function(bool) loderOnOFF}) async {
+  static Future<Map<String, dynamic>?> getStripePaymentIntents(
+      {required num amount, required Function(bool) loderOnOFF}) async {
     try {
       var headers = {
         'Authorization': 'Bearer ${appConfigs.value.stripePay.stripeSecretkey}',
@@ -79,8 +94,8 @@ class StripeServices {
 
       request.bodyFields = {
         'amount': (amount * 100).toInt().toString(),
-        'currency': isIqonicProduct ? STRIPE_CURRENCY_CODE : appCurrency.value.currencyCode,
-        'description': 'Name: ${loginUserData.value.userName} - Email: ${loginUserData.value.email}',
+        'currency': appCurrency.value.currencyCode,
+        'description': 'Espitalia appointment payment',
       };
 
       request.headers.addAll(headers);
@@ -89,8 +104,6 @@ class StripeServices {
 
       var res = jsonDecode(await response.stream.bytesToString());
 
-      log('RESPONSE: ${response.reasonPhrase}');
-
       apiPrint(
         url: STRIPE_URL,
         request: jsonEncode(request.bodyFields),
@@ -98,15 +111,18 @@ class StripeServices {
         statusCode: response.statusCode,
       );
       if (response.statusCode == 200) {
-        log("Response: $res");
         loderOnOFF.call(false);
-        var paymentDetail = {"transaction_id": res["id"], "client_secret": res["client_secret"]};
+        var paymentDetail = {
+          "transaction_id": res["id"],
+          "client_secret": res["client_secret"]
+        };
         return paymentDetail;
       } else {
         loderOnOFF.call(false);
       }
     } catch (e) {
-      toast(e.toString(), print: true);
+      toast(sanitizeBackendMessage(e, locale.value.transactionFailed),
+          print: true);
     }
     return null;
   }

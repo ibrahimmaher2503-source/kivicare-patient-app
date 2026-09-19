@@ -7,7 +7,10 @@ import '../../../utils/constants.dart';
 import 'package:country_picker/country_picker.dart';
 
 import '../../api/core_apis.dart';
+import '../../components/operation_verification_screen.dart';
 import '../../main.dart';
+import '../../network/critical_operation.dart';
+import '../../network/network_utils.dart';
 import '../../utils/common_base.dart';
 import 'model/incident_response_model.dart';
 import 'model/incident_status_model.dart';
@@ -35,7 +38,8 @@ class IncidentManagement extends GetxController {
   XFile? pickedFile;
 
   // Incident list state
-  Rx<Future<RxList<Incident>>> incidenceFuture = Future(() => RxList<Incident>()).obs;
+  Rx<Future<RxList<Incident>>> incidenceFuture =
+      Future(() => RxList<Incident>()).obs;
   RxList<Incident> incidents = RxList<Incident>();
   RxBool isIncidenceLastPage = false.obs;
   RxInt incidencePage = 1.obs;
@@ -55,7 +59,9 @@ class IncidentManagement extends GetxController {
     filterStatus = [
       IncidentStatusModel(type: IncidentStatus.all, name: locale.value.all),
       IncidentStatusModel(type: IncidentStatus.open, name: locale.value.open),
-      IncidentStatusModel(type: IncidentStatus.closed, name: locale.value.closed.toLowerCase().capitalizeFirstLetter()),
+      IncidentStatusModel(
+          type: IncidentStatus.closed,
+          name: locale.value.closed.toLowerCase().capitalizeFirstLetter()),
     ].obs;
 
     if (filterStatus.isNotEmpty) {
@@ -101,14 +107,15 @@ class IncidentManagement extends GetxController {
   }
 
   void pickImage() async {
-    pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 1800, maxHeight: 1800);
+    pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery, maxWidth: 1800, maxHeight: 1800);
     if (pickedFile != null) {
       imageFile(File(pickedFile!.path));
       imageTitleCont.text = path.basename(pickedFile!.path);
     }
   }
 
-  Future<void> submitAPI({
+  Future<bool> submitAPI({
     required String title,
     required String description,
     required String phoneCode,
@@ -116,18 +123,71 @@ class IncidentManagement extends GetxController {
     required String email,
     required File imageFile,
   }) async {
+    if (isLoading.value) return false;
     isLoading(true);
     hideKeyBoardWithoutContext();
-    log('Submit Request: title: $title,description: $description,email: $email,mobileNumber: $mobileNumber, phoneCode: $phoneCode,imageFile: $imageFile');
-    await CoreServiceApis.addIncident(title: title,description: description,email: email,mobileNumber: mobileNumber, phoneCode: phoneCode,imageFile: imageFile).then((value) async {
-      log('Incident Submitted: ${value.toJson()}');
-      toast(value.message);
-      isLoading(false);
-    }).then((data) {
-      toast(locale.value.successfullyAdded);
-    }).catchError((e) {
-      isLoading(false);
-      log(e.toString());
+    final fingerprint = criticalOperationFingerprint({
+      'title': title,
+      'description': description,
+      'phone_code': phoneCode,
+      'mobile_number': mobileNumber,
+      'email': email,
+      'has_attachment': imageFile.existsSync(),
     });
+    String? operationKey;
+    try {
+      operationKey = await CriticalOperationStore.begin(
+        CriticalOperationType.incident,
+        scope: fingerprint,
+        requestFingerprint: fingerprint,
+      );
+      final response = await CoreServiceApis.addIncident(
+        title: title,
+        description: description,
+        email: email,
+        mobileNumber: mobileNumber,
+        phoneCode: phoneCode,
+        imageFile: imageFile,
+        idempotencyKey: operationKey,
+      );
+      await CriticalOperationStore.complete(
+        CriticalOperationType.incident,
+        scope: fingerprint,
+      );
+      toast(response.message.isNotEmpty
+          ? sanitizeBackendMessage(
+              response.message, locale.value.successfullyAdded)
+          : locale.value.successfullyAdded);
+      return true;
+    } catch (error) {
+      log('Incident submission failed: $error');
+      if (error is AmbiguousRequestOutcomeException && operationKey != null) {
+        Get.to(() => OperationVerificationScreen(
+              operationType: CriticalOperationType.incident,
+              operationKey: operationKey!,
+            ));
+      }
+      toast(locale.value.somethingWentWrong);
+      return false;
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  @override
+  void onClose() {
+    titleCont.dispose();
+    desCont.dispose();
+    emailCont.dispose();
+    phoneCodeCont.dispose();
+    mobileCont.dispose();
+    imageTitleCont.dispose();
+    titleFocus.dispose();
+    desFocus.dispose();
+    emailFocus.dispose();
+    phoneCodeFocus.dispose();
+    mobileFocus.dispose();
+    imageTitleFocus.dispose();
+    super.onClose();
   }
 }

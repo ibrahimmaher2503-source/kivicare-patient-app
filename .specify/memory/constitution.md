@@ -1,25 +1,24 @@
 <!--
 Sync Impact Report
 ===================
-Version change: N/A (template) → 1.0.0
-Modified principles: N/A (initial creation)
+Version change: 1.0.1 → 1.1.0
+Modified principles:
+  - III. GetX Architecture Consistency — clarified that global state
+    variables (isLoggedIn, loginUserData) are defined in
+    lib/utils/app_common.dart and consumed throughout the app.
+  - VI. Testing Discipline — elevated the importance of "User Scenarios
+    & Testing" in feature specifications as the primary verification
+    source.
 Added sections:
-  - Core Principles (7 principles: Platform Parity, Patient Data Security,
-    GetX Architecture Consistency, Backend Contract Fidelity,
-    Localization-First, Testing Discipline, Simplicity & Maintainability)
-  - Technology Stack Constraints
-  - Development Workflow
-  - Governance
+  - VIII. Service Module Uniformity — mandated consistent patterns for
+    discovery, booking, tracking, and copyable reference numbers
+    across service-based modules (Pharmacy, ICU, Labs, etc.).
 Removed sections: None
 Templates requiring updates:
-  - .specify/templates/plan-template.md — ✅ no changes needed
-    (Constitution Check section is generic and will reference this file)
-  - .specify/templates/spec-template.md — ✅ no changes needed
-    (spec requirements sections align with principles)
-  - .specify/templates/tasks-template.md — ✅ no changes needed
-    (task phases and testing policy align; testing marked optional)
-  - .specify/templates/checklist-template.md — ✅ no changes needed
-    (generic structure, filled per feature)
+  - .specify/templates/plan-template.md — ✅ updated with module uniformity check
+  - .specify/templates/spec-template.md — ✅ already supports structured testing
+  - .specify/templates/tasks-template.md — ✅ updated to include reference number tasks
+  - .specify/templates/checklist-template.md — ✅ updated with module checks
 Follow-up TODOs: None
 -->
 
@@ -85,8 +84,10 @@ approaches creates maintenance debt and unpredictable behavior.
   Do not use `Navigator.push()` directly.
 - Dependency injection MUST use `Get.put()` or `Get.lazyPut()`.
 - Global state variables (`isLoggedIn`, `loginUserData`, `isDarkMode`,
-  `locale`) MUST be accessed from `lib/utils/common_base.dart`.
-  Do not create parallel global state.
+  `appCurrency`, `appConfigs`) are defined in
+  `lib/utils/app_common.dart` and MUST NOT be duplicated.
+- Utilities and helper functions that consume this state MUST be
+  placed in `lib/utils/common_base.dart`.
 - Controllers MAY be embedded in screen files (current convention)
   or placed in separate files, but each screen MUST have exactly one
   controller pattern — not both.
@@ -126,11 +127,10 @@ Hardcoded strings in UI code are defects.
 
 - User-visible strings MUST use `locale.value.<key>` from the
   `BaseLanguage` system in `lib/locale/`.
-- New strings MUST be added to ALL language files: `language_en.dart`,
-  `language_ar.dart`, `language_de.dart`, `language_fr.dart`,
-  `language_hi.dart`.
-- If a translation is unknown, use the English string as a placeholder
-  and add a `// TODO: translate` comment in non-English files.
+- New strings MUST be added to BOTH language files: `language_en.dart`
+  and `language_ar.dart`.
+- If an Arabic translation is unknown, use the English string as a
+  placeholder and add a `// TODO: translate` comment.
 - RTL layout support MUST be maintained for Arabic (ar) locale.
 - Date and number formatting MUST use the `intl` package, not manual
   string formatting.
@@ -141,10 +141,13 @@ difficult to find later.
 
 ### VI. Testing Discipline (RECOMMENDED)
 
-Tests are strongly recommended for critical paths and SHOULD be
-included when modifying authentication, payment, or booking flows.
-Tests are not mandatory for all changes.
+Verification MUST align with the "User Scenarios & Testing" section
+defined in each feature's `spec.md`. While automated tests are
+not mandatory for all changes, they are strongly recommended for
+critical paths.
 
+- Feature implementation MUST satisfy all P1 Acceptance Scenarios
+  defined in the spec.
 - Authentication flows (login, registration, token refresh, social
   sign-in) SHOULD have widget or integration tests.
 - Payment gateway integrations SHOULD have unit tests for request
@@ -153,13 +156,10 @@ Tests are not mandatory for all changes.
   responses.
 - Test files MUST be placed in the `test/` directory mirroring the
   `lib/` structure.
-- Tests MUST NOT depend on live backend services. Use mock responses
-  for API testing.
 
 **Rationale**: Healthcare and payment features carry high risk.
-Testing these paths catches regressions before they reach patients.
-Making tests recommended (not mandatory) avoids blocking velocity
-on low-risk UI changes.
+Aligning development with spec-defined scenarios ensures that the
+feature meets the user's intent before delivery.
 
 ### VII. Simplicity & Maintainability
 
@@ -182,6 +182,30 @@ needs.
 **Rationale**: The codebase has 261 files across 59 directories.
 Every unnecessary abstraction increases cognitive load for
 developers joining the project.
+
+### VIII. Service Module Uniformity
+
+New service-oriented modules (e.g., Pharmacy, ICU, Labs) MUST follow
+ the established "Discovery-Booking-Tracking" pattern to ensure
+ UI consistency and patient familiarity.
+
+- **Discovery Hub**: Each module MUST have a hub allowing discovery
+  via categories or facility lists, with support for location
+  filtering and name search.
+- **Booking/Request Flow**: The transition from discovery to booking
+  MUST be seamless, with clear form validation and price summaries.
+- **Reference Numbers**: Every successful booking/request MUST
+  generate a unique reference number displayed on a success screen
+  with a one-tap "Copy to Clipboard" action.
+- **Status Tracking**: Orders/Requests MUST be trackable via a
+  history list with status filters and a visual status timeline
+  showing historical transitions.
+- **Emergency/Contact**: High-urgency modules (like ICU) MUST have
+  unobtrusive but always-available emergency call actions.
+
+**Rationale**: Consistency across different medical services reduces
+cognitive load for patients and speeds up the implementation of new
+service modules by reusing proven UI patterns.
 
 ## Technology Stack Constraints
 
@@ -214,7 +238,7 @@ New dependencies MUST be justified. Prefer packages with:
 - **Commits**: Atomic commits with descriptive messages. Reference
   task IDs when applicable.
 - **Code Review**: Changes to `lib/network/`, `lib/api/`,
-  `lib/payment_gateways/`, and `lib/utils/common_base.dart` SHOULD
+  `lib/payment_gateways/`, and `lib/utils/app_common.dart` SHOULD
   receive review before merge due to high blast radius.
 - **Firebase Configuration**: Changes to `firebase_options.dart`
   MUST be generated via `flutterfire configure`, not hand-edited.
@@ -244,4 +268,4 @@ conflicts with a principle above, the principle takes precedence.
   runtime development guidance (commands, patterns, structure).
   It MUST NOT contradict this constitution.
 
-**Version**: 1.0.0 | **Ratified**: 2026-03-02 | **Last Amended**: 2026-03-02
+**Version**: 1.1.0 | **Ratified**: 2026-03-02 | **Last Amended**: 2026-04-30

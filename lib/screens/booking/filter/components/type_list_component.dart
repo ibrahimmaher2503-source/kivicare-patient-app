@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 import '../../../../utils/app_common.dart';
 import '../../../../utils/colors.dart';
@@ -11,11 +11,12 @@ class FilterTypeListComponent extends StatefulWidget {
   const FilterTypeListComponent({super.key, required this.filterList});
 
   @override
-  State<FilterTypeListComponent> createState() => _FilterTypeListComponentState();
+  State<FilterTypeListComponent> createState() =>
+      _FilterTypeListComponentState();
 }
 
 class _FilterTypeListComponentState extends State<FilterTypeListComponent> {
-  final FilterController filterCont = Get.put(FilterController());
+  final FilterController filterCont = Get.find<FilterController>();
   @override
   void initState() {
     super.initState();
@@ -24,68 +25,54 @@ class _FilterTypeListComponentState extends State<FilterTypeListComponent> {
       filterCont.filterType(widget.filterList.first);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: Get.height,
-      width: 88,
-      decoration: BoxDecoration(
-        color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-        border: Border(
-          right: BorderSide(
-            color: isDarkMode.value ? glassStrokeDark : whiteBorderColor,
-            width: 1,
-          ),
-        ),
-      ),
+      width: 80,
+      decoration: boxDecorationDefault(
+          borderRadius: radius(0), color: context.cardColor),
       child: ListView.builder(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         shrinkWrap: true,
         physics: const ScrollPhysics(),
         itemCount: widget.filterList.length,
-        padding: const EdgeInsets.only(top: 8),
+        padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
           return Obx(
-            () {
-              final bool isSelected = filterCont.filterType.value == widget.filterList[index];
-              return InkWell(
+            () => Semantics(
+              button: true,
+              selected: filterCont.filterType.value == widget.filterList[index],
+              label: '${widget.filterList[index]}',
+              onTap: () {
+                filterCont.filterType(widget.filterList[index]);
+                filterCont.filterType.refresh();
+              },
+              child: InkWell(
                 onTap: () {
                   filterCont.filterType(widget.filterList[index]);
                   filterCont.filterType.refresh();
                 },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  height: 48,
+                child: Container(
+                  height: 50,
                   width: double.infinity,
                   alignment: Alignment.center,
-                  margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? isDarkMode.value
-                            ? appColorSecondary.withValues(alpha: 0.15)
-                            : lightSecondaryColor
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
-                    border: isSelected
-                        ? Border.all(color: appColorSecondary.withValues(alpha: 0.3), width: 1)
-                        : null,
-                  ),
+                  color: filterCont.filterType.value == widget.filterList[index]
+                      ? isDarkMode.value
+                          ? appScreenBackgroundDark
+                          : appScreenBackground
+                      : context.cardColor,
                   child: Text(
                     "${widget.filterList[index]}",
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 11,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                      color: isSelected
-                          ? appColorSecondary
-                          : isDarkMode.value
-                              ? Colors.white70
-                              : secondaryTextColor,
-                    ),
-                    textAlign: TextAlign.center,
+                    style:
+                        filterCont.filterType.value == widget.filterList[index]
+                            ? boldTextStyle(size: 12, color: appColorPrimary)
+                            : primaryTextStyle(size: 12),
                   ),
                 ),
-              );
-            },
+              ),
+            ),
           );
         },
       ),

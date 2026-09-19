@@ -1,12 +1,10 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import '../../../components/app_scaffold.dart';
 import '../../../generated/assets.dart';
 import '../../../main.dart';
-import '../../../utils/app_common.dart';
 import '../../dashboard/dashboard_screen.dart';
 import '../../home/home_controller.dart';
 import '../sign_in_sign_up/signin_screen.dart';
@@ -22,6 +20,7 @@ class WelcomeScreen extends StatelessWidget {
       hideAppBar: true,
       isLoading: optionScreenController.isLoading,
       body: Stack(
+        // fit: StackFit.expand,
         children: [
           SizedBox(
             height: Get.height,
@@ -46,19 +45,9 @@ class WelcomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   width: MediaQuery.of(context).size.width,
                   height: optionScreenController.bottomWidgetHeight,
-                  decoration: BoxDecoration(
-                    color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(30),
-                      topLeft: Radius.circular(30),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                        blurRadius: 24,
-                        offset: const Offset(0, -4),
-                      ),
-                    ],
+                  decoration: boxDecorationDefault(
+                    color: context.cardColor,
+                    borderRadius: BorderRadius.only(topRight: radiusCircular(30), topLeft: const Radius.circular(30)),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -68,100 +57,55 @@ class WelcomeScreen extends StatelessWidget {
                       Text(
                         locale.value.exploreTopClinicsWithAdvancedServicesTailored,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.outfit(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.5,
-                          color: isDarkMode.value ? Colors.white : primaryTextColor,
-                        ),
+                        style: primaryTextStyle(size: 20),
                       ),
                       16.height,
                       Text(
                         locale.value.discoverYourIdealClinicWithOurPersonalizedSea,
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 14,
-                          color: secondaryTextColor,
-                          letterSpacing: 0.1,
-                        ),
+                        style: secondaryTextStyle(size: 14),
                         textAlign: TextAlign.center,
                       ).paddingSymmetric(horizontal: 24),
                       const Spacer(),
                       Row(
                         children: [
-                          // Sign In - navy outline button
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Get.to(
-                                  () => SignInScreen(),
-                                  arguments: true,
-                                  binding: BindingsBuilder(() {}),
-                                );
-                              },
-                              child: Container(
-                                height: 52,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: isDarkMode.value
-                                      ? appColorPrimary.withValues(alpha: 0.12)
-                                      : lightPrimaryColor,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: isDarkMode.value
-                                        ? appColorPrimary.withValues(alpha: 0.2)
-                                        : appColorPrimary.withValues(alpha: 0.08),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Text(
-                                  locale.value.signIn,
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: isDarkMode.value ? Colors.white : appColorPrimary,
-                                    letterSpacing: 0.1,
-                                  ),
-                                ),
+                          AppButton(
+                            height: 52,
+                            elevation: 0,
+                            color: lightPrimaryColor,
+                            onTap: () {
+                              Get.to(
+                                () => SignInScreen(),
+                                arguments: true,
+                                binding: BindingsBuilder(() {}),
+                              );
+                            },
+                            child: Text(
+                              locale.value.signIn,
+                              style: boldTextStyle(
+                                size: 12,
+                                color: blackTextColor,
                               ),
                             ),
-                          ),
+                          ).expand(),
                           24.width,
-                          // Explore - gradient CTA
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Get.offAll(() => DashboardScreen(), binding: BindingsBuilder(() {
-                                  Get.put(HomeController());
-                                }));
-                              },
-                              child: Container(
-                                height: 52,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [gradientSecondaryStart, gradientSecondaryEnd],
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: appColorSecondary.withValues(alpha: 0.3),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  locale.value.explore,
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                    letterSpacing: 0.1,
-                                  ),
-                                ),
+                          AppButton(
+                            height: 52,
+                            elevation: 0,
+                            color: appColorSecondary,
+                            onTap: () {
+                              Get.offAll(() => DashboardScreen(), binding: BindingsBuilder(() {
+                                Get.put(HomeController());
+                              }));
+                            },
+                            child: Text(
+                              locale.value.explore,
+                              style: boldTextStyle(
+                                size: 12,
+                                color: whiteTextColor,
+                                weight: FontWeight.w400,
                               ),
                             ),
-                          ),
+                          ).expand(),
                         ],
                       ).paddingSymmetric(horizontal: 24).paddingBottom(30),
                     ],

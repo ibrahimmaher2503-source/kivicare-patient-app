@@ -18,6 +18,31 @@ nul
 # Generated
 *.g.dart
 
+# Android
+android/.gradle/
+android/key.properties
+*.jks
+*.keystore
+android/local.properties
+android/app/release/
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+
+# iOS generated/local configuration
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Runner/GeneratedPluginRegistrant.*
+ios/Runner/GoogleService-Info.plist
+
 # Misc
 .env
 *.log
+.worktrees/
+
+# Local automation and QA output
+.codex_tmp/
+.dart_local/
+.playwright-mcp/
+artifacts/
+/*.png
+/*.xml
+/qa_*_summary.txt

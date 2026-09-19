@@ -1,11 +1,13 @@
 import 'package:get/get.dart';
 import 'package:kivicare_patient/api/auth_apis.dart';
+import 'package:kivicare_patient/main.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../model/patient_wallet_history_res.dart';
 
 class PatientWalletHistoryController extends GetxController {
   RxBool isLoading = false.obs;
-  Rx<Future<RxList<WalletHistoryElement>>> walletHistoryFuture = Future(() => RxList<WalletHistoryElement>()).obs;
+  Rx<Future<RxList<WalletHistoryElement>>> walletHistoryFuture =
+      Future(() => RxList<WalletHistoryElement>()).obs;
   RxList<WalletHistoryElement> historyData = RxList();
   RxBool isPatientLastPage = false.obs;
   RxInt historyPage = 1.obs;
@@ -27,7 +29,7 @@ class PatientWalletHistoryController extends GetxController {
         isPatientLastPage(p0);
       },
     )).then((value) {}).catchError((e) {
-      toast("Error: $e");
+      toast(locale.value.somethingWentWrong);
       log("getWalletHistory err: $e");
     }).whenComplete(() => isLoading(false));
   }

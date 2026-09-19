@@ -10,6 +10,8 @@ class BookingReq {
   String appointmentTime;
   String description;
   bool isOnlineService;
+  bool isIndependent;
+  String independentServiceId;
 
   //Extra local variables
   String serviceName;
@@ -34,6 +36,8 @@ class BookingReq {
     this.appointmentTime = "",
     this.description = "",
     this.isOnlineService = false,
+    this.isIndependent = false,
+    this.independentServiceId = "",
 
     //Extra local variables
     this.serviceName = "",
@@ -53,13 +57,18 @@ class BookingReq {
     return BookingReq(
       clinicId: json['clinic_id'] is String ? json['clinic_id'] : "",
       serviceId: json['service_id'] is String ? json['service_id'] : "",
-      appointmentDate: json['appointment_date'] is String ? json['appointment_date'] : "",
+      appointmentDate:
+          json['appointment_date'] is String ? json['appointment_date'] : "",
       userId: json['user_id'] is String ? json['user_id'] : "",
       status: json['status'] is String ? json['status'] : "",
       doctorId: json['doctor_id'] is String ? json['doctor_id'] : "",
-      appointmentTime: json['appointment_time'] is String ? json['appointment_time'] : "",
+      appointmentTime:
+          json['appointment_time'] is String ? json['appointment_time'] : "",
       description: json['description'] is String ? json['description'] : "",
-      otherPatientId: json['otherpatient_id'] is num ? json['otherpatient_id'] : "",
+      isIndependent: json['is_independent'] == true,
+      independentServiceId: json['independent_service_id']?.toString() ?? "",
+      otherPatientId:
+          json['otherpatient_id'] is num ? json['otherpatient_id'] : "",
     );
   }
 
@@ -74,6 +83,16 @@ class BookingReq {
       'appointment_time': appointmentTime,
       'description': description,
       'otherpatient_id': otherPatientId,
+    };
+  }
+
+  Map<String, dynamic> toIndependentJson() {
+    return {
+      'doctor_id': doctorId,
+      'independent_service_id': independentServiceId,
+      'appointment_date': appointmentDate,
+      'appointment_time': appointmentTime,
+      'transaction_type': 'cash',
     };
   }
 }

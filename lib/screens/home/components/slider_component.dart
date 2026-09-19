@@ -71,6 +71,8 @@ class _SliderComponentState extends State<SliderComponent> {
               onPageChanged: (int page) {
                 hideKeyboard(context);
                 homeScreenController.sliderCurrentPage(page);
+                _timer?.cancel();
+                _startAutoScroll();
               },
               itemCount: homeScreenController.dashboardData.value.slider.length,
               itemBuilder: (context, index) {
@@ -89,27 +91,13 @@ class _SliderComponentState extends State<SliderComponent> {
                   },
                   behavior: HitTestBehavior.translucent,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: softShadowColorMedium,
-                          blurRadius: 16,
-                          offset: const Offset(0, 6),
-                          spreadRadius: 0,
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: CachedImageWidget(
-                        url: homeScreenController.dashboardData.value.slider[index].sliderImage,
-                        fit: BoxFit.cover,
-                        usePlaceholderIfUrlEmpty: false,
-                        width: Get.width,
-                        height: 200,
-                      ),
+                    color: Colors.transparent,
+                    width: Get.width,
+                    child: CachedImageWidget(
+                      url: homeScreenController.dashboardData.value.slider[index].sliderImage,
+                      fit: BoxFit.fitWidth,
+                      usePlaceholderIfUrlEmpty: false,
+                      width: Get.width,
                     ),
                   ),
                 );
@@ -117,7 +105,7 @@ class _SliderComponentState extends State<SliderComponent> {
             ),
           ),
           Positioned(
-            bottom: -12,
+            bottom: 8,
             left: 0,
             right: 0,
             child: Obx(
@@ -127,7 +115,6 @@ class _SliderComponentState extends State<SliderComponent> {
                 children: List<Widget>.generate(
                   homeScreenController.dashboardData.value.slider.length,
                   (index) {
-                    final bool isActive = homeScreenController.sliderCurrentPage.value == index;
                     return InkWell(
                       onTap: () {
                         homeScreenController.sliderPageController.animateToPage(
@@ -137,17 +124,14 @@ class _SliderComponentState extends State<SliderComponent> {
                         );
                       },
                       child: Obx(
-                        () => AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          height: isActive ? 8 : 6,
-                          width: homeScreenController.sliderCurrentPage.value == index ? 24 : 6,
-                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                        () => Container(
+                          height: 10,
+                          width: homeScreenController.sliderCurrentPage.value == index ? 20 : 10,
+                          margin: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: homeScreenController.sliderCurrentPage.value == index
-                                ? appColorSecondary
-                                : appColorPrimary.withValues(alpha: 0.3),
+                            border: Border.all(color: white),
+                            color: homeScreenController.sliderCurrentPage.value == index ? appColorSecondary : appColorPrimary,
                           ),
                         ),
                       ),
@@ -159,6 +143,6 @@ class _SliderComponentState extends State<SliderComponent> {
           ),
         ],
       ),
-    ).paddingTop(16);
+    ).paddingTop(30);
   }
 }

@@ -1,3 +1,4 @@
+import '../../../utils/localized_field.dart';
 import 'clinic_detail_model.dart';
 
 class ClinicsRes {
@@ -183,9 +184,9 @@ class Clinic {
     return Clinic(
       id: json['id'] is int ? json['id'] : -1,
       slug: json['slug'] is String ? json['slug'] : "",
-      name: json['name'] is String ? json['name'] : "",
+      name: pickLocalized(json, 'name'),
       email: json['email'] is String ? json['email'] : "",
-      description: json['description'] is String ? json['description'] : "",
+      description: pickLocalized(json, 'description'),
       systemServiceCategory: json['system_service_category'] is String ? json['system_service_category'] : "",
       specialty: json['specialty'] is String ? json['specialty'] : "",
       contactNumber: json['contact_number'] is String ? json['contact_number'] : "",

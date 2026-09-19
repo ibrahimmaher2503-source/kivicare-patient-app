@@ -1,3 +1,5 @@
+import '../../../utils/localized_field.dart';
+
 class CategoryListRes {
   bool status;
   List<CategoryElement> data;
@@ -64,9 +66,9 @@ class CategoryElement {
   factory CategoryElement.fromJson(Map<String, dynamic> json) {
     return CategoryElement(
       id: json['id'] is int ? json['id'] : -1,
-      name: json['name'] is String ? json['name'] : "",
+      name: pickLocalized(json, 'name'),
       slug: json['slug'] is String ? json['slug'] : "",
-      description: json['description'] is String ? json['description'] : "",
+      description: pickLocalized(json, 'description'),
       parentId: json['parent_id'] is int ? json['parent_id'] : -1,
       status: json['status'] is int ? json['status'] : -1,
       isFeatured: json['is_featured'] is bool ? json['is_featured'] : json['is_featured'] == 1,

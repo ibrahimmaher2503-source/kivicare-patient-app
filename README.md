@@ -1,16 +1,24 @@
-# KiviCare - Patient App
+# Espitalia Patient App
 
-A new Flutter project.
+Flutter patient application for the Espitalia healthcare platform.
 
-## Getting Started
+## Supported production platform
 
-This project is a starting point for a Flutter application.
+Android is the only fully configured production target in this repository.
+iOS requires an Espitalia `GoogleService-Info.plist`, Firebase OAuth setup, and
+an injected `GOOGLE_MAPS_API_KEY` before it can be released. Web and desktop
+targets are not currently supported and must not be advertised as production
+targets.
 
-A few resources to get you started if this is your first Flutter project:
+## Local setup
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Install a compatible Flutter 3 / Dart 3 toolchain.
+2. Run `flutter pub get`.
+3. Copy `android/key.properties.example` to `android/key.properties` and inject
+   local or CI signing values.
+4. Provide a restricted Android Maps key with the `GOOGLE_MAPS_API_KEY` Gradle
+   property or environment variable.
+5. Run `flutter run` on an Android device or emulator.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Do not commit signing credentials, Firebase service files, Maps keys, payment
+secrets, local SDK paths, or generated release metadata.

@@ -1,6 +1,16 @@
+import 'package:intl/intl.dart';
 import 'languages.dart';
 
 class LanguageEn extends BaseLanguage {
+  @override
+  String get onlinePaymentUnavailable =>
+      'Online payment is temporarily unavailable. Please choose cash or wallet.';
+  @override
+  String get loading => 'Loading';
+  @override
+  String get cashAfterService => 'Cash after service';
+  @override
+  String get pharmacy => 'Pharmacy';
   @override
   String get language => 'Language';
 
@@ -74,13 +84,22 @@ class LanguageEn extends BaseLanguage {
   String get delete => 'Delete';
 
   @override
-  String get deleteAccountConfirmation => 'Your account will be deleted permanently. Your Data will not be Restored Again.';
+  String get deleteAccountConfirmation =>
+      'Your account will be deleted permanently. Your Data will not be Restored Again.';
 
   @override
-  String get demoUserCannotBeGrantedForThis => 'Demo user cannot be granted for this action';
+  String get demoUserCannotBeGrantedForThis =>
+      'Demo user cannot be granted for this action';
 
   @override
   String get somethingWentWrong => 'Something Went Wrong';
+
+  @override
+  String get requestTimedOut => 'The request timed out. Please try again.';
+
+  @override
+  String get requestTimedOutAfterSubmission =>
+      'The request timed out after submission. Verify its status before retrying.';
 
   @override
   String get yourInternetIsNotWorking => 'Your internet is not working';
@@ -89,22 +108,33 @@ class LanguageEn extends BaseLanguage {
   String get profileUpdatedSuccessfully => 'Profile Updated Successfully';
 
   @override
-  String get wouldYouLikeToSetProfilePhotoAs => 'Would you like to set this picture as your profile photo?';
+  String get wouldYouLikeToSetProfilePhotoAs =>
+      'Would you like to set this picture as your profile photo?';
 
   @override
   String get yourOldPasswordDoesnT => "Your old password doesn't correct!";
 
   @override
-  String get yourNewPasswordDoesnT => "Your new password doesn't match confirm password!";
+  String get yourNewPasswordDoesnT =>
+      "Your new password doesn't match confirm password!";
 
   @override
   String get location => 'Location';
+
+  @override
+  String get startLocation => 'Start';
 
   @override
   String get yes => 'Yes';
 
   @override
   String get submit => 'Submit';
+
+  @override
+  String get select => 'Select';
+
+  @override
+  String get chooseAnother => 'Choose Another';
 
   @override
   String get firstName => 'First Name';
@@ -116,10 +146,17 @@ class LanguageEn extends BaseLanguage {
   String get changePassword => 'Change Password';
 
   @override
-  String get yourNewPasswordMust => 'Your New Password Must Be Different From Your Previous Password';
+  String get yourNewPasswordMust =>
+      'Your New Password Must Be Different From Your Previous Password';
 
   @override
   String get password => 'Password';
+
+  @override
+  String get showPassword => 'Show password';
+
+  @override
+  String get hidePassword => 'Hide password';
 
   @override
   String get newPassword => 'New Password';
@@ -134,13 +171,15 @@ class LanguageEn extends BaseLanguage {
   String get mainStreet => 'Main Street';
 
   @override
-  String get toResetYourNew => 'To Reset Your New Password Please Enter Your Email Address';
+  String get toResetYourNew =>
+      'To Reset Your New Password Please Enter Your Email Address';
 
   @override
   String get stayTunedNoNew => 'Stay tuned! No new notifications.';
 
   @override
-  String get noNewNotificationsAt => "No new notifications at the moment. We'll keep you posted when there's an update.";
+  String get noNewNotificationsAt =>
+      "No new notifications at the moment. We'll keep you posted when there's an update.";
 
   @override
   String get signIn => 'Sign In';
@@ -176,7 +215,8 @@ class LanguageEn extends BaseLanguage {
   String get createYourAccount => 'Create Your Account';
 
   @override
-  String get createYourAccountFor => 'Create Your Account for Better Experience';
+  String get createYourAccountFor =>
+      'Create Your Account for Better Experience';
 
   @override
   String get signUp => 'Sign up';
@@ -188,7 +228,8 @@ class LanguageEn extends BaseLanguage {
   String get yourPasswordHasBeen => 'Your Password Has Been Successfully Reset';
 
   @override
-  String get youCanNowLog => 'You Can Now Log In To Your New Account With Your New Password';
+  String get youCanNowLog =>
+      'You Can Now Log In To Your New Account With Your New Password';
 
   @override
   String get done => 'Done';
@@ -221,10 +262,30 @@ class LanguageEn extends BaseLanguage {
   String get appTheme => 'App Theme';
 
   @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
   String get guest => 'Guest';
 
   @override
   String get notifications => 'Notifications';
+
+  @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
+  String get notificationPermissionDescription =>
+      'Get appointment reminders and updates about your care.';
+
+  @override
+  String get notificationPermissionDenied =>
+      'Notifications are off. You can enable them in app settings.';
 
   @override
   String get contactUs => 'Contact Us';
@@ -239,7 +300,8 @@ class LanguageEn extends BaseLanguage {
   String get anUpdateTo => 'An Update to';
 
   @override
-  String get isAvailableGoTo => 'is available. Go to Play Store and Download the New Version of the App.';
+  String get isAvailableGoTo =>
+      'is available. Go to Play Store and Download the New Version of the App.';
 
   @override
   String get later => 'Later';
@@ -249,6 +311,9 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get updateNow => 'Update Now';
+  @override
+  String get updateLinkUnavailable =>
+      'The update link is unavailable. Please try again later.';
 
   @override
   String get signInFailed => 'Sign in failed';
@@ -257,7 +322,8 @@ class LanguageEn extends BaseLanguage {
   String get userCancelled => 'User cancelled';
 
   @override
-  String get appleSigninIsNot => 'Apple SignIn is not available for your device';
+  String get appleSigninIsNot =>
+      'Apple SignIn is not available for your device';
 
   @override
   String get eventStatus => 'Event Status';
@@ -314,10 +380,12 @@ class LanguageEn extends BaseLanguage {
   String get notificationDeleted => 'notification deleted';
 
   @override
-  String get doYouWantToRemoveNotification => 'Do you want to remove notification';
+  String get doYouWantToRemoveNotification =>
+      'Do you want to remove notification';
 
   @override
-  String get doYouWantToClearAllNotification => 'Do you want to clearall notification';
+  String get doYouWantToClearAllNotification =>
+      'Do you want to clear all notifications?';
 
   @override
   String get locationPermissionDenied => 'location permission denied';
@@ -350,7 +418,8 @@ class LanguageEn extends BaseLanguage {
   String get confirmAppointment => 'Confirm Appointment';
 
   @override
-  String get iHaveReadAll => "I have read all detail and fill the form and I'll confirm this appointment with";
+  String get iHaveReadAll =>
+      "I have read all detail and fill the form and I'll confirm this appointment with";
 
   @override
   String get confirm => 'Confirm';
@@ -359,19 +428,23 @@ class LanguageEn extends BaseLanguage {
   String get doYouConfirmThisPayment => 'Do you confirm this payment?';
 
   @override
-  String get exploreTopClinicsWithAdvancedServicesTailored => "Explore top clinics with advanced services tailored to your needs";
+  String get exploreTopClinicsWithAdvancedServicesTailored =>
+      "Explore top clinics with advanced services tailored to your needs";
 
   @override
-  String get discoverYourIdealClinicWithOurPersonalizedSea => "Discover your ideal clinic with our personalized search. Let's get started!";
+  String get discoverYourIdealClinicWithOurPersonalizedSea =>
+      "Discover your ideal clinic with our personalized search. Let's get started!";
 
   @override
-  String get weHaveEmailedYourPasswordResetLink => "We have emailed your password reset link!";
+  String get weHaveEmailedYourPasswordResetLink =>
+      "We have emailed your password reset link!";
 
   @override
   String get resetYourPassword => "Reset Your Password";
 
   @override
-  String get enterYourEmailAddressToResetYourNewPassword => "Enter Your Email Address to Reset Your New Password.";
+  String get enterYourEmailAddressToResetYourNewPassword =>
+      "Enter Your Email Address to Reset Your New Password.";
 
   @override
   String get sendCode => "Send Code";
@@ -401,7 +474,8 @@ class LanguageEn extends BaseLanguage {
   String get notAMember => "Not A Member?";
 
   @override
-  String get registerYourAccountForBetterExperience => "Register Your Account For Better Experience";
+  String get registerYourAccountForBetterExperience =>
+      "Register Your Account For Better Experience";
 
   @override
   String get termsConditions => "Terms & Conditions";
@@ -422,7 +496,8 @@ class LanguageEn extends BaseLanguage {
   String get payment => "Payment";
 
   @override
-  String get doYouWantToCancelAppointment => "Do you want to cancel appointment?";
+  String get doYouWantToCancelAppointment =>
+      "Do you want to cancel appointment?";
 
   @override
   String get videoCallLinkIsNotFound => "Video call link is not found!";
@@ -431,13 +506,16 @@ class LanguageEn extends BaseLanguage {
   String get thisIsNotAOnlineService => "This is not a online service!";
 
   @override
-  String get oppsThisAppointmentIsNotConfirmedYet => "Opps! This appointment is not confirmed yet!";
+  String get oppsThisAppointmentIsNotConfirmedYet =>
+      "Opps! This appointment is not confirmed yet!";
 
   @override
-  String get oppsThisAppointmentHasBeenCancelled => "Opps! This appointment has been cancelled!";
+  String get oppsThisAppointmentHasBeenCancelled =>
+      "Opps! This appointment has been cancelled!";
 
   @override
-  String get oppsThisAppointmentHasBeenCompleted => "Opps! This appointment has been completed!";
+  String get oppsThisAppointmentHasBeenCompleted =>
+      "Opps! This appointment has been completed!";
 
   @override
   String get noTimeSlotsAvailable => "No time slots available";
@@ -455,22 +533,26 @@ class LanguageEn extends BaseLanguage {
   String get statusListIsEmpty => "Status list is empty";
 
   @override
-  String get thereAreNoStatusListedAtTheMomentStayTunedFor => "There are no status listed at the moment. Stay tuned for more options.";
+  String get thereAreNoStatusListedAtTheMomentStayTunedFor =>
+      "There are no status listed at the moment. Stay tuned for more options.";
 
   @override
   String get chooseDate => "Choose Date";
 
   @override
-  String get doYouWantToChangeTheTimeSlotOfThisAppointment => "Do you want to change the time slot of this appointment?";
+  String get doYouWantToChangeTheTimeSlotOfThisAppointment =>
+      "Do you want to change the time slot of this appointment?";
 
   @override
   String get no => "No";
 
   @override
-  String get somethingWentWrongPleaseTryAgainLater => "Something went wrong. Please try again later.";
+  String get somethingWentWrongPleaseTryAgainLater =>
+      "Something went wrong. Please try again later.";
 
   @override
-  String get doYouWantToRemoveThisReview => "Do you want to remove this review?";
+  String get doYouWantToRemoveThisReview =>
+      "Do you want to remove this review?";
 
   @override
   String get encounterDetail => "Encounter Detail";
@@ -518,6 +600,9 @@ class LanguageEn extends BaseLanguage {
   String get tax => "Tax";
 
   @override
+  String get taxIncluded => 'Tax included';
+
+  @override
   String get total => "Total";
 
   @override
@@ -530,7 +615,8 @@ class LanguageEn extends BaseLanguage {
   String get youHaventRatedYet => "You haven't rated yet";
 
   @override
-  String get yourFeedbackWillImproveOurService => "Your Feedback Will Improve Our Service.";
+  String get yourFeedbackWillImproveOurService =>
+      "Your Feedback Will Improve Our Service.";
 
   @override
   String get writeHere => "Write here..";
@@ -560,7 +646,8 @@ class LanguageEn extends BaseLanguage {
   String get noAppointmentsFound => "No Appointments found";
 
   @override
-  String get thereAreCurrentlyNoAppointmentsAvailableStart => "There are currently no appointments available. Start booking your next appointment now.";
+  String get thereAreCurrentlyNoAppointmentsAvailableStart =>
+      "There are currently no appointments available. Start booking your next appointment now.";
 
   @override
   String get encounter => "Encounter";
@@ -605,10 +692,19 @@ class LanguageEn extends BaseLanguage {
   String get noServicesFoundAtAMoment => "No services found at a moment";
 
   @override
-  String get looksLikeThereIsNoServicesForThis => "Looks like there is no services for this";
+  String get noServicesMatchFilters => "No services match your filters";
 
   @override
-  String get wellKeepYouPostedWhenTheresAnUpdate => "We'll keep you posted when there's an update.";
+  String get tryChangingFiltersOrSearchAgain =>
+      "Try changing the filters or searching for another service.";
+
+  @override
+  String get looksLikeThereIsNoServicesForThis =>
+      "Looks like there is no services for this";
+
+  @override
+  String get wellKeepYouPostedWhenTheresAnUpdate =>
+      "We'll keep you posted when there's an update.";
 
   @override
   String get services => "Services";
@@ -629,10 +725,12 @@ class LanguageEn extends BaseLanguage {
   String get doctors => "Doctors";
 
   @override
-  String get noSystemServicesFoundAtAMoment => "No system services found at a moment";
+  String get noSystemServicesFoundAtAMoment =>
+      "No system services found at a moment";
 
   @override
-  String get looksLikeThereIsNoSystemServicesForThis => "Looks like there is no system services for this";
+  String get looksLikeThereIsNoSystemServicesForThis =>
+      "Looks like there is no system services for this";
 
   @override
   String get appointmentsSummary => "Appointments summary";
@@ -671,7 +769,8 @@ class LanguageEn extends BaseLanguage {
   String get serviceListIsEmpty => "Service list is empty.";
 
   @override
-  String get thereAreNoServicesListedAtTheMomentStayTunedF => "There are no services listed at the moment. Stay tuned for more service offerings.";
+  String get thereAreNoServicesListedAtTheMomentStayTunedF =>
+      "There are no services listed at the moment. Stay tuned for more service offerings.";
 
   @override
   String get kindlyChooseAServiceFirst => "Kindly choose a service first";
@@ -686,7 +785,8 @@ class LanguageEn extends BaseLanguage {
   String get clinicListIsEmpty => "Clinic list is empty.";
 
   @override
-  String get thereAreNoClinicsListedAtTheMomentStayTunedFo => "There are no clinics listed at the moment. Stay tuned for more clinics.";
+  String get thereAreNoClinicsListedAtTheMomentStayTunedFo =>
+      "There are no clinics listed at the moment. Stay tuned for more clinics.";
 
   @override
   String get kindlyChooseAClinicFirst => "Kindly choose a clinic first";
@@ -698,7 +798,8 @@ class LanguageEn extends BaseLanguage {
   String get searchForDoctor => "Search For Doctor";
 
   @override
-  String get thereAreNoDoctorsListedAtTheMomentStayTunedFo => "There are no doctors listed at the moment. Stay tuned for more options.";
+  String get thereAreNoDoctorsListedAtTheMomentStayTunedFo =>
+      "There are no doctors listed at the moment. Stay tuned for more options.";
 
   @override
   String get writeMedicalHistory => "Write medical history";
@@ -713,22 +814,37 @@ class LanguageEn extends BaseLanguage {
   String get next => "Next";
 
   @override
-  String get personalizedHealthPlansForYourJourney => "Personalized Health Plans for Your Journey";
+  String get skip => 'Skip';
 
   @override
-  String get stayOnTrackAndSetPersonalGoals => "Stay on track and set personal goals";
+  String get finish => 'Finish';
 
   @override
-  String get discoverAndGetSupportWithin24Hours => "Discover and get support within 24 hours";
+  String pageOf(int current, int total) => 'Page $current of $total';
 
   @override
-  String get customizeHealthPlansForATailoredApproachAlign => "Customize health plans for a tailored approach, aligning each aspect with your needs.";
+  String get personalizedHealthPlansForYourJourney =>
+      "Personalized Health Plans for Your Journey";
 
   @override
-  String get focusOnYourPathSetClearGoalsAndStrideForwardW => "Focus on your path, set clear goals, and stride forward with determination and purpose.";
+  String get stayOnTrackAndSetPersonalGoals =>
+      "Stay on track and set personal goals";
 
   @override
-  String get exploreFindSolutionsAndReceiveAssistanceSwift => "Explore, find solutions, and receive assistance swiftly  your support network is ready within 24 hours.";
+  String get discoverAndGetSupportWithin24Hours =>
+      "Discover and get support within 24 hours";
+
+  @override
+  String get customizeHealthPlansForATailoredApproachAlign =>
+      "Customize health plans for a tailored approach, aligning each aspect with your needs.";
+
+  @override
+  String get focusOnYourPathSetClearGoalsAndStrideForwardW =>
+      "Focus on your path, set clear goals, and stride forward with determination and purpose.";
+
+  @override
+  String get exploreFindSolutionsAndReceiveAssistanceSwift =>
+      "Explore, find solutions, and receive assistance swiftly  your support network is ready within 24 hours.";
 
   @override
   String get transactionIsInProcess => 'Transaction is in process...';
@@ -737,7 +853,8 @@ class LanguageEn extends BaseLanguage {
   String get enterYourMsisdnHere => 'Enter your msisdn here';
 
   @override
-  String get pleaseCheckThePayment => 'Please check the payment request is sent to your number';
+  String get pleaseCheckThePayment =>
+      'Please check the payment request is sent to your number';
 
   @override
   String get ambiguous => 'Ambiguous';
@@ -749,7 +866,8 @@ class LanguageEn extends BaseLanguage {
   String get incorrectPin => 'Incorrect Pin';
 
   @override
-  String get exceedsWithdrawalAmountLimit => 'Exceeds withdrawal amount limit(s) / Withdrawal amount limit exceeded';
+  String get exceedsWithdrawalAmountLimit =>
+      'Exceeds withdrawal amount limit(s) / Withdrawal amount limit exceeded';
 
   @override
   String get inProcess => 'In process';
@@ -773,7 +891,8 @@ class LanguageEn extends BaseLanguage {
   String get transactionIdIsInvalid => 'Transaction ID is invalid';
 
   @override
-  String get errorWhileFetchingEncryption => 'Error while fetching encryption key';
+  String get errorWhileFetchingEncryption =>
+      'Error while fetching encryption key';
 
   @override
   String get transactionExpired => 'Transaction Expired';
@@ -785,10 +904,12 @@ class LanguageEn extends BaseLanguage {
   String get transactionNotFound => 'Transaction Not Found';
 
   @override
-  String get successfullyFetchedEncryptionKey => 'Successfully fetched Encryption Key';
+  String get successfullyFetchedEncryptionKey =>
+      'Successfully fetched Encryption Key';
 
   @override
-  String get theTransactionIsStill => 'The transaction is still processing and is in ambiguous state. Please do the transaction enquiry to fetch the transaction status.';
+  String get theTransactionIsStill =>
+      'The transaction is still processing and is in ambiguous state. Please do the transaction enquiry to fetch the transaction status.';
 
   @override
   String get transactionIsSuccessful => 'Transaction is successful';
@@ -797,37 +918,44 @@ class LanguageEn extends BaseLanguage {
   String get incorrectPinHasBeen => 'Incorrect Pin has been entered';
 
   @override
-  String get theUserHasExceeded => 'The User has exceeded their wallet allowed transaction limit';
+  String get theUserHasExceeded =>
+      'The User has exceeded their wallet allowed transaction limit';
 
   @override
-  String get theAmountUserIs => 'The amount User is trying to transfer is less than the minimum amount allowed';
+  String get theAmountUserIs =>
+      'The amount User is trying to transfer is less than the minimum amount allowed';
 
   @override
   String get userDidnTEnterThePin => 'User didn\'t enter the pin';
 
   @override
-  String get transactionInPendingState => 'Transaction in pending state. Please check after sometime';
+  String get transactionInPendingState =>
+      'Transaction in pending state. Please check after sometime';
 
   @override
-  String get userWalletDoesNot => 'User wallet does not have enough money to cover the payable amount';
+  String get userWalletDoesNot =>
+      'User wallet does not have enough money to cover the payable amount';
 
   @override
   String get theTransactionWasRefused => 'The transaction was refused';
 
   @override
-  String get encryptionKeyHasBeen => 'Encryption key has been fetched successfully';
+  String get encryptionKeyHasBeen =>
+      'Encryption key has been fetched successfully';
 
   @override
   String get transactionHasBeenExpired => 'Transaction has been expired';
 
   @override
-  String get payeeIsAlreadyInitiated => 'Payee is already initiated for churn or barred or not registered on Airtel Money platform';
+  String get payeeIsAlreadyInitiated =>
+      'Payee is already initiated for churn or barred or not registered on Airtel Money platform';
 
   @override
   String get theTransactionWasNot => 'The transaction was not found.';
 
   @override
-  String get thisIsAGeneric => 'This is a generic refusal that has several possible causes';
+  String get thisIsAGeneric =>
+      'This is a generic refusal that has several possible causes';
 
   @override
   String get theTransactionWasTimed => 'The transaction was timed out.';
@@ -851,7 +979,8 @@ class LanguageEn extends BaseLanguage {
   String get redirectingToBookings => "Redirecting to bookings..";
 
   @override
-  String get pleaseConfirmYourAppointmentByCheckingTheBox => "Please confirm your appointment by checking the box";
+  String get pleaseConfirmYourAppointmentByCheckingTheBox =>
+      "Please confirm your appointment by checking the box";
 
   @override
   String get appointmentDetail => "Appointment Detail";
@@ -899,7 +1028,8 @@ class LanguageEn extends BaseLanguage {
   String get noPhotosAvailable => "No photos available";
 
   @override
-  String get looksLikeThereIsNoServicesListedOnThisClinicW => "Looks like there is no services listed on this clinic, We'll keep you posted when there's an update.";
+  String get looksLikeThereIsNoServicesListedOnThisClinicW =>
+      "Looks like there is no services listed on this clinic, We'll keep you posted when there's an update.";
 
   @override
   String get session => "Session";
@@ -926,7 +1056,8 @@ class LanguageEn extends BaseLanguage {
   String get noGalleryFoundAtAMoment => "No Gallery found at a moment";
 
   @override
-  String get looksLikeThereIsNoGalleryForThisClinicWellKee => "Looks like there is no gallery for this clinic, We'll keep you posted when there's an update.";
+  String get looksLikeThereIsNoGalleryForThisClinicWellKee =>
+      "Looks like there is no gallery for this clinic, We'll keep you posted when there's an update.";
 
   @override
   String get clinics => "Clinics";
@@ -938,7 +1069,8 @@ class LanguageEn extends BaseLanguage {
   String get noClinicsFoundAtAMoment => "No clinics found at a moment";
 
   @override
-  String get looksLikeThereIsNoClinicForThisServiceWellKee => "Looks like there is no clinic for this service, We'll keep you posted when there's an update.";
+  String get looksLikeThereIsNoClinicForThisServiceWellKee =>
+      "Looks like there is no clinic for this service, We'll keep you posted when there's an update.";
 
   @override
   String get searchClinicHere => "Search Clinic Here";
@@ -962,7 +1094,8 @@ class LanguageEn extends BaseLanguage {
   String get experience => "Experience";
 
   @override
-  String get experienceSpecializationContactInfo => "Experience, Specialization, Contact Info";
+  String get experienceSpecializationContactInfo =>
+      "Experience, Specialization, Contact Info";
 
   @override
   String get reviews => "Reviews";
@@ -989,13 +1122,15 @@ class LanguageEn extends BaseLanguage {
   String get noQualificationsFound => "No Qualifications found!";
 
   @override
-  String get looksLikeThereAreNoQualificationsAddedByThisD => "Looks like there are no Qualifications added by this doctor.";
+  String get looksLikeThereAreNoQualificationsAddedByThisD =>
+      "Looks like there are no Qualifications added by this doctor.";
 
   @override
   String get totalAppointmentsDone => "Total Appointments done";
 
   @override
-  String get looksLikeThereIsNoServicesProvidedByThisDocto => "Looks like there is no services provided by this doctor, We'll keep you posted when there's an update.";
+  String get looksLikeThereIsNoServicesProvidedByThisDocto =>
+      "Looks like there is no services provided by this doctor, We'll keep you posted when there's an update.";
 
   @override
   String get doctorDetail => "Doctor Detail";
@@ -1007,13 +1142,15 @@ class LanguageEn extends BaseLanguage {
   String get noDoctorsFoundAtAMoment => "No Doctors found at a moment";
 
   @override
-  String get looksLikeThereIsNoDoctorsForThisClinicWellKee => "Looks like there is no doctors for this clinic, We'll keep you posted when there's an update.";
+  String get looksLikeThereIsNoDoctorsForThisClinicWellKee =>
+      "Looks like there is no doctors for this clinic, We'll keep you posted when there's an update.";
 
   @override
   String get noReviewsFoundAtAMoment => "No Reviews found at a moment";
 
   @override
-  String get looksLikeThereIsNoReviewsWellKeepYouPostedWhe => "Looks like there is no reviews, We'll keep you posted when there's an update.";
+  String get looksLikeThereIsNoReviewsWellKeepYouPostedWhe =>
+      "Looks like there is no reviews, We'll keep you posted when there's an update.";
 
   @override
   String get searchHere => "Search Here";
@@ -1025,7 +1162,8 @@ class LanguageEn extends BaseLanguage {
   String get noEncountersFound => "No encounters found!";
 
   @override
-  String get looksLikeThereIsNoEncountersWellKeepYouPosted => "Looks like there is no encounters, We'll keep you posted when there's an update.";
+  String get looksLikeThereIsNoEncountersWellKeepYouPosted =>
+      "Looks like there is no encounters, We'll keep you posted when there's an update.";
 
   @override
   String get clinicsNearYou => "Clinics Near You";
@@ -1040,7 +1178,8 @@ class LanguageEn extends BaseLanguage {
   String get bookingSuccessful => "Booking Successful";
 
   @override
-  String get yourAppointmentHasBeenBookedSuccessfully => "Your appointment has been booked successfully";
+  String get yourAppointmentHasBeenBookedSuccessfully =>
+      "Your appointment has been booked successfully";
 
   @override
   String get totalPayment => "Total Payment";
@@ -1056,10 +1195,12 @@ class LanguageEn extends BaseLanguage {
   String get choosePaymentMethod => "Choose Payment Method";
 
   @override
-  String get chooseOurConvenientPaymentOptionAndUnlockUnli => "Choose our convenient payment option and unlock unlimited access to exclusive privileges.";
+  String get chooseOurConvenientPaymentOptionAndUnlockUnli =>
+      "Choose our convenient payment option and unlock unlimited access to exclusive privileges.";
 
   @override
-  String get doYouWantToReplaceThePreviousServiceWithTheCu => "Do you want to replace the previous service with the current one?";
+  String get doYouWantToReplaceThePreviousServiceWithTheCu =>
+      "Do you want to replace the previous service with the current one?";
 
   @override
   String get bookNow => "Book Now";
@@ -1083,7 +1224,8 @@ class LanguageEn extends BaseLanguage {
   String get noWalletDataFound => "No wallet data found!";
 
   @override
-  String get oppsNoWalletDataFoundAtAMoment => "Opps! no wallet data found at a moment.";
+  String get oppsNoWalletDataFoundAtAMoment =>
+      "Opps! no wallet data found at a moment.";
 
   @override
   String get walletBalance => "Wallet Balance";
@@ -1113,7 +1255,8 @@ class LanguageEn extends BaseLanguage {
   String get dateOfBirth => 'Date of Birth';
 
   @override
-  String get passwordLengthShouldBe8To14Characters => 'Password length should be 8 to 14 characters';
+  String get passwordLengthShouldBe8To14Characters =>
+      'Password length should be 8 to 14 characters';
 
   @override
   String get noteInCaseYouFailToMakeTheAdvancePaymentYouWi =>
@@ -1132,13 +1275,15 @@ class LanguageEn extends BaseLanguage {
   String get appointmentId => 'Appointment id:';
 
   @override
-  String get youDontHaveEnoughBalanceToCompleteThePaymentU => "You don't have enough balance to complete the payment using your wallet.";
+  String get youDontHaveEnoughBalanceToCompleteThePaymentU =>
+      "You don't have enough balance to complete the payment using your wallet.";
 
   @override
   String get advancePayment => 'Advance Payment';
 
   @override
-  String get doYouWantToPerformThisAction => 'Do you want to perform this action?';
+  String get doYouWantToPerformThisAction =>
+      'Do you want to perform this action?';
 
   @override
   String get bookedFor => 'Booked For';
@@ -1150,7 +1295,7 @@ class LanguageEn extends BaseLanguage {
   String get relation => 'Relation';
 
   @override
-  String get save => 'save';
+  String get save => 'Save';
 
   @override
   String get managePatient => 'Manage Patient';
@@ -1177,7 +1322,8 @@ class LanguageEn extends BaseLanguage {
   String get editPatient => 'Edit Patient';
 
   @override
-  String get doYouWantToDeleteYourOtherPatientsProfile => "Do you want to delete your other patient's profile?";
+  String get doYouWantToDeleteYourOtherPatientsProfile =>
+      "Do you want to delete your other patient's profile?";
 
   @override
   String get birthdateIsRequired => 'Birthdate is required';
@@ -1217,6 +1363,16 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get refunded => 'Refunded';
+  @override
+  String get preparing => 'Preparing';
+  @override
+  String get outForDelivery => 'Out for delivery';
+  @override
+  String get delivered => 'Delivered';
+  @override
+  String get reviewed => 'Reviewed';
+  @override
+  String get processed => 'Processed';
 
   @override
   String get failed => 'Failed';
@@ -1315,7 +1471,9 @@ class LanguageEn extends BaseLanguage {
   String get appliedTaxes => "Applied Taxes";
 
   @override
-  String cancellationChargesWillBeAppliedForCancellationWithin(String amount, String hours) => "Cancellation charges of $amount will be applied for cancellation within $hours hours of scheduled time";
+  String cancellationChargesWillBeAppliedForCancellationWithin(
+          String amount, String hours) =>
+      "Cancellation charges of $amount will be applied for cancellation within $hours hours of scheduled time";
 
   @override
   String get cancelAppointment => "Cancel Appointment";
@@ -1324,7 +1482,8 @@ class LanguageEn extends BaseLanguage {
   String get goBack => "Go Back";
 
   @override
-  String cancellationFeesWillBeAppliedIfYouCancelWithinHoursOfScheduledTime(String hours, bool isCancellationChargesEnabled) =>
+  String cancellationFeesWillBeAppliedIfYouCancelWithinHoursOfScheduledTime(
+          String hours, bool isCancellationChargesEnabled) =>
       "Do you want to cancel this appointment? ${isCancellationChargesEnabled ? 'Cancellation fees will be applied if you cancel within $hours hour of scheduled time' : ''}";
 
   @override
@@ -1334,19 +1493,23 @@ class LanguageEn extends BaseLanguage {
   String get continueText => "Continue";
 
   @override
-  String get wouldYouLikeToProceedAndConfirmPayment => "Would you like to proceed & confirm payment?";
+  String get wouldYouLikeToProceedAndConfirmPayment =>
+      "Would you like to proceed & confirm payment?";
 
   @override
   String get cancellationFee => "Cancellation Fee";
 
   @override
-  String get yourAppointmentHasBeenSuccessfullyCancelled => "Your appointment has been successfully cancelled";
+  String get yourAppointmentHasBeenSuccessfullyCancelled =>
+      "Your appointment has been successfully cancelled";
 
   @override
-  String get appointmentRefundWillBeProcessedWithingHoursIfApplicable => "Appointment refund will be processed Withing 24h if applicable.";
+  String get appointmentRefundWillBeProcessedWithingHoursIfApplicable =>
+      "Appointment refund will be processed Withing 24h if applicable.";
 
   @override
-  String get noteCheckYourAppointmentHistoryForRefundDetailsIfApplicable => "*Note: Check your appointment history for refund details if applicable.";
+  String get noteCheckYourAppointmentHistoryForRefundDetailsIfApplicable =>
+      "*Note: Check your appointment history for refund details if applicable.";
 
   @override
   String get ok => "Ok";
@@ -1379,7 +1542,8 @@ class LanguageEn extends BaseLanguage {
   String get selectService => 'Select Service';
 
   @override
-  String get quicklyBookYourAppointmentNow => 'Quickly Book Your Appointment Now';
+  String get quicklyBookYourAppointmentNow =>
+      'Quickly Book Your Appointment Now';
 
   @override
   String get noDataFound => 'No Data Found';
@@ -1397,10 +1561,8 @@ class LanguageEn extends BaseLanguage {
   String get incidentManagement => 'Incident Management';
 
   @override
-  String get requestHelpForAnyMistakeHappen => 'Request help for any mistake happen';
-
-  @override
-  String get otp => 'OTP';
+  String get requestHelpForAnyMistakeHappen =>
+      'Request help for any mistake happen';
 
   @override
   String get verify => 'Verify';
@@ -1415,7 +1577,8 @@ class LanguageEn extends BaseLanguage {
   String get title => 'Title';
 
   @override
-  String get enterYourDetailDescriptionForYourComplaint => 'Enter your detail description for your complaint';
+  String get enterYourDetailDescriptionForYourComplaint =>
+      'Enter your detail description for your complaint';
 
   @override
   String get phoneNumber => 'Phone Number';
@@ -1433,16 +1596,8 @@ class LanguageEn extends BaseLanguage {
   String get add => 'Add';
 
   @override
-  String get toSubmitYourProblemsSimplyPressAddButtonAndExplainYourConcern => 'To submit your problems simply press add button and explain your concern';
-
-  @override
-  String get tryToAnotherWay => 'Try to another way';
-
-  @override
-  String get pleaseEnterValid6digitOTP => 'Please enter a valid 6-digit OTP';
-
-  @override
-  String get otpFromAuthenticatorApp => 'OTP from Authenticator App';
+  String get toSubmitYourProblemsSimplyPressAddButtonAndExplainYourConcern =>
+      'To submit your problems simply press add button and explain your concern';
 
   @override
   String get open => 'Open';
@@ -1454,19 +1609,20 @@ class LanguageEn extends BaseLanguage {
   String get pleaseEnterValidEmail => 'Please enter a valid email';
 
   @override
-  String get pleaseEnterOTP => 'Please Enter The OTP';
+  String get passwordMustIncludeSpacialCharacter =>
+      'Password must include at least one special character';
 
   @override
-  String get passwordMustIncludeSpacialCharacter => 'Password must include at least one special character';
+  String get passwordMustIncludeAtLeastOneLowercaseCharacter =>
+      'Password must include at least one lowercase character';
 
   @override
-  String get passwordMustIncludeAtLeastOneLowercaseCharacter => 'Password must include at least one lowercase character';
+  String get passwordMustIncludeAtLeastOneNumber =>
+      'Password must include at least one number';
 
   @override
-  String get passwordMustIncludeAtLeastOneNumber => 'Password must include at least one number';
-
-  @override
-  String get passwordMustIncludeAtLeastOneCapitalCharacter => 'Password must include at least one capital character';
+  String get passwordMustIncludeAtLeastOneCapitalCharacter =>
+      'Password must include at least one capital character';
 
   @override
   String get addFile => 'Add File';
@@ -1484,7 +1640,8 @@ class LanguageEn extends BaseLanguage {
   String get passwordIsRequired => "Password is required";
 
   @override
-  String get passwordDoesNotMeetRequirements => "Password does not meet the required rules";
+  String get passwordDoesNotMeetRequirements =>
+      "Password does not meet the required rules";
 
   @override
   String get passwordTooShort => "Password must be at least 8 characters long";
@@ -1503,9 +1660,14 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get createdBy => 'Created by';
+  @override
+  String get createdOn => 'on';
 
   @override
   String get incident => "Incident";
+
+  @override
+  String get invalidIncidentType => 'Invalid incident type selected';
 
   @override
   String get reject => 'Reject';
@@ -1514,11 +1676,1103 @@ class LanguageEn extends BaseLanguage {
   String get successfullyAdded => 'Successfully Added';
 
   @override
-  String get otpSentToEmail => "OTP sent to your email, please verify to continue";
-
-  @override
   String get rejected => "Rejected";
 
   @override
   String get incidenceReportReply => "Incidence report reply";
+
+  @override
+  String get quickServices => "Our Services";
+
+  @override
+  String get labs => "Labs";
+
+  @override
+  String get radiology => "Radiology";
+
+  @override
+  String get homeCare => "Home Care";
+
+  // NURSE REQUEST MODULE
+  @override
+  String get homeNursing => 'Home Nursing';
+
+  @override
+  String get newRequest => 'New Request';
+
+  @override
+  String get myRequests => 'My Requests';
+
+  @override
+  String get requestHomeNursing => 'Request Home Nursing';
+
+  @override
+  String get serviceDescriptionEnglish => 'Service Description (English)';
+
+  @override
+  String get serviceDescriptionArabic => 'Service Description (Arabic)';
+
+  @override
+  String get atLeastOneDescriptionRequired =>
+      'Please provide a service description in at least one language.';
+
+  @override
+  String get preferredDate => 'Preferred Date';
+
+  @override
+  String get preferredTime => 'Preferred Time (optional)';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get durationHours => 'Duration (hours)';
+
+  @override
+  String durationHoursValue(int n) {
+    return Intl.plural(n, locale: 'en', one: '$n hour', other: '$n hours');
+  }
+
+  @override
+  String get addressLine1 => 'Address Line 1';
+
+  @override
+  String get addressLine2 => 'Address Line 2 (optional)';
+
+  @override
+  String get moreAddressDetails => 'More Address Details';
+
+  @override
+  String get governorate => 'Governorate';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get stateLabel => 'State / Province';
+
+  @override
+  String get countryLabel => 'Country';
+
+  @override
+  String get postalCode => 'Postal Code';
+
+  @override
+  String get contactPhone => 'Contact Phone';
+
+  @override
+  String get patientNotes => 'Additional Notes (optional)';
+
+  @override
+  String get submitting => 'Submitting...';
+
+  @override
+  String get requestSubmitted => 'Request Submitted!';
+
+  @override
+  String get referenceNumber => 'Reference Number';
+
+  @override
+  String get copyReferenceNumber => 'Copy Reference Number';
+
+  @override
+  String get copied => 'Copied!';
+
+  @override
+  String get notifyTeamWillAssign =>
+      'Our team will assign a nurse and confirm details soon.';
+
+  @override
+  String get viewRequest => 'View Request';
+
+  @override
+  String get backToHome => 'Back to Home';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterPending => 'Pending';
+
+  @override
+  String get filterAssigned => 'Assigned';
+
+  @override
+  String get filterConfirmed => 'Confirmed';
+
+  @override
+  String get filterInProgress => 'In Progress';
+
+  @override
+  String get filterCompleted => 'Completed';
+
+  @override
+  String get filterCancelled => 'Cancelled';
+
+  @override
+  String get nurseStatusPending => 'Pending';
+
+  @override
+  String get nurseStatusAssigned => 'Assigned';
+
+  @override
+  String get nurseStatusConfirmed => 'Confirmed';
+
+  @override
+  String get nurseStatusInProgress => 'In Progress';
+
+  @override
+  String get nurseStatusCompleted => 'Completed';
+
+  @override
+  String get nurseStatusCancelled => 'Cancelled';
+
+  @override
+  String get assignedNurse => 'Assigned Nurse';
+
+  @override
+  String get nurseRating => 'Rating';
+
+  @override
+  String get nursePhone => 'Nurse Phone';
+
+  @override
+  String get estimatedTotal => 'Estimated Total';
+
+  @override
+  String get paymentStatusUnpaid => 'Unpaid';
+
+  @override
+  String get paymentContextUnavailable =>
+      'We couldn\'t open the payment screen. Please try again.';
+
+  @override
+  String get paymentStatusPaid => 'Paid';
+
+  @override
+  String get paymentStatusRefunded => 'Refunded';
+
+  @override
+  String get cancellationReason => 'Cancellation Reason';
+
+  @override
+  String get completedOn => 'Completed On';
+
+  @override
+  String get statusHistory => 'Status History';
+
+  @override
+  String get emptyRequestsTitle => 'No requests yet';
+
+  @override
+  String get emptyRequestsSubtitle =>
+      'Submit your first request to get started';
+
+  @override
+  String get loadFailed => 'Failed to load. Please try again.';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get paymentConfirmationFailedRetry =>
+      'Your payment was taken but confirming it with the server failed. Please retry to avoid losing your payment.';
+
+  @override
+  String get pleaseContactSupportWithTransactionId =>
+      'Please contact support and share this transaction ID:';
+
+  @override
+  String get phoneInvalid =>
+      'Please enter a valid phone number (e.g. +201001234567)';
+
+  @override
+  String get noDialerAvailable => 'No phone app available to make calls.';
+
+  @override
+  String get descriptionTooLong =>
+      'Description must be 2000 characters or less';
+
+  @override
+  String get notesTooLong => 'Notes must be 2000 characters or less';
+
+  @override
+  String get addressTooLong => 'Address must be 255 characters or less';
+
+  @override
+  String get cityRequired => 'City is required';
+
+  @override
+  String get addressLine1Required => 'Address line 1 is required';
+
+  @override
+  String get preferredDateRequired => 'Preferred date is required';
+
+  @override
+  String get durationOutOfRange => 'Duration must be between 1 and 24 hours';
+
+  @override
+  String get unknownSubmitOutcomeBanner =>
+      'Please confirm your request was created before submitting again.';
+
+  @override
+  String get quickServiceHomeNursing => 'Home Nursing';
+
+  // Pharmacy
+  @override
+  String get pharmacyHome => 'Pharmacy Home';
+  @override
+  String get searchProducts => 'Search products...';
+  @override
+  String get categories => 'Categories';
+  @override
+  String get brands => 'Brands';
+  @override
+  String get productTypes => 'Product Types';
+  @override
+  String get featuredProducts => 'Featured Products';
+  @override
+  String get addToCart => 'Add to Cart';
+  @override
+  String get viewCart => 'View Cart';
+  @override
+  String get cart => 'Cart';
+  @override
+  String get cartEmpty => 'Your cart is empty';
+  @override
+  String get cartEmptyHint =>
+      'Nothing here yet. Find what you need below, or upload a prescription.';
+  @override
+  String get browsePharmacy => 'Browse pharmacy';
+  @override
+  String get deliveryAtCheckout => 'Delivery calculated at checkout';
+  @override
+  String get needHelpUploadPrescription =>
+      'Need help choosing? Upload your prescription.';
+  @override
+  String get checkout => 'Checkout';
+  @override
+  String get placeOrder => 'Place Order';
+  @override
+  String get orderSuccess => 'Order Placed Successfully';
+  @override
+  String get orderFailed => 'Order Placement Failed';
+  @override
+  String get availablePharmacies => 'Available Pharmacies';
+  @override
+  String get selectPharmacy => 'Select Pharmacy';
+  @override
+  String get deliveryAddress => 'Delivery Address';
+  @override
+  String get paymentMethod => 'Payment Method';
+  @override
+  String get applyCoupon => 'Apply Coupon';
+  @override
+  String get couponCode => 'Coupon Code';
+  @override
+  String get deliveryFee => 'Delivery Fee';
+  @override
+  String get orders => 'Orders';
+  @override
+  String get orderDetail => 'Order Detail';
+  @override
+  String get orderStatus => 'Order Status';
+  @override
+  String get trackOrder => 'Track Order';
+  @override
+  String get cancelOrder => 'Cancel Order';
+  @override
+  String get requestRefund => 'Request Refund';
+  @override
+  String get refundReason => 'Refund Reason';
+  @override
+  String get prescriptions => 'Prescriptions';
+  @override
+  String get uploadPrescription => 'Upload Prescription';
+  @override
+  String get prescriptionRequired => 'Prescription Required';
+  @override
+  String get uploadPrescriptionInstructions =>
+      'Please upload a clear photo of your prescription.';
+  @override
+  String get takePhoto => 'Take Photo';
+  @override
+  String get chooseFromGallery => 'Choose from Gallery';
+  @override
+  String get maxImageLimitReached => 'Maximum image limit reached (5 images)';
+  @override
+  String get maximumQuantityReached => 'Maximum quantity reached';
+  @override
+  String get markAllAsRead => 'Mark all as read';
+  @override
+  String get noProductsFound => 'No products found';
+  @override
+  String get filter => 'Filter';
+  @override
+  String get sort => 'Sort';
+
+  // Pharmacy Sorting
+  @override
+  String get sortNewest => 'Newest';
+  @override
+  String get sortPriceAsc => 'Price: Low to High';
+  @override
+  String get sortPriceDesc => 'Price: High to Low';
+  @override
+  String get sortRating => 'Rating';
+
+  // Pharmacy Details
+  @override
+  String get productInfo => 'Product Info';
+  @override
+  String get manufacturer => 'Manufacturer';
+  @override
+  String get dosage => 'Dosage';
+  @override
+  String get unit => 'Unit';
+  @override
+  String get inStock => 'in stock';
+  @override
+  String get outOfStock => 'Out of stock';
+  @override
+  String get productUnavailable => 'This product is currently unavailable';
+
+  // Pharmacy Prescription
+  @override
+  String get notesOptional => 'Notes (Optional)';
+  @override
+  String get submitPrescription => 'Submit Prescription';
+  @override
+  String get chooseImageSource => 'Choose Image Source';
+
+  // Pharmacy Orders
+  @override
+  String get placedOn => 'Placed on';
+  @override
+  String get items => 'Items';
+  @override
+  String get orderNumber => 'Order Number';
+  @override
+  String get fulfillFullCart => 'Full Cart';
+  @override
+  String get fulfillPartialCart => 'Partial Cart';
+  @override
+  String get partialFulfillWarning =>
+      'This pharmacy can only fulfill some items in your cart. Do you want to proceed with the available items? Unavailable items will be removed from this order.';
+
+  // Pharmacy Refunds
+  @override
+  String get refundRequests => 'Refund Requests';
+  @override
+  String get damagedProduct => 'Damaged Product';
+  @override
+  String get wrongProductReceived => 'Wrong Product Received';
+  @override
+  String get expiredProduct => 'Expired Product';
+  @override
+  String get qualityIssue => 'Quality Issue';
+  @override
+  String get submitRequest => 'Submit Request';
+
+  @override
+  String get selectGovernorate => 'Select Governorate';
+
+  @override
+  String get selectCity => 'Select City';
+
+  @override
+  String get searchGovernorate => 'Search governorate';
+
+  @override
+  String get searchCity => 'Search city';
+
+  @override
+  String get clearSearch => 'Clear search';
+
+  @override
+  String get allGovernorates => 'All Governorates';
+
+  @override
+  String get allCities => 'All Cities';
+
+  @override
+  String get showDoctorsFromAllGovernorates =>
+      'Show doctors from all governorates';
+
+  @override
+  String get showAllCitiesInGovernorate =>
+      'Show all cities in this governorate';
+
+  @override
+  String get showingCitiesInGovernorate => 'Showing cities in this governorate';
+
+  @override
+  String get xDoctors => '{count} doctors';
+
+  @override
+  String get xCities => '{count} cities';
+
+  @override
+  String get noGovernoratesFound => 'No governorates found';
+
+  @override
+  String get noCitiesFound => 'No cities found';
+
+  @override
+  String get noResultsFor => 'No results for "{query}"';
+
+  @override
+  String get noCitiesAvailable => 'No cities available';
+
+  @override
+  String get applyGovernorateOnly => 'Apply Governorate Only';
+
+  @override
+  String get changeGovernorate => 'Change Governorate';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get failedToLoadGovernorates => 'Failed to load governorates';
+
+  @override
+  String get failedToLoadCities => 'Failed to load cities';
+
+  @override
+  String get allLocations => 'All Locations';
+
+  @override
+  String get locationFilterFormat => '{governorate} > {city}';
+
+  // DOCTOR VISIT MODULE
+  @override
+  String get homeVisit => 'Home Visit';
+
+  @override
+  String get doctorVisit => 'Doctor Visit';
+
+  @override
+  String get homeVisitRequests => 'Home Visit Requests';
+
+  @override
+  String get newHomeVisitRequest => 'New Home Visit Request';
+
+  @override
+  String get requestHomeVisit => 'Request a Home Visit';
+
+  @override
+  String get noVisitRequests => 'No visit requests';
+
+  @override
+  String get noVisitRequestsTitle => 'No Requests Yet';
+
+  @override
+  String get requestYourFirstVisit =>
+      'Submit your first home visit request to get started';
+
+  @override
+  String get visitReason => 'Visit Reason';
+
+  @override
+  String get visitReasonHint =>
+      'Describe your symptoms or reason for the visit...';
+
+  @override
+  String get visitReasonRequired => 'Visit reason is required';
+
+  @override
+  String get visitReasonTooLong => 'Maximum 1000 characters';
+
+  @override
+  String get preferredDateMustBeFuture => 'Date must be today or in the future';
+
+  @override
+  String get contactPhoneRequired => 'Contact phone is required';
+
+  @override
+  String get contactPhoneInvalid =>
+      'Enter a valid phone number (e.g. +201001234567)';
+
+  @override
+  String get preferredDoctor => 'Preferred Doctor';
+
+  @override
+  String get preferredDoctorOptional => 'Preferred Doctor (Optional)';
+
+  @override
+  String get selectPreferredDoctor => 'Select Preferred Doctor';
+
+  @override
+  String get clearDoctorSelection => 'Clear Selection';
+
+  @override
+  String get additionalNotes => 'Additional Notes';
+
+  @override
+  String get additionalNotesOptional => 'Additional Notes (Optional)';
+
+  @override
+  String get additionalNotesHint =>
+      'Any extra info for the doctor (e.g. 3rd floor, no elevator)...';
+
+  @override
+  String get additionalNotesTooLong => 'Maximum 2000 characters';
+
+  @override
+  String get requestSubmittedSuccessfully => 'Request Submitted Successfully';
+
+  @override
+  String get referenceCopied => 'Reference number copied';
+
+  @override
+  String get weWillGetBackToYouSoon =>
+      "We'll review your request and get back to you soon";
+
+  @override
+  String get requestDetails => 'Request Details';
+
+  @override
+  String get visitInformation => 'Visit Information';
+
+  @override
+  String get assignedDoctor => 'Assigned Doctor';
+
+  @override
+  String get yourVisitingDoctor => 'Your Visiting Doctor';
+
+  @override
+  String get noDoctorAssignedYet => 'No doctor assigned yet';
+
+  @override
+  String get visitCompleted => 'Visit Completed';
+
+  @override
+  String get visitCompletedAt => 'Completed on';
+
+  @override
+  String get submittedOn => 'Submitted on';
+
+  @override
+  String get visitChangedBy => 'Changed by';
+
+  @override
+  String get discountApplied => 'Discount Applied';
+
+  @override
+  String get visitOfferCode => 'Offer Code';
+
+  @override
+  String get youSaved => 'You saved';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get serviceDuration => 'Duration';
+
+  @override
+  String get patientServed => 'Patients';
+
+  @override
+  String get bookAppointment => 'Book Appointment';
+
+  @override
+  String get noUpcomingAppointments => 'No upcoming appointments';
+
+  @override
+  String get bookYourFirstAppointment => 'Book your first appointment';
+
+  @override
+  String get icuAdmission => 'ICU Admission';
+
+  @override
+  String get icuHospitals => 'ICU Hospitals';
+
+  @override
+  String get searchHospitals => 'Search hospitals...';
+
+  @override
+  String get hospitalsFound => 'hospitals found';
+
+  @override
+  String get noHospitalsFound => 'No hospitals found';
+
+  @override
+  String get hasAvailableBeds => 'Has available beds';
+
+  @override
+  String get noBedsAvailable => 'No beds available';
+
+  @override
+  String get hospitalDetail => 'Hospital Detail';
+
+  @override
+  String get aboutHospital => 'About Hospital';
+
+  @override
+  String get departments => 'Departments';
+
+  @override
+  String get availableBeds => 'Available Beds';
+
+  @override
+  String get totalBeds => 'Total Beds';
+
+  @override
+  String get callHospital => 'Call Hospital';
+
+  @override
+  String get callEmergency => 'Call Emergency';
+
+  @override
+  String get openInMaps => 'Open in Maps';
+
+  @override
+  String get requestIcuAdmissionHere => 'Request ICU Admission Here';
+
+  @override
+  String get icuDepartments => 'ICU Departments';
+
+  @override
+  String get browseByDepartment => 'Browse by ICU Department';
+
+  @override
+  String get departmentDescription => 'Department Description';
+
+  @override
+  String get patientName => 'Patient Name';
+
+  @override
+  String get patientAge => 'Patient Age';
+
+  @override
+  String get invalidPatientAge => 'Enter an age from 0 to 150';
+
+  @override
+  String get reportDownloadUnavailable => 'This report is not available yet';
+
+  @override
+  String get invalidReportDownloadUrl => 'The report link is not secure';
+
+  @override
+  String get reportDownloadFailed => 'Could not download the report';
+
+  @override
+  String get labTestRequired => 'Select a lab test before booking';
+
+  @override
+  String get preferredDatePast => 'Select today or a future date';
+
+  @override
+  String get preferredTimeInvalid => 'Select a valid appointment time';
+
+  @override
+  String get patientNotesTooLong =>
+      'Patient notes cannot exceed 1000 characters';
+
+  @override
+  String get selectedTest => 'Selected test';
+
+  @override
+  String get patientGender => 'Patient Gender';
+
+  @override
+  String get diagnosis => 'Diagnosis';
+
+  @override
+  String get urgencyLevel => 'Urgency Level';
+
+  @override
+  String get accompanyingName => 'Accompanying Person Name';
+
+  @override
+  String get accompanyingRelation => 'Relation to Patient';
+
+  @override
+  String get accompanyingPhone => 'Accompanying Person Phone';
+
+  @override
+  String get nationalId => 'National ID (Optional)';
+
+  @override
+  String get currentCondition => 'Current Condition (Optional)';
+
+  @override
+  String get attendingDoctor => 'Attending Doctor (Optional)';
+
+  @override
+  @override
+  String get currentMedications => 'Current Medications (Optional)';
+
+  @override
+  String get allergies => 'Allergies (Optional)';
+
+  @override
+  @override
+  @override
+  String get selectHospital => 'Select Hospital';
+
+  @override
+  String get selectDepartment => 'Select Department';
+
+  @override
+  String get changeHospital => 'Change';
+
+  @override
+  String get routine => 'Routine';
+
+  @override
+  String get urgent => 'Urgent';
+
+  @override
+  String get critical => 'Critical';
+
+  @override
+  String get criticalUrgencyAlertTitle => 'Critical Urgency!';
+
+  @override
+  String get criticalUrgencyAlertMessage =>
+      'You have selected Critical urgency. For life-threatening emergencies, please call the emergency hotline immediately.';
+
+  @override
+  String get callEmergencyHotline => 'Call Emergency Hotline';
+
+  @override
+  String get continueForm => 'Continue with Form';
+
+  @override
+  @override
+  String get underReview => 'Under Review';
+
+  @override
+  String get approved => 'Approved';
+
+  @override
+  String get admitted => 'Admitted';
+
+  @override
+  String get discharged => 'Discharged';
+
+  @override
+  @override
+  @override
+  String get status => 'Status';
+
+  @override
+  @override
+  String get fieldRequired => 'This field is required';
+
+  @override
+  String get invalidPhone => 'Invalid phone format';
+
+  @override
+  String get maxCharsReached => 'Maximum characters reached';
+
+  @override
+  String get invalidDate => 'Invalid date';
+
+  @override
+  String get pleaseSelectHospital => 'Please select a hospital';
+
+  @override
+  String get pleaseSelectDepartment => 'Please select a department';
+
+  @override
+  @override
+  @override
+  String get copyReference => 'Copy Reference';
+
+  @override
+  @override
+  String get trackRequest => 'Track this request';
+
+  @override
+  String get lastReference => 'Last reference';
+
+  @override
+  String get goBackToHome => 'Go back to Home';
+
+  @override
+  String get cancelRequest => 'Cancel Request';
+
+  @override
+  String get cancelConfirmation =>
+      'Are you sure you want to cancel this admission request?';
+
+  @override
+  String get cancelReason => 'Cancellation Reason (Optional)';
+
+  @override
+  String get confirmCancellation => 'Confirm Cancellation';
+
+  @override
+  String get keepRequest => 'Keep Request';
+
+  @override
+  String get requestCancelled => 'Request cancelled successfully';
+
+  @override
+  String get emergencyHotline => 'Emergency Hotline';
+
+  @override
+  String get emergencyNumberCopied => 'Emergency number copied';
+
+  @override
+  String get callNow => 'Call Now';
+
+  @override
+  String get locationUnavailable => 'Location unavailable';
+
+  @override
+  String get myAdmissionRequests => 'My Admission Requests';
+
+  @override
+  String get statusTimeline => 'Status Timeline';
+
+  @override
+  String get admissionDetails => 'Admission Details';
+
+  @override
+  String get room => 'Room';
+
+  @override
+  String get bed => 'Bed';
+
+  @override
+  String get admittedAt => 'Admitted At';
+
+  @override
+  String get dischargeDetails => 'Discharge Details';
+
+  @override
+  String get dischargedAt => 'Discharged At';
+
+  @override
+  String get dischargeSummary => 'Discharge Summary';
+
+  @override
+  String get rejectionReason => 'Rejection Reason';
+
+  @override
+
+  // Pharmacy Localized Strings
+  @override
+  String get pharmacyCouponApplied => 'Coupon applied successfully';
+  @override
+  String get pharmacyInvalidCoupon => 'Invalid coupon';
+  @override
+  String get pharmacyDeliveryAddressRequired => 'Delivery address is required';
+  @override
+  String get pharmacyPrescriptionRequired =>
+      'Please attach a prescription for prescription-required items';
+  @override
+  String get pharmacySelectDeliveryAddress => 'Select delivery address';
+  @override
+  String get pharmacyCartPrescriptionWarning =>
+      'You need a prescription for some items in your cart.';
+  @override
+  String get pharmacyPrescriptionLabel => 'Prescription';
+  @override
+  String get pharmacySelectPrescription => 'Select Prescription';
+  @override
+  String get pharmacyUploadNewPrescription => '+ Upload New Prescription';
+  @override
+  String get pharmacyCashOnDelivery => 'Cash on Delivery';
+  @override
+  String get pharmacyWallet => 'Wallet';
+  @override
+  String get pharmacyCancelOrderConfirm =>
+      'Are you sure you want to cancel this order?';
+  @override
+  String get pharmacyYesCancel => 'Yes, Cancel';
+  @override
+  String get pharmacyQty => 'Qty';
+  @override
+  String get pharmacyNoOrders => 'You haven\'t placed any orders yet.';
+  @override
+  String get pharmacyOrderSuccess =>
+      'Your order #{orderNumber} has been placed successfully.';
+  @override
+  String get pharmacyBackToHome => 'Back to Pharmacy Home';
+  @override
+  String get pharmacyNoPharmaciesAvailable =>
+      'No pharmacies can fulfill your cart at this time.';
+  @override
+  String get pharmacyNoPrescriptions =>
+      'You haven\'t uploaded any prescriptions yet.';
+  @override
+  String get pharmacyPrescriptionImages => 'Prescription Images';
+  @override
+  String get pharmacyRejectionReason => 'Rejection Reason';
+  @override
+  String get pharmacyUploadedOn => 'Uploaded on';
+  @override
+  String get pharmacySelectReason => 'Please select a reason...';
+  @override
+  String get pharmacyRefundSubmitted => 'Refund request submitted successfully';
+  @override
+  String get pharmacyAdditionalNotes => 'Additional Notes';
+  @override
+  String get pharmacyDescribeIssue => 'Describe the issue in detail...';
+  @override
+  String get pharmacyNoRefunds => 'You haven\'t requested any refunds yet.';
+  @override
+  String get pharmacyReason => 'Reason';
+  @override
+  String get pharmacyRefundAmount => 'Refund Amount';
+  @override
+  String get pharmacyNoNotifications => 'No notifications yet.';
+  @override
+  String get pharmacyNotesForPharmacy => 'Add any notes for the pharmacy...';
+  @override
+  String get pharmacyNoDescription => 'No description available.';
+
+  // LABS & RADIOLOGY MODULE
+  @override
+  String get labsAndRadiology => 'Labs & Radiology';
+  @override
+  String get bookDiagnosticTestsSubtitle =>
+      'Book diagnostic tests and view reports';
+  @override
+  String get orderMedicinesSubtitle =>
+      'Order medicines and healthcare products';
+  @override
+  String get radiologyCenters => 'Radiology Centers';
+  @override
+  String get searchLabs => 'Search Labs';
+  @override
+  String get searchRadiologyCenters => 'Search Radiology Centers';
+  @override
+  String get viewTests => 'View Tests';
+  @override
+  String get startingFrom => 'Starting from';
+  @override
+  String xReviews(int n) =>
+      Intl.plural(n, one: '$n review', other: '$n reviews');
+  @override
+  String get nearby => 'Nearby';
+  @override
+  String get browseTestCategories => 'Browse Test Categories';
+  @override
+  String get allTests => 'All Tests';
+  @override
+  String get myTestOrders => 'My Test Orders';
+  @override
+  String get noFacilitiesFound => 'No facilities found';
+  @override
+  String get testCategories => 'Test Categories';
+  @override
+  String xTests(int n) => Intl.plural(n, one: '$n test', other: '$n tests');
+  @override
+  String get noCategoriesFound => 'No categories found';
+  @override
+  String get tests => 'Tests';
+  @override
+  String get allTestsTitle => 'Diagnostic Tests';
+  @override
+  String get testDetails => 'Test Details';
+  @override
+  String get preparationInstructions => 'Preparation Instructions';
+  @override
+  String get turnaroundTime => 'Turnaround Time';
+  @override
+  String xHoursTurnaround(int n) => 'Results in $n hours';
+  @override
+  String get imaging => 'Imaging';
+  @override
+  String get bookTest => 'Book Test';
+  @override
+  String get bookThisTest => 'Book This Test';
+  @override
+  String get testCategoryLabel => 'Category';
+  @override
+  String get priceLabel => 'Price';
+  @override
+  String get servicesOffered => 'Services Offered';
+  @override
+  String get availableTests => 'Available Tests';
+  @override
+  String get facilityAddress => 'Facility Address';
+  @override
+  String get contactFacility => 'Contact Facility';
+  @override
+  String get selectTime => 'Select Time';
+  @override
+  String get selectDate => 'Select Date';
+  @override
+  String get availableSlots => 'Available Slots';
+  @override
+  String get noSlotsAvailable => 'No slots available';
+  @override
+  String get tryAnotherDate => 'Try another date';
+  @override
+  String get continueToConfirm => 'Continue to Confirm';
+  @override
+  String get selectASlot => 'Please select a slot';
+  @override
+  String get slotConflictTitle => 'Slot Conflict';
+  @override
+  String get slotConflictBody =>
+      'This slot was just taken. Please select another slot.';
+  @override
+  String get confirmBooking => 'Confirm Booking';
+  @override
+  String get bookingSummary => 'Booking Summary';
+  @override
+  String get testPrice => 'Test Price';
+  @override
+  String get patientNotesOptional => 'Additional Notes (Optional)';
+  @override
+  String get patientNotesHint => 'Any special instructions for the facility...';
+  @override
+  String get confirmAndBook => 'Confirm & Book';
+  @override
+  String get bookingSubmitted => 'Booking Submitted Successfully';
+  @override
+  String get yourTestIsBooked =>
+      'Your diagnostic test has been booked successfully';
+  @override
+  String get backToLabs => 'Back to Labs & Radiology';
+  @override
+  String get myOrders => 'My Test Orders';
+  @override
+  String get orderRef => 'Order Ref';
+  @override
+  String get bookedOn => 'Booked on';
+  @override
+  String get slotDate => 'Slot Date';
+  @override
+  String get slotTime => 'Slot Time';
+  @override
+  String get pricing => 'Pricing';
+  @override
+  String get downloadingReport => 'Downloading report...';
+  @override
+  String get downloadFailed => 'Download failed. Please try again.';
+  @override
+  String get reportNotReady => 'Report is not ready for download yet.';
+  @override
+  String get cancelOrderTitle => 'Cancel Test Order';
+  @override
+  String get cancelOrderConfirm =>
+      'Are you sure you want to cancel this test order?';
+  @override
+  String get cancelReasonOptional => 'Cancellation Reason (Optional)';
+  @override
+  String get keepOrder => 'Keep Order';
+  @override
+  String get statusPending => 'Pending';
+  @override
+  String get statusConfirmed => 'Confirmed';
+  @override
+  String get statusSampleCollected => 'Sample Collected';
+  @override
+  String get statusInProgress => 'In Progress';
+  @override
+  String get statusCompleted => 'Completed';
+  @override
+  String get statusCancelled => 'Cancelled';
+  @override
+  String get statusRejected => 'Rejected';
 }

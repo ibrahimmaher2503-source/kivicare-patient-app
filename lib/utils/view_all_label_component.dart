@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/constants.dart';
@@ -40,50 +39,23 @@ class ViewAllLabel extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: GoogleFonts.outfit(
-              fontSize: (labelSize ?? Constants.labelTextSize).toDouble() + 2,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.3,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-            ),
+            style: boldTextStyle(size: labelSize ?? Constants.labelTextSize),
             maxLines: maxLines ?? 1,
             overflow: textOverflow ?? TextOverflow.ellipsis,
           ),
         ),
         if (isShowAll)
-          GestureDetector(
-            onTap: (list == null ? true : isViewAllVisible(list!))
+          TextButton(
+            onPressed: (list == null ? true : isViewAllVisible(list!))
                 ? () {
               onTap?.call();
             }
                 : null,
-            behavior: HitTestBehavior.translucent,
             child: (list == null ? true : isViewAllVisible(list!))
-                ? Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: (trailingTextColor ?? appColorSecondary).withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          trailingText ?? locale.value.viewAll,
-                          style: boldTextStyle(
-                            color: trailingTextColor ?? appColorSecondary,
-                            size: 13,
-                          ),
-                        ),
-                        4.width,
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 12,
-                          color: trailingTextColor ?? appColorSecondary,
-                        ),
-                      ],
-                    ),
-                  )
+                ? Text(
+              trailingText ?? locale.value.viewAll,
+              style: boldTextStyle(color: trailingTextColor ?? appColorSecondary, size: 14),
+            )
                 : const SizedBox(),
           )
         else

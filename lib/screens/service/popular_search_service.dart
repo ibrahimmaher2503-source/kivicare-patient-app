@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/screens/service/service_list_controller.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../generated/assets.dart';
-import '../../utils/app_common.dart';
 import '../../utils/common_base.dart';
 
 class PopularSearchServiceWidget extends StatelessWidget {
@@ -31,11 +29,7 @@ class PopularSearchServiceWidget extends StatelessWidget {
       controller: popularServiceController.searchCont,
       textFieldType: TextFieldType.OTHER,
       textInputAction: TextInputAction.done,
-      textStyle: GoogleFonts.plusJakartaSans(
-        fontSize: 14,
-        color: isDarkMode.value ? Colors.white : primaryTextColor,
-        letterSpacing: 0.1,
-      ),
+      textStyle: primaryTextStyle(decorationColor: appColorPrimary),
       onTap: onTap,
       onFieldSubmitted: onFieldSubmitted,
       onChanged: (p0) {
@@ -55,14 +49,14 @@ class PopularSearchServiceWidget extends StatelessWidget {
             popularServiceController.page(1);
             popularServiceController.getServiceList();
           },
-          size: 11,
+          size: 12,
         ).visible(popularServiceController.isSearchText.value),
       ),
       decoration: inputDecorationWithOutBorder(
         context,
         hintText: hintText ?? locale.value.searchHere,
         filled: true,
-        fillColor: isDarkMode.value ? inputFillColorDark : inputFillColor,
+        fillColor: context.cardColor,
         prefixIcon: commonLeadingWid(imgPath: Assets.iconsIcSearch, icon: Icons.search_outlined, size: 18).paddingAll(14),
       ),
     );

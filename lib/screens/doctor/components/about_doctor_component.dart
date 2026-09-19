@@ -1,13 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/components/app_scaffold.dart';
 
 import '../../../components/cached_image_widget.dart';
 import '../../../generated/assets.dart';
 import '../../../main.dart';
-import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/common_base.dart';
 import '../model/doctor_list_res.dart';
@@ -25,44 +24,19 @@ class AboutDoctorComponent extends StatelessWidget {
       body: AnimatedScrollView(
         padding: const EdgeInsets.all(24),
         children: [
-          /// About section
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                locale.value.about,
-                style: GoogleFonts.outfit(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.3,
-                  color: isDarkMode.value ? Colors.white : appColorPrimary,
-                ),
-              ),
+              Text(locale.value.about, style: boldTextStyle(size: 16)),
               16.height,
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
+                decoration: boxDecorationDefault(color: context.cardColor),
                 child: ReadMoreText(
                   parseHtmlString(doctorData.aboutSelf),
                   trimLines: 4,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: secondaryTextColor,
-                    height: 1.6,
-                  ),
-                  colorClickableText: appColorSecondary,
+                  style: secondaryTextStyle(size: 14, color: secondaryTextColor),
+                  colorClickableText: appColorPrimary,
                   trimMode: TrimMode.Line,
                   textAlign: TextAlign.justify,
                   trimCollapsedText: " ...${locale.value.readMore}",
@@ -71,36 +45,15 @@ class AboutDoctorComponent extends StatelessWidget {
                 ),
               ),
             ],
-          ).paddingBottom(24).visible(doctorData.aboutSelf.isNotEmpty),
-
-          /// Contact Info section
+          ).paddingBottom(30).visible(doctorData.aboutSelf.isNotEmpty),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                locale.value.contactInfo,
-                style: GoogleFonts.outfit(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.3,
-                  color: isDarkMode.value ? Colors.white : appColorPrimary,
-                ),
-              ),
+              Text(locale.value.contactInfo, style: boldTextStyle(size: 16)),
               16.height,
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
+                decoration: boxDecorationDefault(color: context.cardColor),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -112,23 +65,9 @@ class AboutDoctorComponent extends StatelessWidget {
                         behavior: HitTestBehavior.translucent,
                         child: Row(
                           children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: isDarkMode.value ? appColorAccent.withValues(alpha: 0.12) : lightAccentColor,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const CachedImageWidget(url: Assets.iconsIcMail, color: appColorSecondary, width: 14, height: 14),
-                            ),
+                            const CachedImageWidget(url: Assets.iconsIcMail, color: primaryTextColor, width: 14, height: 14),
                             12.width,
-                            Text(
-                              doctorData.email,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: secondaryTextColor,
-                              ),
-                            ),
+                            Text(doctorData.email, style: primaryTextStyle(color: secondaryTextColor)),
                           ],
                         ),
                       ).paddingBottom(16),
@@ -140,23 +79,9 @@ class AboutDoctorComponent extends StatelessWidget {
                         behavior: HitTestBehavior.translucent,
                         child: Row(
                           children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: isDarkMode.value ? appColorAccent.withValues(alpha: 0.12) : lightAccentColor,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const CachedImageWidget(url: Assets.iconsIcCall, color: appColorSecondary, width: 14, height: 14),
-                            ),
+                            const CachedImageWidget(url: Assets.iconsIcCall, color: primaryTextColor, width: 14, height: 14),
                             12.width,
-                            Text(
-                              doctorData.mobile,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: secondaryTextColor,
-                              ),
-                            ),
+                            Text(doctorData.mobile, style: primaryTextStyle(color: secondaryTextColor)),
                           ],
                         ),
                       ),
@@ -164,108 +89,38 @@ class AboutDoctorComponent extends StatelessWidget {
                 ),
               ),
             ],
-          ).paddingBottom(24).visible(doctorData.email.isNotEmpty || doctorData.mobile.isNotEmpty),
-
-          /// Specialization section
+          ).paddingBottom(30).visible(doctorData.email.isNotEmpty || doctorData.mobile.isNotEmpty),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                locale.value.specialization,
-                style: GoogleFonts.outfit(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.3,
-                  color: isDarkMode.value ? Colors.white : appColorPrimary,
-                ),
-              ),
+              Text(locale.value.specialization, style: boldTextStyle(size: 16)),
               16.height,
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
+                decoration: boxDecorationDefault(color: context.cardColor),
                 child: Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: isDarkMode.value ? appColorAccent.withValues(alpha: 0.12) : lightAccentColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const CachedImageWidget(url: Assets.iconsIcSpecialization, color: appColorSecondary, width: 14, height: 14),
-                    ),
+                    const CachedImageWidget(url: Assets.iconsIcSpecialization, color: primaryTextColor, width: 14, height: 14),
                     12.width,
-                    Text(
-                      doctorData.expert,
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: secondaryTextColor,
-                      ),
-                    ),
+                    Text(doctorData.expert, style: primaryTextStyle(color: secondaryTextColor)),
                   ],
                 ),
               ),
             ],
-          ).paddingBottom(24).visible(doctorData.expert.isNotEmpty),
-
-          /// Experience section
+          ).paddingBottom(30).visible(doctorData.expert.isNotEmpty),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                locale.value.experience,
-                style: GoogleFonts.outfit(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.3,
-                  color: isDarkMode.value ? Colors.white : appColorPrimary,
-                ),
-              ),
+              Text(locale.value.experience, style: boldTextStyle(size: 16)),
               16.height,
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
+                decoration: boxDecorationDefault(color: context.cardColor),
                 child: Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: isDarkMode.value ? appColorAccent.withValues(alpha: 0.12) : lightAccentColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const CachedImageWidget(url: Assets.iconsIcExperience, color: appColorSecondary, width: 14, height: 14),
-                    ),
+                    const CachedImageWidget(url: Assets.iconsIcExperience, color: primaryTextColor, width: 14, height: 14),
                     12.width,
-                    Text(
-                      doctorData.experience,
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: secondaryTextColor,
-                      ),
-                    ),
+                    Text(doctorData.experience, style: primaryTextStyle(color: secondaryTextColor)),
                   ],
                 ),
               ),

@@ -7,7 +7,6 @@ import 'package:stream_transform/stream_transform.dart';
 
 import '../generated/assets.dart';
 import '../main.dart';
-import '../utils/colors.dart';
 import '../utils/common_base.dart';
 import '../utils/empty_error_state_widget.dart';
 import 'loader_widget.dart';
@@ -24,7 +23,8 @@ class BSScontroller extends GetxController {
 
   @override
   void onInit() {
-    _scrollController.addListener(() => Get.context != null ? hideKeyboard(Get.context) : null);
+    _scrollController.addListener(
+        () => Get.context != null ? hideKeyboard(Get.context) : null);
     searchStream.stream.debounce(const Duration(seconds: 1)).listen((s) {
       searchApiCall?.call(s);
     });
@@ -34,9 +34,8 @@ class BSScontroller extends GetxController {
   @override
   void onClose() {
     searchStream.close();
-    if (Get.context != null) {
-      _scrollController.removeListener(() => hideKeyboard(Get.context));
-    }
+    searchCont.dispose();
+    _scrollController.dispose();
     super.onClose();
   }
 }
@@ -94,52 +93,42 @@ class BottomSelectionSheet extends StatelessWidget {
             behavior: HitTestBehavior.translucent,
             child: Container(
               width: Get.width,
-              constraints: BoxConstraints(minWidth: Get.height * 0.65, maxHeight: Get.height * heightRatio),
+              constraints: BoxConstraints(
+                  minWidth: Get.height * 0.65,
+                  maxHeight: Get.height * heightRatio),
               decoration: BoxDecoration(
                 color: context.scaffoldBackgroundColor,
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(24.0),
-                  topRight: Radius.circular(24.0),
+                  topLeft: Radius.circular(30.0),
+                  topRight: Radius.circular(30.0),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: softShadowColorMedium,
-                    blurRadius: 20,
-                    offset: const Offset(0, -4),
-                  ),
-                ],
               ),
               child: Stack(
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      8.height,
-                      Center(
-                        child: Container(
-                          width: 40,
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: secondaryTextColor.withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      ),
-                      42.height,
+                      54.height,
                       bottomSheetDivider,
                       AppTextField(
                         controller: getxBSSCont.searchCont,
-                        textStyle: secondaryTextStyle(size: 14, color: textPrimaryColorGlobal),
+                        textStyle: secondaryTextStyle(
+                            size: 14, color: textPrimaryColorGlobal),
                         textFieldType: TextFieldType.OTHER,
                         onChanged: (p0) {
                           onChanged?.call(p0);
-                          getxBSSCont.isSearchText(getxBSSCont.searchCont.text.trim().isNotEmpty);
+                          getxBSSCont.isSearchText(
+                              getxBSSCont.searchCont.text.trim().isNotEmpty);
                           getxBSSCont.searchStream.add(p0);
                         },
                         decoration: inputDecorationWithOutBorder(
                           context,
-                          hintText: hintText ?? 'Search Here',
-                          prefixIcon: commonLeadingWid(imgPath: Assets.iconsIcSearch, icon: Icons.search_outlined, size: 14).paddingAll(12),
+                          hintText: hintText ?? locale.value.searchHere,
+                          prefixIcon: commonLeadingWid(
+                                  imgPath: Assets.iconsIcSearch,
+                                  icon: Icons.search_outlined,
+                                  size: 14)
+                              .paddingAll(12),
                           filled: true,
                           fillColor: context.cardColor,
                           suffixIcon: Obx(
@@ -148,7 +137,7 @@ class BottomSelectionSheet extends StatelessWidget {
                               onPressed: () {
                                 handleCloseClick(context, getxBSSCont);
                               },
-                              size: 11,
+                              size: 12,
                             ).visible(getxBSSCont.isSearchText.value),
                           ),
                         ),
@@ -157,7 +146,8 @@ class BottomSelectionSheet extends StatelessWidget {
                       hasError
                           ? Obx(
                               () => NoDataWidget(
-                                title: errorText ?? locale.value.somethingWentWrong,
+                                title: errorText ??
+                                    locale.value.somethingWentWrong,
                                 retryText: locale.value.reload,
                                 imageWidget: const ErrorStateWidget(),
                                 onRetry: isLoading == true.obs ? null : onRetry,
@@ -166,13 +156,17 @@ class BottomSelectionSheet extends StatelessWidget {
                           : isEmpty
                               ? Obx(
                                   () => NoDataWidget(
-                                    title: noDataTitle ?? locale.value.noDataFound,
+                                    title:
+                                        noDataTitle ?? locale.value.noDataFound,
                                     subTitle: noDataSubTitle,
                                     titleTextStyle: primaryTextStyle(),
                                     retryText: locale.value.reload,
                                     imageWidget: const EmptyStateWidget(),
-                                    onRetry: isLoading == true.obs ? null : onRetry,
-                                  ).visible(!(isLoading ?? false.obs).value).paddingSymmetric(horizontal: 32),
+                                    onRetry:
+                                        isLoading == true.obs ? null : onRetry,
+                                  )
+                                      .visible(!(isLoading ?? false.obs).value)
+                                      .paddingSymmetric(horizontal: 32),
                                 )
                               : listWidget,
                       32.height,
@@ -192,19 +186,23 @@ class BottomSelectionSheet extends StatelessWidget {
                         appCloseIconButton(
                           context,
                           onPressed: () {
-                            if (!(isLoading == null ? false : isLoading!.value)) {
+                            if (!(isLoading == null
+                                ? false
+                                : isLoading!.value)) {
                               handleCloseClick(context, getxBSSCont);
                               Get.back();
                             }
                           },
-                          size: 11,
+                          size: 12,
                         ).paddingOnly(right: 12),
                       ],
                     ),
                   ),
                   Obx(
                     () => (currentPage ?? (1.obs)).value == 1
-                        ? const LoaderWidget().center().visible((isLoading ?? false.obs).value)
+                        ? const LoaderWidget()
+                            .center()
+                            .visible((isLoading ?? false.obs).value)
                         : Positioned(
                             bottom: 60,
                             left: 16,
@@ -231,14 +229,15 @@ class BottomSelectionSheet extends StatelessWidget {
   }
 }
 
-void serviceCommonBottomSheet(BuildContext context, {required Widget child, final Function(dynamic)? onSheetClose}) {
+void serviceCommonBottomSheet(BuildContext context,
+    {required Widget child, final Function(dynamic)? onSheetClose}) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(24),
-        topRight: Radius.circular(24),
+        topLeft: Radius.circular(30),
+        topRight: Radius.circular(30),
       ),
     ),
     builder: (context) => child,

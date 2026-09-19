@@ -11,7 +11,6 @@ import '../../../utils/colors.dart';
 import '../../../utils/common_base.dart';
 import '../clinic_detail_screen.dart';
 import '../model/clinics_res_model.dart';
-import '../../service/service_list_controller.dart';
 
 class PopularClinicCard extends StatelessWidget {
   final Clinic clinicElement;
@@ -22,18 +21,7 @@ class PopularClinicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: context.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-            blurRadius: 20,
-            offset: const Offset(0, 6),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
+      decoration: boxDecorationDefault(color: context.cardColor, borderRadius: radius(16)),
       width: width ?? Get.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,20 +29,15 @@ class PopularClinicCard extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-                child: CachedImageWidget(
-                  url: clinicElement.clinicImage,
-                  width: Get.width,
-                  fit: BoxFit.cover,
-                  height: Get.height * 0.24,
-                ),
+              CachedImageWidget(
+                url: clinicElement.clinicImage,
+                width: Get.width,
+                fit: BoxFit.cover,
+                topLeftRadius: 8,
+                topRightRadius: 8,
+                height: Get.height * 0.24,
               ).onTap((){
                 currentSelectedClinic(clinicElement);
-                Get.delete<ServiceListController>();
                 Get.to(() => ClinicDetailScreen(), arguments: clinicElement);
               }),
             ],
@@ -111,7 +94,7 @@ class PopularClinicCard extends StatelessWidget {
                           ),
                           child: Text(
                             getClinicStatus(status: clinicElement.clinicStatus.toLowerCase()),
-                            style: boldTextStyle(size: 10, color: getClinicStatusColor(clinicStatus: clinicElement.clinicStatus.toLowerCase())),
+                            style: boldTextStyle(size: 12, color: getClinicStatusColor(clinicStatus: clinicElement.clinicStatus.toLowerCase())),
                           ),
                         )
                       ],
@@ -119,30 +102,18 @@ class PopularClinicCard extends StatelessWidget {
                   ).expand(),
                 ],
               ).paddingTop(8),
-              GestureDetector(
-                onTap: () {
+              TextButton(
+                onPressed: () {
                   currentSelectedClinic(clinicElement);
-                  Get.delete<ServiceListController>();
                   Get.to(() => ClinicDetailScreen(), arguments: clinicElement);
                 },
-                behavior: HitTestBehavior.translucent,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: appColorSecondary.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(locale.value.viewDetail, style: boldTextStyle(color: appColorSecondary, size: 12)),
-                      4.width,
-                      Icon(Icons.arrow_forward_ios_rounded, size: 11, color: appColorSecondary),
-                    ],
-                  ),
+                style: const ButtonStyle(
+                  padding: WidgetStatePropertyAll(EdgeInsets.zero),
+                  overlayColor: WidgetStatePropertyAll(lightSecondaryColor),
                 ),
+                child: Text(locale.value.viewDetail, style: boldTextStyle(color: appColorSecondary, size: 12)),
               ),
-              12.height,
+              8.height,
             ],
           ).paddingSymmetric(horizontal: 16),
         ],

@@ -11,6 +11,7 @@ import '../../utils/app_common.dart';
 import '../../utils/common_base.dart';
 import '../../utils/constants.dart';
 import '../../utils/local_storage.dart';
+import '../../network/network_utils.dart';
 import '../auth/other/settings_screen.dart';
 import '../auth/profile/profile_controller.dart';
 import '../auth/profile/profile_screen.dart';
@@ -18,21 +19,25 @@ import '../booking/appointments_screen.dart';
 import '../home/home_screen.dart';
 import 'components/menu.dart';
 
-class DashboardController extends GetxController {
+class DashboardController extends GetxController with WidgetsBindingObserver {
   RxInt currentIndex = 0.obs;
   RxBool isLoading = false.obs;
 
+  Rx<BottomBarItem> selectedBottomNav = BottomBarItem(
+          title: (locale.value.home).obs,
+          icon: Assets.navigationIcHomeOutlined,
+          activeIcon: Assets.navigationIcHomeFilled,
+          type: BottomItem.home.name)
+      .obs;
 
-
-  Rx<BottomBarItem> selectedBottomNav = BottomBarItem(title: (locale.value.home).obs, icon: Assets.navigationIcHomeOutlined, activeIcon: Assets.navigationIcHomeFilled, type: BottomItem.home.name).obs;
-
-  RxList<StatelessWidget> screen = [
+  RxList<Widget> screen = [
     HomeScreen(),
     AppointmentsScreen(),
   ].obs;
 
   @override
   void onInit() {
+    WidgetsBinding.instance.addObserver(this);
     if (!isLoggedIn.value) {
       ProfileController().getAboutPageData();
     }
@@ -49,59 +54,78 @@ class DashboardController extends GetxController {
   @override
   void onReady() {
     reloadBottomTabs();
-    if (Get.context != null) {
-      View.of(Get.context!).platformDispatcher.onPlatformBrightnessChanged = () {
-        WidgetsBinding.instance.handlePlatformBrightnessChanged();
-        try {
-          final getThemeFromLocal = getValueFromLocal(SettingsLocalConst.THEME_MODE);
-          if (getThemeFromLocal is int) {
-            toggleThemeMode(themeId: getThemeFromLocal);
-          }
-        } catch (e) {
-          log('getThemeFromLocal from cache E: $e');
-        }
-      };
-    }
     super.onReady();
   }
 
-  void reloadBottomTabs() {
-    debugPrint('reloadBottomTabs ISLOGGEDIN.VALUE: ${isLoggedIn.value}');
-    if (isLoggedIn.value) {
-      screen.removeWhere((element) => element is SettingScreen);
-      if (bottomNavItems.indexWhere((element) => element is ProfileScreen).isNegative) {
-        screen.add(ProfileScreen());
+  @override
+  void didChangePlatformBrightness() {
+    try {
+      final getThemeFromLocal =
+          getValueFromLocal(SettingsLocalConst.THEME_MODE);
+      if (getThemeFromLocal is int) {
+        toggleThemeMode(themeId: getThemeFromLocal);
       }
-      screen.toSet();
-
-      bottomNavItems.removeWhere((element) => element.type == BottomItem.settings.name);
-      if (bottomNavItems.indexWhere((element) => element.type == BottomItem.profile.name).isNegative) {
-        bottomNavItems.add(BottomBarItem(title: (locale.value.profile).obs, icon: Assets.navigationIcUserOutlined, activeIcon: Assets.navigationIcUserFilled, type: BottomItem.profile.name));
-      }
-      bottomNavItems.toSet();
-    } else {
-      screen.removeWhere((element) => element is ProfileScreen);
-      screen.add(SettingScreen());
-      screen.toSet();
-
-      bottomNavItems.removeWhere((element) => element.type == BottomItem.profile.name);
-      if (bottomNavItems.indexWhere((element) => element.type == BottomItem.settings.name).isNegative) {
-        bottomNavItems.add(BottomBarItem(title: (locale.value.settings).obs, icon: Assets.iconsIcSettingOutlined, activeIcon: Assets.iconsIcSetting, type: BottomItem.settings.name));
-      }
-      bottomNavItems.toSet();
+    } catch (e) {
+      log('getThemeFromLocal from cache E: $e');
     }
+  }
+
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
+  }
+
+  void reloadBottomTabs() {
+    final authenticated = isLoggedIn.value;
+    screen.assignAll([
+      HomeScreen(),
+      AppointmentsScreen(),
+      authenticated ? ProfileScreen() : SettingScreen(),
+    ]);
+    bottomNavItems.assignAll([
+      BottomBarItem(
+        title: locale.value.home.obs,
+        icon: Assets.navigationIcHomeOutlined,
+        activeIcon: Assets.navigationIcHomeFilled,
+        type: BottomItem.home.name,
+      ),
+      BottomBarItem(
+        title: locale.value.appointment.obs,
+        icon: Assets.navigationIcCalenderOutlined,
+        activeIcon: Assets.navigationIcCalenderFilled,
+        type: BottomItem.appointment.name,
+      ),
+      BottomBarItem(
+        title:
+            (authenticated ? locale.value.profile : locale.value.settings).obs,
+        icon: authenticated
+            ? Assets.navigationIcUserOutlined
+            : Assets.iconsIcSettingOutlined,
+        activeIcon: authenticated
+            ? Assets.navigationIcUserFilled
+            : Assets.iconsIcSetting,
+        type:
+            authenticated ? BottomItem.profile.name : BottomItem.settings.name,
+      ),
+    ]);
+    currentIndex(
+      currentIndex.value.clamp(0, bottomNavItems.length - 1).toInt(),
+    );
     selectedBottomNav(bottomNavItems[currentIndex.value]);
   }
 }
 
 ///Get App Configuration Api
 Future<void> getAppConfigurations() async {
+  if (appConfigs.value.status) return;
   await AuthServiceApis.getAppConfigurations().then((value) async {
     appConfigs(value);
 
     /// Place ChatGPT Key Here
     chatGPTAPIkey = value.chatgptKey;
   }).onError((error, stackTrace) {
-    toast(error.toString());
+    toast(sanitizeBackendMessage(
+        error, locale.value.somethingWentWrongPleaseTryAgainLater));
   });
 }

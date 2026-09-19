@@ -50,7 +50,7 @@ class SearchDoctorServiceWidget extends StatelessWidget {
             doctorDetailController.servicesPage(1);
             doctorDetailController.getServiceList();
           },
-          size: 11,
+          size: 12,
         ).visible(doctorDetailController.isSearchText.value),
       ),
       decoration: inputDecorationWithOutBorder(

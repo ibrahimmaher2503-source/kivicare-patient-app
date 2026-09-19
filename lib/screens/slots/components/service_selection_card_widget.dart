@@ -14,7 +14,8 @@ class ServiceSelectionCardWidget extends StatelessWidget {
   final ServiceElement serviceElement;
   final void Function()? onTap;
 
-  const ServiceSelectionCardWidget({super.key, required this.serviceElement, this.onTap});
+  const ServiceSelectionCardWidget(
+      {super.key, required this.serviceElement, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +33,28 @@ class ServiceSelectionCardWidget extends StatelessWidget {
                   width: Get.height * 0.12,
                   height: Get.height * 0.12,
                   decoration: boxDecorationDefault(),
-                  child: CachedImageWidget(url: serviceElement.serviceImage, fit: BoxFit.cover, radius: 6),
+                  child: CachedImageWidget(
+                      url: serviceElement.serviceImage,
+                      fit: BoxFit.cover,
+                      radius: 6),
                 ),
                 if (serviceElement.isVideoConsultancy)
-                  Positioned(
+                  PositionedDirectional(
                     bottom: 0,
-                    right: 0,
+                    end: 0,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: boxDecorationDefault(
                         color: completedStatusColor,
-                        borderRadius: BorderRadius.only(topLeft: radiusCircular(), bottomRight: radiusCircular(6)),
-                        border: Border(left: BorderSide(color: context.cardColor, width: 6), top: BorderSide(color: context.cardColor, width: 6)),
+                        borderRadius: BorderRadiusDirectional.only(
+                          topStart: radiusCircular(),
+                          bottomEnd: radiusCircular(6),
+                        ),
+                        border: BorderDirectional(
+                          start: BorderSide(color: context.cardColor, width: 6),
+                          top: BorderSide(color: context.cardColor, width: 6),
+                        ),
                       ),
                       child: Row(
                         children: [
@@ -54,7 +65,9 @@ class ServiceSelectionCardWidget extends StatelessWidget {
                             color: context.cardColor,
                           ),
                           6.width,
-                          Text(locale.value.video, style: boldTextStyle(size: 12, color: context.cardColor))
+                          Text(locale.value.video,
+                              style: boldTextStyle(
+                                  size: 12, color: context.cardColor))
                         ],
                       ),
                     ),
@@ -76,26 +89,33 @@ class ServiceSelectionCardWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (serviceElement.isDiscount) PriceWidget(price: serviceElement.payableAmount, size: 18).paddingRight(6),
+                      if (serviceElement.isDiscount)
+                        PriceWidget(
+                          price: serviceElement.payableAmount,
+                          size: 18,
+                        ).paddingDirectional(end: 6),
                       PriceWidget(
                         price: serviceElement.charges,
-                        isLineThroughEnabled: serviceElement.isDiscount ? true : false,
+                        isLineThroughEnabled:
+                            serviceElement.isDiscount ? true : false,
                         size: serviceElement.isDiscount ? 14 : 18,
-                        color: serviceElement.isDiscount ? textSecondaryColorGlobal : appColorPrimary,
+                        color: serviceElement.isDiscount
+                            ? textSecondaryColorGlobal
+                            : appColorPrimary,
                       ),
                       if (serviceElement.isDiscount)
                         if (serviceElement.discountType == TaxType.PERCENTAGE)
                           Text(
                             '${serviceElement.discountValue}% ${locale.value.off}',
                             style: boldTextStyle(color: greenColor, size: 14),
-                          ).paddingLeft(8)
+                          ).paddingDirectional(start: 8)
                         else if (serviceElement.discountType == TaxType.FIXED)
                           PriceWidget(
                             price: serviceElement.discountValue,
                             color: greenColor,
                             size: 14,
                             isDiscountedPrice: true,
-                          ).paddingLeft(6),
+                          ).paddingDirectional(start: 6),
                     ],
                   ),
                 ),

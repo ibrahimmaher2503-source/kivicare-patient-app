@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/screens/service/model/service_list_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../../../components/loader_widget.dart';
+import '../../../../../generated/assets.dart';
 import '../../../../../main.dart';
-import '../../../../../utils/app_common.dart';
 import '../../../../../utils/colors.dart';
+import '../../../../../utils/common_base.dart';
 import '../../../../../utils/empty_error_state_widget.dart';
 import '../filter_controller.dart';
 
 class FilterCategoryComponent extends StatelessWidget {
-  final FilterController filterCont = Get.put(FilterController());
+  final FilterController filterCont = Get.find<FilterController>();
 
   FilterCategoryComponent({super.key});
 
@@ -29,7 +29,7 @@ class FilterCategoryComponent extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   NoDataWidget(
-                    title: error,
+                    title: locale.value.somethingWentWrong,
                     retryText: locale.value.reload,
                     imageWidget: const ErrorStateWidget(),
                     onRetry: () {
@@ -58,80 +58,76 @@ class FilterCategoryComponent extends StatelessWidget {
                       AnimatedScrollView(
                         children: [
                           AnimatedWrap(
-                            spacing: 0,
-                            runSpacing: 0,
-                            children: List.generate(filterCont.serviceList.length, (index) {
-                              ServiceElement service = filterCont.serviceList[index];
-                              final bool isSelected = filterCont.selectedServiceData.value.id == service.id;
+                            children: List.generate(
+                                filterCont.serviceList.length, (index) {
+                              ServiceElement service =
+                                  filterCont.serviceList[index];
                               return InkWell(
-                                borderRadius: BorderRadius.circular(12),
                                 onTap: () {
+                                  // filterCont.selectedServiceData(service);
                                   filterCont.selectedServiceDataFunc(service);
                                 },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  margin: const EdgeInsets.all(4),
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? isDarkMode.value
-                                            ? appColorSecondary.withValues(alpha: 0.2)
-                                            : lightSecondaryColor
-                                        : isDarkMode.value
-                                            ? surfaceElevatedDark
-                                            : surfaceElevated,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? appColorSecondary
-                                          : isDarkMode.value
-                                              ? glassStrokeDark
-                                              : whiteBorderColor,
-                                      width: isSelected ? 1.5 : 1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      if (isSelected) ...[
-                                        Icon(Icons.check_circle, color: appColorSecondary, size: 16),
-                                        6.width,
-                                      ],
-                                      Flexible(
-                                        child: Text(
-                                          service.name.toString(),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.plusJakartaSans(
-                                            fontSize: 12,
-                                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                                            color: isSelected
-                                                ? appColorSecondary
-                                                : isDarkMode.value
-                                                    ? Colors.white70
-                                                    : primaryTextColor,
-                                          ),
-                                        ),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.all(6),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 10),
+                                      decoration: boxDecorationDefault(
+                                        color: context.cardColor,
+                                        borderRadius: BorderRadius.circular(6),
                                       ),
-                                    ],
-                                  ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            service.name.toString(),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: primaryTextStyle(
+                                              size: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    PositionedDirectional(
+                                      top: 0,
+                                      end: 0,
+                                      child: commonLeadingWid(
+                                        imgPath: Assets.imagesConfirm,
+                                        color: whiteTextColor,
+                                        size: 12,
+                                      ).circularLightPrimaryBg(
+                                          color: appColorPrimary, padding: 6),
+                                    ).visible(filterCont
+                                            .selectedServiceData.value.id ==
+                                        service.id),
+                                  ],
                                 ),
                               );
                             }),
                           ),
                         ],
                         onNextPage: () async {
-                          if (!filterCont.isServiceLoading.value) {
-                            filterCont.servicePage(filterCont.servicePage.value + 1);
+                          if (!filterCont.isServiceLoading.value &&
+                              !filterCont.isServiceLastPage.value) {
+                            filterCont
+                                .servicePage(filterCont.servicePage.value + 1);
                             filterCont.getServicesList();
                           }
                         },
                         onSwipeRefresh: () async {
                           filterCont.servicePage(1);
-                          return await filterCont.getServicesList(showLoader: false);
+                          return await filterCont.getServicesList(
+                              showLoader: false);
                         },
                       ),
-                      if (filterCont.isServiceLoading.isTrue) const LoaderWidget()
+                      if (filterCont.isServiceLoading.isTrue)
+                        const LoaderWidget()
                     ],
                   ),
                 );

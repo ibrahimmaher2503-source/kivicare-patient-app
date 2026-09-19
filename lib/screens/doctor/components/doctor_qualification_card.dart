@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
 import '../model/doctor_detail_model.dart';
@@ -14,92 +13,78 @@ class QualificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-        boxShadow: [
-          BoxShadow(
-            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-            spreadRadius: 0,
+    return Obx(
+      () => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isDarkMode.value
+                ? const Color(0xFF243046)
+                : const Color(0xFFEDF1F4),
           ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${locale.value.year}:",
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: secondaryTextColor,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (qualificationData.year.isNotEmpty) ...[
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: isDarkMode.value
+                      ? appColorSecondary.withValues(alpha: 0.12)
+                      : lightSecondaryColor,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  qualificationData.year,
+                  style: const TextStyle(
+                    color: appColorSecondary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-              8.height,
-              Text(
-                qualificationData.year,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: isDarkMode.value ? Colors.white : appColorPrimary,
-                ),
-              ),
+              12.width,
             ],
-          ).expand(flex: 1).visible(qualificationData.year.isNotEmpty),
-          16.width,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${locale.value.degree}:",
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: secondaryTextColor,
-                ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (qualificationData.degree.isNotEmpty)
+                    Text(
+                      qualificationData.degree,
+                      style: TextStyle(
+                        color: isDarkMode.value
+                            ? textPrimaryDark
+                            : appColorPrimary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        height: 1.25,
+                      ),
+                    ),
+                  if (qualificationData.university.isNotEmpty) ...[
+                    3.height,
+                    Text(
+                      qualificationData.university,
+                      style: TextStyle(
+                        color: isDarkMode.value
+                            ? textSecondaryDark
+                            : const Color(0xFF75818A),
+                        fontSize: 12,
+                        height: 1.3,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
               ),
-              8.height,
-              Text(
-                qualificationData.degree,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: appColorSecondary,
-                ),
-              ),
-            ],
-          ).expand(flex: 2),
-          16.width,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${locale.value.university}:",
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: secondaryTextColor,
-                ),
-              ),
-              8.height,
-              Text(
-                qualificationData.university,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: isDarkMode.value ? Colors.white : appColorPrimary,
-                ),
-              ),
-            ],
-          ).expand(flex: 2),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

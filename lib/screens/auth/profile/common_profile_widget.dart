@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import '../../../components/cached_image_widget.dart';
-import '../../../utils/app_common.dart';
 
 class ProfilePicWidget extends StatelessWidget {
   final double picSize;
@@ -46,20 +44,9 @@ class ProfilePicWidget extends StatelessWidget {
                     onTap: onPicTap,
                     child: Stack(
                       children: [
-                        // Avatar with accent border ring
                         Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: appColorAccent, width: 2),
-                            boxShadow: [
-                              BoxShadow(
-                                color: isDarkMode.value ? softShadowColorDark : appColorAccent.withValues(alpha: 0.15),
-                                blurRadius: 16,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
+                          padding: const EdgeInsets.all(4),
+                          decoration: boxDecorationDefault(shape: BoxShape.circle, color: context.cardColor),
                           child: Hero(
                             tag: heroTag,
                             child: CachedImageWidget(
@@ -73,7 +60,6 @@ class ProfilePicWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // Camera button
                         Positioned(
                           top: picSize * 3 / 4 + 6,
                           left: picSize * 3 / 4 + 6,
@@ -81,27 +67,10 @@ class ProfilePicWidget extends StatelessWidget {
                             onTap: onCameraTap,
                             child: Container(
                               padding: const EdgeInsets.all(3),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isDarkMode.value ? surfaceElevatedDark : Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: isDarkMode.value ? softShadowColorDark : softShadowColorMedium,
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
+                              decoration: boxDecorationDefault(shape: BoxShape.circle, color: Colors.white),
                               child: Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [gradientSecondaryStart, gradientSecondaryEnd],
-                                  ),
-                                ),
+                                padding: const EdgeInsets.all(5),
+                                decoration: boxDecorationDefault(shape: BoxShape.circle, color: appColorPrimary),
                                 child: const Icon(
                                   Icons.camera_alt_outlined,
                                   size: 16,
@@ -119,24 +88,9 @@ class ProfilePicWidget extends StatelessWidget {
             ),
             if (!showOnlyPhoto) ...[
               16.height,
-              Text(
-                userName,
-                style: GoogleFonts.outfit(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: isDarkMode.value ? Colors.white : primaryTextColor,
-                  letterSpacing: -0.3,
-                ),
-              ),
+              Text(userName, style: primaryTextStyle(size: 22)),
               4.height,
-              Text(
-                subInfo,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 14,
-                  color: secondaryTextColor,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+              Text(subInfo, style: secondaryTextStyle(size: 14)),
             ],
           ],
         ),

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
-import '../../../../../utils/app_common.dart';
-import '../../../../../utils/colors.dart';
 import '../../filter_controller.dart';
 
 class FilterServiceTypeComponent extends StatelessWidget {
-  final FilterController filterCont = Get.put(FilterController());
+  final FilterController filterCont = Get.find<FilterController>();
 
   FilterServiceTypeComponent({super.key});
 
@@ -18,58 +15,31 @@ class FilterServiceTypeComponent extends StatelessWidget {
       children: [
         Obx(
           () => AnimatedWrap(
-            spacing: 0,
-            runSpacing: 0,
             children: List.generate(filterCont.serviceTypeList.length, (index) {
               var statusData = filterCont.serviceTypeList[index];
-              final bool isSelected = filterCont.selectedServiceType == statusData['value'];
               return InkWell(
-                borderRadius: BorderRadius.circular(12),
                 onTap: () {
                   filterCont.selectedServiceType(statusData['value']);
                 },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   margin: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? isDarkMode.value
-                            ? appColorSecondary.withValues(alpha: 0.2)
-                            : lightSecondaryColor
-                        : isDarkMode.value
-                            ? surfaceElevatedDark
-                            : surfaceElevated,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: isSelected
-                          ? appColorSecondary
-                          : isDarkMode.value
-                              ? glassStrokeDark
-                              : whiteBorderColor,
-                      width: isSelected ? 1.5 : 1,
-                    ),
+                  decoration: boxDecorationDefault(
+                    borderRadius: BorderRadius.circular(6),
+                    color: filterCont.selectedServiceType == statusData['value']
+                        ? const Color.fromRGBO(86, 112, 204, 1)
+                        : context.cardColor,
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (isSelected) ...[
-                        Icon(Icons.check_circle, color: appColorSecondary, size: 16),
-                        8.width,
-                      ],
-                      Text(
-                        statusData['title'].toString(),
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 12,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                          color: isSelected
-                              ? appColorSecondary
-                              : isDarkMode.value
-                                  ? Colors.white70
-                                  : primaryTextColor,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    statusData['title'].toString(),
+                    style: primaryTextStyle(
+                      size: 12,
+                      color:
+                          filterCont.selectedServiceType == statusData['value']
+                              ? white
+                              : null,
+                    ),
                   ),
                 ),
               );

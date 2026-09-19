@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/common_base.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -8,7 +7,7 @@ import '../../api/core_apis.dart';
 import '../../components/app_scaffold.dart';
 import '../../components/cached_image_widget.dart';
 import '../../main.dart';
-import '../../utils/app_common.dart';
+import '../../network/network_utils.dart';
 import '../../utils/constants.dart';
 import '../auth/model/common_model.dart';
 import 'components/incident_description_conponent.dart';
@@ -30,119 +29,74 @@ class IncidentDetailScreen extends StatelessWidget {
 
   final IncidentManagement incidentController;
 
-  Color get _statusColor {
-    final typeName = incident.incidenceTypeName.toLowerCase();
-    if (typeName == 'open') return confirmedStatusColor;
-    if (typeName == 'closed') return completedStatusColor;
-    return cancelStatusColor;
-  }
-
-  String get _statusLabel {
-    return incidentStatuses
-        .firstWhere(
-          (e) => incident.incidenceTypeName.toLowerCase().contains(e.slug),
-          orElse: () => CMNModel(slug: incident.incidenceTypeName.toLowerCase()),
-        )
-        .name;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final statusName = incident.statusName.isNotEmpty
+        ? incident.statusName
+        : incident.incidenceTypeName;
+    final normalizedStatus = statusName.toLowerCase();
+    final status = incidentStatuses.firstWhere(
+      (e) => normalizedStatus.contains(e.slug),
+      orElse: () => CMNModel(slug: normalizedStatus),
+    );
     return AppScaffoldNew(
       appBartitleText: "${locale.value.incident} #${incident.id}",
       hasLeadingWidget: true,
       appBarVerticalSize: Get.height * 0.12,
       body: AnimatedScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: AlwaysScrollableScrollPhysics(),
         listAnimationType: ListAnimationType.Scale,
-        fadeInConfiguration: FadeInConfiguration(duration: GetNumUtils(1).seconds),
+        fadeInConfiguration:
+            FadeInConfiguration(duration: GetNumUtils(1).seconds),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           16.height,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '#${incident.id}',
-                style: GoogleFonts.outfit(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.3,
-                  color: appColorSecondary,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  gradient: LinearGradient(
-                    colors: [
-                      _statusColor.withValues(alpha: 0.15),
-                      _statusColor.withValues(alpha: 0.08),
-                    ],
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _statusColor,
-                      ),
-                    ),
-                    6.width,
-                    Text(
-                      _statusLabel,
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.1,
-                        color: _statusColor,
-                      ),
-                    ),
-                  ],
-                ),
+              Text('#${incident.id}',
+                  style: boldTextStyle(color: context.primaryColor)),
+              Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                color: normalizedStatus.contains('open')
+                    ? context.primaryColor
+                    : normalizedStatus.contains('closed')
+                        ? Colors.green
+                        : redTextColor,
+                child: Text(
+                  status.name,
+                  style: primaryTextStyle(size: 14, color: Colors.white),
+                ).paddingSymmetric(horizontal: 14, vertical: 5),
               ),
             ],
           ),
           8.height,
-          Text(
-            incident.createdAt.validate().dateInddMMMyyyyHHmmAmPmFormat,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              letterSpacing: 0.1,
-              color: secondaryTextColor,
-            ),
-          ),
-          IncidentDescriptionComponent(description: incident.description.validate(), title: incident.title.validate()),
-          IncidentDescriptionComponent(description: incident.email.validate(), title: locale.value.email),
-          IncidentDescriptionComponent(description: incident.phone.validate(), title: locale.value.phoneNumber),
+          Text(incident.createdAt.validate().dateInddMMMyyyyHHmmAmPmFormat,
+              style: secondaryTextStyle()),
+          IncidentDescriptionComponent(
+              description: incident.description.validate(),
+              title: incident.title.validate()),
+          IncidentDescriptionComponent(
+              description: incident.email.validate(),
+              title: locale.value.email),
+          IncidentDescriptionComponent(
+              description: incident.phone.validate(),
+              title: locale.value.phoneNumber),
           16.height,
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: CachedImageWidget(
-              url: incident.fileUrl.validate(),
-              fit: BoxFit.cover,
-              width: Get.width,
-              height: 230,
-              radius: 16,
-            ),
+          CachedImageWidget(
+            url: incident.fileUrl.validate(),
+            fit: BoxFit.cover,
+            width: Get.width,
+            height: 230,
+            radius: defaultRadius,
           ),
           16.height,
           Container(
-            decoration: BoxDecoration(
-              color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+            decoration: boxDecorationWithRoundedCorners(
+              backgroundColor: context.cardColor, // dark card color
+              borderRadius: radius(12),
             ),
             padding: const EdgeInsets.all(16),
             child: Obx(() {
@@ -158,23 +112,15 @@ class IncidentDetailScreen extends StatelessWidget {
                           children: [
                             Text.rich(
                               TextSpan(
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 12,
-                                  letterSpacing: 0.1,
-                                  color: secondaryTextColor,
-                                ),
+                                style: secondaryTextStyle(size: 12),
                                 children: [
                                   TextSpan(text: "${locale.value.createdBy} "),
                                   TextSpan(
-                                    text: incident.name,
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: 0.1,
-                                      color: isDarkMode.value ? Colors.white : primaryTextColor,
-                                    ),
-                                  ),
-                                  TextSpan(text: " on ${incident.createdAt.dateInddMMMyyyyHHmmAmPmFormat}"),
+                                      text: incident.name,
+                                      style: boldTextStyle(size: 14)),
+                                  TextSpan(
+                                      text:
+                                          " ${locale.value.createdOn} ${incident.createdAt.dateInddMMMyyyyHHmmAmPmFormat}"),
                                 ],
                               ),
                             ),
@@ -185,62 +131,33 @@ class IncidentDetailScreen extends StatelessWidget {
                     ],
                   ),
                   if (incident.reply.validate().isNotEmpty) ...[
-                    Text(
-                      locale.value.reply,
-                      style: GoogleFonts.outfit(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.3,
-                        color: secondaryTextColor,
-                      ),
-                    ),
+                    Text(locale.value.reply,
+                        style:
+                            boldTextStyle(size: 14, color: secondaryTextColor)),
                     8.height,
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: isDarkMode.value ? inputFillColorDark : inputFillColor,
-                        borderRadius: BorderRadius.circular(12),
+                        color: context.scaffoldBackgroundColor,
+                        borderRadius: radius(10),
                       ),
                       child: Text(
                         incident.reply.validate(),
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 13,
-                          letterSpacing: 0.1,
-                          color: secondaryTextColor,
-                        ),
+                        style: secondaryTextStyle(size: 13),
                       ),
                     ),
                   ],
-                  16.height,
-                  GestureDetector(
+                  AppButton(
+                    width: double.infinity,
+                    elevation: 0,
+                    text: locale.value.markAsClosed,
+                    textColor: Colors.white,
+                    color: context.primaryColor,
+                    shapeBorder:
+                        RoundedRectangleBorder(borderRadius: radius(12)),
                     onTap: onMarkClosed,
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: appColorSecondary.withValues(alpha: 0.3),
-                            blurRadius: 12,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        locale.value.markAsClosed,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.1,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ).visible(!isClosed && !isRejected),
+                  ).paddingTop(16).visible(!isClosed && !isRejected),
                 ],
               );
             }),
@@ -255,13 +172,16 @@ class IncidentDetailScreen extends StatelessWidget {
       "incident_type": 2, // 2 is the ID for "Closed"
     };
     incidentController.isLoading(true);
-    await CoreServiceApis.updateIncidentStatus(incidentId: incident.id, request: request).then((res) {
-      toast(res.message);
+    await CoreServiceApis.updateIncidentStatus(
+            incidentId: incident.id, request: request)
+        .then((res) {
+      toast(
+          sanitizeBackendMessage(res.message, locale.value.somethingWentWrong));
       incidentController.incidencePage(1);
       incidentController.getIncidents();
       Get.back();
     }).catchError((e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     }).whenComplete(() {
       incidentController.isLoading(false);
     });

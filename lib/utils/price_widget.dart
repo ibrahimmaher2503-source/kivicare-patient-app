@@ -1,15 +1,15 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import 'app_common.dart';
-import 'colors.dart';
+import 'locale_formatters.dart';
 
 class PriceWidget extends StatelessWidget {
   final num price;
   final String? priceText;
+  final String? currencyCode;
   final double? size;
   final Color? color;
   final Color? hourlyTextColor;
@@ -35,98 +35,82 @@ class PriceWidget extends StatelessWidget {
     this.isHourlyService = false,
     this.isFreeService = false,
     this.priceText,
+    this.currencyCode,
     this.fontStyle,
   });
 
   @override
   Widget build(BuildContext context) {
-    TextDecoration? textDecoration() => isLineThroughEnabled ? TextDecoration.lineThrough : null;
+    TextDecoration? textDecoration() =>
+        isLineThroughEnabled ? TextDecoration.lineThrough : null;
 
-    // Determine the effective color: default to teal for price emphasis
-    final Color effectiveColor = color ?? appColorSecondary;
-
-    // Currency symbol style: smaller and slightly muted
-    TextStyle _currencyStyle() {
-      final double currencySize = (size ?? 16.0) * 0.75;
-      return GoogleFonts.plusJakartaSans(
-        fontSize: currencySize,
-        fontWeight: isBoldText ? FontWeight.w600 : FontWeight.w400,
-        color: effectiveColor.withValues(alpha: 0.7),
-        decoration: textDecoration(),
-        fontStyle: fontStyle,
-        letterSpacing: 0.1,
-      );
-    }
-
-    // Amount text style: Outfit font for numerical emphasis
-    TextStyle _amountStyle() {
-      FontWeight weight;
+    TextStyle _textStyle({int? aSize}) {
       if (isSemiBoldText) {
-        weight = FontWeight.w600;
-      } else if (isBoldText) {
-        weight = FontWeight.w700;
-      } else {
-        weight = FontWeight.w400;
+        return primaryTextStyle(
+          size: aSize ?? size!.toInt(),
+          color: color ?? context.primaryColor,
+          decoration: textDecoration(),
+          fontStyle: fontStyle,
+        );
       }
-
-      return GoogleFonts.outfit(
-        fontSize: size,
-        fontWeight: weight,
-        color: effectiveColor,
-        decoration: textDecoration(),
-        fontStyle: fontStyle,
-        letterSpacing: -0.3,
-      );
+      return isBoldText
+          ? boldTextStyle(
+              size: aSize ?? size!.toInt(),
+              color: color ?? context.primaryColor,
+              decoration: textDecoration(),
+              fontStyle: fontStyle,
+            )
+          : secondaryTextStyle(
+              size: aSize ?? size!.toInt(),
+              color: color ?? context.primaryColor,
+              decoration: textDecoration(),
+              fontStyle: fontStyle,
+            );
     }
-
-    // Build the formatted price string
-    final String formattedPrice = priceText ??
-        price.validate().toStringAsFixed(appCurrency.value.noOfDecimal).formatNumberWithComma(seperator: appCurrency.value.thousandSeparator);
-
-    // Determine left/right currency symbols
-    final String leftCurrency = leftCurrencyFormat();
-    final String rightCurrency = rightCurrencyFormat();
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
       children: [
-        if (isDiscountedPrice)
-          Text(
-            ' -',
-            style: _amountStyle(),
-          ),
-        if (leftCurrency.isNotEmpty)
-          Text(
-            leftCurrency,
-            style: _currencyStyle(),
-          ),
         Text(
-          priceText != null ? formattedPrice : formattedPrice,
-          style: _amountStyle(),
+          isDiscountedPrice ? ' -' : '',
+          style: _textStyle(),
         ),
-        if (rightCurrency.isNotEmpty)
-          Text(
-            rightCurrency,
-            style: _currencyStyle(),
-          ),
+        Text(
+          priceText ??
+              (currencyCode?.trim().isNotEmpty == true
+                  ? formatLocalizedCurrency(price, currencyCode)
+                  : formatCurrencyValue(price)),
+          style: _textStyle(),
+        ),
       ],
     );
   }
 }
 
+String formatCurrencyValue(num? value) {
+  final amount = (value ?? 0)
+      .toStringAsFixed(appCurrency.value.noOfDecimal)
+      .formatNumberWithComma(
+        seperator: appCurrency.value.thousandSeparator,
+      );
+  return '${leftCurrencyFormat()}$amount${rightCurrencyFormat()}';
+}
+
 String leftCurrencyFormat() {
   if (isCurrencyPositionLeft || isCurrencyPositionLeftWithSpace) {
-    return isCurrencyPositionLeftWithSpace ? '${appCurrency.value.currencySymbol} ' : appCurrency.value.currencySymbol;
+    return isCurrencyPositionLeftWithSpace
+        ? '${appCurrency.value.currencySymbol} '
+        : appCurrency.value.currencySymbol;
   }
   return '';
 }
 
 String rightCurrencyFormat() {
   if (isCurrencyPositionRight || isCurrencyPositionRightWithSpace) {
-    return isCurrencyPositionRightWithSpace ? ' ${appCurrency.value.currencySymbol}' : appCurrency.value.currencySymbol;
+    return isCurrencyPositionRightWithSpace
+        ? ' ${appCurrency.value.currencySymbol}'
+        : appCurrency.value.currencySymbol;
   }
   return '';
 }

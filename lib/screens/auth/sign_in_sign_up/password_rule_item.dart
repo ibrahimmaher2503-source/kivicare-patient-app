@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
-import '../../../utils/colors.dart';
 
 class PasswordRuleItem extends StatelessWidget {
   final bool isValid;
@@ -11,27 +10,14 @@ class PasswordRuleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: Icon(
-            isValid ? Icons.check_circle_rounded : Icons.circle_outlined,
-            key: ValueKey(isValid),
-            size: 16,
-            color: isValid ? completedStatusColor : secondaryTextColor.withValues(alpha: 0.4),
-          ),
+        Icon(
+          isValid ? Icons.check_circle : Icons.cancel,
+          size: 16,
+          color: isValid ? Colors.green : Colors.red,
         ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            text,
-            style: secondaryTextStyle(
-              size: 11,
-              color: isValid ? completedStatusColor : null,
-            ),
-          ),
-        ),
+        SizedBox(width: 8),
+        Text(text, style: primaryTextStyle(size: 12)),
       ],
     );
   }

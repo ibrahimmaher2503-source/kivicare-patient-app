@@ -23,11 +23,19 @@ class ZoomImageScreen extends StatefulWidget {
 
 class _ZoomImageScreenState extends State<ZoomImageScreen> {
   bool showAppBar = false;
+  late final PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: widget.index);
     init();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   Future<void> init() async {
@@ -60,15 +68,18 @@ class _ZoomImageScreenState extends State<ZoomImageScreen> {
             scrollPhysics: const BouncingScrollPhysics(),
             enableRotation: false,
             backgroundDecoration: const BoxDecoration(color: white),
-            pageController: PageController(initialPage: widget.index),
+            pageController: _pageController,
             builder: (BuildContext context, int index) {
               return PhotoViewGalleryPageOptions(
-                imageProvider: CachedNetworkImageProvider(widget.galleryImages![index]),
+                imageProvider:
+                    CachedNetworkImageProvider(widget.galleryImages![index]),
                 //imageProvider: Image.network(widget.galleryImages![index], errorBuilder: (context, error, stackTrace) => PlaceHolderWidget()).image,
                 initialScale: PhotoViewComputedScale.contained,
                 minScale: PhotoViewComputedScale.contained,
-                errorBuilder: (context, error, stackTrace) => const PlaceHolderWidget(),
-                heroAttributes: PhotoViewHeroAttributes(tag: widget.galleryImages![index]),
+                errorBuilder: (context, error, stackTrace) =>
+                    const PlaceHolderWidget(),
+                heroAttributes:
+                    PhotoViewHeroAttributes(tag: widget.galleryImages![index]),
               );
             },
             itemCount: widget.galleryImages!.length,
@@ -96,7 +107,8 @@ class ZoomSingleImg extends StatelessWidget {
                   // Replace this with your image path
                   initialScale: PhotoViewComputedScale.contained,
                   minScale: PhotoViewComputedScale.contained,
-                  errorBuilder: (context, error, stackTrace) => const PlaceHolderWidget(),
+                  errorBuilder: (context, error, stackTrace) =>
+                      const PlaceHolderWidget(),
                   heroAttributes: PhotoViewHeroAttributes(tag: url),
                 )
               : url.startsWith(r"assets/")
@@ -105,7 +117,8 @@ class ZoomSingleImg extends StatelessWidget {
                       // Replace this with your image path
                       initialScale: PhotoViewComputedScale.contained,
                       minScale: PhotoViewComputedScale.contained,
-                      errorBuilder: (context, error, stackTrace) => const PlaceHolderWidget(),
+                      errorBuilder: (context, error, stackTrace) =>
+                          const PlaceHolderWidget(),
                       heroAttributes: PhotoViewHeroAttributes(tag: url),
                     )
                   : PhotoView(
@@ -113,7 +126,8 @@ class ZoomSingleImg extends StatelessWidget {
                       // Replace this with your image path
                       initialScale: PhotoViewComputedScale.contained,
                       minScale: PhotoViewComputedScale.contained,
-                      errorBuilder: (context, error, stackTrace) => const PlaceHolderWidget(),
+                      errorBuilder: (context, error, stackTrace) =>
+                          const PlaceHolderWidget(),
                       heroAttributes: PhotoViewHeroAttributes(tag: url),
                     ),
         ),

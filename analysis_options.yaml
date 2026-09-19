@@ -10,7 +10,7 @@ analyzer:
     always_declare_return_types: warning
     unnecessary_new: warning
     camel_case_types: warning
-    must_be_immutable: ignore
+    must_be_immutable: warning
 
 include: package:flutter_lints/flutter.yaml
 

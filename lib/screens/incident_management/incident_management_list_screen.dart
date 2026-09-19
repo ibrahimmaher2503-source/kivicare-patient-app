@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../components/app_scaffold.dart';
 import '../../components/cached_image_widget.dart';
 import '../../components/loader_widget.dart';
 import '../../generated/assets.dart';
 import '../../main.dart';
-import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import 'add_incident_management_screen.dart';
 import 'components/incedent_management_card.dart';
@@ -54,27 +52,29 @@ class IncidentManagementListScreen extends StatelessWidget {
                       fit: BoxFit.fitHeight,
                     ),
                     30.height,
-                    Text(
-                      locale.value.noQueryYet,
-                      style: GoogleFonts.outfit(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.5,
-                        color: isDarkMode.value ? Colors.white : primaryTextColor,
-                      ),
-                    ),
+                    Text(locale.value.noQueryYet, style: boldTextStyle(size: 20)),
                     10.height,
                     Text(
                       locale.value.toSubmitYourProblemsSimplyPressAddButtonAndExplainYourConcern,
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 13,
-                        letterSpacing: 0.1,
-                        color: darkGrayGeneral,
-                      ),
+                      style: primaryTextStyle(size: 13, color: darkGrayGeneral),
                       textAlign: TextAlign.center,
                     ).paddingOnly(left: 12, right: 12),
                     30.height,
-                    _buildAddButton(),
+                    ElevatedButton(
+                      onPressed: () {
+                        controller.clearTextFields();
+                        Get.to(() => AddIncidentManagement());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 8),
+                        backgroundColor: appColorSecondary,
+                      ),
+                      child: Text(
+                        locale.value.add,
+                        style: TextStyle(fontSize: 18, color: whiteTextColor),
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -89,49 +89,36 @@ class IncidentManagementListScreen extends StatelessWidget {
                   /// Filter Chips
                   if (controller.incidents.isNotEmpty)
                     AnimatedWrap(
-                      spacing: 12,
+                      spacing: 16,
                       runSpacing: 8,
                       children: List.generate(controller.filterStatus.length, (index) {
                         final filterStatus = controller.filterStatus[index];
                         return Obx(() {
                           final isSelected = controller.selectedTab.value.type == filterStatus.type;
-                          return GestureDetector(
-                            onTap: () {
+                          return FilterChip(
+                            showCheckmark: false,
+                            labelPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              side: BorderSide(
+                                color: Colors.transparent,
+                              ),
+                            ),
+                            label: Text(
+                              filterStatus.name,
+                              style: boldTextStyle(
+                                size: 14,
+                                color: isSelected ? switchActiveColor : textPrimaryColorGlobal,
+                              ),
+                            ).paddingSymmetric(horizontal: 10),
+                            selected: isSelected,
+                            backgroundColor: isSelected ? appColorPrimary : context.cardColor,
+                            selectedColor: appColorPrimary,
+                            onSelected: (_) {
                               controller.selectedTab(filterStatus);
                               controller.incidencePage(1);
                               controller.getIncidents();
                             },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                              decoration: BoxDecoration(
-                                gradient: isSelected
-                                    ? LinearGradient(colors: [gradientStart, gradientEnd])
-                                    : null,
-                                color: isSelected ? null : (isDarkMode.value ? surfaceElevatedDark : surfaceElevated),
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: isSelected
-                                        ? appColorPrimary.withValues(alpha: 0.3)
-                                        : (isDarkMode.value ? softShadowColorDark : softShadowColor),
-                                    blurRadius: isSelected ? 12 : 8,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                filterStatus.name,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.1,
-                                  color: isSelected
-                                      ? Colors.white
-                                      : (isDarkMode.value ? Colors.white70 : primaryTextColor),
-                                ),
-                              ),
-                            ),
                           );
                         });
                       }),
@@ -155,27 +142,29 @@ class IncidentManagementListScreen extends StatelessWidget {
                               fit: BoxFit.fitHeight,
                             ),
                             30.height,
-                            Text(
-                              locale.value.noQueryYet,
-                              style: GoogleFonts.outfit(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: -0.5,
-                                color: isDarkMode.value ? Colors.white : primaryTextColor,
-                              ),
-                            ),
+                            Text(locale.value.noQueryYet, style: boldTextStyle(size: 20)),
                             10.height,
                             Text(
                               locale.value.toSubmitYourProblemsSimplyPressAddButtonAndExplainYourConcern,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 13,
-                                letterSpacing: 0.1,
-                                color: darkGrayGeneral,
-                              ),
+                              style: primaryTextStyle(size: 13, color: darkGrayGeneral),
                               textAlign: TextAlign.center,
                             ).paddingOnly(left: 12, right: 12),
                             30.height,
-                            _buildAddButton(),
+                            ElevatedButton(
+                              onPressed: () {
+                                controller.clearTextFields();
+                                Get.to(() => AddIncidentManagement());
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 8),
+                                backgroundColor: appColorSecondary,
+                              ),
+                              child: Text(
+                                locale.value.add,
+                                style: TextStyle(fontSize: 18, color: whiteTextColor),
+                              ),
+                            ),
                           ],
                         ).paddingTop(Get.height * 0.15);
                       }
@@ -209,38 +198,6 @@ class IncidentManagementListScreen extends StatelessWidget {
             },
           ),
         ).paddingTop(16),
-      ),
-    );
-  }
-
-  Widget _buildAddButton() {
-    return GestureDetector(
-      onTap: () {
-        controller.clearTextFields();
-        Get.to(() => AddIncidentManagement());
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 12),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: appColorSecondary.withValues(alpha: 0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Text(
-          locale.value.add,
-          style: GoogleFonts.plusJakartaSans(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.1,
-            color: Colors.white,
-          ),
-        ),
       ),
     );
   }

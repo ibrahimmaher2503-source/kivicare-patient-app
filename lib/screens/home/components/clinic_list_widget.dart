@@ -25,10 +25,7 @@ class ClinicListWidget extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             hideKeyboard(context);
-            quickBookController.selectedClinicId.value = clinicList[index].id;
-            quickBookController.clinicCont.text = clinicList[index].name;
-            quickBookController.selectedService.value = quickBookController.clinicCont.text;
-            quickBookController.selectedClinicData = clinicList[index];
+            quickBookController.onClinicSelected(clinicList[index]);
             Get.back();
           },
           child: Container(

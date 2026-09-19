@@ -14,7 +14,8 @@ class UserResponse {
   factory UserResponse.fromJson(Map<String, dynamic> json) {
     return UserResponse(
       status: json['status'] is bool ? json['status'] : false,
-      userData: json['data'] is Map ? UserData.fromJson(json['data']) : UserData(),
+      userData:
+          json['data'] is Map ? UserData.fromJson(json['data']) : UserData(),
       message: json['message'] is String ? json['message'] : "",
     );
   }
@@ -46,15 +47,21 @@ class UserData {
   String userType;
   num walletAmount;
 
-  bool get isSocialLoginType => loginType == LoginTypeConst.LOGIN_TYPE_GOOGLE || loginType == LoginTypeConst.LOGIN_TYPE_APPLE || isSocialLogin;
+  bool get isSocialLoginType =>
+      loginType == LoginTypeConst.LOGIN_TYPE_GOOGLE ||
+      loginType == LoginTypeConst.LOGIN_TYPE_APPLE ||
+      isSocialLogin;
 
   //Book for Other Patient
   String relation;
   String birthDate;
   String contactNumber;
   String fullName;
-  int isGoogleAuthentication;
-  String googleAuthenticationType;
+
+  /// Fresh provider assertion for the current login request only.
+  ///
+  /// This value is deliberately excluded from [toJson] and storage.
+  String identityToken;
 
   UserData({
     this.id = -1,
@@ -77,8 +84,7 @@ class UserData {
     this.birthDate = '',
     this.contactNumber = '',
     this.fullName = '',
-    this.isGoogleAuthentication = -1,
-    this.googleAuthenticationType=''
+    this.identityToken = '',
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
@@ -86,25 +92,30 @@ class UserData {
       id: json['id'] is int ? json['id'] : -1,
       firstName: json['first_name'] is String ? json['first_name'] : "",
       lastName: json['last_name'] is String ? json['last_name'] : "",
-      userName: json['user_name'] is String ? json['user_name'] : "${json['first_name']} ${json['last_name']}",
+      userName: json['user_name'] is String
+          ? json['user_name']
+          : "${json['first_name']} ${json['last_name']}",
       mobile: json['mobile'] is String ? json['mobile'] : "",
       address: json['address'] is String ? json['address'] : "",
       email: json['email'] is String ? json['email'] : "",
       gender: json['gender'] is String ? json['gender'] : "",
       dateOfBirth: json['date_of_birth'] is String ? json['date_of_birth'] : "",
-      userRole: json['user_role'] is List ? List<String>.from(json['user_role'].map((x) => x)) : [],
+      userRole: json['user_role'] is List
+          ? List<String>.from(json['user_role'].map((x) => x))
+          : [],
       apiToken: json['api_token'] is String ? json['api_token'] : "",
-      profileImage: json['profile_image'] is String ? json['profile_image'] : "",
+      profileImage:
+          json['profile_image'] is String ? json['profile_image'] : "",
       loginType: json['login_type'] is String ? json['login_type'] : "",
-      isSocialLogin: json['is_social_login'] is bool ? json['is_social_login'] : false,
+      isSocialLogin:
+          json['is_social_login'] is bool ? json['is_social_login'] : false,
       userType: json['user_type'] is String ? json['user_type'] : "",
       walletAmount: json['wallet_amount'] is num ? json['wallet_amount'] : 0,
       relation: json['relation'] is String ? json['relation'] : "",
       birthDate: json['dob'] is String ? json['dob'] : "",
-      contactNumber: json['contactNumber'] is String ? json['contactNumber'] : "",
+      contactNumber:
+          json['contactNumber'] is String ? json['contactNumber'] : "",
       fullName: json['full_name'] is String ? json['full_name'] : "",
-      isGoogleAuthentication: json['is_google_authentication'] is int ? json['is_google_authentication'] : -1,
-      googleAuthenticationType: json['google_authentication_type'] is String ? json['google_authentication_type'] : "",
     );
   }
 
@@ -130,8 +141,6 @@ class UserData {
       'dob': birthDate,
       'contactNumber': contactNumber,
       'full_name': fullName,
-      'is_google_authentication': isGoogleAuthentication,
-      'google_authentication_type': googleAuthenticationType,
     };
   }
 }

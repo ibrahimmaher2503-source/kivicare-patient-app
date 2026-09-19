@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -20,7 +19,10 @@ class ServiceCard extends StatelessWidget {
   final ServiceElement serviceElement;
   final bool isFromClinicDetail;
 
-  const ServiceCard({super.key, required this.serviceElement, this.isFromClinicDetail = false});
+  const ServiceCard(
+      {super.key,
+      required this.serviceElement,
+      this.isFromClinicDetail = false});
 
   @override
   Widget build(BuildContext context) {
@@ -29,54 +31,55 @@ class ServiceCard extends StatelessWidget {
         if (isFromClinicDetail) {
           Get.delete<ServiceDetailController>();
         }
-        Get.to(() => ServiceDetailScreen(isFromClinicDetail: isFromClinicDetail), arguments: serviceElement);
+        Get.to(
+            () => ServiceDetailScreen(isFromClinicDetail: isFromClinicDetail),
+            arguments: serviceElement);
       },
       child: Container(
-        decoration: BoxDecoration(
-          color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-              blurRadius: 16,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+        decoration: boxDecorationDefault(
+            color: context.cardColor, borderRadius: radius(8)),
         width: Get.width / 2 - 24,
         child: Column(
           children: [
             Hero(
-              tag: serviceElement.serviceImage.trim().isNotEmpty ? "${serviceElement.id}${serviceElement.serviceImage}" : UniqueKey(),
+              tag: serviceElement.serviceImage.trim().isNotEmpty
+                  ? "${serviceElement.id}${serviceElement.serviceImage}"
+                  : UniqueKey(),
               child: Stack(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: CachedImageWidget(
-                        url: serviceElement.serviceImage,
-                        fit: BoxFit.cover,
-                        width: Get.width / 2 - 40,
-                        height: Get.height * 0.15,
-                      ),
-                    ),
+                  CachedImageWidget(
+                    url: serviceElement.serviceImage,
+                    fit: BoxFit.cover,
+                    width: Get.width / 2 - 24,
+                    height: Get.height * 0.12,
+                    topLeftRadius: 8,
+                    topRightRadius: 8,
+                    bottomRightRadius:
+                        serviceElement.isVideoConsultancy ? 6 : 0,
                   ),
                   if (serviceElement.isVideoConsultancy)
                     Positioned(
-                      bottom: 8,
-                      right: 8,
+                      bottom: 0,
+                      right: 0,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
-                          borderRadius: BorderRadius.circular(8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: boxDecorationDefault(
+                          color: completedStatusColor,
+                          borderRadius: BorderRadius.only(
+                              topLeft: radiusCircular(),
+                              bottomRight: radiusCircular(6)),
+                          border: Border(
+                              left: BorderSide(
+                                  color: context.cardColor, width: 6),
+                              top: BorderSide(
+                                  color: context.cardColor, width: 6)),
                         ),
                         child: CachedImageWidget(
                           url: Assets.imagesVideoCamera,
                           fit: BoxFit.fitHeight,
                           height: 10,
-                          color: Colors.white,
+                          color: context.cardColor,
                         ),
                       ),
                     ),
@@ -93,12 +96,7 @@ class ServiceCard extends StatelessWidget {
                       serviceElement.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.outfit(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: -0.3,
-                        color: isDarkMode.value ? Colors.white : primaryTextColor,
-                      ),
+                      style: boldTextStyle(size: 16),
                     ).flexible(),
                   ],
                 ),
@@ -108,32 +106,41 @@ class ServiceCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     spacing: 6,
                     children: [
-                      if (serviceElement.payableAmount != serviceElement.charges)
-                        PriceWidget(price: serviceElement.payableAmount, size: 18, color: appColorSecondary),
+                      if (serviceElement.payableAmount !=
+                          serviceElement.charges)
+                        PriceWidget(
+                            price: serviceElement.payableAmount, size: 18),
                       if (!serviceElement.isInclusiveTaxesAvailable)
                         PriceWidget(
                           price: serviceElement.charges,
-                          isLineThroughEnabled: serviceElement.isDiscount ? true : false,
+                          isLineThroughEnabled:
+                              serviceElement.isDiscount ? true : false,
                           size: serviceElement.isDiscount ? 14 : 18,
-                          color: serviceElement.isDiscount ? textSecondaryColorGlobal : appColorSecondary,
+                          color: serviceElement.isDiscount
+                              ? textSecondaryColorGlobal
+                              : appColorPrimary,
                         ),
                       if (serviceElement.isInclusiveTaxesAvailable) ...[
                         Text(
                           locale.value.includesInclusiveTax,
-                          style: GoogleFonts.plusJakartaSans(
+                          style: secondaryTextStyle(
                             color: appColorSecondary,
-                            fontSize: 10,
+                            size: 12,
                             fontStyle: FontStyle.italic,
-                            letterSpacing: 0.1,
                           ),
                         ),
                       ],
                     ],
                   ),
                 ),
-                12.height,
-                // Gradient Book Now button
-                GestureDetector(
+                6.height,
+                AppButton(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+                  margin: EdgeInsets.zero,
+                  width: Get.width,
+                  elevation: 0,
+                  color: appColorSecondary,
                   onTap: () {
                     if (isFromClinicDetail) {
                       showInDialog(
@@ -141,48 +148,33 @@ class ServiceCard extends StatelessWidget {
                         contentPadding: EdgeInsets.zero,
                         builder: (context) {
                           return AppCustomDialog(
-                            title: locale.value.doYouWantToReplaceThePreviousServiceWithTheCu,
+                            title: locale.value
+                                .doYouWantToReplaceThePreviousServiceWithTheCu,
                             negativeText: locale.value.no,
                             positiveText: locale.value.yes,
                             onTap: () {
                               currentSelectedService(serviceElement);
                               Get.back();
-                              Get.to(() => DoctorsListScreen(), arguments: currentSelectedClinic.value.id);
+                              Get.to(() => DoctorsListScreen(),
+                                  arguments: currentSelectedClinic.value.id);
                             },
                           );
                         },
                       );
                     } else {
+                      /// Store select service in global variable
                       currentSelectedService(serviceElement);
-                      Get.to(() => ClinicListScreen(), arguments: serviceElement);
+                      Get.to(() => ClinicListScreen(),
+                          arguments: serviceElement);
                     }
                   },
-                  child: Container(
-                    width: Get.width,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: appColorSecondary.withValues(alpha: 0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      locale.value.bookNow,
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                        letterSpacing: 0.1,
-                      ),
-                    ),
-                  ),
+                  child: Text(locale.value.bookNow,
+                      style: boldTextStyle(
+                          size: 12,
+                          color: whiteTextColor,
+                          weight: FontWeight.w400)),
                 ),
+                // const Spacer()
               ],
             ).paddingSymmetric(horizontal: 12, vertical: 12),
           ],

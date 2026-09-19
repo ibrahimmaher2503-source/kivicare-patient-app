@@ -17,28 +17,32 @@ class GoogleSignInAuthService {
     GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
 
     if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
 
-      final UserCredential authResult = await auth.signInWithCredential(credential);
+      final UserCredential authResult =
+          await auth.signInWithCredential(credential);
       final User user = authResult.user!;
       assert(!user.isAnonymous);
 
       final User currentUser = auth.currentUser!;
       assert(user.uid == currentUser.uid);
 
-      log('CURRENTUSER: $currentUser');
-
       await googleSignIn.signOut();
 
       String firstName = '';
       String lastName = '';
-      if (currentUser.displayName.validate().split(' ').isNotEmpty) firstName = currentUser.displayName.splitBefore(' ');
-      if (currentUser.displayName.validate().split(' ').length >= 2) lastName = currentUser.displayName.splitAfter(' ');
+      if (currentUser.displayName.validate().split(' ').isNotEmpty) {
+        firstName = currentUser.displayName.splitBefore(' ');
+      }
+      if (currentUser.displayName.validate().split(' ').length >= 2) {
+        lastName = currentUser.displayName.splitAfter(' ');
+      }
 
       /// Create a temporary request to send
       UserData tempUserData = UserData()
@@ -48,7 +52,8 @@ class GoogleSignInAuthService {
         ..lastName = lastName.validate()
         ..profileImage = currentUser.photoURL.validate()
         ..loginType = LoginTypeConst.LOGIN_TYPE_GOOGLE
-        ..userName = currentUser.displayName.validate();
+        ..userName = currentUser.displayName.validate()
+        ..identityToken = (await currentUser.getIdToken(true)).validate();
 
       return tempUserData;
     } else {
@@ -69,7 +74,8 @@ class GoogleSignInAuthService {
           final oAuthProvider = OAuthProvider('apple.com');
           final credential = oAuthProvider.credential(
             idToken: String.fromCharCodes(appleIdCredential.identityToken!),
-            accessToken: String.fromCharCodes(appleIdCredential.authorizationCode!),
+            accessToken:
+                String.fromCharCodes(appleIdCredential.authorizationCode!),
           );
 
           final authResult = await auth.signInWithCredential(credential);
@@ -79,16 +85,11 @@ class GoogleSignInAuthService {
           final User currentUser = auth.currentUser!;
           assert(user.uid == currentUser.uid);
 
-          log('CURRENTUSER: $currentUser');
-
-          // await googleSignIn.signOut();
-
           String firstName = '';
           String lastName = '';
-          log('result.credential ==> ${result.credential?.toMap()}');
-          log('result.credential!.fullName ==> ${result.credential!.fullName!.toMap()}');
 
-          if (result.credential != null && result.credential!.fullName != null) {
+          if (result.credential != null &&
+              result.credential!.fullName != null) {
             firstName = result.credential!.fullName!.givenName.validate();
             lastName = result.credential!.fullName!.familyName.validate();
           }
@@ -101,7 +102,8 @@ class GoogleSignInAuthService {
             ..lastName = lastName.validate()
             ..profileImage = currentUser.photoURL.validate()
             ..loginType = LoginTypeConst.LOGIN_TYPE_APPLE
-            ..userName = "${firstName.validate()} ${lastName.validate()}";
+            ..userName = "${firstName.validate()} ${lastName.validate()}"
+            ..identityToken = (await currentUser.getIdToken(true)).validate();
 
           return tempUserData;
         case AuthorizationStatus.error:

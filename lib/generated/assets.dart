@@ -58,7 +58,6 @@ class Assets {
   static const String iconsIcMyAddress = 'assets/icons/ic_my_address.png';
   static const String iconsIcNotebook = 'assets/icons/ic_notebook.png';
   static const String iconsIcOnline = 'assets/icons/ic_online.png';
-  static const String iconsIcPhone = 'assets/icons/ic_phone.png';
   static const String iconsIcPlusCircle = 'assets/icons/ic_plusCircle.png';
   static const String iconsIcPrinter = 'assets/icons/ic_printer.png';
   static const String iconsIcQualification = 'assets/icons/ic_qualification.png';

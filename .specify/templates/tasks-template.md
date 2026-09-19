@@ -20,10 +20,12 @@ description: "Task list template for feature implementation"
 
 ## Path Conventions
 
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
-- Paths shown below assume single project - adjust based on plan.md structure
+- **Core Logic**: `lib/utils/`, `lib/network/`, `lib/api/`
+- **Feature Modules**: `lib/screens/[module]/`
+- **Models**: `lib/screens/[module]/models/` or `lib/models/`
+- **Components**: `lib/screens/[module]/components/` or `lib/components/`
+- **Tests**: `test/` at repository root
+- Paths shown below assume feature module structure - adjust based on plan.md structure
 
 <!-- 
   ============================================================================
@@ -88,12 +90,17 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T012 [P] [US1] Create [Entity1] model in lib/screens/[module]/models/[entity1].py
+- [ ] T013 [P] [US1] Create [Entity2] model in lib/screens/[module]/models/[entity2].py
+- [ ] T014 [US1] Implement [Controller] in lib/screens/[module]/[controller].dart (GetX)
+- [ ] T015 [US1] Implement Discovery Hub / List Screen
+- [ ] T016 [US1] Implement Facility/Service Detail Screen
+- [ ] T017 [US1] Implement Booking/Request Form with validation
+- [ ] T018 [US1] Implement Success Screen with reference number and copy action
+- [ ] T019 [US1] Implement Tracking/History List with status filters
+- [ ] T020 [US1] Implement Status Detail with visual timeline
+- [ ] T021 [US1] Add localization keys to en/ar files
+- [ ] T022 [US1] Verify RTL and Dark Mode support
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

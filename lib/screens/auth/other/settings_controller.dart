@@ -1,18 +1,21 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/screens/booking/model/appointment_status_model.dart';
-import 'package:kivicare_patient/screens/dashboard/components/menu.dart';
+import 'package:kivicare_patient/screens/dashboard/dashboard_controller.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../configs.dart';
-import '../../dashboard/dashboard_screen.dart';
-import '../../home/home_controller.dart';
+import '../../../locale/app_localizations.dart';
 import '../model/theme_mode_data_model.dart';
 import '../../../api/auth_apis.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/common_base.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/local_storage.dart';
+import '../../../utils/locale_formatters.dart';
+import '../../../network/network_utils.dart';
 
 class SettingsController extends GetxController {
   RxBool isLoading = false.obs;
@@ -20,31 +23,53 @@ class SettingsController extends GetxController {
   RxBool isTouchId = false.obs;
 
   Rx<LanguageDataModel> selectedLang = LanguageDataModel().obs;
-  List<ThemeModeData> themeModes = [ThemeModeData(id: THEME_MODE_SYSTEM, mode: "System"), ThemeModeData(id: THEME_MODE_LIGHT, mode: "Light"), ThemeModeData(id: THEME_MODE_DARK, mode: "Dark")];
+  List<ThemeModeData> themeModes = [
+    ThemeModeData(id: THEME_MODE_SYSTEM, mode: "System"),
+    ThemeModeData(id: THEME_MODE_LIGHT, mode: "Light"),
+    ThemeModeData(id: THEME_MODE_DARK, mode: "Dark")
+  ];
   Rx<ThemeModeData> dropdownValue = ThemeModeData().obs;
 
-  void handleDeleteAccountClick() {
-    ifNotTester(() {
-      isLoading(true);
+  Future<void> changeLanguage(LanguageDataModel newValue) async {
+    selectedLang(newValue);
+    isLoading(true);
+    await setValue(SELECTED_LANGUAGE_CODE, newValue.languageCode);
+    selectedLanguageDataModel = newValue;
+    final loadedLocale = await const AppLocalizations()
+        .load(Locale(newValue.languageCode.validate()));
+    locale = loadedLocale.obs;
+    setValueToLocal(SELECTED_LANGUAGE_CODE, newValue.languageCode.validate());
+    selectedLanguageCode(newValue.languageCode!);
+    Intl.defaultLocale = activeIntlLocale;
+    Get.updateLocale(Locale(newValue.languageCode.validate()));
+    isLoading(false);
+    onLanguageChange();
+  }
 
-      AuthServiceApis.deleteAccountCompletely().then((value) async {
-        AuthServiceApis.clearData(isFromDeleteAcc: true);
+  void handleDeleteAccountClick() {
+    ifNotTester(() async {
+      if (isLoading.value) return;
+      isLoading(true);
+      try {
+        final value = await AuthServiceApis.deleteAccountCompletely();
+        await AuthServiceApis.clearData(isFromDeleteAcc: true);
+        toast(sanitizeBackendMessage(
+            value.message, locale.value.somethingWentWrong));
+        await navigateToSignedOutHome();
+      } catch (error) {
+        toast(sanitizeBackendMessage(
+            error, locale.value.somethingWentWrongPleaseTryAgainLater));
+      } finally {
         isLoading(false);
-        toast(value.message);
-        Get.offAll(() => DashboardScreen(), binding: BindingsBuilder(() {
-          Get.put(HomeController());
-        }));
-      }).catchError((e) {
-        isLoading(false);
-        toast(e.toString());
-      });
+      }
     });
   }
 
   @override
   Future<void> onInit() async {
     if (localeLanguageList.isNotEmpty) {
-      selectedLanguageCode(getValueFromLocal(SELECTED_LANGUAGE_CODE) ?? DEFAULT_LANGUAGE);
+      selectedLanguageCode(
+          getValueFromLocal(SELECTED_LANGUAGE_CODE) ?? DEFAULT_LANGUAGE);
       selectedLang(localeLanguageList.firstWhere(
         (element) => element.languageCode == selectedLanguageCode.value,
         orElse: () => LanguageDataModel(id: -1),
@@ -58,7 +83,8 @@ class SettingsController extends GetxController {
   @override
   void onReady() {
     try {
-      final getThemeFromLocal = getValueFromLocal(SettingsLocalConst.THEME_MODE);
+      final getThemeFromLocal =
+          getValueFromLocal(SettingsLocalConst.THEME_MODE);
       if (getThemeFromLocal is int) {
         dropdownValue(themeModes.firstWhere(
           (element) => element.id == getThemeFromLocal,
@@ -73,10 +99,9 @@ class SettingsController extends GetxController {
   }
 
   void onLanguageChange() {
-    log('SettingsController - onClose called-----------------------');
-    bottomNavItems[0].title.value = locale.value.home;
-    bottomNavItems[1].title.value = locale.value.appointment;
-    bottomNavItems[2].title.value = locale.value.profile;
+    if (Get.isRegistered<DashboardController>()) {
+      Get.find<DashboardController>().reloadBottomTabs();
+    }
     for (var status in filterStatus) {
       switch (status.type) {
         case AppointmentStatus.all:

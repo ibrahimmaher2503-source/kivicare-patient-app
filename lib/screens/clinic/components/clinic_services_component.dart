@@ -21,7 +21,7 @@ class ClinicServicesComponent extends StatelessWidget {
             future: clinicDetailCont.serviceListFuture.value,
             errorBuilder: (error) {
               return NoDataWidget(
-                title: error,
+                title: locale.value.somethingWentWrong,
                 retryText: locale.value.reload,
                 imageWidget: const ErrorStateWidget(),
                 onRetry: () {
@@ -39,7 +39,8 @@ class ClinicServicesComponent extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 emptyWidget: NoDataWidget(
                   title: locale.value.noServicesFoundAtAMoment,
-                  subTitle: locale.value.looksLikeThereIsNoServicesListedOnThisClinicW,
+                  subTitle: locale
+                      .value.looksLikeThereIsNoServicesListedOnThisClinicW,
                   titleTextStyle: primaryTextStyle(),
                   imageWidget: const EmptyStateWidget(),
                   retryText: locale.value.reload,
@@ -47,26 +48,35 @@ class ClinicServicesComponent extends StatelessWidget {
                     clinicDetailCont.servicesPage(1);
                     clinicDetailCont.getServiceList();
                   },
-                ).paddingSymmetric(horizontal: 32).paddingBottom(Get.height * 0.1),
+                )
+                    .paddingSymmetric(horizontal: 32)
+                    .paddingBottom(Get.height * 0.1),
                 itemBuilder: (context, index) {
-                  ServiceElement serviceElement = clinicDetailCont.serviceList[index];
-                  return ServiceCard(serviceElement: serviceElement).paddingTop(index == 0 ? 0 : 16);
+                  ServiceElement serviceElement =
+                      clinicDetailCont.serviceList[index];
+                  return ServiceCard(serviceElement: serviceElement)
+                      .paddingTop(index == 0 ? 0 : 16);
                 },
                 onNextPage: () async {
                   if (!clinicDetailCont.isServicesLastPage.value) {
-                    clinicDetailCont.servicesPage(clinicDetailCont.servicesPage.value + 1);
+                    clinicDetailCont
+                        .servicesPage(clinicDetailCont.servicesPage.value + 1);
                     clinicDetailCont.getServiceList();
                   }
                 },
                 onSwipeRefresh: () async {
                   clinicDetailCont.servicesPage(1);
-                  return await clinicDetailCont.getServiceList(showLoader: false);
+                  return await clinicDetailCont.getServiceList(
+                      showLoader: false);
                 },
               ).paddingSymmetric(horizontal: 16);
             },
           ),
         ).paddingOnly(top: 16, bottom: 80),
-        Obx(() => const LoaderWidget().center().paddingTop(Get.height * 0.12).visible(clinicDetailCont.isServicesLoading.value)),
+        Obx(() => const LoaderWidget()
+            .center()
+            .paddingTop(Get.height * 0.12)
+            .visible(clinicDetailCont.isServicesLoading.value)),
       ],
     );
   }

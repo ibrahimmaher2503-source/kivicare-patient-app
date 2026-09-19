@@ -8,8 +8,8 @@ import '../../../utils/app_common.dart';
 import '../../../api/auth_apis.dart';
 import 'password_set_success.dart';
 import '../../../utils/common_base.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/local_storage.dart';
+import '../../../utils/secure_session_storage.dart';
+import '../../../network/network_utils.dart';
 
 class ChangePassController extends GetxController {
   RxBool isLoading = false.obs;
@@ -23,7 +23,7 @@ class ChangePassController extends GetxController {
   RxBool hasLetter = false.obs;
 
   RxBool newPasshasFocus = false.obs;
-  
+
   void checkPasswordRules(String password) {
     hasUppercase.value = RegExp(r'[A-Z]').hasMatch(password);
     hasNumber.value = RegExp(r'[0-9]').hasMatch(password);
@@ -31,37 +31,42 @@ class ChangePassController extends GetxController {
     hasLetter.value = RegExp(r'[a-z]').hasMatch(password);
   }
 
-  @override
-  void onInit() {
-    oldPasswordCont.text = getValueFromLocal(SharedPreferenceConst.USER_PASSWORD);
-    super.onInit();
-  }
-
   Future<void> saveForm() async {
+    if (isLoading.value) return;
     isLoading(true);
-    if (getValueFromLocal(SharedPreferenceConst.USER_PASSWORD) != oldPasswordCont.text.trim()) {
-      return toast(locale.value.yourOldPasswordDoesnT);
-    } else if (newpasswordCont.text.trim() != confirmPasswordCont.text.trim()) {
+    if (newpasswordCont.text.trim() != confirmPasswordCont.text.trim()) {
+      isLoading(false);
       return toast(locale.value.yourNewPasswordDoesnT);
-    } else if ((oldPasswordCont.text.trim() == newpasswordCont.text.trim()) && oldPasswordCont.text.trim() == confirmPasswordCont.text.trim()) {
+    } else if ((oldPasswordCont.text.trim() == newpasswordCont.text.trim()) &&
+        oldPasswordCont.text.trim() == confirmPasswordCont.text.trim()) {
+      isLoading(false);
       return toast(locale.value.oldAndNewPassword);
     }
 
     hideKeyBoardWithoutContext();
 
     Map<String, dynamic> req = {
-      'old_password': getValueFromLocal(SharedPreferenceConst.USER_PASSWORD),
+      'old_password': oldPasswordCont.text.trim(),
       'new_password': confirmPasswordCont.text.trim(),
     };
 
     await AuthServiceApis.changePasswordAPI(request: req).then((value) async {
       isLoading(false);
-      setValueToLocal(SharedPreferenceConst.USER_PASSWORD, confirmPasswordCont.text.trim());
       loginUserData.value.apiToken = value.data.apiToken;
+      await SecureSessionStorage.writeUser(loginUserData.value);
       Get.to(() => const PasswordSetSuccess());
     }).catchError((e) {
       isLoading(false);
-      toast(e.toString(), print: true);
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong),
+          print: true);
     });
+  }
+
+  @override
+  void onClose() {
+    oldPasswordCont.dispose();
+    newpasswordCont.dispose();
+    confirmPasswordCont.dispose();
+    super.onClose();
   }
 }

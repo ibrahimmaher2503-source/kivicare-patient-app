@@ -1,0 +1,431 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:nb_utils/nb_utils.dart';
+import '../../../api/pharmacy_apis.dart';
+import '../../../components/app_scaffold.dart';
+import '../../../components/operation_verification_screen.dart';
+import '../../../main.dart';
+import '../../../network/critical_operation.dart';
+import '../../../network/network_utils.dart';
+import '../model/pharmacy_prescription_model.dart';
+import '../../../utils/colors.dart';
+import '../utils/pharmacy_constants.dart';
+import 'prescription_list_screen.dart';
+
+class PrescriptionUploadController extends GetxController {
+  RxList<File> selectedImages = <File>[].obs;
+  TextEditingController notesController = TextEditingController();
+  RxBool isUploading = false.obs;
+  final ImagePicker _imagePicker = ImagePicker();
+
+  void pickImage(bool isCamera) async {
+    if (selectedImages.length >= PharmacyConstants.maxPrescriptionImages) {
+      toast(locale.value.maxImageLimitReached);
+      return;
+    }
+
+    final pickedFile = await _imagePicker.pickImage(
+        source: isCamera ? ImageSource.camera : ImageSource.gallery,
+        imageQuality: 85);
+    if (pickedFile != null) {
+      selectedImages.add(File(pickedFile.path));
+    }
+  }
+
+  void removeImage(int index) {
+    selectedImages.removeAt(index);
+  }
+
+  Future<PharmacyPrescription?> submitPrescription() async {
+    if (selectedImages.isEmpty) {
+      toast(locale.value.uploadPrescriptionInstructions);
+      return null;
+    }
+
+    isUploading(true);
+    String? operationKey;
+    var operationResolved = false;
+    var retainOperationForReconciliation = false;
+    try {
+      operationKey = await CriticalOperationStore.begin(
+        CriticalOperationType.pharmacyPrescription,
+        requestFingerprint: criticalOperationFingerprint({
+          'notes': notesController.text.trim(),
+          'files': selectedImages
+              .map((file) => {
+                    'path': file.path,
+                    'size': file.existsSync() ? file.lengthSync() : 0,
+                  })
+              .toList(),
+        }),
+      );
+      final prescription = await PharmacyApis.uploadPrescriptionAsync(
+        imagePaths: selectedImages.map((e) => e.path).toList(),
+        notes: notesController.text,
+        idempotencyKey: operationKey,
+      );
+      operationResolved = true;
+      await CriticalOperationStore.complete(
+        CriticalOperationType.pharmacyPrescription,
+      );
+      return prescription;
+    } catch (e) {
+      if ((e is AmbiguousRequestOutcomeException ||
+              e is PendingCriticalOperationException) &&
+          operationKey != null) {
+        retainOperationForReconciliation = true;
+        await Get.to(() => OperationVerificationScreen(
+              operationType: CriticalOperationType.pharmacyPrescription,
+              operationKey: operationKey,
+              recordsScreen: () => PrescriptionListScreen(),
+            ));
+      } else {
+        toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
+      }
+      return null;
+    } finally {
+      if (!operationResolved &&
+          !retainOperationForReconciliation &&
+          operationKey != null) {
+        // Non-ambiguous validation/server errors have a definitive outcome;
+        // release the local reservation so the user can submit a corrected
+        // prescription. Ambiguous outcomes retain the key for reconciliation.
+        // The verification route above owns the pending reservation.
+        await CriticalOperationStore.complete(
+          CriticalOperationType.pharmacyPrescription,
+        );
+      }
+      if (!isClosed) isUploading(false);
+    }
+  }
+
+  @override
+  void onClose() {
+    notesController.dispose();
+    super.onClose();
+  }
+}
+
+class PrescriptionUploadScreen extends StatelessWidget {
+  PrescriptionUploadScreen({super.key, this.returnResult = false});
+
+  final bool returnResult;
+
+  final PrescriptionUploadController controller =
+      Get.put(PrescriptionUploadController());
+
+  @override
+  Widget build(BuildContext context) {
+    return AppScaffoldNew(
+      appBartitleText: locale.value.uploadPrescription,
+      isLoading: controller.isUploading,
+      scaffoldBackgroundColor: appLayoutBackground,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(
+                color: lightSecondaryColor,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: appColorSecondary,
+                      borderRadius: BorderRadius.circular(11),
+                      boxShadow: [
+                        BoxShadow(
+                          color: appColorSecondary.withValues(alpha: 0.22),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.lightbulb_rounded,
+                        color: Colors.white, size: 18),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(locale.value.uploadPrescriptionInstructions,
+                        style: primaryTextStyle(size: 13)),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildImageGrid(context),
+            const SizedBox(height: 24),
+            Text(locale.value.notesOptional, style: boldTextStyle(size: 14)),
+            const SizedBox(height: 8),
+            Container(
+              decoration: BoxDecoration(
+                color: inputFillColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: AppTextField(
+                controller: controller.notesController,
+                textFieldType: TextFieldType.MULTILINE,
+                maxLines: 6,
+                minLines: 4,
+                decoration: InputDecoration(
+                  hintText: locale.value.pharmacyNotesForPharmacy,
+                  hintStyle: secondaryTextStyle(size: 13),
+                  filled: true,
+                  fillColor: inputFillColor,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide:
+                        const BorderSide(color: appColorSecondary, width: 1.5),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+            Obx(() {
+              final bool enabled = controller.selectedImages.isNotEmpty &&
+                  !controller.isUploading.value;
+              return Opacity(
+                opacity: enabled ? 1 : 0.4,
+                child: Container(
+                  height: 52,
+                  width: Get.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                          color: softShadowColorMedium,
+                          blurRadius: 16,
+                          offset: const Offset(0, 6)),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(14),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(14),
+                      onTap: enabled ? _submitPrescription : null,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.cloud_upload_rounded,
+                              color: Colors.white, size: 18),
+                          const SizedBox(width: 8),
+                          Text(
+                            locale.value.submitPrescription,
+                            style: boldTextStyle(color: Colors.white, size: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _submitPrescription() async {
+    final prescription = await controller.submitPrescription();
+    if (prescription == null) return;
+
+    toast(locale.value.successfullyAdded);
+    if (returnResult) {
+      Get.back(result: prescription);
+    } else {
+      Get.off(() => PrescriptionListScreen());
+    }
+  }
+
+  Widget _buildImageGrid(BuildContext context) {
+    return Obx(() => Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            ...controller.selectedImages.asMap().entries.map((entry) {
+              int index = entry.key;
+              File file = entry.value;
+              return Stack(
+                children: [
+                  Image.file(file, height: 100, width: 100, fit: BoxFit.cover)
+                      .cornerRadiusWithClipRRect(12),
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: GestureDetector(
+                      onTap: () => controller.removeImage(index),
+                      child: Container(
+                        height: 24,
+                        width: 24,
+                        decoration: BoxDecoration(
+                          color: surfaceElevated,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                                color: softShadowColor,
+                                blurRadius: 8,
+                                offset: const Offset(0, 2)),
+                          ],
+                        ),
+                        child: const Icon(Icons.close_rounded,
+                            color: appColorPrimary, size: 14),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
+            if (controller.selectedImages.length <
+                PharmacyConstants.maxPrescriptionImages)
+              GestureDetector(
+                onTap: () => _showImageSourceDialog(context),
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: appColorSecondary.withValues(alpha: 0.06),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: appColorSecondary.withValues(alpha: 0.32),
+                      width: 1.4,
+                      strokeAlign: BorderSide.strokeAlignInside,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: const LinearGradient(
+                            colors: [
+                              gradientSecondaryStart,
+                              gradientSecondaryEnd,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: appColorSecondary.withValues(alpha: 0.25),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(Icons.add_a_photo_rounded,
+                            color: Colors.white, size: 20),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(locale.value.add,
+                          style: boldTextStyle(
+                              color: appColorSecondary, size: 12)),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ));
+  }
+
+  void _showImageSourceDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(locale.value.chooseImageSource,
+                  style: boldTextStyle(size: 18)),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildSourceOption(
+                      Icons.camera_alt_outlined, locale.value.camera, () {
+                    Get.back();
+                    controller.pickImage(true);
+                  }),
+                  _buildSourceOption(
+                      Icons.photo_library_outlined, locale.value.gallery, () {
+                    Get.back();
+                    controller.pickImage(false);
+                  }),
+                ],
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSourceOption(IconData icon, String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            width: 72,
+            height: 72,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: const LinearGradient(
+                colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: appColorSecondary.withValues(alpha: 0.25),
+                  blurRadius: 14,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Icon(icon, color: Colors.white, size: 30),
+          ),
+          const SizedBox(height: 8),
+          Text(label, style: primaryTextStyle()),
+        ],
+      ),
+    );
+  }
+}

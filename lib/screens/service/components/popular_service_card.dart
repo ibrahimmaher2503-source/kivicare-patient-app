@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../components/app_custom_dialog.dart';
@@ -46,17 +45,9 @@ class PopularServiceCard extends StatelessWidget {
         Get.to(() => ServiceDetailScreen(isFromClinicDetail: isFromClinicDetail), arguments: serviceElement);
       },
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-          boxShadow: [
-            BoxShadow(
-              color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-              blurRadius: 16,
-              offset: const Offset(0, 4),
-              spreadRadius: 0,
-            ),
-          ],
+        decoration: boxDecorationWithRoundedCorners(
+          borderRadius: radius(16),
+          backgroundColor: context.cardColor,
         ),
         width: Get.width / 2 - 24,
         child: Column(
@@ -67,7 +58,7 @@ class PopularServiceCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(8), bottom: Radius.circular(8)),
                     child: CachedImageWidget(
                       url: serviceElement.serviceImage,
                       fit: BoxFit.cover,
@@ -77,21 +68,17 @@ class PopularServiceCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 16,
-                  left: 16,
+                  top: 12,
+                  left: 12,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: white.withValues(alpha: 0.92),
-                      borderRadius: BorderRadius.circular(8),
+                      color: white,
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       serviceElement.categoryName,
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: appColorSecondary,
-                      ),
+                      style: secondaryTextStyle(color: appColorSecondary),
                     ),
                   ),
                 )
@@ -102,36 +89,30 @@ class PopularServiceCard extends StatelessWidget {
               children: [
                 Text(
                   serviceElement.name,
-                  style: GoogleFonts.outfit(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.3,
-                    color: isDarkMode.value ? Colors.white : appColorPrimary,
-                  ),
+                  style: boldTextStyle(size: 16),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                8.height,
+                6.height,
                 Marquee(
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     spacing: 6,
                     children: [
-                      if (serviceElement.payableAmount != serviceElement.charges) PriceWidget(price: serviceElement.payableAmount, size: 18, color: appColorSecondary),
+                      if (serviceElement.payableAmount != serviceElement.charges) PriceWidget(price: serviceElement.payableAmount, size: 18),
                       if (!serviceElement.isInclusiveTaxesAvailable)
                         PriceWidget(
                           price: serviceElement.charges,
                           isLineThroughEnabled: serviceElement.isDiscount ? true : false,
-                          size: serviceElement.isDiscount ? 13 : 18,
-                          color: serviceElement.isDiscount ? textSecondaryColorGlobal : appColorSecondary,
+                          size: serviceElement.isDiscount ? 14 : 18,
+                          color: serviceElement.isDiscount ? textSecondaryColorGlobal : appColorPrimary,
                         ),
                       if (serviceElement.isInclusiveTaxesAvailable) ...[
                         Text(
                           locale.value.includesInclusiveTax,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
+                          style: secondaryTextStyle(
                             color: appColorSecondary,
+                            size: 12,
                             fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -142,33 +123,25 @@ class PopularServiceCard extends StatelessWidget {
                 8.height,
                 Row(
                   children: [
-                    Icon(Icons.access_time_rounded, size: 14, color: appColorSecondary),
+                    Icon(Icons.access_time, size: 16, color: Colors.grey),
                     4.width,
-                    Text(
-                      "Duration: ",
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: secondaryTextColor,
-                      ),
-                    ),
-                    Text(
-                      formatDuration(serviceElement.duration.validate().toInt()),
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: isDarkMode.value ? Colors.white : appColorPrimary,
-                      ),
+                    Obx(() => Text(
+                      '${locale.value.serviceDuration}: ',
+                      style: secondaryTextStyle(),
+                    )),
+                     Text(
+                       formatDuration(serviceElement.duration.validate().toInt()),
+                      style: boldTextStyle(size: 14),
                     ),
                   ],
                 ),
-                16.height,
+                12.height,
                 AppButton(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   width: Get.width,
                   elevation: 0,
                   color: appColorSecondary,
-                  shapeBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shapeBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   onTap: () {
                     if (isFromClinicDetail) {
                       showInDialog(
@@ -194,15 +167,11 @@ class PopularServiceCard extends StatelessWidget {
                   },
                   child: Text(
                     locale.value.bookNow,
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: white,
-                    ),
+                    style: boldTextStyle(size: 14, color: white),
                   ),
                 ),
               ],
-            ).paddingSymmetric(horizontal: 12, vertical: 8)
+            ).paddingSymmetric(horizontal: 12, vertical: 5)
           ],
         ),
       ),

@@ -6,9 +6,11 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../main.dart';
 import '../../../api/auth_apis.dart';
 import '../model/notification_model.dart';
+import '../../../network/network_utils.dart';
 
 class NotificationScreenController extends GetxController {
-  Rx<Future<List<NotificationData>>> getNotifications = Future(() => <NotificationData>[]).obs;
+  Rx<Future<List<NotificationData>>> getNotifications =
+      Future(() => <NotificationData>[]).obs;
   RxBool isLoading = false.obs;
   RxList<NotificationData> notificationDetail = RxList();
   RxBool isLastPage = false.obs;
@@ -34,7 +36,8 @@ class NotificationScreenController extends GetxController {
     }).whenComplete(() => isLoading(false));
   }
 
-  Future<void> removeNotification({required BuildContext context, required String notificationId}) async {
+  Future<void> removeNotification(
+      {required BuildContext context, required String notificationId}) async {
     showConfirmDialogCustom(
       context,
       primaryColor: context.primaryColor,
@@ -43,12 +46,15 @@ class NotificationScreenController extends GetxController {
       negativeText: locale.value.cancel,
       onAccept: (ctx) async {
         isLoading(true);
-        await AuthServiceApis.removeNotification(notificationId: notificationId).then((value) {
+        await AuthServiceApis.removeNotification(notificationId: notificationId)
+            .then((value) {
           init();
-          toast("${locale.value.notificationDeleted}  ${locale.value.successfully}");
+          toast(
+              "${locale.value.notificationDeleted}  ${locale.value.successfully}");
         }).catchError((error) {
           isLoading(true);
-          toast(error.toString());
+          toast(sanitizeBackendMessage(
+              error, locale.value.somethingWentWrongPleaseTryAgainLater));
         }).whenComplete(() => isLoading(false));
       },
     );
@@ -67,7 +73,8 @@ class NotificationScreenController extends GetxController {
           init();
         }).catchError((error) {
           isLoading(true);
-          toast(error.toString());
+          toast(sanitizeBackendMessage(
+              error, locale.value.somethingWentWrongPleaseTryAgainLater));
         }).whenComplete(() => isLoading(false));
       },
     );

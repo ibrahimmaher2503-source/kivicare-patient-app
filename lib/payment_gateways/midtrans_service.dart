@@ -1,11 +1,4 @@
-import 'package:flutter/foundation.dart';
-import 'package:midpay/midpay.dart';
-import 'package:nb_utils/nb_utils.dart';
-
-import '../utils/app_common.dart';
-
 class MidtransService {
-  Midpay midpay = Midpay();
   num totalAmount = 0;
   int serviceId = 0;
   num servicePrice = 0;
@@ -24,28 +17,8 @@ class MidtransService {
   }
 
   Future midtransPaymentCheckout() async {
-    //for android auto sandbox when debug and production when release
-
-    midpay.init(
-      appConfigs.value.midtransPay.midtransClientKey.validate(),
-      kDebugMode ? "https://app.sandbox.midtrans.com/snap/v1/transactions/" : 'https://app.midtrans.com/snap/v1/transactions/',
-      environment: kDebugMode ? Environment.sandbox : Environment.production,
+    throw UnsupportedError(
+      'Midtrans is disabled until payment sessions and callbacks are handled server-side.',
     );
-
-    var midtransCustomer = MidtransCustomer(loginUserData.value.firstName, loginUserData.value.lastName, loginUserData.value.email, loginUserData.value.mobile);
-
-    List<MidtransItem> listitems = [];
-
-    var midtransTransaction = MidtransTransaction(totalAmount.toInt(), midtransCustomer, listitems, skipCustomer: true);
-
-    midpay.makePayment(midtransTransaction).catchError((err) => log("ERROR $err"));
-
-    midpay.setFinishCallback(_callback);
-  }
-
-  //callback
-  Future<void> _callback(TransactionFinished finished) async {
-    log("Finish $finished");
-    return Future.value(null);
   }
 }

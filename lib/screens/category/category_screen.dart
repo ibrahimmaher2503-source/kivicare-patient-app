@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/app_scaffold.dart';
 import '../../components/loader_widget.dart';
 import '../../main.dart';
-import '../../utils/app_common.dart';
-import '../../utils/colors.dart';
 import '../../utils/empty_error_state_widget.dart';
 import 'category_list_controller.dart';
 import 'components/category_card.dart';
@@ -28,7 +25,7 @@ class CategoryScreen extends StatelessWidget {
           future: categoryListController.categoryListFuture.value,
           errorBuilder: (error) {
             return NoDataWidget(
-              title: error,
+              title: locale.value.somethingWentWrongPleaseTryAgainLater,
               retryText: locale.value.reload,
               imageWidget: const ErrorStateWidget(),
               onRetry: () {
@@ -64,19 +61,6 @@ class CategoryScreen extends StatelessWidget {
                 }
               },
               children: [
-                // Section heading
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16, left: 4),
-                  child: Text(
-                    locale.value.category,
-                    style: GoogleFonts.outfit(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.3,
-                      color: isDarkMode.value ? Colors.white : primaryTextColor,
-                    ),
-                  ),
-                ),
                 AnimatedWrap(
                   runSpacing: 16,
                   spacing: 16,

@@ -22,13 +22,12 @@ class PopularServiceComponent extends StatelessWidget {
     return SizedBox(
       width: Get.width,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          16.height,
+          24.height,
           ViewAllLabel(
             label: homeController.dashboardData.value.popularService.subTitle,
             onTap: () {
-              Get.to(() => PopularServiceListScreen(title: locale.value.ourPopularSevices, isFromDashboard: true), arguments: {"isPopular": 1});
+              Get.to(() => PopularServiceListScreen(title: locale.value.ourPopularSevices, isFromDashboard: true),arguments: {"isPopular":1});
             },
             trailingText: locale.value.viewAll,
           ).paddingOnly(left: 16, right: 8),

@@ -1,0 +1,92 @@
+import 'package:flutter/material.dart';
+import 'package:kivicare_patient/main.dart';
+import 'package:kivicare_patient/utils/colors.dart';
+import 'package:kivicare_patient/utils/price_widget.dart';
+import 'package:nb_utils/nb_utils.dart';
+
+import 'nurse_request_design.dart';
+
+class PricingCard extends StatelessWidget {
+  final double totalAmount;
+  final String? currency;
+  final String? paymentStatus;
+
+  const PricingCard({
+    super.key,
+    required this.totalAmount,
+    this.currency,
+    this.paymentStatus,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final statusLabel = _paymentLabel(paymentStatus);
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: nurseRequestCardDecoration(context),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(locale.value.estimatedTotal, style: boldTextStyle(size: 14)),
+          8.height,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: PriceWidget(
+                  price: totalAmount,
+                  currencyCode: currency,
+                  size: 20,
+                ),
+              ),
+              Container(
+                constraints: const BoxConstraints(minHeight: 30),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: _statusColor(paymentStatus).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: _statusColor(paymentStatus).withValues(alpha: 0.26),
+                  ),
+                ),
+                child: Text(
+                  statusLabel,
+                  style: TextStyle(
+                    color: _statusColor(paymentStatus),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _paymentLabel(String? s) {
+    switch (s) {
+      case 'paid':
+        return locale.value.paymentStatusPaid;
+      case 'refunded':
+        return locale.value.paymentStatusRefunded;
+      default:
+        return locale.value.paymentStatusUnpaid;
+    }
+  }
+
+  Color _statusColor(String? s) {
+    switch (s) {
+      case 'paid':
+        return completedStatusColor;
+      case 'refunded':
+        return checkInStatusColor;
+      default:
+        return pendingStatusColor;
+    }
+  }
+}

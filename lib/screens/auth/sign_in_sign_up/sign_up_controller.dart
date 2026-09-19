@@ -6,6 +6,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../main.dart';
 import '../../../utils/common_base.dart';
 import '../../../utils/constants.dart';
+import '../../../network/network_utils.dart';
 import '../../../api/auth_apis.dart';
 import 'sign_in_controller.dart';
 
@@ -40,6 +41,7 @@ class SignUpController extends GetxController {
   }
 
   Future<void> saveForm() async {
+    if (isLoading.value) return;
     if (isAcceptedTc.value) {
       hideKeyBoardWithoutContext();
       Map<String, dynamic> req = {
@@ -53,26 +55,48 @@ class SignUpController extends GetxController {
 
       isLoading(true);
       await AuthServiceApis.createUser(request: req).then((value) async {
-        toast(value.message.toString(), print: true);
+        toast(
+            sanitizeBackendMessage(
+                value.message, locale.value.somethingWentWrong),
+            print: true);
         try {
           final SignInController sCont = Get.find();
           sCont.emailCont.text = emailCont.text.trim();
           sCont.passwordCont.text = passwordCont.text.trim();
           sCont.isNavigateToDashboard(true);
-          sCont.userName("${firstNameCont.text.trim()} ${lastNameCont.text.trim()}");
+          sCont.userName(
+              "${firstNameCont.text.trim()} ${lastNameCont.text.trim()}");
           Get.back();
           // isLoading(true);
           // sCont.saveForm().whenComplete(() => isLoading(false));
         } catch (e) {
-          log('E: $e');
-          toast(e.toString(), print: true);
+          log('Sign-up completion failed: ${e.runtimeType}');
+          toast(sanitizeBackendMessage(
+              e is NetworkRequestException ? e.message : e,
+              locale.value.somethingWentWrong));
         }
       }).catchError((e) {
         isLoading(false);
-        toast(locale.value.emailHasAlreadyBeenTaken, print: true);
+        log('Sign-up failed: ${e.runtimeType}');
+        toast(sanitizeBackendMessage(
+            e is NetworkRequestException ? e.message : e,
+            locale.value.somethingWentWrong));
       }).whenComplete(() => isLoading(false));
     } else {
       toast(locale.value.pleaseAcceptTermsAnd);
     }
+  }
+
+  @override
+  void onClose() {
+    emailCont.dispose();
+    firstNameCont.dispose();
+    lastNameCont.dispose();
+    passwordCont.dispose();
+    emailFocus.dispose();
+    fisrtNameFocus.dispose();
+    lastNameFocus.dispose();
+    passwordFocus.dispose();
+    super.onClose();
   }
 }

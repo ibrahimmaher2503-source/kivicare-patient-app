@@ -34,21 +34,22 @@ class ClinicListScreen extends StatelessWidget {
             onFieldSubmitted: (p0) {
               hideKeyboard(context);
             },
-          ).paddingOnly(left: 16, right: 16, top: 16, bottom: 8),
+          ).paddingAll(16),
           ViewAllLabel(
-            label: "${locale.value.availableClinicsFor} ${clinicListCont.service.value.name}",
+            label:
+                "${locale.value.availableClinicsFor} ${clinicListCont.service.value.name}",
             isShowAll: false,
             maxLines: 1,
             expandedText: true,
             textOverflow: TextOverflow.ellipsis,
-          ).paddingSymmetric(horizontal: 16),
+          ).paddingSymmetric(horizontal: 22),
           8.height,
           Obx(
             () => SnapHelperWidget(
               future: clinicListCont.clinicsFuture.value,
               errorBuilder: (error) {
                 return NoDataWidget(
-                  title: error,
+                  title: locale.value.somethingWentWrong,
                   retryText: locale.value.reload,
                   imageWidget: const ErrorStateWidget(),
                   onRetry: () {
@@ -57,17 +58,21 @@ class ClinicListScreen extends StatelessWidget {
                   },
                 ).paddingSymmetric(horizontal: 32);
               },
-              loadingWidget: clinicListCont.isLoading.value ? const Offstage() : const LoaderWidget(),
+              loadingWidget: clinicListCont.isLoading.value
+                  ? const Offstage()
+                  : const LoaderWidget(),
               onSuccess: (p0) {
                 return AnimatedListView(
                   shrinkWrap: true,
-                  padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 80),
+                  padding: const EdgeInsets.only(
+                      left: 22, right: 22, top: 16, bottom: 80),
                   itemCount: clinicListCont.clinics.length,
                   physics: const AlwaysScrollableScrollPhysics(),
                   emptyWidget: SingleChildScrollView(
                     child: NoDataWidget(
                       title: locale.value.noClinicsFoundAtAMoment,
-                      subTitle: locale.value.looksLikeThereIsNoClinicForThisServiceWellKee,
+                      subTitle: locale
+                          .value.looksLikeThereIsNoClinicForThisServiceWellKee,
                       titleTextStyle: primaryTextStyle(),
                       imageWidget: const EmptyStateWidget(),
                       retryText: locale.value.reload,
@@ -75,11 +80,11 @@ class ClinicListScreen extends StatelessWidget {
                         clinicListCont.page(1);
                         clinicListCont.getClinicList();
                       },
-                    ).paddingSymmetric(horizontal: 16),
+                    ).paddingSymmetric(horizontal: 25),
                   ).center(),
                   itemBuilder: (context, index) {
                     Clinic clinic = clinicListCont.clinics[index];
-                    return ClinicCard(clinicData: clinic).paddingBottom(12);
+                    return ClinicCard(clinicData: clinic).paddingBottom(16);
                   },
                   onNextPage: () async {
                     if (!clinicListCont.isLastPage.value) {
@@ -89,7 +94,8 @@ class ClinicListScreen extends StatelessWidget {
                   },
                   onSwipeRefresh: () async {
                     clinicListCont.page(1);
-                    return await clinicListCont.getClinicList(showLoader: false);
+                    return await clinicListCont.getClinicList(
+                        showLoader: false);
                   },
                 );
               },
@@ -98,33 +104,17 @@ class ClinicListScreen extends StatelessWidget {
         ],
       ),
       fabWidget: Obx(
-        () => Container(
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [gradientSecondaryStart, gradientSecondaryEnd],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: appColorSecondary.withValues(alpha: 0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: FloatingActionButton(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            onPressed: () {
-              if (!clinicListCont.selectedClinic.value.id.isNegative) {
-                Get.to(() => DoctorsListScreen(), arguments: clinicListCont.selectedClinic.value.id);
-              }
-            },
-            child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20),
-          ),
-        ).visible(clinicListCont.clinics.isNotEmpty && (!clinicListCont.selectedClinic.value.id.isNegative)),
+        () => FloatingActionButton(
+          backgroundColor: appColorSecondary,
+          onPressed: () {
+            if (!clinicListCont.selectedClinic.value.id.isNegative) {
+              Get.to(() => DoctorsListScreen(),
+                  arguments: clinicListCont.selectedClinic.value.id);
+            }
+          },
+          child: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+        ).visible(clinicListCont.clinics.isNotEmpty &&
+            (!clinicListCont.selectedClinic.value.id.isNegative)),
       ),
     );
   }

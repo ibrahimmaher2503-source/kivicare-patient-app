@@ -1,3 +1,5 @@
+import '../../../utils/localized_field.dart';
+
 class SystemServicesRes {
   bool status;
   List<SystemService> data;
@@ -72,8 +74,8 @@ class SystemService {
   factory SystemService.fromJson(Map<String, dynamic> json) {
     return SystemService(
       id: json['id'] is int ? json['id'] : -1,
-      name: json['name'] is String ? json['name'] : "",
-      description: json['description'] is String ? json['description'] : "",
+      name: pickLocalized(json, 'name'),
+      description: pickLocalized(json, 'description'),
       parentId: json['parent_id'] is int ? json['parent_id'] : -1,
       status: json['status'] is int ? json['status'] : -1,
       isFeatured: json['is_featured'] is int ? json['is_featured'] : -1,

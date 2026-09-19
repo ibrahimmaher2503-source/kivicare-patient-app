@@ -2,6 +2,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../configs.dart';
+import '../main.dart';
+import '../network/network_utils.dart';
 import '../utils/app_common.dart';
 import '../utils/colors.dart';
 
@@ -33,12 +35,20 @@ class RazorPayService {
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
-    toast(response.message.validate(), print: true);
+    toast(
+        sanitizeBackendMessage(
+          response.message,
+          locale.value.transactionFailed,
+        ),
+        print: true);
   }
 
   void handleExternalWallet(ExternalWalletResponse response) {
     if (response.walletName != null) {
-      toast(response.walletName);
+      toast(sanitizeBackendMessage(
+        response.walletName,
+        locale.value.transactionFailed,
+      ));
     }
   }
 
@@ -51,7 +61,10 @@ class RazorPayService {
       'description': APP_NAME,
       'image': APP_LOGO_URL,
       'currency': isIqonicProduct ? "INR" : appCurrency.value.currencyCode,
-      'prefill': {'contact': loginUserData.value.mobile, 'email': loginUserData.value.email},
+      'prefill': {
+        'contact': loginUserData.value.mobile,
+        'email': loginUserData.value.email
+      },
       'external': {
         'wallets': ['paytm']
       }
@@ -60,6 +73,7 @@ class RazorPayService {
       razorPay.open(options);
     } catch (e) {
       log(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.transactionFailed));
     }
   }
 }

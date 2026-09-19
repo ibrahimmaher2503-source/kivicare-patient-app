@@ -5,20 +5,21 @@ import 'package:get/get.dart';
 
 import '../../api/home_apis.dart';
 import '../../utils/app_common.dart';
-import '../dashboard/dashboard_controller.dart';
 import 'model/dashboard_res_model.dart';
 
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isRefresh = false.obs;
   TextEditingController searchCont = TextEditingController();
-  Rx<Future<DashboardRes>> getDashboardDetailFuture = Future(() => DashboardRes(data: DashboardData())).obs;
+  Rx<Future<DashboardRes>> getDashboardDetailFuture =
+      Future(() => DashboardRes(data: DashboardData())).obs;
   Rx<DashboardData> dashboardData = DashboardData().obs;
   PageController pageController = PageController();
   RxInt currentPage = 0.obs;
 
   ///Slider
-  PageController sliderPageController = PageController(keepPage: true, initialPage: 0);
+  PageController sliderPageController =
+      PageController(keepPage: true, initialPage: 0);
   RxInt sliderCurrentPage = 0.obs;
 
   @override
@@ -36,7 +37,6 @@ class HomeController extends GetxController {
     if (!isFromSwipeRefresh) {
       isLoading(true);
     }
-    getAppConfigurations();
     await getDashboardDetailFuture(
       HomeServiceApis.getDashboard(),
     ).then((value) {
@@ -45,11 +45,16 @@ class HomeController extends GetxController {
   }
 
   void handleDashboardRes(DashboardRes value) {
-    debugPrint('NEARBYCLINIC.LENGTH: ${dashboardData.value.nearByClinic.length}');  
-    debugPrint('VALUE.DATA: ${value.data.nearByClinic.length}');
     dashboardData(value.data);
     unreadNotificationCount(value.data.unReadCount);
-    debugPrint('After NEARBYCLINIC.LENGTH: ${dashboardData.value.nearByClinic.length}');
     //More Logic....
+  }
+
+  @override
+  void onClose() {
+    searchCont.dispose();
+    pageController.dispose();
+    sliderPageController.dispose();
+    super.onClose();
   }
 }

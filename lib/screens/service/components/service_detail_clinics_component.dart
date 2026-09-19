@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../components/cached_image_widget.dart';
 import '../../../generated/assets.dart';
@@ -46,46 +45,20 @@ class ServiceDetailClinicsComponent extends StatelessWidget {
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          margin: const EdgeInsets.only(bottom: 12),
                           padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-                            borderRadius: BorderRadius.circular(16),
-                            border: clinicData.id == serviceDetailController.selectedClinic.value.id
-                                ? Border.all(color: appColorSecondary.withValues(alpha: 0.3), width: 1.5)
-                                : null,
-                            boxShadow: [
-                              BoxShadow(
-                                color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                                blurRadius: 16,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
+                          decoration: boxDecorationDefault(
+                            borderRadius: BorderRadius.circular(6),
+                            color: context.cardColor,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              // Clinic image with rounded styling
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: CachedImageWidget(
-                                    url: clinicData.clinicImage,
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                              CachedImageWidget(
+                                url: clinicData.clinicImage,
+                                width: 100,
+                                height: 100,
+                                radius: 6,
+                                fit: BoxFit.cover,
                               ),
                               16.width,
                               Column(
@@ -95,17 +68,7 @@ class ServiceDetailClinicsComponent extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        clinicData.name,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: GoogleFonts.outfit(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w700,
-                                          letterSpacing: -0.3,
-                                          color: isDarkMode.value ? Colors.white : primaryTextColor,
-                                        ),
-                                      ).flexible(),
+                                      Text(clinicData.name, overflow: TextOverflow.ellipsis, maxLines: 1, style: boldTextStyle(size: 14, color: isDarkMode.value ? null : darkGrayTextColor)).flexible(),
                                     ],
                                   ),
                                   GestureDetector(
@@ -116,15 +79,11 @@ class ServiceDetailClinicsComponent extends StatelessWidget {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const CachedImageWidget(url: Assets.iconsIcLocation, color: appColorSecondary, width: 16, height: 16),
+                                        const CachedImageWidget(url: Assets.iconsIcLocation, color: iconColor, width: 16, height: 16),
                                         12.width,
                                         Text(
                                           clinicData.address,
-                                          style: GoogleFonts.plusJakartaSans(
-                                            fontSize: 12,
-                                            color: secondaryTextColor,
-                                            letterSpacing: 0.1,
-                                          ),
+                                          style: secondaryTextStyle(),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                         ).flexible(),
@@ -141,17 +100,9 @@ class ServiceDetailClinicsComponent extends StatelessWidget {
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const CachedImageWidget(url: Assets.iconsIcCall, color: appColorSecondary, width: 14, height: 14),
+                                            const CachedImageWidget(url: Assets.iconsIcCall, color: iconColor, width: 14, height: 14),
                                             12.width,
-                                            Text(
-                                              clinicData.contactNumber,
-                                              style: GoogleFonts.plusJakartaSans(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600,
-                                                color: appColorPrimary,
-                                                letterSpacing: 0.1,
-                                              ),
-                                            ),
+                                            Text(clinicData.contactNumber, style: primaryTextStyle(color: appColorPrimary)),
                                           ],
                                         ),
                                       ).paddingTop(8).visible(clinicData.contactNumber.trim().isNotEmpty),
@@ -167,28 +118,18 @@ class ServiceDetailClinicsComponent extends StatelessWidget {
                                         },
                                         child: Text(
                                           locale.value.viewDetail,
-                                          style: GoogleFonts.plusJakartaSans(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w700,
-                                            color: appColorSecondary,
-                                            letterSpacing: 0.1,
-                                          ),
+                                          style: boldTextStyle(size: 14, fontFamily: fontFamilyWeight700, color: appColorSecondary),
                                         ).paddingSymmetric(horizontal: 8),
                                       ),
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                                        decoration: BoxDecoration(
+                                        decoration: boxDecorationDefault(
                                           color: getClinicStatusLightColor(clinicStatus: clinicData.clinicStatus.toLowerCase()),
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: radius(22),
                                         ),
                                         child: Text(
                                           getClinicStatus(status: clinicData.clinicStatus.toLowerCase()),
-                                          style: GoogleFonts.plusJakartaSans(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w700,
-                                            color: getClinicStatusColor(clinicStatus: clinicData.clinicStatus.toLowerCase()),
-                                            letterSpacing: 0.1,
-                                          ),
+                                          style: boldTextStyle(size: 12, color: getClinicStatusColor(clinicStatus: clinicData.clinicStatus.toLowerCase())),
                                         ),
                                       ).paddingLeft(4),
                                     ],
@@ -198,32 +139,20 @@ class ServiceDetailClinicsComponent extends StatelessWidget {
                               12.width,
                             ],
                           ),
-                        ),
-                        // Selected checkmark with gradient
+                        ).paddingBottom(16),
                         Positioned(
-                          top: -8,
-                          right: -8,
-                          child: Container(
-                            width: 28,
-                            height: 28,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: appColorSecondary.withValues(alpha: 0.3),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: const Icon(Icons.check_rounded, color: Colors.white, size: 16),
-                          ),
+                          top: -10,
+                          right: -10,
+                          child: commonLeadingWid(
+                            imgPath: Assets.imagesConfirm,
+                            color: whiteTextColor,
+                            size: 12,
+                          ).circularLightPrimaryBg(color: appColorPrimary, padding: 8),
                         ).visible(clinicData.id == serviceDetailController.selectedClinic.value.id),
                       ],
                     ),
                   ),
-                );
+                ).paddingBottom(16);
               },
             ),
           )

@@ -38,34 +38,27 @@ class AppDialogueComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      padding: const EdgeInsets.all(16),
       height: dialogueHeight,
       decoration: boxDecorationDefault(
         color: context.cardColor,
-        borderRadius: borderRadius ?? BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: softShadowColor,
-            blurRadius: 24,
-            offset: const Offset(0, 12),
-          ),
-        ],
+        borderRadius: borderRadius,
       ),
       child: AnimatedCrossFade(
         crossFadeState: CrossFadeState.showFirst,
-        duration: const Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 600), // Fixed duration unit
         firstChild: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.min, // Ensures height adjusts dynamically
           children: [
-            16.height,
+            12.height,
             child ??
                 CachedImageWidget(
                   url: confirmationImage ?? Assets.iconsIcConfirmation,
-                  height: 40,
-                  width: 40,
+                  height: 35,
+                  width: 35,
                   color: confirmationImage != null ? confirmationImageColor : appColorPrimary,
                 ),
-            24.height,
+            20.height,
             Text(
               titleText ?? locale.value.doYouWantToPerformThisAction,
               style: boldTextStyle(size: 16),
@@ -79,7 +72,7 @@ class AppDialogueComponent extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
-            32.height,
+            24.height,
             Row(
               spacing: 16,
               children: [
@@ -87,7 +80,7 @@ class AppDialogueComponent extends StatelessWidget {
                   width: Get.width,
                   text: cancelText ?? locale.value.cancel,
                   shapeBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   color: context.scaffoldBackgroundColor,
                   textStyle: boldTextStyle(),
@@ -98,7 +91,7 @@ class AppDialogueComponent extends StatelessWidget {
                   text: confirmText ?? locale.value.confirm,
                   color: appColorSecondary,
                   shapeBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   textStyle: boldTextStyle(color: Colors.white),
                   onTap: () {
@@ -110,7 +103,7 @@ class AppDialogueComponent extends StatelessWidget {
             ),
           ],
         ),
-        secondChild: const SizedBox.shrink(),
+        secondChild: const SizedBox.shrink(), // Cleaner alternative to Offstage()
       ),
     );
   }

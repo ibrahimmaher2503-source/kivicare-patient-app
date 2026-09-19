@@ -15,18 +15,18 @@ import 'package:flutter/foundation.dart'
 /// );
 /// ```
 class DefaultFirebaseOptions {
+  static bool get isSupportedPlatform =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+
   static FirebaseOptions get currentPlatform {
-    if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
-    }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'Firebase is not configured for iOS. Supply Espitalia production '
+          'options before enabling Firebase features.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -50,19 +50,10 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    appId: "1:470329686255:android:22275b1bda3542326f031a", // mobilesdk_app_id
-    apiKey: "AIzaSyDRO8UvG0R8NM7sfwl4c3ce7B78FMsQIF4",      // current_key
-    projectId: "espitalia-d934b",                           // project_id
-    messagingSenderId: "470329686255",                      // project_number
-    storageBucket: "espitalia-d934b.firebasestorage.app",   // storage_bucket
+    apiKey: 'AIzaSyAc-AUl_jdOhXty_ikiSh2cHMHL9MJ-4yg',
+    appId: '1:544365620844:android:b93bc9d3da577950a8b249',
+    messagingSenderId: '544365620844',
+    projectId: 'espitalia-patient-2026',
+    storageBucket: 'espitalia-patient-2026.firebasestorage.app',
   );
-static const FirebaseOptions ios = FirebaseOptions(
-  appId: "FIREBASE iOS APP ID",
-  apiKey: 'FIREBASE API KEY',
-  projectId: 'FIREBASE PROJECT ID',
-  messagingSenderId: 'FIREBASE SENDER ID',
-  storageBucket: 'FIREBASE STORAGE BUCKET',
-  iosBundleId: 'FIREBASE iOS',
-);
-
 }

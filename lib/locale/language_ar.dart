@@ -1,14 +1,24 @@
+import 'package:intl/intl.dart';
 import 'languages.dart';
 
 class LanguageAr extends BaseLanguage {
   @override
+  String get onlinePaymentUnavailable =>
+      'الدفع الإلكتروني غير متاح مؤقتًا. يُرجى اختيار الدفع نقدًا أو المحفظة.';
+  @override
+  String get loading => 'جارٍ التحميل';
+  @override
+  String get cashAfterService => 'الدفع نقدًا بعد الخدمة';
+  @override
+  String get pharmacy => 'الصيدلية';
+  @override
   String get language => 'لغة';
 
   @override
-  String get badRequest => '400 طلب سىء';
+  String get badRequest => '400: طلب خاطئ';
 
   @override
-  String get forbidden => '403 ممنوع';
+  String get forbidden => '403: ممنوع';
 
   @override
   String get pageNotFound => '404: الصفحة لم يتم العثور عليها';
@@ -20,13 +30,13 @@ class LanguageAr extends BaseLanguage {
   String get internalServerError => '500: خطأ الخادم الداخلي';
 
   @override
-  String get badGateway => '502 مدخل غير صالح';
+  String get badGateway => '502: بوابة خاطئة';
 
   @override
-  String get serviceUnavailable => '503 الخدمة غير متوفرة';
+  String get serviceUnavailable => '503: الخدمة غير متوفرة';
 
   @override
-  String get gatewayTimeout => 'البوابة 504 انتهى الزمن';
+  String get gatewayTimeout => '504: انتهت مهلة البوابة';
 
   @override
   String get hey => 'يا';
@@ -35,7 +45,7 @@ class LanguageAr extends BaseLanguage {
   String get hello => 'مرحبًا';
 
   @override
-  String get thisFieldIsRequired => 'هذه الخانة مطلوبه';
+  String get thisFieldIsRequired => 'هذا الحقل مطلوب';
 
   @override
   String get contactNumber => 'رقم الاتصال';
@@ -68,19 +78,29 @@ class LanguageAr extends BaseLanguage {
   String get invalidUrl => 'URL غير صالح';
 
   @override
-  String get cancel => 'يلغي';
+  String get cancel => 'إلغاء';
 
   @override
-  String get delete => 'يمسح';
+  String get delete => 'حذف';
 
   @override
-  String get deleteAccountConfirmation => 'سيتم حذف حسابك بشكل دائم. لن تتم استعادة بياناتك مرة أخرى.';
+  String get deleteAccountConfirmation =>
+      'سيتم حذف حسابك بشكل دائم. لن تتم استعادة بياناتك مرة أخرى.';
 
   @override
-  String get demoUserCannotBeGrantedForThis => 'لا يمكن منح المستخدم التجريبي لهذا الإجراء';
+  String get demoUserCannotBeGrantedForThis =>
+      'لا يمكن منح المستخدم التجريبي لهذا الإجراء';
 
   @override
   String get somethingWentWrong => 'هناك خطأ ما';
+
+  @override
+  String get requestTimedOut =>
+      '\u0627\u0646\u062a\u0647\u062a \u0645\u0647\u0644\u0629 \u0627\u0644\u0637\u0644\u0628. \u064a\u0631\u062c\u0649 \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629 \u0645\u0631\u0629 \u0623\u062e\u0631\u0649.';
+
+  @override
+  String get requestTimedOutAfterSubmission =>
+      '\u0627\u0646\u062a\u0647\u062a \u0645\u0647\u0644\u0629 \u0627\u0644\u0637\u0644\u0628 \u0628\u0639\u062f \u0627\u0644\u0625\u0631\u0633\u0627\u0644. \u062a\u062d\u0642\u0642 \u0645\u0646 \u062d\u0627\u0644\u0629 \u0627\u0644\u0637\u0644\u0628 \u0642\u0628\u0644 \u0625\u0639\u0627\u062f\u0629 \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629.';
 
   @override
   String get yourInternetIsNotWorking => 'الإنترنت الخاص بك لا يعمل';
@@ -89,22 +109,34 @@ class LanguageAr extends BaseLanguage {
   String get profileUpdatedSuccessfully => 'تم تحديث الملف الشخصي بنجاح';
 
   @override
-  String get wouldYouLikeToSetProfilePhotoAs => 'هل ترغب في تعيين هذه الصورة كصورة ملفك الشخصي؟';
+  String get wouldYouLikeToSetProfilePhotoAs =>
+      'هل ترغب في تعيين هذه الصورة كصورة ملفك الشخصي؟';
 
   @override
-  String get yourOldPasswordDoesnT => 'كلمة المرور القديمة الخاصة بك غير صحيحة!';
+  String get yourOldPasswordDoesnT =>
+      'كلمة المرور القديمة الخاصة بك غير صحيحة!';
 
   @override
-  String get yourNewPasswordDoesnT => 'كلمة المرور الجديدة لا تتطابق مع مؤكد كلمة المرور!';
+  String get yourNewPasswordDoesnT =>
+      'كلمة المرور الجديدة لا تطابق كلمة المرور المؤكدة!';
 
   @override
-  String get location => 'موقع';
+  String get location => 'الموقع';
+
+  @override
+  String get startLocation => 'البداية';
 
   @override
   String get yes => 'نعم';
 
   @override
-  String get submit => 'يُقدِّم';
+  String get submit => 'إرسال';
+
+  @override
+  String get select => 'اختيار';
+
+  @override
+  String get chooseAnother => 'اختر آخر';
 
   @override
   String get firstName => 'الاسم الأول';
@@ -116,10 +148,17 @@ class LanguageAr extends BaseLanguage {
   String get changePassword => 'تغيير كلمة المرور';
 
   @override
-  String get yourNewPasswordMust => 'يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمة المرور السابقة';
+  String get yourNewPasswordMust =>
+      'يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمة المرور السابقة';
 
   @override
   String get password => 'كلمة المرور';
+
+  @override
+  String get showPassword => 'إظهار كلمة المرور';
+
+  @override
+  String get hidePassword => 'إخفاء كلمة المرور';
 
   @override
   String get newPassword => 'كلمة المرور الجديدة';
@@ -128,49 +167,51 @@ class LanguageAr extends BaseLanguage {
   String get confirmNewPassword => 'تأكيد كلمة المرور الجديدة';
 
   @override
-  String get email => 'بريد إلكتروني';
+  String get email => 'البريد الإلكتروني';
 
   @override
   String get mainStreet => 'شارع رئيسي';
 
   @override
-  String get toResetYourNew => 'لإعادة تعيين كلمة المرور الجديدة ، يرجى إدخال عنوان بريدك الإلكتروني';
+  String get toResetYourNew =>
+      'لإعادة تعيين كلمة المرور، يُرجى إدخال بريدك الإلكتروني';
 
   @override
-  String get stayTunedNoNew => 'ابقوا متابعين! لا يوجد إشعارات جديدة.';
+  String get stayTunedNoNew => 'لا توجد إشعارات جديدة حاليًا.';
 
   @override
-  String get noNewNotificationsAt => 'لا توجد إشعارات جديدة في الوقت الحالي. سنبقيك على اطلاع عندما يكون هناك تحديث.';
+  String get noNewNotificationsAt =>
+      'لا توجد إشعارات جديدة حاليًا. سنخبرك عند وجود تحديث.';
 
   @override
   String get signIn => 'تسجيل الدخول';
 
   @override
-  String get explore => 'يستكشف';
+  String get explore => 'استكشاف';
 
   @override
-  String get settings => 'إعدادات';
+  String get settings => 'الإعدادات';
 
   @override
-  String get rateApp => 'قيم التطبيق';
+  String get rateApp => 'قيّم التطبيق';
 
   @override
-  String get aboutApp => 'حول التطبيق';
+  String get aboutApp => 'عن التطبيق';
 
   @override
   String get logout => 'تسجيل خروج';
 
   @override
-  String get rememberMe => 'تذكرنى';
+  String get rememberMe => 'تذكرني';
 
   @override
-  String get forgotPassword => 'هل نسيت كلمة السر؟';
+  String get forgotPassword => 'هل نسيت كلمة المرور؟';
 
   @override
   String get forgotPasswordTitle => 'هل نسيت كلمة السر';
 
   @override
-  String get registerNow => 'سجل الان';
+  String get registerNow => 'سجّل الآن';
 
   @override
   String get createYourAccount => 'أنشئ حسابك';
@@ -179,19 +220,21 @@ class LanguageAr extends BaseLanguage {
   String get createYourAccountFor => 'قم بإنشاء حسابك لتجربة أفضل';
 
   @override
-  String get signUp => 'اشتراك';
+  String get signUp => 'إنشاء حساب';
 
   @override
   String get alreadyHaveAnAccount => 'هل لديك حساب؟';
 
   @override
-  String get yourPasswordHasBeen => 'تمت إعادة تعيين كلمة المرور الخاصة بك بنجاح';
+  String get yourPasswordHasBeen =>
+      'تمت إعادة تعيين كلمة المرور الخاصة بك بنجاح';
 
   @override
-  String get youCanNowLog => 'يمكنك الآن تسجيل الدخول إلى حسابك الجديد بكلمة مرورك الجديدة';
+  String get youCanNowLog =>
+      'يمكنك الآن تسجيل الدخول إلى حسابك الجديد بكلمة مرورك الجديدة';
 
   @override
-  String get done => 'منتهي';
+  String get done => 'تم';
 
   @override
   String get pleaseAcceptTermsAnd => 'يرجى قبول الشروط والأحكام';
@@ -203,13 +246,13 @@ class LanguageAr extends BaseLanguage {
   String get eG => 'على سبيل المثال';
 
   @override
-  String get merry => 'مرح';
+  String get merry => 'ميري';
 
   @override
-  String get doe => 'ظبية';
+  String get doe => 'دو';
 
   @override
-  String get welcomeBackToThe => 'مرحبًا بك في';
+  String get welcomeBackToThe => 'مرحبًا بعودتك إلى';
 
   @override
   String get welcomeToThe => 'أهلا بك في';
@@ -218,13 +261,33 @@ class LanguageAr extends BaseLanguage {
   String get doYouWantToLogout => 'هل ترغب بالخروج؟';
 
   @override
-  String get appTheme => 'موضوع التطبيق';
+  String get appTheme => 'مظهر التطبيق';
+
+  @override
+  String get themeSystem => 'النظام';
+
+  @override
+  String get themeLight => 'فاتح';
+
+  @override
+  String get themeDark => 'داكن';
 
   @override
   String get guest => 'ضيف';
 
   @override
-  String get notifications => 'إشعارات';
+  String get notifications => 'الإشعارات';
+
+  @override
+  String get enableNotifications => 'تفعيل الإشعارات';
+
+  @override
+  String get notificationPermissionDescription =>
+      'احصل على تذكيرات المواعيد وتحديثات الرعاية.';
+
+  @override
+  String get notificationPermissionDenied =>
+      'الإشعارات متوقفة. يمكنك تفعيلها من إعدادات التطبيق.';
 
   @override
   String get contactUs => 'اتصل بنا';
@@ -239,7 +302,8 @@ class LanguageAr extends BaseLanguage {
   String get anUpdateTo => 'تحديث ل';
 
   @override
-  String get isAvailableGoTo => 'متاح. انتقل إلى المتجر وتنزيل الإصدار الجديد من التطبيق.';
+  String get isAvailableGoTo =>
+      'متاح. انتقل إلى المتجر وتنزيل الإصدار الجديد من التطبيق.';
 
   @override
   String get later => 'لاحقاً';
@@ -249,6 +313,9 @@ class LanguageAr extends BaseLanguage {
 
   @override
   String get updateNow => 'تحديث الان';
+  @override
+  String get updateLinkUnavailable =>
+      'رابط التحديث غير متاح حاليًا. يُرجى المحاولة لاحقًا.';
 
   @override
   String get signInFailed => 'فشل تسجيل الدخول';
@@ -257,7 +324,7 @@ class LanguageAr extends BaseLanguage {
   String get userCancelled => 'تم إلغاء المستخدم';
 
   @override
-  String get appleSigninIsNot => 'علامة Apple غير متوفرة لجهازك';
+  String get appleSigninIsNot => 'تسجيل الدخول عبر Apple غير متوفر لجهازك';
 
   @override
   String get eventStatus => 'حالة الحدث';
@@ -269,13 +336,13 @@ class LanguageAr extends BaseLanguage {
   String get notRegistered => 'غير مسجل؟';
 
   @override
-  String get signInWithGoogle => 'الدخول مع جوجل';
+  String get signInWithGoogle => 'تسجيل الدخول باستخدام Google';
 
   @override
   String get signInWithApple => 'تسجيل الدخول مع Apple';
 
   @override
-  String get orSignInWith => 'أو تسجيل الدخول مع';
+  String get orSignInWith => 'أو سجّل الدخول باستخدام';
 
   @override
   String get ohNoYouAreLeaving => 'أوه لا ، أنت تغادر!';
@@ -290,7 +357,7 @@ class LanguageAr extends BaseLanguage {
   String get personalizeYourProfile => 'تخصيص ملفك الشخصي';
 
   @override
-  String get themeAndMore => 'موضوع وأكثر';
+  String get themeAndMore => 'المظهر والمزيد';
 
   @override
   String get showSomeLoveShare => 'أظهر بعض الحب ، شارك!';
@@ -311,13 +378,13 @@ class LanguageAr extends BaseLanguage {
   String get clearAll => 'امسح الكل';
 
   @override
-  String get notificationDeleted => 'تم حذف الإخطار';
+  String get notificationDeleted => 'تم حذف الإشعار';
 
   @override
-  String get doYouWantToRemoveNotification => 'هل تريد إزالة الإخطار';
+  String get doYouWantToRemoveNotification => 'هل تريد حذف هذا الإشعار؟';
 
   @override
-  String get doYouWantToClearAllNotification => 'هل تريد إلغاء الإخطار';
+  String get doYouWantToClearAllNotification => 'هل تريد حذف جميع الإشعارات؟';
 
   @override
   String get locationPermissionDenied => 'تم رفض إذن الموقع';
@@ -335,7 +402,7 @@ class LanguageAr extends BaseLanguage {
   String get setAddress => 'تعيين العنوان';
 
   @override
-  String get sorryUserCannotSignin => 'آسف لا يمكن للمستخدم تسجيل الدخول';
+  String get sorryUserCannotSignin => 'عذرًا، لا يمكن تسجيل الدخول';
 
   @override
   String get iAgreeToThe => 'أنا أوافق على';
@@ -350,40 +417,44 @@ class LanguageAr extends BaseLanguage {
   String get confirmAppointment => 'تأكيد الموعد';
 
   @override
-  String get iHaveReadAll => 'لقد قرأت جميع التفاصيل وملأت النموذج وسأؤكد هذا الموعد مع';
+  String get iHaveReadAll => 'راجعت تفاصيل الحجز وأؤكد الموعد مع';
 
   @override
   String get confirm => 'تأكيد';
 
   @override
-  String get doYouConfirmThisPayment => 'هل تؤكد هذه الدفعة؟';
+  String get doYouConfirmThisPayment => 'هل تريد تأكيد عملية الدفع؟';
 
   @override
-  String get exploreTopClinicsWithAdvancedServicesTailored => "استكشف العيادات العليا مع الخدمات المتقدمة المصممة لتلبية احتياجاتك";
+  String get exploreTopClinicsWithAdvancedServicesTailored =>
+      "استكشف أفضل العيادات وخدماتها المتقدمة المصممة لتلبية احتياجاتك";
 
   @override
-  String get discoverYourIdealClinicWithOurPersonalizedSea => "اكتشف عيادتك المثالية مع بحثنا الشخصي.هيا بنا نبدأ!";
+  String get discoverYourIdealClinicWithOurPersonalizedSea =>
+      'اعثر على العيادة المناسبة لك من خلال بحث مخصص. لنبدأ!';
 
   @override
-  String get weHaveEmailedYourPasswordResetLink => "لقد أرسلنا بريدًا إلكترونيًا إلى رابط إعادة تعيين كلمة المرور الخاصة بك!";
+  String get weHaveEmailedYourPasswordResetLink =>
+      "لقد أرسلنا بريدًا إلكترونيًا إلى رابط إعادة تعيين كلمة المرور الخاصة بك!";
 
   @override
-  String get resetYourPassword => "اعد ضبط كلمه السر";
+  String get resetYourPassword => 'إعادة تعيين كلمة المرور';
 
   @override
-  String get enterYourEmailAddressToResetYourNewPassword => "أدخل عنوان بريدك الإلكتروني لإعادة تعيين كلمة المرور الجديدة.";
+  String get enterYourEmailAddressToResetYourNewPassword =>
+      "أدخل عنوان بريدك الإلكتروني لإعادة تعيين كلمة المرور الجديدة.";
 
   @override
   String get sendCode => "إرسال الرمز";
 
   @override
-  String get edit => "يحرر";
+  String get edit => "تعديل";
 
   @override
-  String get gender => "جنس";
+  String get gender => 'النوع';
 
   @override
-  String get profile => "حساب تعريفي";
+  String get profile => 'الملف الشخصي';
 
   @override
   String get encounters => "اللقاءات";
@@ -401,7 +472,8 @@ class LanguageAr extends BaseLanguage {
   String get notAMember => "ليس عضوا؟";
 
   @override
-  String get registerYourAccountForBetterExperience => "سجل حسابك للحصول على خبرة أفضل";
+  String get registerYourAccountForBetterExperience =>
+      "سجل حسابك للحصول على خبرة أفضل";
 
   @override
   String get termsConditions => "البنود و الظروف";
@@ -413,34 +485,37 @@ class LanguageAr extends BaseLanguage {
   String get privacyPolicy => "سياسة الخصوصية";
 
   @override
-  String get appointment => "ميعاد";
+  String get appointment => 'موعد';
 
   @override
   String get doctor => "طبيب";
 
   @override
-  String get payment => "قسط";
+  String get payment => 'الدفع';
 
   @override
   String get doYouWantToCancelAppointment => "هل تريد إلغاء الموعد؟";
 
   @override
-  String get videoCallLinkIsNotFound => "لم يتم العثور على رابط مكالمات الفيديو!";
+  String get videoCallLinkIsNotFound =>
+      "لم يتم العثور على رابط مكالمات الفيديو!";
 
   @override
   String get thisIsNotAOnlineService => "هذه ليست خدمة عبر الإنترنت!";
 
   @override
-  String get oppsThisAppointmentIsNotConfirmedYet => "أوس!لم يتم تأكيد هذا الموعد بعد!";
+  String get oppsThisAppointmentIsNotConfirmedYet =>
+      "عذرًا، لم يتم تأكيد هذا الموعد بعد.";
 
   @override
-  String get oppsThisAppointmentHasBeenCancelled => "أوس!تم إلغاء هذا الموعد!";
+  String get oppsThisAppointmentHasBeenCancelled =>
+      "عذرًا، تم إلغاء هذا الموعد.";
 
   @override
-  String get oppsThisAppointmentHasBeenCompleted => "أوس!تم الانتهاء من هذا الموعد!";
+  String get oppsThisAppointmentHasBeenCompleted => "عذرًا، اكتمل هذا الموعد.";
 
   @override
-  String get noTimeSlotsAvailable => "لا توجد فتحات زمنية متاحة";
+  String get noTimeSlotsAvailable => "لا توجد مواعيد متاحة.";
 
   @override
   String get chooseTime => "اختر الوقت";
@@ -452,37 +527,40 @@ class LanguageAr extends BaseLanguage {
   String get searchForService => "ابحث عن الخدمة";
 
   @override
-  String get statusListIsEmpty => "قائمة الحالة فارغة";
+  String get statusListIsEmpty => "لا توجد حالات لعرضها حاليًا";
 
   @override
-  String get thereAreNoStatusListedAtTheMomentStayTunedFor => "لا توجد حالة مدرجة في الوقت الحالي.ترقبوا المزيد من الخيارات.";
+  String get thereAreNoStatusListedAtTheMomentStayTunedFor =>
+      "لا توجد حالات مدرجة حاليًا. سنخبرك عند توفر المزيد.";
 
   @override
   String get chooseDate => "اختر موعدا";
 
   @override
-  String get doYouWantToChangeTheTimeSlotOfThisAppointment => "هل تريد تغيير الفتحة الزمنية لهذا الموعد؟";
+  String get doYouWantToChangeTheTimeSlotOfThisAppointment =>
+      "هل تريد تغيير موعد هذا الحجز؟";
 
   @override
   String get no => "لا";
 
   @override
-  String get somethingWentWrongPleaseTryAgainLater => "هناك خطأ ما. الرجاء معاودة المحاولة في وقت لاحق.";
+  String get somethingWentWrongPleaseTryAgainLater =>
+      "هناك خطأ ما. الرجاء معاودة المحاولة في وقت لاحق.";
 
   @override
-  String get doYouWantToRemoveThisReview => "هل تريد إزالة هذا الاستعراض؟";
+  String get doYouWantToRemoveThisReview => "هل تريد حذف هذا التقييم؟";
 
   @override
-  String get encounterDetail => "مواجهة التفاصيل";
+  String get encounterDetail => "تفاصيل الزيارة الطبية";
 
   @override
-  String get view => "منظر";
+  String get view => "عرض";
 
   @override
   String get doctorName => "اسم الطبيب";
 
   @override
-  String get active => "نشيط";
+  String get active => 'نشط';
 
   @override
   String get closed => "مغلق";
@@ -503,19 +581,22 @@ class LanguageAr extends BaseLanguage {
   String get paymentDetail => "تفاصيل الدفع";
 
   @override
-  String get price => "سعر";
+  String get price => "السعر";
 
   @override
   String get discount => "تخفيض";
 
   @override
-  String get off => "أقل";
+  String get off => "خصم";
 
   @override
-  String get subtotal => "نطاق فرعي";
+  String get subtotal => "المجموع الفرعي";
 
   @override
   String get tax => "ضريبة";
+
+  @override
+  String get taxIncluded => 'السعر شامل الضريبة';
 
   @override
   String get total => "المجموع";
@@ -551,16 +632,17 @@ class LanguageAr extends BaseLanguage {
   String get completed => "مكتمل";
 
   @override
-  String get appointmentCancelSuccessfully => "موعد إلغاء بنجاح";
+  String get appointmentCancelSuccessfully => "تم إلغاء الموعد بنجاح";
 
   @override
-  String get appointments => "تعيينات";
+  String get appointments => "المواعيد";
 
   @override
   String get noAppointmentsFound => "لم يتم العثور على مواعيد";
 
   @override
-  String get thereAreCurrentlyNoAppointmentsAvailableStart => "لا توجد مواعيد متاحة حاليًا.ابدأ في حجز موعدك التالي الآن.";
+  String get thereAreCurrentlyNoAppointmentsAvailableStart =>
+      "لا توجد مواعيد متاحة حاليًا. يمكنك حجز موعدك التالي الآن.";
 
   @override
   String get encounter => "يقابل";
@@ -590,10 +672,10 @@ class LanguageAr extends BaseLanguage {
   String get otherInformation => "معلومات أخرى";
 
   @override
-  String get patientSoap => "صابون المريض";
+  String get patientSoap => "ملف SOAP للمريض";
 
   @override
-  String get category => "فئة";
+  String get category => "الفئة";
 
   @override
   String get noCategoryFound => "لم يتم العثور على فئة";
@@ -602,13 +684,20 @@ class LanguageAr extends BaseLanguage {
   String get viewDetail => "عرض التفاصيل";
 
   @override
-  String get noServicesFoundAtAMoment => "لم يتم العثور على خدمات في لحظة";
+  String get noServicesFoundAtAMoment => "لا توجد خدمات متاحة حاليًا";
+
+  @override
+  String get noServicesMatchFilters => "لا توجد خدمات مطابقة لاختياراتك";
+
+  @override
+  String get tryChangingFiltersOrSearchAgain =>
+      "جرّب تغيير الاختيارات أو البحث عن خدمة أخرى.";
 
   @override
   String get looksLikeThereIsNoServicesForThis => "يبدو أنه لا توجد خدمات لهذا";
 
   @override
-  String get wellKeepYouPostedWhenTheresAnUpdate => "سنبقيك منشورًا عند وجود تحديث.";
+  String get wellKeepYouPostedWhenTheresAnUpdate => "سنخبرك عند توفر تحديث.";
 
   @override
   String get services => "خدمات";
@@ -629,10 +718,12 @@ class LanguageAr extends BaseLanguage {
   String get doctors => "الأطباء";
 
   @override
-  String get noSystemServicesFoundAtAMoment => "لم يتم العثور على خدمات النظام في لحظة";
+  String get noSystemServicesFoundAtAMoment =>
+      "لم نعثر على خدمات النظام حاليًا.";
 
   @override
-  String get looksLikeThereIsNoSystemServicesForThis => "يبدو أنه لا توجد خدمات نظام لهذا";
+  String get looksLikeThereIsNoSystemServicesForThis =>
+      "يبدو أنه لا توجد خدمات نظام لهذا القسم.";
 
   @override
   String get appointmentsSummary => "ملخص المواعيد";
@@ -650,7 +741,7 @@ class LanguageAr extends BaseLanguage {
   String get clinic => "عيادة";
 
   @override
-  String get proceed => "يتابع";
+  String get proceed => "متابعة";
 
   @override
   String get video => "فيديو";
@@ -671,7 +762,8 @@ class LanguageAr extends BaseLanguage {
   String get serviceListIsEmpty => "قائمة الخدمة فارغة.";
 
   @override
-  String get thereAreNoServicesListedAtTheMomentStayTunedF => "لا توجد خدمات مدرجة في الوقت الحالي.ترقبوا المزيد من عروض الخدمة.";
+  String get thereAreNoServicesListedAtTheMomentStayTunedF =>
+      "لا توجد خدمات مدرجة حاليًا. سنخبرك عند توفر المزيد.";
 
   @override
   String get kindlyChooseAServiceFirst => "يرجى اختيار الخدمة أولا";
@@ -686,7 +778,8 @@ class LanguageAr extends BaseLanguage {
   String get clinicListIsEmpty => "قائمة العيادة فارغة.";
 
   @override
-  String get thereAreNoClinicsListedAtTheMomentStayTunedFo => "لا توجد عيادات مدرجة في الوقت الحالي.ترقبوا المزيد من العيادات.";
+  String get thereAreNoClinicsListedAtTheMomentStayTunedFo =>
+      "لا توجد عيادات مدرجة حاليًا. سنخبرك عند توفر المزيد.";
 
   @override
   String get kindlyChooseAClinicFirst => "يرجى اختيار عيادة أولا";
@@ -698,7 +791,8 @@ class LanguageAr extends BaseLanguage {
   String get searchForDoctor => "ابحث عن الطبيب";
 
   @override
-  String get thereAreNoDoctorsListedAtTheMomentStayTunedFo => "لا يوجد أطباء مدرجين في الوقت الحالي.ترقبوا المزيد من الخيارات.";
+  String get thereAreNoDoctorsListedAtTheMomentStayTunedFo =>
+      "لا يوجد أطباء مدرجون حاليًا. سنخبرك عند توفر المزيد.";
 
   @override
   String get writeMedicalHistory => "اكتب التاريخ الطبي";
@@ -713,25 +807,39 @@ class LanguageAr extends BaseLanguage {
   String get next => "التالي";
 
   @override
+  String get skip => 'تخطي';
+
+  @override
+  String get finish => 'إنهاء';
+
+  @override
+  String pageOf(int current, int total) => 'الصفحة $current من $total';
+
+  @override
   String get personalizedHealthPlansForYourJourney => "خطط صحية مخصصة لرحلتك";
 
   @override
-  String get stayOnTrackAndSetPersonalGoals => "ابق على المسار الصحيح ووضع الأهداف الشخصية";
+  String get stayOnTrackAndSetPersonalGoals =>
+      'حافظ على تقدمك وحدد أهدافك الشخصية';
 
   @override
-  String get discoverAndGetSupportWithin24Hours => "اكتشف واحصل على الدعم في غضون 24 ساعة";
+  String get discoverAndGetSupportWithin24Hours =>
+      "اكتشف واحصل على الدعم في غضون 24 ساعة";
 
   @override
-  String get customizeHealthPlansForATailoredApproachAlign => "تخصيص الخطط الصحية لنهج مخصص ، ومواءمة كل جانب مع احتياجاتك.";
+  String get customizeHealthPlansForATailoredApproachAlign =>
+      'خصّص خطتك الصحية بما يناسب احتياجاتك في كل خطوة.';
 
   @override
-  String get focusOnYourPathSetClearGoalsAndStrideForwardW => "ركز على طريقك ، ووضع أهداف واضحة ، والخطوة إلى الأمام مع العزم والغرض.";
+  String get focusOnYourPathSetClearGoalsAndStrideForwardW =>
+      'ركّز على طريقك، وحدد أهدافًا واضحة، وتقدّم بثبات وإصرار.';
 
   @override
-  String get exploreFindSolutionsAndReceiveAssistanceSwift => "استكشف ، وإيجاد الحلول ، وتلقي المساعدة بسرعة ، شبكة الدعم الخاصة بك جاهزة في غضون 24 ساعة.";
+  String get exploreFindSolutionsAndReceiveAssistanceSwift =>
+      'استكشف الخيارات، واعثر على الحلول، واحصل على الدعم خلال 24 ساعة.';
 
   @override
-  String get transactionIsInProcess => 'الصفقة قيد التنفيذ...';
+  String get transactionIsInProcess => 'المعاملة قيد التنفيذ...';
 
   @override
   String get enterYourMsisdnHere => 'أدخل msisdn الخاص بك هنا';
@@ -749,7 +857,8 @@ class LanguageAr extends BaseLanguage {
   String get incorrectPin => 'رقم التعريف الشخصي غير صحيح';
 
   @override
-  String get exceedsWithdrawalAmountLimit => 'يتجاوز حد (حدود) مبلغ السحب / تم تجاوز حد مبلغ السحب';
+  String get exceedsWithdrawalAmountLimit =>
+      'يتجاوز حد (حدود) مبلغ السحب / تم تجاوز حد مبلغ السحب';
 
   @override
   String get inProcess => 'تحت المعالجة';
@@ -764,10 +873,11 @@ class LanguageAr extends BaseLanguage {
   String get refused => 'رفض';
 
   @override
-  String get doNotHonor => 'لا تتباهي';
+  String get doNotHonor => 'تم رفض العملية من البنك';
 
   @override
-  String get transactionNotPermittedTo => 'المعاملة غير مسموح بها للمدفوع لأمره';
+  String get transactionNotPermittedTo =>
+      'المعاملة غير مسموح بها للمدفوع لأمره';
 
   @override
   String get transactionIdIsInvalid => 'معرف المعاملة غير صالح';
@@ -788,7 +898,8 @@ class LanguageAr extends BaseLanguage {
   String get successfullyFetchedEncryptionKey => 'تم جلب مفتاح التشفير بنجاح';
 
   @override
-  String get theTransactionIsStill => 'لا تزال المعاملة قيد المعالجة وهي في حالة غامضة. يرجى إجراء الاستعلام عن المعاملة لجلب حالة المعاملة.';
+  String get theTransactionIsStill =>
+      'لا تزال المعاملة قيد المعالجة وهي في حالة غامضة. يرجى إجراء الاستعلام عن المعاملة لجلب حالة المعاملة.';
 
   @override
   String get transactionIsSuccessful => 'عملية ناجحة';
@@ -797,22 +908,26 @@ class LanguageAr extends BaseLanguage {
   String get incorrectPinHasBeen => 'تم إدخال رقم التعريف الشخصي بشكل غير صحيح';
 
   @override
-  String get theUserHasExceeded => 'لقد تجاوز المستخدم حد المعاملات المسموح به في محفظته';
+  String get theUserHasExceeded =>
+      'لقد تجاوز المستخدم حد المعاملات المسموح به في محفظته';
 
   @override
-  String get theAmountUserIs => 'المبلغ الذي يحاول المستخدم تحويله أقل من الحد الأدنى المسموح به';
+  String get theAmountUserIs =>
+      'المبلغ الذي يحاول المستخدم تحويله أقل من الحد الأدنى المسموح به';
 
   @override
   String get userDidnTEnterThePin => 'لم يدخل المستخدم الرقم السري';
 
   @override
-  String get transactionInPendingState => 'المعاملة في حالة معلقة. يرجى التحقق بعد وقت ما';
+  String get transactionInPendingState =>
+      'المعاملة في حالة معلقة. يرجى التحقق بعد وقت ما';
 
   @override
-  String get userWalletDoesNot => 'لا تحتوي محفظة المستخدم على أموال كافية لتغطية المبلغ المستحق';
+  String get userWalletDoesNot =>
+      'لا تحتوي محفظة المستخدم على أموال كافية لتغطية المبلغ المستحق';
 
   @override
-  String get theTransactionWasRefused => 'تم رفض الصفقة';
+  String get theTransactionWasRefused => 'تم رفض المعاملة';
 
   @override
   String get encryptionKeyHasBeen => 'تم جلب مفتاح التشفير بنجاح';
@@ -821,10 +936,11 @@ class LanguageAr extends BaseLanguage {
   String get transactionHasBeenExpired => 'لقد انتهت صلاحية المعاملة';
 
   @override
-  String get payeeIsAlreadyInitiated => 'لقد تم بالفعل بدء المستفيد في الإيقاف أو الحظر أو عدم التسجيل على منصة Airtel Money';
+  String get payeeIsAlreadyInitiated =>
+      'لقد تم بالفعل بدء المستفيد في الإيقاف أو الحظر أو عدم التسجيل على منصة Airtel Money';
 
   @override
-  String get theTransactionWasNot => 'لم يتم العثور على الصفقة.';
+  String get theTransactionWasNot => 'لم يتم العثور على المعاملة.';
 
   @override
   String get thisIsAGeneric => 'هذا رفض عام له عدة أسباب محتملة';
@@ -845,13 +961,14 @@ class LanguageAr extends BaseLanguage {
   String get transactionCancelled => 'تم إلغاء المعاملة';
 
   @override
-  String get paymentSuccess => "الدفع الناجح";
+  String get paymentSuccess => "تم الدفع بنجاح";
 
   @override
   String get redirectingToBookings => "إعادة التوجيه إلى الحجوزات ..";
 
   @override
-  String get pleaseConfirmYourAppointmentByCheckingTheBox => "يرجى تأكيد موعدك من خلال التحقق من المربع";
+  String get pleaseConfirmYourAppointmentByCheckingTheBox =>
+      "يرجى تأكيد موعدك من خلال التحقق من المربع";
 
   @override
   String get appointmentDetail => "تفاصيل الموعد";
@@ -878,10 +995,10 @@ class LanguageAr extends BaseLanguage {
   String get objective => "موضوعي";
 
   @override
-  String get assessment => "تقدير";
+  String get assessment => 'التقييم';
 
   @override
-  String get plan => "يخطط";
+  String get plan => 'الخطة';
 
   @override
   String get bodyChart => "مخطط الجسم";
@@ -890,7 +1007,7 @@ class LanguageAr extends BaseLanguage {
   String get doctorsAvailable => "الأطباء المتاحين";
 
   @override
-  String get noDoctorsAvailable => "لا أطباء متاح";
+  String get noDoctorsAvailable => 'لا يوجد أطباء متاحون';
 
   @override
   String get photosAvailable => "الصور المتاحة";
@@ -899,13 +1016,14 @@ class LanguageAr extends BaseLanguage {
   String get noPhotosAvailable => "لا توجد صور متوفرة";
 
   @override
-  String get looksLikeThereIsNoServicesListedOnThisClinicW => "يبدو أنه لا توجد خدمات مدرجة في هذه العيادة ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
+  String get looksLikeThereIsNoServicesListedOnThisClinicW =>
+      "يبدو أنه لا توجد خدمات مدرجة في هذه العيادة ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
 
   @override
-  String get session => "حصة";
+  String get session => 'جلسة';
 
   @override
-  String get unavailable => "غير متوفره";
+  String get unavailable => 'غير متوفرة';
 
   @override
   String get lblBreak => "استراحة";
@@ -914,7 +1032,7 @@ class LanguageAr extends BaseLanguage {
   String get clinicDetail => "تفاصيل العيادة";
 
   @override
-  String get pincode => "pincode";
+  String get pincode => "الرمز البريدي";
 
   @override
   String get readMore => "اقرأ أكثر";
@@ -923,10 +1041,11 @@ class LanguageAr extends BaseLanguage {
   String get readLess => "أقرأ أقل";
 
   @override
-  String get noGalleryFoundAtAMoment => "لم يتم العثور على معرض في لحظة";
+  String get noGalleryFoundAtAMoment => "لا توجد صور للعرض حاليًا";
 
   @override
-  String get looksLikeThereIsNoGalleryForThisClinicWellKee => "يبدو أنه لا يوجد معرض لهذه العيادة ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
+  String get looksLikeThereIsNoGalleryForThisClinicWellKee =>
+      "يبدو أنه لا يوجد معرض لهذه العيادة ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
 
   @override
   String get clinics => "العيادات";
@@ -935,13 +1054,14 @@ class LanguageAr extends BaseLanguage {
   String get availableClinicsFor => "العيادات المتاحة ل";
 
   @override
-  String get noClinicsFoundAtAMoment => "لم يتم العثور على عيادات في لحظة";
+  String get noClinicsFoundAtAMoment => "لم نعثر على عيادات حاليًا";
 
   @override
-  String get looksLikeThereIsNoClinicForThisServiceWellKee => "يبدو أنه لا توجد عيادة لهذه الخدمة ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
+  String get looksLikeThereIsNoClinicForThisServiceWellKee =>
+      "يبدو أنه لا توجد عيادة لهذه الخدمة ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
 
   @override
-  String get searchClinicHere => "عيادة البحث هنا";
+  String get searchClinicHere => "ابحث عن عيادة هنا";
 
   @override
   String get home => "بيت";
@@ -956,13 +1076,14 @@ class LanguageAr extends BaseLanguage {
   String get contactInfo => "معلومات الاتصال";
 
   @override
-  String get specialization => "تخصص";
+  String get specialization => "التخصص";
 
   @override
-  String get experience => "خبرة";
+  String get experience => "سنوات الخبرة";
 
   @override
-  String get experienceSpecializationContactInfo => "الخبرة ، التخصص ، معلومات الاتصال";
+  String get experienceSpecializationContactInfo =>
+      "الخبرة ، التخصص ، معلومات الاتصال";
 
   @override
   String get reviews => "المراجعات";
@@ -971,10 +1092,10 @@ class LanguageAr extends BaseLanguage {
   String get noReviewsAvailable => "لا توجد مراجعات متاحة";
 
   @override
-  String get qualification => "مؤهل";
+  String get qualification => "المؤهل";
 
   @override
-  String get qualificationInDetail => "التأهيل بالتفصيل";
+  String get qualificationInDetail => "المؤهلات بالتفصيل";
 
   @override
   String get year => "سنة";
@@ -989,13 +1110,15 @@ class LanguageAr extends BaseLanguage {
   String get noQualificationsFound => "لم يتم العثور على مؤهلات!";
 
   @override
-  String get looksLikeThereAreNoQualificationsAddedByThisD => "يبدو أنه لا توجد مؤهلات يضاف إليها هذا الطبيب.";
+  String get looksLikeThereAreNoQualificationsAddedByThisD =>
+      "يبدو أنه لا توجد مؤهلات مضافة لهذا الطبيب.";
 
   @override
   String get totalAppointmentsDone => "إجمالي المواعيد المنجزة";
 
   @override
-  String get looksLikeThereIsNoServicesProvidedByThisDocto => "يبدو أنه لا توجد خدمات يقدمها هذا الطبيب ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
+  String get looksLikeThereIsNoServicesProvidedByThisDocto =>
+      "يبدو أن هذا الطبيب لا يقدم خدمات حاليًا. سنخبرك عند توفر تحديث.";
 
   @override
   String get doctorDetail => "تفاصيل الطبيب";
@@ -1004,28 +1127,31 @@ class LanguageAr extends BaseLanguage {
   String get socialMedia => "وسائل التواصل الاجتماعي";
 
   @override
-  String get noDoctorsFoundAtAMoment => "لم يتم العثور على أطباء في لحظة";
+  String get noDoctorsFoundAtAMoment => "لم نعثر على أطباء حاليًا";
 
   @override
-  String get looksLikeThereIsNoDoctorsForThisClinicWellKee => "يبدو أنه لا يوجد أطباء لهذه العيادة ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
+  String get looksLikeThereIsNoDoctorsForThisClinicWellKee =>
+      "يبدو أنه لا يوجد أطباء لهذه العيادة ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
 
   @override
-  String get noReviewsFoundAtAMoment => "لم يتم العثور على مراجعات في لحظة";
+  String get noReviewsFoundAtAMoment => "لا توجد تقييمات حاليًا";
 
   @override
-  String get looksLikeThereIsNoReviewsWellKeepYouPostedWhe => "يبدو أنه لا توجد مراجعات ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
+  String get looksLikeThereIsNoReviewsWellKeepYouPostedWhe =>
+      "يبدو أنه لا توجد مراجعات ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
 
   @override
   String get searchHere => "ابحث هنا";
 
   @override
-  String get searchDoctorHere => "بحث الطبيب هنا";
+  String get searchDoctorHere => "ابحث عن طبيب هنا";
 
   @override
   String get noEncountersFound => "لم يتم العثور على لقاءات!";
 
   @override
-  String get looksLikeThereIsNoEncountersWellKeepYouPosted => "يبدو أنه لا توجد لقاءات ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
+  String get looksLikeThereIsNoEncountersWellKeepYouPosted =>
+      "يبدو أنه لا توجد لقاءات ، سنبقيك على اطلاع عندما يكون هناك تحديث.";
 
   @override
   String get clinicsNearYou => "العيادات القريبة منك";
@@ -1037,7 +1163,7 @@ class LanguageAr extends BaseLanguage {
   String get great => "عظيم!";
 
   @override
-  String get bookingSuccessful => "حجز ناجح";
+  String get bookingSuccessful => "تم الحجز بنجاح";
 
   @override
   String get yourAppointmentHasBeenBookedSuccessfully => "تم حجز موعدك بنجاح";
@@ -1049,16 +1175,19 @@ class LanguageAr extends BaseLanguage {
   String get goToAppointments => "اذهب إلى المواعيد";
 
   @override
-  String get noteForCashPaymentPurposesDontUseThePayNowBut => "ملاحظة: لأغراض الدفع النقدي ، لا تستخدم زر \"الدفع الآن\".إذا كنت ترغب في إجراء دفعة نقدًا ، فيمكنك إعطاء الأموال يدويًا للطبيب وإكمال موعدك من جانب الطبيب.";
+  String get noteForCashPaymentPurposesDontUseThePayNowBut =>
+      "ملاحظة: لأغراض الدفع النقدي ، لا تستخدم زر \"الدفع الآن\".إذا كنت ترغب في إجراء دفعة نقدًا ، فيمكنك إعطاء الأموال يدويًا للطبيب وإكمال موعدك من جانب الطبيب.";
 
   @override
-  String get choosePaymentMethod => "اختر وسيلة الدفع";
+  String get choosePaymentMethod => "اختر طريقة الدفع المناسبة لك";
 
   @override
-  String get chooseOurConvenientPaymentOptionAndUnlockUnli => "اختر خيار الدفع المريح الخاص بنا وإلغاء تأمين وصول غير محدود إلى امتيازات حصرية.";
+  String get chooseOurConvenientPaymentOptionAndUnlockUnli =>
+      "اختر طريقة الدفع الأنسب لك لإكمال الحجز بسهولة.";
 
   @override
-  String get doYouWantToReplaceThePreviousServiceWithTheCu => "هل تريد استبدال الخدمة السابقة بالذات الحالية؟";
+  String get doYouWantToReplaceThePreviousServiceWithTheCu =>
+      "هل تريد استبدال الخدمة السابقة بالذات الحالية؟";
 
   @override
   String get bookNow => "احجز الآن";
@@ -1076,16 +1205,17 @@ class LanguageAr extends BaseLanguage {
   String get remainingPayableAmount => "المبلغ المستحق المتبقي";
 
   @override
-  String get walletHistory => "تاريخ المحفظة";
+  String get walletHistory => "سجل المحفظة";
 
   @override
   String get noWalletDataFound => "لم يتم العثور على بيانات محفظة!";
 
   @override
-  String get oppsNoWalletDataFoundAtAMoment => "أوس!لم يتم العثور على بيانات محفظة في لحظة.";
+  String get oppsNoWalletDataFoundAtAMoment =>
+      "أوس!لم يتم العثور على بيانات محفظة في لحظة.";
 
   @override
-  String get walletBalance => "توازن المحفظة";
+  String get walletBalance => "رصيد المحفظة";
 
   @override
   String get addFiles => 'إضافة ملفات';
@@ -1112,7 +1242,8 @@ class LanguageAr extends BaseLanguage {
   String get dateOfBirth => 'تاريخ الميلاد';
 
   @override
-  String get passwordLengthShouldBe8To14Characters => 'يجب أن يكون طول كلمة المرور من 8 إلى 14 حرفًا';
+  String get passwordLengthShouldBe8To14Characters =>
+      'يجب أن يكون طول كلمة المرور من 8 إلى 14 حرفًا';
 
   @override
   String get noteInCaseYouFailToMakeTheAdvancePaymentYouWi =>
@@ -1131,7 +1262,8 @@ class LanguageAr extends BaseLanguage {
   String get appointmentId => 'معرف الموعد:';
 
   @override
-  String get youDontHaveEnoughBalanceToCompleteThePaymentU => 'ليس لديك رصيد كافي لإكمال الدفع باستخدام محفظتك.';
+  String get youDontHaveEnoughBalanceToCompleteThePaymentU =>
+      'ليس لديك رصيد كافي لإكمال الدفع باستخدام محفظتك.';
 
   @override
   String get advancePayment => 'الدفع المسبق';
@@ -1140,7 +1272,7 @@ class LanguageAr extends BaseLanguage {
   String get doYouWantToPerformThisAction => 'هل تريد تنفيذ هذا الإجراء؟';
 
   @override
-  String get bookedFor => 'حجزت ل';
+  String get bookedFor => 'الحجز باسم';
 
   @override
   String get addPatient => 'إضافة مريض';
@@ -1149,7 +1281,7 @@ class LanguageAr extends BaseLanguage {
   String get relation => 'علاقة';
 
   @override
-  String get save => 'يحفظ';
+  String get save => 'حفظ';
 
   @override
   String get managePatient => 'إدارة المريض';
@@ -1176,7 +1308,8 @@ class LanguageAr extends BaseLanguage {
   String get editPatient => 'تحرير المريض';
 
   @override
-  String get doYouWantToDeleteYourOtherPatientsProfile => 'هل تريد حذف الملف الشخصي لمريضك الآخر؟';
+  String get doYouWantToDeleteYourOtherPatientsProfile =>
+      'هل تريد حذف الملف الشخصي لمريضك الآخر؟';
 
   @override
   String get birthdateIsRequired => 'مطلوب تاريخ الميلاد';
@@ -1185,7 +1318,7 @@ class LanguageAr extends BaseLanguage {
   String get selectBirthdate => 'حدد تاريخ الميلاد';
 
   @override
-  String get bookedForWithColon => 'حجزت ل: ';
+  String get bookedForWithColon => 'الحجز باسم: ';
 
   @override
   String get inClinic => 'في العيادة';
@@ -1200,7 +1333,7 @@ class LanguageAr extends BaseLanguage {
   String get confirmed => 'مؤكد';
 
   @override
-  String get checkIn => 'تحقق في';
+  String get checkIn => 'تسجيل الوصول';
 
   @override
   String get cancelled => 'تم الإلغاء';
@@ -1216,6 +1349,16 @@ class LanguageAr extends BaseLanguage {
 
   @override
   String get refunded => 'ردها';
+  @override
+  String get preparing => 'جاري التجهيز';
+  @override
+  String get outForDelivery => 'خرج للتوصيل';
+  @override
+  String get delivered => 'تم التوصيل';
+  @override
+  String get reviewed => 'تمت المراجعة';
+  @override
+  String get processed => 'تمت المعالجة';
 
   @override
   String get failed => 'فشل';
@@ -1236,7 +1379,7 @@ class LanguageAr extends BaseLanguage {
   String get appointmentCompleted => 'اكتمل الموعد';
 
   @override
-  String get appointmentRejected => 'تم رفض التعيين';
+  String get appointmentRejected => 'تم رفض الموعد';
 
   @override
   String get appointmentCancelled => 'تم إلغاء الموعد';
@@ -1245,7 +1388,7 @@ class LanguageAr extends BaseLanguage {
   String get appointmentRescheduled => 'تمت إعادة جدولة الموعد';
 
   @override
-  String get appointmentAccepted => 'تم قبول التعيين';
+  String get appointmentAccepted => 'تم قبول الموعد';
 
   @override
   String get forgetEmailPassword => 'نسيت كلمة مرور البريد الإلكتروني';
@@ -1263,7 +1406,7 @@ class LanguageAr extends BaseLanguage {
   String get spouse => 'زوج';
 
   @override
-  String get relative => 'نسبي';
+  String get relative => 'قريب';
 
   @override
   String get deleteConfirmation => 'حذف التأكيد';
@@ -1287,7 +1430,7 @@ class LanguageAr extends BaseLanguage {
   String get other => 'آخر';
 
   @override
-  String get others => 'آحرون';
+  String get others => 'آخرون';
 
   @override
   String get appliedInclusiveTaxes => "الضرائب الشاملة المطبقة";
@@ -1314,7 +1457,9 @@ class LanguageAr extends BaseLanguage {
   String get appliedTaxes => "الضرائب المطبقة";
 
   @override
-  String cancellationChargesWillBeAppliedForCancellationWithin(String amount, String hours) => "سيتم تطبيق رسوم إلغاء بقيمة $amount للإلغاء خلال $hours ساعة.";
+  String cancellationChargesWillBeAppliedForCancellationWithin(
+          String amount, String hours) =>
+      "سيتم تطبيق رسوم إلغاء بقيمة $amount للإلغاء خلال $hours ساعة.";
 
   @override
   String get cancelAppointment => "إلغاء الحجز";
@@ -1323,29 +1468,34 @@ class LanguageAr extends BaseLanguage {
   String get goBack => "العودة";
 
   @override
-  String cancellationFeesWillBeAppliedIfYouCancelWithinHoursOfScheduledTime(String hours, bool isCancellationChargesEnabled) =>
+  String cancellationFeesWillBeAppliedIfYouCancelWithinHoursOfScheduledTime(
+          String hours, bool isCancellationChargesEnabled) =>
       "هل تريد إلغاء هذا الموعد؟ ${isCancellationChargesEnabled ? 'سيتم تطبيق رسوم الإلغاء إذا قمت بالإلغاء خلال $hours ساعة من الوقت المحدد' : ''}";
 
   @override
   String get reason => "السبب";
 
   @override
-  String get continueText => "استمر";
+  String get continueText => "متابعة";
 
   @override
-  String get wouldYouLikeToProceedAndConfirmPayment => "هل ترغب في المتابعة وتأكيد الدفع؟";
+  String get wouldYouLikeToProceedAndConfirmPayment =>
+      "هل ترغب في المتابعة وتأكيد الدفع؟";
 
   @override
   String get cancellationFee => "رسوم الإلغاء";
 
   @override
-  String get yourAppointmentHasBeenSuccessfullyCancelled => "تم إلغاء موعدك بنجاح";
+  String get yourAppointmentHasBeenSuccessfullyCancelled =>
+      "تم إلغاء موعدك بنجاح";
 
   @override
-  String get appointmentRefundWillBeProcessedWithingHoursIfApplicable => "سيتم معالجة استرداد الموعد خلال 24 ساعة إذا كان ذلك ممكنًا.";
+  String get appointmentRefundWillBeProcessedWithingHoursIfApplicable =>
+      "سيتم رد المبلغ خلال 24 ساعة إذا انطبق ذلك.";
 
   @override
-  String get noteCheckYourAppointmentHistoryForRefundDetailsIfApplicable => "*ملاحظة: تحقق من سجل مواعيدك للحصول على تفاصيل الاسترداد إذا كان ذلك ممكنًا.";
+  String get noteCheckYourAppointmentHistoryForRefundDetailsIfApplicable =>
+      "*ملاحظة: تحقق من سجل مواعيدك للحصول على تفاصيل الاسترداد إذا كان ذلك ممكنًا.";
 
   @override
   String get ok => "حسنًا";
@@ -1393,16 +1543,14 @@ class LanguageAr extends BaseLanguage {
   String get filterCategory => 'الفئة';
 
   @override
-  String get incidentManagement => 'إدارة الحوادث';
+  String get incidentManagement => 'إدارة البلاغات';
 
   @override
-  String get requestHelpForAnyMistakeHappen => 'اطلب المساعدة لأي خطأ يحدث';
+  String get requestHelpForAnyMistakeHappen =>
+      'اطلب المساعدة عند حدوث أي مشكلة';
 
   @override
-  String get otp => 'كلمة المرور لمرة واحدة';
-
-  @override
-  String get verify => 'يؤكد';
+  String get verify => 'تحقق';
 
   @override
   String get closedOn => 'مغلق في';
@@ -1414,7 +1562,8 @@ class LanguageAr extends BaseLanguage {
   String get title => 'عنوان';
 
   @override
-  String get enterYourDetailDescriptionForYourComplaint => 'أدخل وصفًا تفصيليًا لشكواك';
+  String get enterYourDetailDescriptionForYourComplaint =>
+      'أدخل وصفًا تفصيليًا لشكواك';
 
   @override
   String get phoneNumber => 'رقم التليفون';
@@ -1429,43 +1578,36 @@ class LanguageAr extends BaseLanguage {
   String get noQueryYet => 'لا يوجد استفسار حتى الآن';
 
   @override
-  String get add => 'يضيف';
+  String get add => 'إضافة';
 
   @override
-  String get toSubmitYourProblemsSimplyPressAddButtonAndExplainYourConcern => 'لإرسال مشاكلك، ما عليك سوى الضغط على زر الإضافة وشرح مشكلتك';
+  String get toSubmitYourProblemsSimplyPressAddButtonAndExplainYourConcern =>
+      'لإرسال بلاغ، اضغط على زر الإضافة واشرح المشكلة';
 
   @override
-  String get tryToAnotherWay => 'حاول بطريقة أخرى';
+  String get open => 'فتح';
 
   @override
-  String get pleaseEnterValid6digitOTP => 'الرجاء إدخال رمز OTP صالح مكون من 6 أرقام';
-
-  @override
-  String get otpFromAuthenticatorApp => 'OTP من تطبيق Authenticator';
-
-  @override
-  String get open => 'يفتح';
-
-  @override
-  String get close => 'يغلق';
+  String get close => 'إغلاق';
 
   @override
   String get pleaseEnterValidEmail => 'الرجاء إدخال بريد إلكتروني صالح';
 
   @override
-  String get pleaseEnterOTP => 'الرجاء إدخال كلمة المرور لمرة واحدة';
+  String get passwordMustIncludeSpacialCharacter =>
+      'يجب أن تتضمن كلمة المرور حرفًا خاصًا واحدًا على الأقل';
 
   @override
-  String get passwordMustIncludeSpacialCharacter => 'يجب أن تتضمن كلمة المرور حرفًا خاصًا واحدًا على الأقل';
+  String get passwordMustIncludeAtLeastOneLowercaseCharacter =>
+      'يجب أن تتضمن كلمة المرور حرفًا صغيرًا واحدًا على الأقل';
 
   @override
-  String get passwordMustIncludeAtLeastOneLowercaseCharacter => 'يجب أن تتضمن كلمة المرور حرفًا صغيرًا واحدًا على الأقل';
+  String get passwordMustIncludeAtLeastOneNumber =>
+      'يجب أن تتضمن كلمة المرور رقمًا واحدًا على الأقل';
 
   @override
-  String get passwordMustIncludeAtLeastOneNumber => 'يجب أن تتضمن كلمة المرور رقمًا واحدًا على الأقل';
-
-  @override
-  String get passwordMustIncludeAtLeastOneCapitalCharacter => 'يجب أن تتضمن كلمة المرور حرفًا كبيرًا واحدًا على الأقل';
+  String get passwordMustIncludeAtLeastOneCapitalCharacter =>
+      'يجب أن تتضمن كلمة المرور حرفًا كبيرًا واحدًا على الأقل';
 
   @override
   String get addFile => 'إضافة ملف';
@@ -1474,7 +1616,7 @@ class LanguageAr extends BaseLanguage {
   String get uploadMedicalReport => 'تحميل التقرير الطبي';
 
   @override
-  String get optional => '(خياري)';
+  String get optional => '(اختياري)';
 
   @override
   String get reply => 'رد';
@@ -1483,7 +1625,8 @@ class LanguageAr extends BaseLanguage {
   String get passwordIsRequired => "كلمة المرور مطلوبة";
 
   @override
-  String get passwordDoesNotMeetRequirements => "كلمة المرور لا تستوفي الشروط المطلوبة";
+  String get passwordDoesNotMeetRequirements =>
+      "كلمة المرور لا تستوفي الشروط المطلوبة";
 
   @override
   String get passwordTooShort => "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل";
@@ -1502,22 +1645,1049 @@ class LanguageAr extends BaseLanguage {
 
   @override
   String get createdBy => 'تم الإنشاء بواسطة';
+  @override
+  String get createdOn => 'في';
 
   @override
   String get incident => "حادث";
 
   @override
-  String get reject => 'يرفض';
+  String get invalidIncidentType => 'نوع البلاغ المحدد غير صالح';
+
+  @override
+  String get reject => 'رفض';
 
   @override
   String get successfullyAdded => 'تمت الإضافة بنجاح';
-
-  @override
-  String get otpSentToEmail => "تم إرسال رمز التحقق إلى بريدك الإلكتروني، يرجى التحقق للمتابعة";
 
   @override
   String get rejected => "مرفوض";
 
   @override
   String get incidenceReportReply => "رد على تقرير الحادث";
+
+  @override
+  String get quickServices => "خدماتنا";
+
+  @override
+  String get labs => "تحاليل";
+
+  @override
+  String get radiology => "أشعة";
+
+  @override
+  String get homeCare => "رعاية منزلية";
+
+  // NURSE REQUEST MODULE
+  @override
+  String get homeNursing => 'تمريض منزلي';
+
+  @override
+  String get newRequest => 'طلب جديد';
+
+  @override
+  String get myRequests => 'طلباتي';
+
+  @override
+  String get requestHomeNursing => 'اطلب خدمة تمريض منزلي';
+
+  @override
+  String get serviceDescriptionEnglish => 'وصف الخدمة (بالإنجليزية)';
+
+  @override
+  String get serviceDescriptionArabic => 'وصف الخدمة (بالعربية)';
+
+  @override
+  String get atLeastOneDescriptionRequired =>
+      'يرجى تقديم وصف الخدمة بلغة واحدة على الأقل.';
+
+  @override
+  String get preferredDate => 'التاريخ المفضل';
+
+  @override
+  String get preferredTime => 'الوقت المفضل (اختياري)';
+
+  @override
+  String get clear => 'مسح';
+
+  @override
+  String get durationHours => 'المدة (بالساعات)';
+
+  // Verified CLDR Arabic plural forms: 1→ساعة، 2→ساعتان، 3-10→n ساعات، 11+→n ساعة
+  @override
+  String durationHoursValue(int n) {
+    return Intl.plural(
+      n,
+      locale: 'ar',
+      zero: 'صفر ساعات',
+      one: 'ساعة واحدة',
+      two: 'ساعتان',
+      few: '$n ساعات',
+      many: '$n ساعة',
+      other: '$n ساعة',
+    );
+  }
+
+  @override
+  String get addressLine1 => 'العنوان (السطر الأول)';
+
+  @override
+  String get addressLine2 => 'سطر العنوان 2 (اختياري)';
+
+  @override
+  String get moreAddressDetails => 'تفاصيل عنوان إضافية';
+
+  @override
+  String get governorate => 'المحافظة';
+
+  @override
+  String get city => 'المدينة';
+
+  @override
+  String get stateLabel => 'الولاية / المنطقة';
+
+  @override
+  String get countryLabel => 'الدولة';
+
+  @override
+  String get postalCode => 'الرمز البريدي';
+
+  @override
+  String get contactPhone => 'هاتف الاتصال';
+
+  @override
+  String get patientNotes => 'ملاحظات إضافية (اختياري)';
+
+  @override
+  String get submitting => 'جارٍ الإرسال...';
+
+  @override
+  String get requestSubmitted => 'تم إرسال الطلب!';
+
+  @override
+  String get referenceNumber => 'رقم المرجع';
+
+  @override
+  String get copyReferenceNumber => 'نسخ رقم المرجع';
+
+  @override
+  String get copied => 'تم النسخ!';
+
+  @override
+  String get notifyTeamWillAssign =>
+      'سيقوم فريقنا بتعيين ممرضة وتأكيد التفاصيل قريباً.';
+
+  @override
+  String get viewRequest => 'عرض الطلب';
+
+  @override
+  String get backToHome => 'العودة إلى الرئيسية';
+
+  @override
+  String get filterAll => 'الكل';
+
+  @override
+  String get filterPending => 'قيد الانتظار';
+
+  @override
+  String get filterAssigned => 'تم التعيين';
+
+  @override
+  String get filterConfirmed => 'مؤكد';
+
+  @override
+  String get filterInProgress => 'جارٍ';
+
+  @override
+  String get filterCompleted => 'مكتمل';
+
+  @override
+  String get filterCancelled => 'ملغي';
+
+  @override
+  String get nurseStatusPending => 'قيد الانتظار';
+
+  @override
+  String get nurseStatusAssigned => 'تم التعيين';
+
+  @override
+  String get nurseStatusConfirmed => 'مؤكد';
+
+  @override
+  String get nurseStatusInProgress => 'جارٍ التنفيذ';
+
+  @override
+  String get nurseStatusCompleted => 'مكتمل';
+
+  @override
+  String get nurseStatusCancelled => 'ملغي';
+
+  @override
+  String get assignedNurse => 'الممرضة المعيّنة';
+
+  @override
+  String get nurseRating => 'التقييم';
+
+  @override
+  String get nursePhone => 'هاتف الممرضة';
+
+  @override
+  String get estimatedTotal => 'الإجمالي التقديري';
+
+  @override
+  String get paymentStatusUnpaid => 'غير مدفوع';
+
+  @override
+  String get paymentContextUnavailable =>
+      'لم نتمكن من فتح شاشة الدفع. جرّب مرة أخرى.';
+
+  @override
+  String get paymentStatusPaid => 'مدفوع';
+
+  @override
+  String get paymentStatusRefunded => 'مسترد';
+
+  @override
+  String get cancellationReason => 'سبب الإلغاء';
+
+  @override
+  String get completedOn => 'اكتمل في';
+
+  @override
+  String get statusHistory => 'سجل الحالة';
+
+  @override
+  String get emptyRequestsTitle => 'لا توجد طلبات بعد';
+
+  @override
+  String get emptyRequestsSubtitle => 'أرسل طلبك الأول للبدء';
+
+  @override
+  String get loadFailed => 'فشل التحميل. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get paymentConfirmationFailedRetry =>
+      'تم خصم المبلغ لكن تعذر تأكيد الدفع مع الخادم. يُرجى إعادة المحاولة حتى لا تفقد دفعتك.';
+
+  @override
+  String get pleaseContactSupportWithTransactionId =>
+      'يُرجى التواصل مع الدعم ومشاركة رقم العملية التالي:';
+
+  @override
+  String get phoneInvalid => 'يرجى إدخال رقم هاتف صالح (مثال: +201001234567)';
+
+  @override
+  String get noDialerAvailable => 'لا يوجد تطبيق هاتف متاح لإجراء المكالمات.';
+
+  @override
+  String get descriptionTooLong => 'يجب أن يكون الوصف 2000 حرف أو أقل';
+
+  @override
+  String get notesTooLong => 'يجب أن تكون الملاحظات 2000 حرف أو أقل';
+
+  @override
+  String get addressTooLong => 'يجب أن يكون العنوان 255 حرفًا أو أقل';
+
+  @override
+  String get cityRequired => 'المدينة مطلوبة';
+
+  @override
+  String get addressLine1Required => 'العنوان (السطر الأول) مطلوب';
+
+  @override
+  String get preferredDateRequired => 'التاريخ المفضل مطلوب';
+
+  @override
+  String get durationOutOfRange => 'يجب أن تكون المدة بين 1 و24 ساعة';
+
+  @override
+  String get unknownSubmitOutcomeBanner =>
+      'يرجى التأكد من إنشاء طلبك قبل الإرسال مرة أخرى.';
+
+  @override
+  String get quickServiceHomeNursing => 'تمريض منزلي';
+
+  // Pharmacy
+  @override
+  String get pharmacyHome => 'الصفحة الرئيسية للصيدلية';
+  @override
+  String get searchProducts => 'البحث عن منتجات...';
+  @override
+  String get categories => 'الأقسام';
+  @override
+  String get brands => 'العلامات التجارية';
+  @override
+  String get productTypes => 'أنواع المنتجات';
+  @override
+  String get featuredProducts => 'منتجات مميزة';
+  @override
+  String get addToCart => 'أضف للسلة';
+  @override
+  String get viewCart => 'عرض السلة';
+  @override
+  String get cart => 'السلة';
+  @override
+  String get cartEmpty => 'سلة التسوق فارغة';
+  @override
+  String get cartEmptyHint =>
+      'لا توجد منتجات في السلة بعد. تصفح المنتجات أو ارفع وصفتك الطبية.';
+  @override
+  String get browsePharmacy => 'تصفح الصيدلية';
+  @override
+  String get deliveryAtCheckout => 'يتم احتساب التوصيل عند الدفع';
+  @override
+  String get needHelpUploadPrescription =>
+      'هل تحتاج مساعدة في الاختيار؟ ارفع وصفتك الطبية.';
+  @override
+  String get checkout => 'الدفع';
+  @override
+  String get placeOrder => 'إتمام الطلب';
+  @override
+  String get orderSuccess => 'تم تقديم الطلب بنجاح';
+  @override
+  String get orderFailed => 'فشل تقديم الطلب';
+  @override
+  String get availablePharmacies => 'الصيدليات المتاحة';
+  @override
+  String get selectPharmacy => 'اختر الصيدلية';
+  @override
+  String get deliveryAddress => 'عنوان التوصيل';
+  @override
+  String get paymentMethod => 'طريقة الدفع';
+  @override
+  String get applyCoupon => 'تطبيق الكوبون';
+  @override
+  String get couponCode => 'كود الخصم';
+  @override
+  String get deliveryFee => 'رسوم التوصيل';
+  @override
+  String get orders => 'الطلبات';
+  @override
+  String get orderDetail => 'تفاصيل الطلب';
+  @override
+  String get orderStatus => 'حالة الطلب';
+  @override
+  String get trackOrder => 'تتبع الطلب';
+  @override
+  String get cancelOrder => 'إلغاء الطلب';
+  @override
+  String get requestRefund => 'طلب استرداد';
+  @override
+  String get refundReason => 'سبب الاسترداد';
+  @override
+  String get prescriptions => 'الوصفات الطبية';
+  @override
+  String get uploadPrescription => 'رفع وصفة طبية';
+  @override
+  String get prescriptionRequired => 'الوصفة الطبية مطلوبة';
+  @override
+  String get uploadPrescriptionInstructions =>
+      'يرجى رفع صورة واضحة لوصفتك الطبية.';
+  @override
+  String get takePhoto => 'التقاط صورة';
+  @override
+  String get chooseFromGallery => 'اختيار من المعرض';
+  @override
+  String get maxImageLimitReached => 'تم الوصول للحد الأقصى للصور (5 صور)';
+  @override
+  String get maximumQuantityReached => 'تم الوصول للحد الأقصى للكمية';
+  @override
+  String get markAllAsRead => 'تحديد الكل كمقروء';
+  @override
+  String get noProductsFound => 'لم يتم العثور على منتجات';
+  @override
+  String get filter => 'تصفية';
+  @override
+  String get sort => 'ترتيب';
+
+  // Pharmacy Sorting
+  @override
+  String get sortNewest => 'الأحدث';
+  @override
+  String get sortPriceAsc => 'السعر: من الأقل للأعلى';
+  @override
+  String get sortPriceDesc => 'السعر: من الأعلى للأقل';
+  @override
+  String get sortRating => 'التقييم';
+
+  // Pharmacy Details
+  @override
+  String get productInfo => 'معلومات المنتج';
+  @override
+  String get manufacturer => 'الشركة المصنعة';
+  @override
+  String get dosage => 'الجرعة';
+  @override
+  String get unit => 'الوحدة';
+  @override
+  String get inStock => 'متوفر';
+  @override
+  String get outOfStock => 'غير متوفر';
+  @override
+  String get productUnavailable => 'هذا المنتج غير متاح حاليًا';
+
+  // Pharmacy Prescription
+  @override
+  String get notesOptional => 'ملاحظات (اختياري)';
+  @override
+  String get submitPrescription => 'إرسال الروشتة';
+  @override
+  String get chooseImageSource => 'اختر مصدر الصورة';
+
+  // Pharmacy Orders
+  @override
+  String get placedOn => 'تم الطلب في';
+  @override
+  String get items => 'الأصناف';
+  @override
+  String get orderNumber => 'رقم الطلب';
+  @override
+  String get fulfillFullCart => 'سلة كاملة';
+  @override
+  String get fulfillPartialCart => 'سلة جزئية';
+  @override
+  String get partialFulfillWarning =>
+      'هذه الصيدلية يمكنها فقط توفير بعض الأصناف في سلتك. هل تريد المتابعة مع الأصناف المتوفرة؟ سيتم إزالة الأصناف غير المتوفرة من هذا الطلب.';
+
+  // Pharmacy Refunds
+  @override
+  String get refundRequests => 'طلبات الاسترداد';
+  @override
+  String get damagedProduct => 'منتج تالف';
+  @override
+  String get wrongProductReceived => 'استلام منتج خاطئ';
+  @override
+  String get expiredProduct => 'منتج منتهي الصلاحية';
+  @override
+  String get qualityIssue => 'مشكلة في الجودة';
+  @override
+  String get submitRequest => 'إرسال الطلب';
+  @override
+  String get selectGovernorate => 'اختر المحافظة';
+
+  @override
+  String get selectCity => 'اختر المدينة';
+
+  @override
+  String get searchGovernorate => 'ابحث عن محافظة';
+
+  @override
+  String get searchCity => 'ابحث عن مدينة';
+
+  @override
+  String get clearSearch => 'مسح البحث';
+
+  @override
+  String get allGovernorates => 'كل المحافظات';
+
+  @override
+  String get allCities => 'كل المدن';
+
+  @override
+  String get showDoctorsFromAllGovernorates => 'عرض الأطباء من كل المحافظات';
+
+  @override
+  String get showAllCitiesInGovernorate => 'عرض كل المدن في هذه المحافظة';
+
+  @override
+  String get showingCitiesInGovernorate => 'عرض المدن في هذه المحافظة';
+
+  @override
+  String get xDoctors => 'عدد الأطباء: {count}';
+
+  @override
+  String get xCities => '{count} مدينة';
+
+  @override
+  String get noGovernoratesFound => 'لم يتم العثور على محافظات';
+
+  @override
+  String get noCitiesFound => 'لم يتم العثور على مدن';
+
+  @override
+  String get noResultsFor => 'لا توجد نتائج لـ "{query}"';
+
+  @override
+  String get noCitiesAvailable => 'لا توجد مدن متاحة';
+
+  @override
+  String get applyGovernorateOnly => 'تطبيق المحافظة فقط';
+
+  @override
+  String get changeGovernorate => 'تغيير المحافظة';
+
+  @override
+  String get change => 'تغيير';
+
+  @override
+  String get failedToLoadGovernorates => 'تعذر تحميل المحافظات';
+
+  @override
+  String get failedToLoadCities => 'تعذر تحميل المدن';
+
+  @override
+  String get allLocations => 'كل المواقع';
+
+  @override
+  String get locationFilterFormat => '{governorate} > {city}';
+
+  // DOCTOR VISIT MODULE
+  @override
+  String get homeVisit => 'زيارة منزلية';
+
+  @override
+  String get doctorVisit => 'زيارة الطبيب';
+
+  @override
+  String get homeVisitRequests => 'طلبات الزيارة المنزلية';
+
+  @override
+  String get newHomeVisitRequest => 'طلب زيارة منزلية جديد';
+
+  @override
+  String get requestHomeVisit => 'اطلب زيارة منزلية';
+
+  @override
+  String get noVisitRequests => 'لا توجد طلبات زيارة';
+
+  @override
+  String get noVisitRequestsTitle => 'لا توجد طلبات بعد';
+
+  @override
+  String get requestYourFirstVisit => 'أرسل طلب زيارتك الأول للبدء';
+
+  @override
+  String get visitReason => 'سبب الزيارة';
+
+  @override
+  String get visitReasonHint => 'صف أعراضك أو سبب الزيارة...';
+
+  @override
+  String get visitReasonRequired => 'سبب الزيارة مطلوب';
+
+  @override
+  String get visitReasonTooLong => 'الحد الأقصى 1000 حرف';
+
+  @override
+  String get preferredDateMustBeFuture =>
+      'يجب أن يكون التاريخ اليوم أو في المستقبل';
+
+  @override
+  String get contactPhoneRequired => 'هاتف الاتصال مطلوب';
+
+  @override
+  String get contactPhoneInvalid => 'أدخل رقم هاتف صالح (مثال: +201001234567)';
+
+  @override
+  String get preferredDoctor => 'الطبيب المفضل';
+
+  @override
+  String get preferredDoctorOptional => 'الطبيب المفضل (اختياري)';
+
+  @override
+  String get selectPreferredDoctor => 'اختر الطبيب المفضل';
+
+  @override
+  String get clearDoctorSelection => 'إلغاء الاختيار';
+
+  @override
+  String get additionalNotes => 'ملاحظات إضافية';
+
+  @override
+  String get additionalNotesOptional => 'ملاحظات إضافية (اختياري)';
+
+  @override
+  String get additionalNotesHint =>
+      'أي معلومات إضافية للطبيب (مثال: الطابق الثالث، لا يوجد مصعد)...';
+
+  @override
+  String get additionalNotesTooLong => 'الحد الأقصى 2000 حرف';
+
+  @override
+  String get requestSubmittedSuccessfully => 'تم إرسال الطلب بنجاح';
+
+  @override
+  String get referenceCopied => 'تم نسخ رقم المرجع';
+
+  @override
+  String get weWillGetBackToYouSoon => 'سنراجع طلبك ونعود إليك قريباً';
+
+  @override
+  String get requestDetails => 'تفاصيل الطلب';
+
+  @override
+  String get visitInformation => 'معلومات الزيارة';
+
+  @override
+  String get assignedDoctor => 'الطبيب المعين';
+
+  @override
+  String get yourVisitingDoctor => 'طبيبك الزائر';
+
+  @override
+  String get noDoctorAssignedYet => 'لم يتم تعيين طبيب بعد';
+
+  @override
+  String get visitCompleted => 'اكتملت الزيارة';
+
+  @override
+  String get visitCompletedAt => 'اكتملت في';
+
+  @override
+  String get submittedOn => 'أُرسل في';
+
+  @override
+  String get visitChangedBy => 'تم التغيير بواسطة';
+
+  @override
+  String get discountApplied => 'تم تطبيق الخصم';
+
+  @override
+  String get visitOfferCode => 'كود العرض';
+
+  @override
+  String get youSaved => 'وفّرت';
+
+  @override
+  String get refresh => 'تحديث';
+
+  @override
+  String get serviceDuration => 'المدة';
+
+  @override
+  String get patientServed => 'المرضى';
+
+  @override
+  String get bookAppointment => 'حجز موعد';
+
+  @override
+  String get noUpcomingAppointments => 'لا توجد مواعيد قادمة';
+
+  @override
+  String get bookYourFirstAppointment => 'احجز موعدك الأول';
+
+  // ICU Admission Module
+  @override
+  String get icuAdmission => 'قسم العناية المركزة';
+  @override
+  String get icuHospitals => 'مستشفيات تضم عناية مركزة';
+  @override
+  String get searchHospitals => 'ابحث عن مستشفيات...';
+  @override
+  String get hospitalsFound => 'مستشفى متاح';
+  @override
+  String get noHospitalsFound => 'لم يتم العثور على مستشفيات';
+  @override
+  String get hasAvailableBeds => 'يوجد أسرة متاحة';
+  @override
+  String get noBedsAvailable => 'لا توجد أسرة متاحة';
+  @override
+  String get hospitalDetail => 'تفاصيل المستشفى';
+  @override
+  String get aboutHospital => 'عن المستشفى';
+  @override
+  String get departments => 'الأقسام';
+  @override
+  String get availableBeds => 'أسرة متاحة';
+  @override
+  String get totalBeds => 'إجمالي الأسرة';
+  @override
+  String get callHospital => 'اتصل بالمستشفى';
+  @override
+  String get callEmergency => 'اتصل بالطوارئ';
+  @override
+  String get openInMaps => 'فتح في الخرائط';
+  @override
+  String get requestIcuAdmissionHere => 'اطلب دخول العناية المركزة هنا';
+  @override
+  String get icuDepartments => 'أقسام العناية المركزة';
+  @override
+  String get browseByDepartment => 'تصفح حسب قسم العناية المركزة';
+  @override
+  String get departmentDescription => 'وصف القسم';
+  @override
+  String get patientName => 'اسم المريض';
+  @override
+  String get patientAge => 'عمر المريض';
+
+  @override
+  String get invalidPatientAge => 'أدخل عمرًا من 0 إلى 150';
+
+  @override
+  String get reportDownloadUnavailable => 'هذا التقرير غير متاح بعد';
+
+  @override
+  String get invalidReportDownloadUrl => 'رابط التقرير غير آمن';
+
+  @override
+  String get reportDownloadFailed => 'تعذر تنزيل التقرير';
+
+  @override
+  String get labTestRequired => 'اختر تحليلًا قبل الحجز';
+
+  @override
+  String get preferredDatePast => 'اختر تاريخ اليوم أو تاريخًا لاحقًا';
+
+  @override
+  String get preferredTimeInvalid => 'اختر وقت موعد صالحًا';
+
+  @override
+  String get patientNotesTooLong => 'يجب ألا تتجاوز ملاحظات المريض 1000 حرف';
+  @override
+  String get selectedTest => 'الفحص المحدد';
+  @override
+  String get patientGender => 'جنس المريض';
+  @override
+  String get diagnosis => 'التشخيص';
+  @override
+  String get urgencyLevel => 'درجة الإلحاح';
+  @override
+  String get accompanyingName => 'اسم المرافق';
+  @override
+  String get accompanyingRelation => 'صلة القرابة بالمريض';
+  @override
+  String get accompanyingPhone => 'هاتف المرافق';
+  @override
+  String get nationalId => 'الرقم القومي (اختياري)';
+  @override
+  String get currentCondition => 'الحالة الراهنة (اختياري)';
+  @override
+  String get attendingDoctor => 'الطبيب المعالج (اختياري)';
+  @override
+  @override
+  String get currentMedications => 'الأدوية الحالية (اختياري)';
+  @override
+  String get allergies => 'الحساسية (اختياري)';
+  @override
+  @override
+  @override
+  String get selectHospital => 'اختر المستشفى';
+  @override
+  String get selectDepartment => 'اختر القسم';
+  @override
+  String get changeHospital => 'تغيير';
+  @override
+  String get routine => 'اعتيادي';
+  @override
+  String get urgent => 'عاجل';
+  @override
+  String get critical => 'حرج';
+  @override
+  String get criticalUrgencyAlertTitle => 'درجة إلحاح حرجة!';
+  @override
+  String get criticalUrgencyAlertMessage =>
+      'لقد اخترت درجة الإلحاح الحرج. للحالات الطارئة التي تهدد الحياة، يرجى الاتصال بخط الطوارئ فوراً.';
+  @override
+  String get callEmergencyHotline => 'اتصل بخط الطوارئ';
+  @override
+  String get continueForm => 'متابعة النموذج';
+  @override
+  @override
+  String get underReview => 'قيد المراجعة';
+  @override
+  String get approved => 'موافق عليه';
+  @override
+  String get admitted => 'تم الدخول';
+  @override
+  String get discharged => 'تم الخروج';
+  @override
+  @override
+  @override
+  String get status => 'الحالة';
+  @override
+  @override
+  String get fieldRequired => 'هذا الحقل مطلوب';
+  @override
+  String get invalidPhone => 'صيغة الهاتف غير صالحة';
+  @override
+  String get maxCharsReached => 'تم الوصول إلى الحد الأقصى من الأحرف';
+  @override
+  String get invalidDate => 'تاريخ غير صالح';
+  @override
+  String get pleaseSelectHospital => 'الرجاء اختيار مستشفى';
+  @override
+  String get pleaseSelectDepartment => 'الرجاء اختيار قسم';
+  @override
+  @override
+  @override
+  String get copyReference => 'نسخ الرقم المرجعي';
+  @override
+  @override
+  String get trackRequest => 'تتبع هذا الطلب';
+  @override
+  String get lastReference => 'آخر رقم مرجعي';
+  @override
+  String get goBackToHome => 'العودة إلى الرئيسية';
+  @override
+  String get cancelRequest => 'إلغاء الطلب';
+  @override
+  String get cancelConfirmation => 'هل أنت متأكد من إلغاء طلب الدخول هذا؟';
+  @override
+  String get cancelReason => 'سبب الإلغاء (اختياري)';
+  @override
+  String get confirmCancellation => 'تأكيد الإلغاء';
+  @override
+  String get keepRequest => 'الإبقاء على الطلب';
+  @override
+  String get requestCancelled => 'تم إلغاء الطلب بنجاح';
+  @override
+  String get emergencyHotline => 'خط الطوارئ';
+  @override
+  String get emergencyNumberCopied => 'تم نسخ رقم الطوارئ';
+  @override
+  String get callNow => 'اتصل الآن';
+
+  @override
+  String get locationUnavailable => 'الموقع غير متاح';
+  @override
+  String get myAdmissionRequests => 'طلبات الدخول';
+  @override
+  String get statusTimeline => 'تسلسل الحالة';
+  @override
+  String get admissionDetails => 'تفاصيل الدخول';
+  @override
+  String get room => 'غرفة';
+  @override
+  String get bed => 'سرير';
+  @override
+  String get admittedAt => 'تاريخ الدخول';
+  @override
+  String get dischargeDetails => 'تفاصيل الخروج';
+  @override
+  String get dischargedAt => 'تاريخ الخروج';
+  @override
+  String get dischargeSummary => 'ملخص الخروج';
+  @override
+  String get rejectionReason => 'سبب الرفض';
+  @override
+
+  // Pharmacy Localized Strings
+  @override
+  String get pharmacyCouponApplied => 'تم تطبيق الكوبون بنجاح';
+  @override
+  String get pharmacyInvalidCoupon => 'كوبون غير صالح';
+  @override
+  String get pharmacyDeliveryAddressRequired => 'عنوان التوصيل مطلوب';
+  @override
+  String get pharmacyPrescriptionRequired =>
+      'يرجى إرفاق وصفة طبية للأصناف التي تستلزم وصفة';
+  @override
+  String get pharmacySelectDeliveryAddress => 'اختر عنوان التوصيل';
+  @override
+  String get pharmacyCartPrescriptionWarning =>
+      'بعض الأصناف في سلتك تستلزم وصفة طبية';
+  @override
+  String get pharmacyPrescriptionLabel => 'وصفة طبية';
+  @override
+  String get pharmacySelectPrescription => 'اختر وصفة طبية';
+  @override
+  String get pharmacyUploadNewPrescription => '+ رفع وصفة طبية جديدة';
+  @override
+  String get pharmacyCashOnDelivery => 'الدفع عند الاستلام';
+  @override
+  String get pharmacyWallet => 'المحفظة';
+  @override
+  String get pharmacyCancelOrderConfirm => 'هل أنت متأكد من إلغاء هذا الطلب؟';
+  @override
+  String get pharmacyYesCancel => 'نعم، إلغاء';
+  @override
+  String get pharmacyQty => 'الكمية';
+  @override
+  String get pharmacyNoOrders => 'لم تقم بأي طلبات بعد';
+  @override
+  String get pharmacyOrderSuccess => 'تم تقديم طلبك رقم #{orderNumber} بنجاح';
+  @override
+  String get pharmacyBackToHome => 'العودة إلى الصيدلية';
+  @override
+  String get pharmacyNoPharmaciesAvailable =>
+      'لا توجد صيدليات يمكنها تلبية طلبك حالياً';
+  @override
+  String get pharmacyNoPrescriptions => 'لم تقم برفع أي وصفة طبية بعد';
+  @override
+  String get pharmacyPrescriptionImages => 'صور الوصفة الطبية';
+  @override
+  String get pharmacyRejectionReason => 'سبب الرفض';
+  @override
+  String get pharmacyUploadedOn => 'تم الرفع في';
+  @override
+  String get pharmacySelectReason => 'اختر سبباً...';
+  @override
+  String get pharmacyRefundSubmitted => 'تم تقديم طلب الاسترداد بنجاح';
+  @override
+  String get pharmacyAdditionalNotes => 'ملاحظات إضافية';
+  @override
+  String get pharmacyDescribeIssue => 'اشرح المشكلة بالتفصيل...';
+  @override
+  String get pharmacyNoRefunds => 'لم تقم بأي طلبات استرداد بعد';
+  @override
+  String get pharmacyReason => 'السبب';
+  @override
+  String get pharmacyRefundAmount => 'مبلغ الاسترداد';
+  @override
+  String get pharmacyNoNotifications => 'لا توجد إشعارات بعد';
+  @override
+  String get pharmacyNotesForPharmacy => 'أضف ملاحظات للصيدلية...';
+  @override
+  String get pharmacyNoDescription => 'لا يوجد وصف متاح';
+
+  // LABS & RADIOLOGY MODULE
+  @override
+  String get labsAndRadiology => 'المختبرات والأشعة';
+  @override
+  String get bookDiagnosticTestsSubtitle =>
+      'احجز الفحوصات التشخيصية واستعرض التقارير';
+  @override
+  String get orderMedicinesSubtitle => 'اطلب الأدوية ومستلزمات الرعاية الصحية';
+  @override
+  String get radiologyCenters => 'مراكز الأشعة';
+  @override
+  String get searchLabs => 'البحث عن مختبرات';
+  @override
+  String get searchRadiologyCenters => 'البحث عن مراكز أشعة';
+  @override
+  String get viewTests => 'عرض التحاليل';
+  @override
+  String get startingFrom => 'يبدأ من';
+  @override
+  String xReviews(int n) => Intl.plural(n,
+      locale: 'ar',
+      zero: 'لا توجد تقييمات',
+      one: 'تقييم واحد',
+      two: 'تقييمان',
+      few: '$n تقييمات',
+      many: '$n تقييماً',
+      other: '$n تقييم');
+  @override
+  String get nearby => 'بالقرب مني';
+  @override
+  String get browseTestCategories => 'تصفح فئات التحاليل';
+  @override
+  String get allTests => 'كل التحاليل';
+  @override
+  String get myTestOrders => 'طلباتي';
+  @override
+  String get noFacilitiesFound => 'لم يتم العثور على مراكز';
+  @override
+  String get testCategories => 'فئات التحاليل';
+  @override
+  String xTests(int n) => Intl.plural(n,
+      locale: 'ar',
+      zero: 'لا توجد تحاليل',
+      one: 'تحليل واحد',
+      two: 'تحليلان',
+      few: '$n تحاليل',
+      many: '$n تحليلاً',
+      other: '$n تحليل');
+  @override
+  String get noCategoriesFound => 'لم يتم العثور على فئات';
+  @override
+  String get tests => 'تحاليل';
+  @override
+  String get allTestsTitle => 'التحاليل التشخيصية';
+  @override
+  String get testDetails => 'تفاصيل التحليل';
+  @override
+  String get preparationInstructions => 'تعليمات التحضير';
+  @override
+  String get turnaroundTime => 'مدة ظهور النتائج';
+  @override
+  String xHoursTurnaround(int n) => 'النتائج خلال $n ساعة';
+  @override
+  String get imaging => 'فحوصات الأشعة';
+  @override
+  String get bookTest => 'حجز فحص';
+  @override
+  String get bookThisTest => 'احجز هذا التحليل';
+  @override
+  String get testCategoryLabel => 'الفئة';
+  @override
+  String get priceLabel => 'السعر';
+  @override
+  String get servicesOffered => 'الخدمات المقدمة';
+  @override
+  String get availableTests => 'التحاليل المتاحة';
+  @override
+  String get facilityAddress => 'عنوان المرفق';
+  @override
+  String get contactFacility => 'اتصل بالمرفق';
+  @override
+  String get selectTime => 'اختر الوقت';
+  @override
+  String get selectDate => 'اختر التاريخ';
+  @override
+  String get availableSlots => 'المواعيد المتاحة';
+  @override
+  String get noSlotsAvailable => 'لا توجد مواعيد متاحة';
+  @override
+  String get tryAnotherDate => 'جرب تاريخاً آخر';
+  @override
+  String get continueToConfirm => 'المتابعة للتأكيد';
+  @override
+  String get selectASlot => 'يرجى اختيار موعد متاح';
+  @override
+  String get slotConflictTitle => 'تعارض في الموعد';
+  @override
+  String get slotConflictBody =>
+      'تم حجز هذا الموعد للتو. يرجى اختيار موعد آخر.';
+  @override
+  String get confirmBooking => 'تأكيد الحجز';
+  @override
+  String get bookingSummary => 'ملخص الحجز';
+  @override
+  String get testPrice => 'سعر التحليل';
+  @override
+  String get patientNotesOptional => 'ملاحظات إضافية (اختياري)';
+  @override
+  String get patientNotesHint => 'أضف أي تعليمات خاصة للمركز...';
+  @override
+  String get confirmAndBook => 'تأكيد وحجز';
+  @override
+  String get bookingSubmitted => 'تم إرسال الحجز بنجاح';
+  @override
+  String get yourTestIsBooked => 'تم حجز تحليلك التشخيصي بنجاح';
+  @override
+  String get backToLabs => 'العودة للمختبرات والأشعة';
+  @override
+  String get myOrders => 'طلباتي';
+  @override
+  String get orderRef => 'رقم الطلب';
+  @override
+  String get bookedOn => 'حجز في';
+  @override
+  String get slotDate => 'تاريخ الموعد';
+  @override
+  String get slotTime => 'وقت الموعد';
+  @override
+  String get pricing => 'التسعير';
+  @override
+  String get downloadingReport => 'جارٍ تحميل التقرير...';
+  @override
+  String get downloadFailed => 'فشل التحميل. يرجى المحاولة مرة أخرى.';
+  @override
+  String get reportNotReady => 'التقرير غير جاهز للتحميل بعد.';
+  @override
+  String get cancelOrderTitle => 'إلغاء طلب التحليل';
+  @override
+  String get cancelOrderConfirm => 'هل أنت متأكد من إلغاء هذا الطلب؟';
+  @override
+  String get cancelReasonOptional => 'سبب الإلغاء (اختياري)';
+  @override
+  String get keepOrder => 'الاحتفاظ بالطلب';
+  @override
+  String get statusPending => 'قيد الانتظار';
+  @override
+  String get statusConfirmed => 'مؤكد';
+  @override
+  String get statusSampleCollected => 'تم سحب العينة';
+  @override
+  String get statusInProgress => 'قيد التنفيذ';
+  @override
+  String get statusCompleted => 'مكتمل';
+  @override
+  String get statusCancelled => 'ملغي';
+  @override
+  String get statusRejected => 'مرفوض';
 }

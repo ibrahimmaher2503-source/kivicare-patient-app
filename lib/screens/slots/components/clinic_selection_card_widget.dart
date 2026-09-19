@@ -12,7 +12,8 @@ class ClinicSelectionCardWidget extends StatelessWidget {
   final Clinic clinicData;
   final void Function()? onTap;
 
-  const ClinicSelectionCardWidget({super.key, required this.clinicData, this.onTap});
+  const ClinicSelectionCardWidget(
+      {super.key, required this.clinicData, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +29,16 @@ class ClinicSelectionCardWidget extends StatelessWidget {
               width: Get.height * 0.12,
               height: Get.height * 0.12,
               decoration: boxDecorationDefault(),
-              child: CachedImageWidget(url: clinicData.clinicImage, fit: BoxFit.cover, radius: 6),
+              child: CachedImageWidget(
+                  url: clinicData.clinicImage, fit: BoxFit.cover, radius: 6),
             ),
             16.width,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(clinicData.name, overflow: TextOverflow.ellipsis, style: boldTextStyle(size: 16)),
+                Text(clinicData.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: boldTextStyle(size: 16)),
                 if (clinicData.address.isNotEmpty)
                   TextIcon(
                     text: clinicData.address,
@@ -42,7 +46,11 @@ class ClinicSelectionCardWidget extends StatelessWidget {
                     edgeInsets: EdgeInsets.zero,
                     expandedText: true,
                     textStyle: secondaryTextStyle(size: 14),
-                    prefix: const CachedImageWidget(url: Assets.iconsIcLocation, color: secondaryTextColor, width: 14, height: 14),
+                    prefix: const CachedImageWidget(
+                        url: Assets.iconsIcLocation,
+                        color: secondaryTextColor,
+                        width: 14,
+                        height: 14),
                     onTap: () {
                       launchMap(clinicData.address);
                     },
@@ -57,21 +65,33 @@ class ClinicSelectionCardWidget extends StatelessWidget {
                       expandedText: true,
                       useMarquee: true,
                       textStyle: primaryTextStyle(color: appColorPrimary),
-                      prefix: const CachedImageWidget(url: Assets.iconsIcCall, color: secondaryTextColor, width: 14, height: 14),
+                      prefix: const CachedImageWidget(
+                          url: Assets.iconsIcCall,
+                          color: secondaryTextColor,
+                          width: 14,
+                          height: 14),
                       onTap: () {
                         launchMap(clinicData.contactNumber);
                       },
                     ).expand(),
                     6.width,
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 6),
                       decoration: boxDecorationDefault(
-                        color: getClinicStatusLightColor(clinicStatus: clinicData.clinicStatus.toLowerCase()),
+                        color: getClinicStatusLightColor(
+                            clinicStatus:
+                                clinicData.clinicStatus.toLowerCase()),
                         borderRadius: radius(22),
                       ),
                       child: Text(
-                        getClinicStatus(status: clinicData.clinicStatus.toLowerCase()),
-                        style: boldTextStyle(size: 10, color: getClinicStatusColor(clinicStatus: clinicData.clinicStatus.toLowerCase())),
+                        getClinicStatus(
+                            status: clinicData.clinicStatus.toLowerCase()),
+                        style: boldTextStyle(
+                            size: 12,
+                            color: getClinicStatusColor(
+                                clinicStatus:
+                                    clinicData.clinicStatus.toLowerCase())),
                       ),
                     ),
                   ],

@@ -11,7 +11,12 @@ class AppCustomDialog extends StatelessWidget {
   final String? negativeText;
   final Function onTap;
 
-  const AppCustomDialog({super.key, required this.title, this.positiveText, this.negativeText, required this.onTap});
+  const AppCustomDialog(
+      {super.key,
+      required this.title,
+      this.positiveText,
+      this.negativeText,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +28,19 @@ class AppCustomDialog extends StatelessWidget {
           Container(
             height: 140.0,
             width: Get.width,
-            decoration: BoxDecoration(color: appColorPrimary.withValues(alpha: 0.2)),
+            decoration:
+                BoxDecoration(color: appColorPrimary.withValues(alpha: 0.2)),
             alignment: Alignment.center,
             child: Container(
-              decoration: BoxDecoration(color: appColorPrimary.withValues(alpha: 0.2), shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                  color: appColorPrimary.withValues(alpha: 0.2),
+                  shape: BoxShape.circle),
               padding: const EdgeInsets.all(16),
-              child: const Icon(Icons.warning_amber_rounded, color: appColorPrimary, size: 40),
+              child: const Icon(Icons.warning_amber_rounded,
+                  color: appColorPrimary, size: 40),
             ),
-          ).cornerRadiusWithClipRRectOnly(topLeft: defaultRadius.toInt(), topRight: defaultRadius.toInt()),
+          ).cornerRadiusWithClipRRectOnly(
+              topLeft: defaultRadius.toInt(), topRight: defaultRadius.toInt()),
           Container(
             width: Get.width,
             color: Colors.transparent,
@@ -39,7 +49,9 @@ class AppCustomDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(title, style: boldTextStyle(size: 16), textAlign: TextAlign.center),
+                Text(title,
+                    style: boldTextStyle(size: 16),
+                    textAlign: TextAlign.center),
                 30.height,
                 Row(
                   children: [
@@ -53,9 +65,12 @@ class AppCustomDialog extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.close, color: textPrimaryColorGlobal, size: 20),
+                          Icon(Icons.close,
+                              color: textPrimaryColorGlobal, size: 20),
                           6.width,
-                          Text(negativeText ?? 'No', style: boldTextStyle(color: textPrimaryColorGlobal)),
+                          Text(negativeText ?? locale.value.no,
+                              style:
+                                  boldTextStyle(color: textPrimaryColorGlobal)),
                         ],
                       ).fit(),
                       onTap: () {
@@ -66,14 +81,16 @@ class AppCustomDialog extends StatelessWidget {
                     AppButton(
                       elevation: 0,
                       color: appColorPrimary,
-                      shapeBorder: RoundedRectangleBorder(borderRadius: radius(defaultRadius)),
+                      shapeBorder: RoundedRectangleBorder(
+                          borderRadius: radius(defaultRadius)),
                       onTap: onTap,
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(Icons.done, color: Colors.white, size: 20),
                           6.width,
-                          Text(positiveText ?? locale.value.yes, style: boldTextStyle(color: Colors.white)),
+                          Text(positiveText ?? locale.value.yes,
+                              style: boldTextStyle(color: Colors.white)),
                         ],
                       ).fit(),
                     ).expand(),
@@ -81,7 +98,11 @@ class AppCustomDialog extends StatelessWidget {
                 ),
               ],
             ),
-          ).cornerRadiusWithClipRRectOnly(bottomLeft: defaultRadius.toInt(), bottomRight: defaultRadius.toInt()).expand(),
+          )
+              .cornerRadiusWithClipRRectOnly(
+                  bottomLeft: defaultRadius.toInt(),
+                  bottomRight: defaultRadius.toInt())
+              .expand(),
         ],
       ),
     );

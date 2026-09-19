@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:kivicare_patient/screens/service/service_list_controller.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/app_custom_dialog.dart';
@@ -45,7 +43,7 @@ class ServiceDetailScreen extends StatelessWidget {
               future: serviceDetailController.getServiceDetails.value,
               errorBuilder: (error) {
                 return NoDataWidget(
-                  title: error,
+                  title: locale.value.somethingWentWrongPleaseTryAgainLater,
                   retryText: locale.value.reload,
                   imageWidget: const ErrorStateWidget(),
                   onRetry: () {
@@ -60,200 +58,94 @@ class ServiceDetailScreen extends StatelessWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.only(top: 16, bottom: 80),
                   children: [
-                    // Service image with rounded corners
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                            blurRadius: 16,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                    Hero(
+                      tag: serviceDetailController.serviceData.value.serviceImage.trim().isNotEmpty
+                          ? "${serviceDetailController.serviceData.value.id}${serviceDetailController.serviceData.value.serviceImage}"
+                          : UniqueKey(),
+                      child: CachedImageWidget(
+                        url: serviceDetailController.serviceData.value.serviceImage,
+                        fit: BoxFit.cover,
+                        width: Get.width,
+                        height: 230,
+                        radius: defaultRadius / 2,
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Hero(
-                          tag: serviceDetailController.serviceData.value.serviceImage.trim().isNotEmpty
-                              ? "${serviceDetailController.serviceData.value.id}${serviceDetailController.serviceData.value.serviceImage}"
-                              : UniqueKey(),
-                          child: CachedImageWidget(
-                            url: serviceDetailController.serviceData.value.serviceImage,
-                            fit: BoxFit.cover,
-                            width: Get.width,
-                            height: 230,
-                          ),
-                        ),
-                      ),
-                    ),
-                    20.height,
-                    // Service info card
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: isDarkMode.value ? softShadowColorDark : softShadowColor,
-                            blurRadius: 16,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            serviceDetailController.serviceData.value.name,
-                            style: GoogleFonts.outfit(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.3,
-                              color: isDarkMode.value ? Colors.white : primaryTextColor,
-                            ),
-                          ),
-                          12.height,
-                          // Category chip
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: isDarkMode.value
-                                  ? appColorSecondary.withValues(alpha: 0.12)
-                                  : lightSecondaryColor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  '${locale.value.category} : ',
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 12,
-                                    color: secondaryTextColor,
-                                    letterSpacing: 0.1,
-                                  ),
-                                ),
-                                Text(
-                                  serviceDetailController.serviceData.value.categoryName,
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: appColorSecondary,
-                                    letterSpacing: 0.1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          16.height,
-                          // Price section with teal accent
-                          Marquee(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                if (serviceDetailController.serviceData.value.charges != serviceDetailController.serviceData.value.payableAmount)
-                                  PriceWidget(
-                                    price: serviceDetailController.serviceData.value.payableAmount,
-                                    size: 22,
-                                    color: appColorSecondary,
-                                  ).paddingRight(8),
-                                if (!serviceDetailController.serviceData.value.isInclusiveTaxesAvailable)
-                                  PriceWidget(
-                                    price: serviceDetailController.serviceData.value.charges,
-                                    isLineThroughEnabled: serviceDetailController.serviceData.value.isDiscount ? true : false,
-                                    size: serviceDetailController.serviceData.value.isDiscount ? 14 : 22,
-                                    color: serviceDetailController.serviceData.value.isDiscount ? textSecondaryColorGlobal : appColorSecondary,
-                                  ),
-                                if (serviceDetailController.serviceData.value.isDiscount)
-                                  if (serviceDetailController.serviceData.value.discountType == TaxType.PERCENTAGE)
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 8),
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: completedStatusColor.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Text(
-                                        '${serviceDetailController.serviceData.value.discountValue}%  ${locale.value.off}',
-                                        style: GoogleFonts.plusJakartaSans(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w700,
-                                          color: completedStatusColor,
-                                        ),
-                                      ),
-                                    )
-                                  else if (serviceDetailController.serviceData.value.discountType == TaxType.FIXED)
-                                    PriceWidget(
-                                      price: serviceDetailController.serviceData.value.discountValue,
-                                      color: greenColor,
-                                      size: 14,
-                                      isDiscountedPrice: true,
-                                    ).paddingLeft(6),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (serviceDetailController.serviceData.value.isInclusiveTaxesAvailable) ...[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(
-                          locale.value.includesInclusiveTax,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 12,
-                            color: appColorSecondary,
-                            fontStyle: FontStyle.italic,
-                            letterSpacing: 0.1,
-                          ),
-                        ),
-                      ),
-                    ],
-                    // Description section
-                    if (serviceDetailController.serviceData.value.description.isNotEmpty) ...[
-                      24.height,
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: isDarkMode.value ? surfaceElevatedDark : surfaceSubtle,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
+                    ).paddingSymmetric(horizontal: 16),
+                    16.height,
+                    Row(
+                      children: [
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Description',
-                              style: GoogleFonts.outfit(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: -0.3,
-                                color: isDarkMode.value ? Colors.white : primaryTextColor,
-                              ),
+                              serviceDetailController.serviceData.value.name,
+                              style: boldTextStyle(size: 16),
                             ),
                             8.height,
-                            Text(
-                              serviceDetailController.serviceData.value.description,
-                              textAlign: TextAlign.justify,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 13,
-                                color: secondaryTextColor,
-                                letterSpacing: 0.1,
-                                height: 1.5,
+                            Row(
+                              children: [
+                                Text('${locale.value.category} : ', style: secondaryTextStyle()),
+                                Text(
+                                  serviceDetailController.serviceData.value.categoryName,
+                                  style: boldTextStyle(size: 14, color: appColorSecondary),
+                                ),
+                              ],
+                            ),
+                            12.height,
+                            Marquee(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (serviceDetailController.serviceData.value.charges != serviceDetailController.serviceData.value.payableAmount)
+                                    PriceWidget(
+                                      price: serviceDetailController.serviceData.value.payableAmount,
+                                      size: 18,
+                                    ).paddingRight(6),
+                                  if (!serviceDetailController.serviceData.value.isInclusiveTaxesAvailable)
+                                    PriceWidget(
+                                      price: serviceDetailController.serviceData.value.charges,
+                                      isLineThroughEnabled: serviceDetailController.serviceData.value.isDiscount ? true : false,
+                                      size: serviceDetailController.serviceData.value.isDiscount ? 14 : 18,
+                                      color: serviceDetailController.serviceData.value.isDiscount ? textSecondaryColorGlobal : appColorPrimary,
+                                    ),
+                                  if (serviceDetailController.serviceData.value.isDiscount)
+                                    if (serviceDetailController.serviceData.value.discountType == TaxType.PERCENTAGE)
+                                      Text(
+                                        '${serviceDetailController.serviceData.value.discountValue}%  ${locale.value.off}',
+                                        style: boldTextStyle(color: greenColor, size: 14),
+                                      ).paddingLeft(8)
+                                    else if (serviceDetailController.serviceData.value.discountType == TaxType.FIXED)
+                                      PriceWidget(
+                                        price: serviceDetailController.serviceData.value.discountValue,
+                                        color: greenColor,
+                                        size: 14,
+                                        isDiscountedPrice: true,
+                                      ).paddingLeft(6),
+                                ],
                               ),
                             ),
                           ],
-                        ),
-                      ),
+                        ).flexible(),
+                      ],
+                    ).paddingSymmetric(horizontal: 16),
+                    if (serviceDetailController.serviceData.value.isInclusiveTaxesAvailable) ...[
+                      Text(locale.value.includesInclusiveTax, style: secondaryTextStyle(color: appColorSecondary, size: 12, fontStyle: FontStyle.italic)).paddingSymmetric(horizontal: 16)
                     ],
+                    24.height,
+                    if (serviceDetailController.serviceData.value.description.isNotEmpty)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          serviceDetailController.serviceData.value.description,
+                          textAlign: TextAlign.justify,
+                          style: primaryTextStyle(size: 12, color: secondaryTextColor.withValues(alpha: 0.8)),
+                        ),
+                      ).paddingSymmetric(horizontal: 16),
                     ServiceDetailClinicsComponent(
                       serviceDetailController: serviceDetailController,
                       onCardTap: (clinicData) {
+                        /// Store selected clinic in global variable
                         if (clinicData.id == serviceDetailController.selectedClinic.value.id) {
+                          /// Deselect, If again tap on same clinic
                           serviceDetailController.selectedClinic(Clinic(clinicSession: ClinicSession()));
                           currentSelectedClinic(serviceDetailController.selectedClinic.value);
                         } else {
@@ -262,8 +154,8 @@ class ServiceDetailScreen extends StatelessWidget {
                         }
                       },
                       onClickViewDetail: (clinicData) {
+                        /// Store selected clinic in global variable
                         currentSelectedClinic(clinicData);
-                        Get.delete<ServiceListController>();
                         Get.to(() => ClinicDetailScreen(), arguments: clinicData);
                       },
                     ),
@@ -278,7 +170,12 @@ class ServiceDetailScreen extends StatelessWidget {
           Positioned(
             bottom: 16,
             width: Get.width,
-            child: GestureDetector(
+            child: AppButton(
+              margin: EdgeInsets.zero,
+              height: 50,
+              width: Get.width,
+              elevation: 0,
+              color: appColorSecondary,
               onTap: () {
                 if (isFromClinicDetail) {
                   showInDialog(
@@ -298,6 +195,7 @@ class ServiceDetailScreen extends StatelessWidget {
                     },
                   );
                 } else {
+                  /// Store select service in global variable
                   currentSelectedService(serviceDetailController.serviceData.value);
 
                   if (!currentSelectedClinic.value.id.isNegative) {
@@ -307,32 +205,8 @@ class ServiceDetailScreen extends StatelessWidget {
                   }
                 }
               },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [gradientSecondaryStart, gradientSecondaryEnd]),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: appColorSecondary.withValues(alpha: 0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Text(
-                  locale.value.bookNow,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    letterSpacing: 0.1,
-                  ),
-                ),
-              ),
-            ),
+              child: Text(locale.value.bookNow, style: boldTextStyle(size: 14, color: whiteTextColor, weight: FontWeight.w400)),
+            ).paddingSymmetric(horizontal: 16),
           )
         ],
       );

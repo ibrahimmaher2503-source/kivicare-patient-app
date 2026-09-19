@@ -33,7 +33,7 @@ class DoctorsListScreen extends StatelessWidget {
             onFieldSubmitted: (p0) {
               hideKeyboard(context);
             },
-          ).paddingOnly(left: 16, right: 16, top: 16, bottom: 8),
+          ).paddingAll(16),
           Obx(
             () => SnapHelperWidget(
               future: doctorsListCont.doctorsFuture.value,
@@ -67,7 +67,7 @@ class DoctorsListScreen extends StatelessWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   listAnimationType: ListAnimationType.FadeIn,
                   children: [
-                    8.height,
+                    16.height,
                     AnimatedWrap(
                       spacing: 16,
                       runSpacing: 16,
@@ -80,7 +80,6 @@ class DoctorsListScreen extends StatelessWidget {
                         },
                       ),
                     ),
-                    16.height,
                   ],
                   onNextPage: () async {
                     if (!doctorsListCont.isLastPage.value) {
@@ -99,35 +98,14 @@ class DoctorsListScreen extends StatelessWidget {
         ],
       ),
       fabWidget: Obx(
-        () => Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            gradient: const LinearGradient(
-              colors: [gradientSecondaryStart, gradientSecondaryEnd],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: appColorSecondary.withValues(alpha: 0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: FloatingActionButton(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            hoverElevation: 0,
-            focusElevation: 0,
-            highlightElevation: 0,
-            onPressed: () {
-              if (!doctorsListCont.selectedDoctor.value.doctorId.isNegative) {
-                Get.to(() => BookingFormScreen());
-              }
-            },
-            child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20),
-          ),
+        () => FloatingActionButton(
+          backgroundColor: appColorSecondary,
+          onPressed: () {
+            if (!doctorsListCont.selectedDoctor.value.doctorId.isNegative) {
+              Get.to(() => BookingFormScreen());
+            }
+          },
+          child: const Icon(Icons.arrow_forward_ios, color: Colors.white),
         ).visible(doctorsListCont.doctors.isNotEmpty && (!doctorsListCont.selectedDoctor.value.doctorId.isNegative)),
       ),
     );

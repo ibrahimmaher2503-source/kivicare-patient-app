@@ -12,7 +12,8 @@ import 'components/system_service_card.dart';
 class SystemServiceListScreen extends StatelessWidget {
   SystemServiceListScreen({super.key});
 
-  final SystemServiceListController systemServiceListCont = Get.put(SystemServiceListController());
+  final SystemServiceListController systemServiceListCont =
+      Get.put(SystemServiceListController());
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class SystemServiceListScreen extends StatelessWidget {
           future: systemServiceListCont.systemServiceListFuture.value,
           errorBuilder: (error) {
             return NoDataWidget(
-              title: error,
+              title: locale.value.somethingWentWrong,
               retryText: locale.value.reload,
               imageWidget: const ErrorStateWidget(),
               onRetry: () {
@@ -34,7 +35,9 @@ class SystemServiceListScreen extends StatelessWidget {
               },
             ).paddingSymmetric(horizontal: 32);
           },
-          loadingWidget: systemServiceListCont.isLoading.value ? const Offstage() : const LoaderWidget(),
+          loadingWidget: systemServiceListCont.isLoading.value
+              ? const Offstage()
+              : const LoaderWidget(),
           onSuccess: (data) {
             return AnimatedListView(
               shrinkWrap: true,
@@ -44,7 +47,8 @@ class SystemServiceListScreen extends StatelessWidget {
               padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
               emptyWidget: NoDataWidget(
                 title: locale.value.noSystemServicesFoundAtAMoment,
-                subTitle: '${locale.value.looksLikeThereIsNoSystemServicesForThis} $appbarTitle, ${locale.value.wellKeepYouPostedWhenTheresAnUpdate}',
+                subTitle:
+                    '${locale.value.looksLikeThereIsNoSystemServicesForThis} $appbarTitle, ${locale.value.wellKeepYouPostedWhenTheresAnUpdate}',
                 titleTextStyle: primaryTextStyle(),
                 imageWidget: const EmptyStateWidget(),
                 retryText: locale.value.reload,
@@ -52,19 +56,25 @@ class SystemServiceListScreen extends StatelessWidget {
                   systemServiceListCont.page(1);
                   systemServiceListCont.getSystemServiceList();
                 },
-              ).paddingSymmetric(horizontal: 32).paddingBottom(Get.height * 0.1),
+              )
+                  .paddingSymmetric(horizontal: 32)
+                  .paddingBottom(Get.height * 0.1),
               itemBuilder: (context, index) {
-                return SystemServiceCard(systemServiceElement: systemServiceListCont.systemServiceList[index]);
+                return SystemServiceCard(
+                    systemServiceElement:
+                        systemServiceListCont.systemServiceList[index]);
               },
               onNextPage: () async {
                 if (!systemServiceListCont.isLastPage.value) {
-                  systemServiceListCont.page(systemServiceListCont.page.value + 1);
+                  systemServiceListCont
+                      .page(systemServiceListCont.page.value + 1);
                   systemServiceListCont.getSystemServiceList();
                 }
               },
               onSwipeRefresh: () async {
                 systemServiceListCont.page(1);
-                return await systemServiceListCont.getSystemServiceList(showLoader: false);
+                return await systemServiceListCont.getSystemServiceList(
+                    showLoader: false);
               },
             );
           },
@@ -73,5 +83,7 @@ class SystemServiceListScreen extends StatelessWidget {
     );
   }
 
-  String get appbarTitle => systemServiceListCont.category.value.name.isNotEmpty ? systemServiceListCont.category.value.name : "System Services";
+  String get appbarTitle => systemServiceListCont.category.value.name.isNotEmpty
+      ? systemServiceListCont.category.value.name
+      : "System Services";
 }
