@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kivicare_patient/main.dart';
-import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../models/nurse_request_model.dart';
+import 'nurse_request_design.dart';
 
 class AddressSummaryCard extends StatelessWidget {
   final NurseRequestModel request;
@@ -14,11 +14,7 @@ class AddressSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: context.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: softShadowColor, blurRadius: 8, offset: const Offset(0, 2))],
-      ),
+      decoration: nurseRequestCardDecoration(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -53,9 +49,21 @@ class _Row extends StatelessWidget {
         children: [
           SizedBox(
             width: 110,
-            child: Text('$label:', style: secondaryTextStyle(size: 13)),
+            child: Text(
+              '$label:',
+              style: secondaryTextStyle(
+                size: 13,
+                color: nurseRequestMutedColor(context),
+              ),
+            ),
           ),
-          Expanded(child: Text(value, style: primaryTextStyle(size: 13))),
+          Expanded(
+            child: Text(
+              value,
+              style: primaryTextStyle(size: 13),
+              textAlign: TextAlign.start,
+            ),
+          ),
         ],
       ),
     );

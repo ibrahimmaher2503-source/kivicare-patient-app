@@ -24,5 +24,5 @@ class AppLocalizations extends LocalizationsDelegate<BaseLanguage> {
   bool isSupported(Locale locale) => ['en', 'ar'].contains(locale.languageCode);
 
   @override
-  bool shouldReload(LocalizationsDelegate<BaseLanguage> old) => true;
+  bool shouldReload(LocalizationsDelegate<BaseLanguage> old) => false;
 }

@@ -7,6 +7,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../components/app_scaffold.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/locale_formatters.dart';
 import '../components/doctor_info_card.dart';
 import '../components/offer_discount_card.dart';
 import '../components/status_history_tile.dart';
@@ -42,12 +43,14 @@ class VisitRequestDetailScreen extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (controller.error.value.isNotEmpty && controller.request.value == null) {
+        if (controller.error.value.isNotEmpty &&
+            controller.request.value == null) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error_outline, size: 48, color: cancelStatusColor),
+                const Icon(Icons.error_outline,
+                    size: 48, color: cancelStatusColor),
                 const SizedBox(height: 12),
                 Text(locale.value.somethingWentWrong, style: boldTextStyle()),
                 const SizedBox(height: 8),
@@ -88,7 +91,8 @@ class VisitRequestDetailScreen extends StatelessWidget {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              Clipboard.setData(ClipboardData(text: req.referenceNumber));
+                              Clipboard.setData(
+                                  ClipboardData(text: req.referenceNumber));
                               toast(locale.value.referenceCopied);
                             },
                             child: Row(
@@ -96,11 +100,13 @@ class VisitRequestDetailScreen extends StatelessWidget {
                                 Flexible(
                                   child: Text(
                                     req.referenceNumber,
-                                    style: boldTextStyle(size: 18, color: white),
+                                    style:
+                                        boldTextStyle(size: 18, color: white),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                const Icon(Icons.copy_outlined, size: 16, color: Colors.white70),
+                                const Icon(Icons.copy_outlined,
+                                    size: 16, color: Colors.white70),
                               ],
                             ),
                           ),
@@ -111,12 +117,58 @@ class VisitRequestDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '${locale.value.submittedOn}: ${DateFormat('d MMM yyyy').format(req.createdAt.toLocal())}',
-                      style: secondaryTextStyle(size: 12, color: Colors.white70),
+                      '${locale.value.submittedOn}: ${DateFormat('d MMM yyyy', activeIntlLocale).format(req.createdAt.toLocal())}',
+                      style:
+                          secondaryTextStyle(size: 12, color: Colors.white70),
                     ),
                   ],
                 ),
               ),
+
+              const SizedBox(height: 20),
+
+              if (req.status == VisitStatus.pending)
+                Semantics(
+                  button: true,
+                  label: locale.value.cancelRequest,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: controller.isCancelling.value
+                          ? null
+                          : () => _showCancellationDialog(context, controller),
+                      icon: const Icon(Icons.cancel_outlined),
+                      label: Text(locale.value.cancelRequest),
+                    ),
+                  ),
+                )
+              else if (req.status == VisitStatus.confirmed)
+                Semantics(
+                  liveRegion: true,
+                  child: Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: context.cardColor,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: gradientStart.withValues(alpha: 0.22),
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.info_outline, color: gradientStart),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            '${locale.value.cancelRequest}: ${locale.value.unavailable}',
+                            style: secondaryTextStyle(size: 13),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
               const SizedBox(height: 20),
 
@@ -128,19 +180,22 @@ class VisitRequestDetailScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Cancellation banner
-              if (req.status == VisitStatus.cancelled && req.cancellationReason != null)
+              if (req.status == VisitStatus.cancelled &&
+                  req.cancellationReason != null)
                 Container(
                   padding: const EdgeInsets.all(16),
                   margin: const EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
                     color: cancelStatusColor.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: cancelStatusColor.withValues(alpha: 0.28)),
+                    border: Border.all(
+                        color: cancelStatusColor.withValues(alpha: 0.28)),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.info_outline, color: cancelStatusColor, size: 20),
+                      const Icon(Icons.info_outline,
+                          color: cancelStatusColor, size: 20),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
@@ -148,10 +203,12 @@ class VisitRequestDetailScreen extends StatelessWidget {
                           children: [
                             Text(
                               locale.value.cancellationReason,
-                              style: boldTextStyle(size: 13, color: cancelStatusColor),
+                              style: boldTextStyle(
+                                  size: 13, color: cancelStatusColor),
                             ),
                             const SizedBox(height: 4),
-                            Text(req.cancellationReason!, style: primaryTextStyle(size: 13)),
+                            Text(req.cancellationReason!,
+                                style: primaryTextStyle(size: 13)),
                           ],
                         ),
                       ),
@@ -170,14 +227,16 @@ class VisitRequestDetailScreen extends StatelessWidget {
               _InfoTile(
                 icon: Icons.calendar_today_outlined,
                 label: locale.value.preferredDate,
-                value: DateFormat('EEEE, d MMMM yyyy').format(req.preferredDate),
+                value: DateFormat('EEEE, d MMMM yyyy', activeIntlLocale)
+                    .format(req.preferredDate),
               ),
               _InfoTile(
                 icon: Icons.phone_outlined,
                 label: locale.value.contactPhone,
                 value: req.contactPhone,
               ),
-              if (req.additionalNotes != null && req.additionalNotes!.isNotEmpty)
+              if (req.additionalNotes != null &&
+                  req.additionalNotes!.isNotEmpty)
                 _InfoTile(
                   icon: Icons.comment_outlined,
                   label: locale.value.additionalNotes,
@@ -223,21 +282,25 @@ class VisitRequestDetailScreen extends StatelessWidget {
                 ),
 
               // Completed at
-              if (req.status == VisitStatus.completed && req.completedAt != null) ...[
+              if (req.status == VisitStatus.completed &&
+                  req.completedAt != null) ...[
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: completedStatusColor.withValues(alpha: 0.09),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: completedStatusColor.withValues(alpha: 0.28)),
+                    border: Border.all(
+                        color: completedStatusColor.withValues(alpha: 0.28)),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.task_alt, color: completedStatusColor, size: 20),
+                      const Icon(Icons.task_alt,
+                          color: completedStatusColor, size: 20),
                       const SizedBox(width: 10),
                       Text(
-                        '${locale.value.visitCompletedAt}: ${DateFormat('d MMM yyyy').format(req.completedAt!.toLocal())}',
-                        style: boldTextStyle(size: 13, color: completedStatusColor),
+                        '${locale.value.visitCompletedAt}: ${DateFormat('d MMM yyyy', activeIntlLocale).format(req.completedAt!.toLocal())}',
+                        style: boldTextStyle(
+                            size: 13, color: completedStatusColor),
                       ),
                     ],
                   ),
@@ -260,6 +323,57 @@ class VisitRequestDetailScreen extends StatelessWidget {
   }
 }
 
+Future<void> _showCancellationDialog(
+  BuildContext context,
+  VisitRequestDetailController controller,
+) async {
+  final reasonController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  try {
+    final reason = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(locale.value.cancelRequest),
+        content: Form(
+          key: formKey,
+          child: TextFormField(
+            controller: reasonController,
+            autofocus: true,
+            minLines: 2,
+            maxLines: 4,
+            maxLength: 500,
+            textInputAction: TextInputAction.newline,
+            decoration: InputDecoration(
+              labelText: locale.value.cancellationReason,
+              hintText: locale.value.cancellationReason,
+            ),
+            validator: (value) => value == null || value.trim().isEmpty
+                ? locale.value.cancellationReason
+                : null,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(locale.value.cancel),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (formKey.currentState?.validate() ?? false) {
+                Navigator.of(dialogContext).pop(reasonController.text.trim());
+              }
+            },
+            child: Text(locale.value.confirmCancellation),
+          ),
+        ],
+      ),
+    );
+    if (reason != null) await controller.cancelRequest(reason);
+  } finally {
+    reasonController.dispose();
+  }
+}
+
 class _SectionHeader extends StatelessWidget {
   final String title;
 
@@ -279,7 +393,8 @@ class _InfoTile extends StatelessWidget {
   final String label;
   final String value;
 
-  const _InfoTile({required this.icon, required this.label, required this.value});
+  const _InfoTile(
+      {required this.icon, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -294,7 +409,7 @@ class _InfoTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: secondaryTextStyle(size: 11)),
+                Text(label, style: secondaryTextStyle(size: 12)),
                 const SizedBox(height: 2),
                 Text(value, style: primaryTextStyle(size: 13)),
               ],

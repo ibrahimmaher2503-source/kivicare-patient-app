@@ -8,6 +8,7 @@ import '../../../components/cached_image_widget.dart';
 import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/locale_formatters.dart';
 import 'visit_request_form_controller.dart';
 
 class VisitRequestFormScreen extends StatelessWidget {
@@ -60,10 +61,12 @@ class VisitRequestFormScreen extends StatelessWidget {
               top: false,
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+                  color:
+                      isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
                   border: Border(
                     top: BorderSide(
-                      color: isDarkMode.value ? borderColorDark : whiteBorderColor,
+                      color:
+                          isDarkMode.value ? borderColorDark : whiteBorderColor,
                     ),
                   ),
                 ),
@@ -94,7 +97,8 @@ class VisitRequestFormScreen extends StatelessWidget {
                           )
                         : Text(
                             locale.value.submitRequest,
-                            style: boldTextStyle(color: whiteTextColor, size: 16),
+                            style:
+                                boldTextStyle(color: whiteTextColor, size: 16),
                           ),
                   ),
                 ),
@@ -273,7 +277,8 @@ class _ReasonField extends StatelessWidget {
       final errorText = controller.fieldErrors['reason'];
       final border = OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: dark ? borderColorDark : whiteBorderColor),
+        borderSide:
+            BorderSide(color: dark ? borderColorDark : whiteBorderColor),
       );
       final focusedBorder = OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
@@ -322,7 +327,8 @@ class _DatePickerField extends StatelessWidget {
       final dark = isDarkMode.value;
       final errorText = controller.fieldErrors['date'];
       final selected = controller.preferredDate.value;
-      return _buildContent(context, dark: dark, errorText: errorText, selected: selected);
+      return _buildContent(context,
+          dark: dark, errorText: errorText, selected: selected);
     });
   }
 
@@ -374,15 +380,15 @@ class _DatePickerField extends StatelessWidget {
                 Icon(
                   Icons.calendar_today_outlined,
                   size: 18,
-                  color: errorText != null
-                      ? cancelStatusColor
-                      : appColorSecondary,
+                  color:
+                      errorText != null ? cancelStatusColor : appColorSecondary,
                 ),
                 12.width,
                 Expanded(
                   child: Text(
                     selected != null
-                        ? DateFormat('EEEE, d MMMM yyyy').format(selected)
+                        ? DateFormat('EEEE, d MMMM yyyy', activeIntlLocale)
+                            .format(selected)
                         : locale.value.preferredDate,
                     style: selected != null
                         ? primaryTextStyle(size: 14)
@@ -428,8 +434,7 @@ class _PhoneField extends StatelessWidget {
       );
       final focusedBorder = OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide:
-            const BorderSide(color: gradientSecondaryStart, width: 1.4),
+        borderSide: const BorderSide(color: gradientSecondaryStart, width: 1.4),
       );
       final errorBorder = OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
@@ -558,8 +563,7 @@ class _NotesField extends StatelessWidget {
       );
       final focusedBorder = OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide:
-            const BorderSide(color: gradientSecondaryStart, width: 1.4),
+        borderSide: const BorderSide(color: gradientSecondaryStart, width: 1.4),
       );
       final errorBorder = OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),

@@ -7,6 +7,7 @@ import '../../api/core_apis.dart';
 import '../../components/app_scaffold.dart';
 import '../../components/cached_image_widget.dart';
 import '../../main.dart';
+import '../../network/network_utils.dart';
 import '../../utils/constants.dart';
 import '../auth/model/common_model.dart';
 import 'components/incident_description_conponent.dart';
@@ -30,6 +31,14 @@ class IncidentDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final statusName = incident.statusName.isNotEmpty
+        ? incident.statusName
+        : incident.incidenceTypeName;
+    final normalizedStatus = statusName.toLowerCase();
+    final status = incidentStatuses.firstWhere(
+      (e) => normalizedStatus.contains(e.slug),
+      orElse: () => CMNModel(slug: normalizedStatus),
+    );
     return AppScaffoldNew(
       appBartitleText: "${locale.value.incident} #${incident.id}",
       hasLeadingWidget: true,
@@ -37,39 +46,44 @@ class IncidentDetailScreen extends StatelessWidget {
       body: AnimatedScrollView(
         physics: AlwaysScrollableScrollPhysics(),
         listAnimationType: ListAnimationType.Scale,
-        fadeInConfiguration: FadeInConfiguration(duration: GetNumUtils(1).seconds),
+        fadeInConfiguration:
+            FadeInConfiguration(duration: GetNumUtils(1).seconds),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           16.height,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('#${incident.id}', style: boldTextStyle(color: context.primaryColor)),
+              Text('#${incident.id}',
+                  style: boldTextStyle(color: context.primaryColor)),
               Card(
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                color: incident.incidenceTypeName.toLowerCase() == 'open'
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                color: normalizedStatus.contains('open')
                     ? context.primaryColor
-                    : incident.incidenceTypeName.toLowerCase() == 'closed'
+                    : normalizedStatus.contains('closed')
                         ? Colors.green
                         : redTextColor,
                 child: Text(
-                  incidentStatuses
-                      .firstWhere(
-                        (e) => incident.incidenceTypeName.toLowerCase().contains(e.slug),
-                        orElse: () => CMNModel(slug: incident.incidenceTypeName.toLowerCase()),
-                      )
-                      .name,
+                  status.name,
                   style: primaryTextStyle(size: 14, color: Colors.white),
                 ).paddingSymmetric(horizontal: 14, vertical: 5),
               ),
             ],
           ),
           8.height,
-          Text(incident.createdAt.validate().dateInddMMMyyyyHHmmAmPmFormat, style: secondaryTextStyle()),
-          IncidentDescriptionComponent(description: incident.description.validate(), title: incident.title.validate()),
-          IncidentDescriptionComponent(description: incident.email.validate(), title: locale.value.email),
-          IncidentDescriptionComponent(description: incident.phone.validate(), title: locale.value.phoneNumber),
+          Text(incident.createdAt.validate().dateInddMMMyyyyHHmmAmPmFormat,
+              style: secondaryTextStyle()),
+          IncidentDescriptionComponent(
+              description: incident.description.validate(),
+              title: incident.title.validate()),
+          IncidentDescriptionComponent(
+              description: incident.email.validate(),
+              title: locale.value.email),
+          IncidentDescriptionComponent(
+              description: incident.phone.validate(),
+              title: locale.value.phoneNumber),
           16.height,
           CachedImageWidget(
             url: incident.fileUrl.validate(),
@@ -101,8 +115,12 @@ class IncidentDetailScreen extends StatelessWidget {
                                 style: secondaryTextStyle(size: 12),
                                 children: [
                                   TextSpan(text: "${locale.value.createdBy} "),
-                                  TextSpan(text: incident.name, style: boldTextStyle(size: 14)),
-                                  TextSpan(text: " on ${incident.createdAt.dateInddMMMyyyyHHmmAmPmFormat}"),
+                                  TextSpan(
+                                      text: incident.name,
+                                      style: boldTextStyle(size: 14)),
+                                  TextSpan(
+                                      text:
+                                          " ${locale.value.createdOn} ${incident.createdAt.dateInddMMMyyyyHHmmAmPmFormat}"),
                                 ],
                               ),
                             ),
@@ -113,7 +131,9 @@ class IncidentDetailScreen extends StatelessWidget {
                     ],
                   ),
                   if (incident.reply.validate().isNotEmpty) ...[
-                    Text(locale.value.reply, style: boldTextStyle(size: 14, color: secondaryTextColor)),
+                    Text(locale.value.reply,
+                        style:
+                            boldTextStyle(size: 14, color: secondaryTextColor)),
                     8.height,
                     Container(
                       width: double.infinity,
@@ -134,7 +154,8 @@ class IncidentDetailScreen extends StatelessWidget {
                     text: locale.value.markAsClosed,
                     textColor: Colors.white,
                     color: context.primaryColor,
-                    shapeBorder: RoundedRectangleBorder(borderRadius: radius(12)),
+                    shapeBorder:
+                        RoundedRectangleBorder(borderRadius: radius(12)),
                     onTap: onMarkClosed,
                   ).paddingTop(16).visible(!isClosed && !isRejected),
                 ],
@@ -151,13 +172,16 @@ class IncidentDetailScreen extends StatelessWidget {
       "incident_type": 2, // 2 is the ID for "Closed"
     };
     incidentController.isLoading(true);
-    await CoreServiceApis.updateIncidentStatus(incidentId: incident.id, request: request).then((res) {
-      toast(res.message);
+    await CoreServiceApis.updateIncidentStatus(
+            incidentId: incident.id, request: request)
+        .then((res) {
+      toast(
+          sanitizeBackendMessage(res.message, locale.value.somethingWentWrong));
       incidentController.incidencePage(1);
       incidentController.getIncidents();
       Get.back();
     }).catchError((e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     }).whenComplete(() {
       incidentController.isLoading(false);
     });

@@ -25,13 +25,17 @@ class DoctorListController extends GetxController {
   StreamController<String> searchDoctorStream = StreamController<String>();
   final _scrollController = ScrollController();
   RxInt isPopular = (-1).obs;
+
   ///Service Filter
   RxString serviceType = "".obs;
   RxString ratingMin = ''.obs;
   RxString ratingMax = ''.obs;
+  final Rxn<int> governorateId = Rxn<int>();
+  final Rxn<int> cityId = Rxn<int>();
   @override
   void onInit() {
-    _scrollController.addListener(() => Get.context != null ? hideKeyboard(Get.context) : null);
+    _scrollController.addListener(
+        () => Get.context != null ? hideKeyboard(Get.context) : null);
     searchDoctorStream.stream.debounce(const Duration(seconds: 1)).listen((s) {
       getDoctors();
     });
@@ -39,7 +43,7 @@ class DoctorListController extends GetxController {
       clinicId(Get.arguments as int);
       getDoctors();
     } else if (Get.arguments is ServiceElement) {
-      clinicId(Get.arguments);
+      currentSelectedService(Get.arguments as ServiceElement);
       getDoctors();
     } else {
       getDoctors();
@@ -58,9 +62,13 @@ class DoctorListController extends GetxController {
         doctorRatingMin: ratingMin.value,
         doctorRatingMax: ratingMax.value,
         doctors: doctors,
-        serviceId: currentSelectedService.value.id == -1 ? null : currentSelectedService.value.id,
+        serviceId: currentSelectedService.value.id == -1
+            ? null
+            : currentSelectedService.value.id,
         clinicId: clinicId.value,
         search: searchDoctorCont.text.trim(),
+        governorateId: governorateId.value,
+        cityId: cityId.value,
         lastPageCallBack: (p0) {
           isLastPage(p0);
         },
@@ -76,9 +84,8 @@ class DoctorListController extends GetxController {
   @override
   void onClose() {
     searchDoctorStream.close();
-    if (Get.context != null) {
-      _scrollController.removeListener(() => hideKeyboard(Get.context));
-    }
+    searchDoctorCont.dispose();
+    _scrollController.dispose();
     super.onClose();
   }
 }

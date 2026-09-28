@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/utils/colors.dart';
+import 'package:kivicare_patient/utils/locale_formatters.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../models/nurse_status.dart';
 import '../models/status_history_entry.dart';
+import 'nurse_request_design.dart';
 
 class NurseStatusHistoryTile extends StatelessWidget {
   final StatusHistoryEntry entry;
@@ -15,13 +16,23 @@ class NurseStatusHistoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final prev = entry.previousStatus != null
-        ? NurseStatusExtension.fromString(entry.previousStatus).displayLabel(locale.value)
+        ? NurseStatusExtension.fromString(
+            entry.previousStatus,
+          ).displayLabel(locale.value)
         : null;
-    final next = NurseStatusExtension.fromString(entry.newStatus).displayLabel(locale.value);
-    final timestamp = DateFormat('dd MMM yyyy HH:mm').format(entry.changedAt);
+    final next = NurseStatusExtension.fromString(
+      entry.newStatus,
+    ).displayLabel(locale.value);
+    final timestamp = formatLocalizedDate(entry.changedAt, 'dd MMM yyyy HH:mm');
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: nurseRequestSubtleSurface(context),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: nurseRequestBorderColor(context)),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -29,7 +40,10 @@ class NurseStatusHistoryTile extends StatelessWidget {
             width: 8,
             height: 8,
             margin: const EdgeInsets.only(top: 5),
-            decoration: BoxDecoration(color: gradientStart, shape: BoxShape.circle),
+            decoration: const BoxDecoration(
+              color: gradientSecondaryStart,
+              shape: BoxShape.circle,
+            ),
           ),
           12.width,
           Expanded(
@@ -37,14 +51,23 @@ class NurseStatusHistoryTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  prev != null ? '$prev → $next' : next,
+                  prev != null ? '$prev -> $next' : next,
                   style: boldTextStyle(size: 13),
                 ),
                 if (entry.note != null && entry.note!.isNotEmpty)
-                  Text(entry.note!, style: secondaryTextStyle(size: 12)),
+                  Text(
+                    entry.note!,
+                    style: secondaryTextStyle(
+                      size: 12,
+                      color: nurseRequestMutedColor(context),
+                    ),
+                  ),
                 Text(
                   timestamp,
-                  style: secondaryTextStyle(size: 11, color: Colors.grey),
+                  style: secondaryTextStyle(
+                    size: 12,
+                    color: nurseRequestMutedColor(context),
+                  ),
                 ),
               ],
             ),

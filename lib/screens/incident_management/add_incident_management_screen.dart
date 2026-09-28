@@ -40,14 +40,19 @@ class AddIncidentManagement extends StatelessWidget {
                           focus: controller.titleFocus,
                           nextFocus: controller.desFocus,
                           textFieldType: TextFieldType.NAME,
-                          errorThisFieldRequired: locale.value.thisFieldIsRequired,
+                          errorThisFieldRequired:
+                              locale.value.thisFieldIsRequired,
                           decoration: inputDecoration(
                             context,
                             hintText: locale.value.title,
                             fillColor: context.cardColor,
                             filled: true,
                           ),
-                          suffix: commonLeadingWid(imgPath: Assets.iconsIcNotebook, color: secondaryTextColor, size: 12).paddingAll(16),
+                          suffix: commonLeadingWid(
+                                  imgPath: Assets.iconsIcNotebook,
+                                  color: secondaryTextColor,
+                                  size: 12)
+                              .paddingAll(16),
                         ),
                         16.height,
                         AppTextField(
@@ -58,10 +63,12 @@ class AddIncidentManagement extends StatelessWidget {
                           maxLength: 500,
                           minLines: 5,
                           focus: controller.desFocus,
-                          errorThisFieldRequired: locale.value.thisFieldIsRequired,
+                          errorThisFieldRequired:
+                              locale.value.thisFieldIsRequired,
                           decoration: inputDecoration(
                             context,
-                            hintText: locale.value.enterYourDetailDescriptionForYourComplaint,
+                            hintText: locale.value
+                                .enterYourDetailDescriptionForYourComplaint,
                             fillColor: context.cardColor,
                             filled: true,
                           ),
@@ -74,15 +81,18 @@ class AddIncidentManagement extends StatelessWidget {
                               () => AppTextField(
                                 textStyle: primaryTextStyle(size: 12),
                                 textFieldType: TextFieldType.OTHER,
-                                controller: TextEditingController(text: " +${controller.pickedPhoneCode.value.phoneCode}"),
+                                controller: controller.phoneCodeCont,
                                 focus: controller.phoneCodeFocus,
                                 nextFocus: controller.mobileFocus,
-                                errorThisFieldRequired: locale.value.thisFieldIsRequired,
+                                errorThisFieldRequired:
+                                    locale.value.thisFieldIsRequired,
                                 readOnly: true,
                                 onTap: () {
-                                  pickCountry(context, onSelect: (Country country) {
+                                  pickCountry(context,
+                                      onSelect: (Country country) {
                                     controller.pickedPhoneCode(country);
-                                    controller.phoneCodeCont.text = controller.pickedPhoneCode.value.phoneCode;
+                                    controller.phoneCodeCont.text = controller
+                                        .pickedPhoneCode.value.phoneCode;
                                   });
                                 },
                                 textAlign: TextAlign.center,
@@ -92,13 +102,15 @@ class AddIncidentManagement extends StatelessWidget {
                                   prefixIcon: Text(
                                     controller.pickedPhoneCode.value.flagEmoji,
                                   ).paddingOnly(top: 2, left: 8),
-                                  prefixIconConstraints: BoxConstraints.tight(const Size(24, 24)),
+                                  prefixIconConstraints:
+                                      BoxConstraints.tight(const Size(24, 24)),
                                   suffixIcon: const Icon(
                                     Icons.keyboard_arrow_down_rounded,
                                     color: dividerColor,
                                     size: 22,
                                   ).paddingOnly(right: 32),
-                                  suffixIconConstraints: BoxConstraints.tight(const Size(24, 24)),
+                                  suffixIconConstraints:
+                                      BoxConstraints.tight(const Size(24, 24)),
                                   fillColor: context.cardColor,
                                   filled: true,
                                 ),
@@ -110,10 +122,12 @@ class AddIncidentManagement extends StatelessWidget {
                               textFieldType: TextFieldType.PHONE,
                               controller: controller.mobileCont,
                               focus: controller.mobileFocus,
-                              errorThisFieldRequired: locale.value.thisFieldIsRequired,
+                              errorThisFieldRequired:
+                                  locale.value.thisFieldIsRequired,
                               keyboardType: TextInputType.phone,
                               inputFormatters: [
-                                FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+                                FilteringTextInputFormatter.allow(
+                                    RegExp('[0-9]')),
                               ],
                               decoration: inputDecoration(
                                 context,
@@ -121,7 +135,11 @@ class AddIncidentManagement extends StatelessWidget {
                                 fillColor: context.cardColor,
                                 filled: true,
                               ),
-                              suffix: commonLeadingWid(imgPath: Assets.iconsIcCall, color: secondaryTextColor, size: 12).paddingAll(16),
+                              suffix: commonLeadingWid(
+                                      imgPath: Assets.iconsIcCall,
+                                      color: secondaryTextColor,
+                                      size: 12)
+                                  .paddingAll(16),
                             ).expand(flex: 8),
                           ],
                         ),
@@ -132,7 +150,8 @@ class AddIncidentManagement extends StatelessWidget {
                           focus: controller.emailFocus,
                           nextFocus: controller.mobileFocus,
                           textFieldType: TextFieldType.EMAIL_ENHANCED,
-                          errorThisFieldRequired: locale.value.thisFieldIsRequired,
+                          errorThisFieldRequired:
+                              locale.value.thisFieldIsRequired,
                           errorInvalidEmail: locale.value.pleaseEnterValidEmail,
                           decoration: inputDecoration(
                             context,
@@ -140,7 +159,11 @@ class AddIncidentManagement extends StatelessWidget {
                             fillColor: context.cardColor,
                             filled: true,
                           ),
-                          suffix: commonLeadingWid(imgPath: Assets.iconsIcMail, color: secondaryTextColor, size: 12).paddingAll(16),
+                          suffix: commonLeadingWid(
+                                  imgPath: Assets.iconsIcMail,
+                                  color: secondaryTextColor,
+                                  size: 12)
+                              .paddingAll(16),
                         ),
                         16.height,
                         AppTextField(
@@ -151,11 +174,14 @@ class AddIncidentManagement extends StatelessWidget {
                           focus: controller.imageTitleFocus,
                           onTap: () => controller.pickImage(),
                           readOnly: true,
-                          errorThisFieldRequired: locale.value.thisFieldIsRequired,
+                          errorThisFieldRequired:
+                              locale.value.thisFieldIsRequired,
                           decoration: inputDecoration(
                             suffixIcon: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(bottomRight: Radius.circular(5), topRight: Radius.circular(5)),
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(5),
+                                    topRight: Radius.circular(5)),
                                 color: Colors.grey[300],
                               ),
                               width: 75,
@@ -182,31 +208,35 @@ class AddIncidentManagement extends StatelessWidget {
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: AppButton(
-                    width: Get.width,
-                    color: appColorSecondary,
-                    text: locale.value.submit,
-                    textStyle: appButtonTextStyleWhite,
-                    onTap: () async {
-                      if (formKey.currentState!.validate()) {
-                        controller
-                            .submitAPI(
-                          title: controller.titleCont.text,
-                          description: controller.desCont.text,
-                          phoneCode: controller.phoneCodeCont.text,
-                          mobileNumber: controller.mobileCont.text,
-                          email: controller.emailCont.text,
-                          imageFile: controller.imageFile.value,
-                        ).then(
-                          (value) async {
-                            controller.clearTextFields();
-                            await controller.getIncidents();
-                            Get.back();
-                          },
-                        ); //image:  controller.imageTitleCont.text,
-                      }
-                    },
-                  ),
+                  child: Obx(() => AppButton(
+                        width: Get.width,
+                        color: appColorSecondary,
+                        disabledColor: appColorSecondary.withValues(alpha: 0.5),
+                        enabled: !controller.isLoading.value,
+                        text: controller.isLoading.value
+                            ? locale.value.submitting
+                            : locale.value.submit,
+                        textStyle: appButtonTextStyleWhite,
+                        onTap: () async {
+                          if (controller.isLoading.value ||
+                              !formKey.currentState!.validate()) {
+                            return;
+                          }
+                          final submitted = await controller.submitAPI(
+                            title: controller.titleCont.text,
+                            description: controller.desCont.text,
+                            phoneCode: controller.phoneCodeCont.text,
+                            mobileNumber: controller.mobileCont.text,
+                            email: controller.emailCont.text,
+                            imageFile: controller.imageFile.value,
+                          );
+                          if (!submitted) return;
+
+                          controller.clearTextFields();
+                          await controller.getIncidents();
+                          Get.back();
+                        },
+                      )),
                 ),
               ),
             ],

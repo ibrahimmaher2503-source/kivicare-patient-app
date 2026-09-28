@@ -29,24 +29,31 @@ class ClinicListController extends GetxController {
   RxString priceMin = ''.obs;
   RxString priceMax = ''.obs;
   RxInt clinicId = (-1).obs;
+  final Rxn<int> governorateId = Rxn<int>();
+  final Rxn<int> cityId = Rxn<int>();
+
+  int get activeFilterCount {
+    var count = 0;
+    if (service.value.id > 0) count++;
+    if (priceMin.value.isNotEmpty || priceMax.value.isNotEmpty) count++;
+    if (governorateId.value != null) count++;
+    if (cityId.value != null) count++;
+    return count;
+  }
 
   @override
   void onInit() {
-    _scrollController.addListener(() => Get.context != null ? hideKeyboard(Get.context) : null);
+    _scrollController.addListener(
+        () => Get.context != null ? hideKeyboard(Get.context) : null);
     searchClinicStream.stream.debounce(const Duration(seconds: 1)).listen((s) {
       getClinicList();
     });
     if (Get.arguments is ServiceElement) {
       service(Get.arguments);
-    }
-    else if(Get.arguments   is Map){
-
-      getClinicList();
-    }
-    else if (Get.arguments is int) {
+    } else if (Get.arguments is Map) {
+      // Filters are applied before the single initial request below.
+    } else if (Get.arguments is int) {
       clinicId(Get.arguments as int);
-      log('clinicId==== $clinicId');
-      getClinicList();
     }
     getClinicList();
     super.onInit();
@@ -66,6 +73,8 @@ class ClinicListController extends GetxController {
         servicePriceMax: priceMax.value,
         clinicId: clinicId.value,
         isPopulars: isPopular.value,
+        governorateId: governorateId.value,
+        cityId: cityId.value,
         lastPageCallBack: (p0) {
           isLastPage(p0);
         },
@@ -81,9 +90,8 @@ class ClinicListController extends GetxController {
   @override
   void onClose() {
     searchClinicStream.close();
-    if (Get.context != null) {
-      _scrollController.removeListener(() => hideKeyboard(Get.context));
-    }
+    searchClinicCont.dispose();
+    _scrollController.dispose();
     super.onClose();
   }
 }

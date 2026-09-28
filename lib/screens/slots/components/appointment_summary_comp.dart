@@ -11,6 +11,7 @@ import '../../../main.dart';
 import '../../../utils/common_base.dart';
 import '../../../utils/constants.dart';
 import '../../booking/model/booking_req.dart';
+import '../../booking/model/save_booking_res.dart';
 import '../../payment/payment_controller.dart';
 import '../../payment/payment_screen.dart';
 
@@ -18,7 +19,8 @@ class AppointmentSummaryWidget extends StatelessWidget {
   final BookingReq bookingData;
   final bool isQuickBook;
 
-  const AppointmentSummaryWidget({super.key, required this.bookingData, this.isQuickBook = false});
+  const AppointmentSummaryWidget(
+      {super.key, required this.bookingData, this.isQuickBook = false});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,8 @@ class AppointmentSummaryWidget extends StatelessWidget {
           width: Get.width,
           alignment: Alignment.center,
           padding: const EdgeInsets.only(top: 16, bottom: 16),
-          decoration: boxDecorationDefault(color: context.cardColor, borderRadius: BorderRadius.circular(8)),
+          decoration: boxDecorationDefault(
+              color: context.cardColor, borderRadius: BorderRadius.circular(8)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -40,21 +43,29 @@ class AppointmentSummaryWidget extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
               16.height,
-              Text(locale.value.appointmentsSummary, style: boldTextStyle(size: 16)),
+              Text(locale.value.appointmentsSummary,
+                  style: boldTextStyle(size: 16)),
               8.height,
               Container(
                 width: Get.width,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(16),
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: boxDecorationDefault(color: isDarkMode.value ? appScreenBackgroundDark : appScreenGreyBackground, borderRadius: BorderRadius.circular(8)),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                decoration: boxDecorationDefault(
+                    color: isDarkMode.value
+                        ? appScreenBackgroundDark
+                        : appScreenGreyBackground,
+                    borderRadius: BorderRadius.circular(8)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("${locale.value.date}:", style: secondaryTextStyle(size: 12)).expand(flex: 1),
+                        Text("${locale.value.date}:",
+                                style: secondaryTextStyle(size: 12))
+                            .expand(flex: 1),
                         16.width,
                         Text(
                           bookingData.appointmentDate.dateInDMMMMyyyyFormat,
@@ -69,7 +80,9 @@ class AppointmentSummaryWidget extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("${locale.value.time}:", style: secondaryTextStyle(size: 12)).expand(flex: 1),
+                        Text("${locale.value.time}:",
+                                style: secondaryTextStyle(size: 12))
+                            .expand(flex: 1),
                         16.width,
                         Text(
                           bookingData.appointmentTime.format24HourtoAMPM,
@@ -84,7 +97,9 @@ class AppointmentSummaryWidget extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("${locale.value.service}:", style: secondaryTextStyle(size: 12)).expand(flex: 1),
+                        Text("${locale.value.service}:",
+                                style: secondaryTextStyle(size: 12))
+                            .expand(flex: 1),
                         16.width,
                         Text(
                           bookingData.serviceName,
@@ -99,7 +114,9 @@ class AppointmentSummaryWidget extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("${locale.value.doctor}:", style: secondaryTextStyle(size: 12)).expand(flex: 1),
+                        Text("${locale.value.doctor}:",
+                                style: secondaryTextStyle(size: 12))
+                            .expand(flex: 1),
                         16.width,
                         Text(
                           bookingData.doctorName,
@@ -110,36 +127,42 @@ class AppointmentSummaryWidget extends StatelessWidget {
                         ).expand(flex: 3),
                       ],
                     ),
-                    8.height,
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("${locale.value.clinic}:", style: secondaryTextStyle(size: 12)).expand(flex: 1),
-                        16.width,
-                        Text(
-                          bookingData.clinicName,
-                          maxLines: 2,
-                          textAlign: TextAlign.end,
-                          overflow: TextOverflow.ellipsis,
-                          style: primaryTextStyle(size: 12),
-                        ).expand(flex: 3),
-                      ],
-                    ),
-                    8.height,
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("${locale.value.location}:", style: secondaryTextStyle(size: 12)).expand(flex: 1),
-                        16.width,
-                        Text(
-                          bookingData.location,
-                          maxLines: 2,
-                          textAlign: TextAlign.end,
-                          overflow: TextOverflow.ellipsis,
-                          style: primaryTextStyle(size: 12),
-                        ).expand(flex: 3),
-                      ],
-                    ),
+                    if (!bookingData.isIndependent) ...[
+                      8.height,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${locale.value.clinic}:",
+                                  style: secondaryTextStyle(size: 12))
+                              .expand(flex: 1),
+                          16.width,
+                          Text(
+                            bookingData.clinicName,
+                            maxLines: 2,
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
+                            style: primaryTextStyle(size: 12),
+                          ).expand(flex: 3),
+                        ],
+                      ),
+                      8.height,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${locale.value.location}:",
+                                  style: secondaryTextStyle(size: 12))
+                              .expand(flex: 1),
+                          16.width,
+                          Text(
+                            bookingData.location,
+                            maxLines: 2,
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
+                            style: primaryTextStyle(size: 12),
+                          ).expand(flex: 3),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -150,17 +173,35 @@ class AppointmentSummaryWidget extends StatelessWidget {
                 text: locale.value.proceed,
                 color: appColorSecondary,
                 textStyle: appButtonTextStyleWhite,
-                shapeBorder: RoundedRectangleBorder(borderRadius: radius(defaultAppButtonRadius / 2)),
+                shapeBorder: RoundedRectangleBorder(
+                    borderRadius: radius(defaultAppButtonRadius / 2)),
                 onTap: () {
                   Get.back(result: true);
-                  paymentController = PaymentController();
+                  // New booking intent: drop any booking created in a previous
+                  // flow so the payment is never applied to a stale booking id.
+                  saveBookingRes(
+                      SaveBookingRes(saveBookingResData: SaveBookingResData()));
+                  final paymentController = PaymentController();
                   paymentController.bookingData = bookingData;
-                  if(isQuickBook){paymentController.paymentOption(PaymentMethods.PAYMENT_METHOD_CASH);}
-                  if (bookingData.isEnableAdvancePayment) {
-                    paymentController.paymentOption(PaymentMethods.PAYMENT_METHOD_STRIPE);
+                  if (isQuickBook) {
+                    paymentController
+                        .paymentOption(PaymentMethods.PAYMENT_METHOD_CASH);
                   }
-                  if(!isQuickBook)AuthServiceApis.getUserWallet();
-                  Get.to(() =>  PaymentScreen(isQuickBook: isQuickBook));
+                  if (bookingData.isIndependent) {
+                    paymentController
+                        .paymentOption(PaymentMethods.PAYMENT_METHOD_CASH);
+                  }
+                  if (bookingData.isEnableAdvancePayment) {
+                    paymentController
+                        .paymentOption(defaultOnlinePaymentMethod());
+                  }
+                  if (!isQuickBook) AuthServiceApis.getUserWallet();
+                  Get.to(
+                    () => PaymentScreen(
+                      paymentController: paymentController,
+                      isQuickBook: isQuickBook,
+                    ),
+                  )?.whenComplete(paymentController.onClose);
                 },
               )
             ],

@@ -1,0 +1,96 @@
+name: Flutter quality gates
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  secret-history-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+
+  analyze-test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.41.9
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze --no-pub
+      - run: flutter test --no-pub
+      - run: flutter build apk --debug --no-pub
+      - run: flutter build apk --profile --no-pub
+      - name: Prepare clean release build and verify plugin registrant
+        run: |
+          set -Eeuo pipefail
+          flutter clean
+          flutter pub get
+          registrant="android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java"
+          test -f "$registrant"
+          if grep -Fq 'IntegrationTestPlugin' "$registrant"; then
+            echo "::error file=$registrant::GeneratedPluginRegistrant.java must not reference IntegrationTestPlugin"
+            exit 1
+          fi
+      - name: Validate Android release configuration
+        run: |
+          set -Eeuo pipefail
+          grep -Eq 'applicationId "com\.espitalia\.patient"' android/app/build.gradle
+          grep -Eq 'targetSdkVersion (3[5-9]|[4-9][0-9])' android/app/build.gradle
+          grep -Fq 'android:label="Espitalia"' android/app/src/main/AndroidManifest.xml
+          grep -Fq 'android:value="${MAPS_API_KEY}"' android/app/src/main/AndroidManifest.xml
+          grep -Fq 'GOOGLE_MAPS_API_KEY' android/app/build.gradle
+          test ! -e android/app/release/output-metadata.json
+      - name: Create ephemeral CI signing key
+        working-directory: android
+        run: |
+          set -Eeuo pipefail
+          ci_store_password="$(openssl rand -hex 24)"
+          ci_key_password="$(openssl rand -hex 24)"
+          keytool -genkeypair -v -keystore ci-upload.jks \
+            -storepass "$ci_store_password" -keypass "$ci_key_password" \
+            -alias ci -keyalg RSA -keysize 2048 -validity 1 -dname "CN=CI" >/dev/null
+          printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=ci\nstoreFile=../ci-upload.jks\n' \
+            "$ci_store_password" "$ci_key_password" > key.properties
+          trap 'rm -f ci-upload.jks key.properties' EXIT
+          cd ..
+          flutter build appbundle --release --target-platform android-arm64 --analyze-size --no-pub
+      - name: Upload release bundle and size analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-artifacts
+          path: |
+            build/app/outputs/bundle/release/app-release.aab
+            ~/.flutter-devtools/aab-code-size-analysis_*.json
+          if-no-files-found: error
+
+  android-integration:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.41.9
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_7
+          script: flutter test integration_test/app_regression_test.dart --no-pub

@@ -13,7 +13,8 @@ import 'components/all_encounters_card.dart';
 class AllEncountersScreen extends StatelessWidget {
   AllEncountersScreen({super.key});
 
-  final AllEncountersController allEncountersCont = Get.put(AllEncountersController());
+  final AllEncountersController allEncountersCont =
+      Get.put(AllEncountersController());
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class AllEncountersScreen extends StatelessWidget {
                 future: allEncountersCont.encounterListFuture.value,
                 errorBuilder: (error) {
                   return NoDataWidget(
-                    title: error,
+                    title: locale.value.somethingWentWrong,
                     retryText: locale.value.reload,
                     imageWidget: const ErrorStateWidget(),
                     onRetry: () {
@@ -39,16 +40,20 @@ class AllEncountersScreen extends StatelessWidget {
                     },
                   ).paddingSymmetric(horizontal: 32);
                 },
-                loadingWidget: allEncountersCont.isLoading.value ? const Offstage() : const LoaderWidget(),
+                loadingWidget: allEncountersCont.isLoading.value
+                    ? const Offstage()
+                    : const LoaderWidget(),
                 onSuccess: (data) {
                   return AnimatedListView(
                     shrinkWrap: true,
-                    padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, top: 16),
                     itemCount: allEncountersCont.encounterList.length,
                     physics: const AlwaysScrollableScrollPhysics(),
                     emptyWidget: NoDataWidget(
                       title: locale.value.noEncountersFound,
-                      subTitle: locale.value.looksLikeThereIsNoEncountersWellKeepYouPosted,
+                      subTitle: locale
+                          .value.looksLikeThereIsNoEncountersWellKeepYouPosted,
                       titleTextStyle: primaryTextStyle(),
                       imageWidget: const EmptyStateWidget(),
                       retryText: locale.value.reload,
@@ -56,23 +61,32 @@ class AllEncountersScreen extends StatelessWidget {
                         allEncountersCont.page(1);
                         allEncountersCont.getAllEncounters();
                       },
-                    ).paddingSymmetric(horizontal: 32).visible(!allEncountersCont.isLoading.value),
+                    )
+                        .paddingSymmetric(horizontal: 32)
+                        .visible(!allEncountersCont.isLoading.value),
                     onNextPage: () async {
                       if (!allEncountersCont.isLastPage.value) {
-                        allEncountersCont.page(allEncountersCont.page.value + 1);
+                        allEncountersCont
+                            .page(allEncountersCont.page.value + 1);
                         allEncountersCont.getAllEncounters();
                       }
                     },
                     onSwipeRefresh: () async {
                       allEncountersCont.page(1);
-                      return await allEncountersCont.getAllEncounters(showLoader: false);
+                      return await allEncountersCont.getAllEncounters(
+                          showLoader: false);
                     },
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
-                          Get.to(() => EncounterDetailScreen(), arguments: allEncountersCont.encounterList[index].id);
+                          Get.to(() => EncounterDetailScreen(),
+                              arguments:
+                                  allEncountersCont.encounterList[index].id);
                         },
-                        child: AllEncountersCard(encounterElement: allEncountersCont.encounterList[index]).paddingBottom(16),
+                        child: AllEncountersCard(
+                                encounterElement:
+                                    allEncountersCont.encounterList[index])
+                            .paddingBottom(16),
                       );
                     },
                   );

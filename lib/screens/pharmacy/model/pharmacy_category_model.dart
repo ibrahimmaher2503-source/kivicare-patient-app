@@ -19,7 +19,10 @@ class PharmacyCategory {
     return PharmacyCategory(
       id: pharmacyInt(json['id']),
       name: json['name'],
-      image: json['image'],
+      image:
+          json['image'] is String && (json['image'] as String).trim().isNotEmpty
+              ? (json['image'] as String).trim()
+              : null,
       parentId: pharmacyInt(json['parent_id']),
       hasSubcategories: pharmacyBool(json['has_subcategories']),
     );

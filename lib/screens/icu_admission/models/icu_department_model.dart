@@ -18,9 +18,12 @@ class IcuDepartment {
   });
 
   factory IcuDepartment.fromJson(Map<String, dynamic> json) {
+    // Backend returns hospital as nested object: {id, name}
+    final hospital = json['hospital'] as Map<String, dynamic>?;
+
     return IcuDepartment(
       id: json['id'] ?? 0,
-      hospitalId: json['hospital_id'],
+      hospitalId: hospital?['id'] ?? json['hospital_id'],
       name: json['name'] ?? '',
       description: json['description'],
       iconUrl: json['icon_url'],

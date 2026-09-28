@@ -2,6 +2,9 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/screens/labs_radiology/labs_radiology_common.dart';
 import '../../../api/labs_radiology_apis.dart';
+import '../../../components/operation_verification_screen.dart';
+import '../../../network/critical_operation.dart';
+import '../../../network/network_utils.dart';
 import '../models/test_order_model.dart';
 import '../shared/service/report_download_service.dart';
 
@@ -28,7 +31,7 @@ class TestOrderDetailController extends GetxController {
       final res = await LabsRadiologyApis.getTestOrderById(orderId);
       order.value = res;
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     } finally {
       isLoading.value = false;
     }
@@ -36,13 +39,36 @@ class TestOrderDetailController extends GetxController {
 
   Future<void> cancelOrder(String? reason) async {
     isLoading.value = true;
+    String? operationKey;
     try {
-      final res =
-          await LabsRadiologyApis.cancelTestOrder(orderId, reason: reason);
+      operationKey = await CriticalOperationStore.begin(
+        CriticalOperationType.testOrderCancellation,
+        scope: orderId.toString(),
+        requestFingerprint: criticalOperationFingerprint({
+          'order_id': orderId,
+          'reason': reason,
+        }),
+      );
+      final res = await LabsRadiologyApis.cancelTestOrder(
+        orderId,
+        reason: reason,
+        idempotencyKey: operationKey,
+      );
+      await CriticalOperationStore.complete(
+        CriticalOperationType.testOrderCancellation,
+        scope: orderId.toString(),
+      );
       order.value = res;
       toast(locale.value.requestCancelled);
     } catch (e) {
-      toast(e.toString());
+      if (e is AmbiguousRequestOutcomeException && operationKey != null) {
+        Get.to(() => OperationVerificationScreen(
+              operationType: CriticalOperationType.testOrderCancellation,
+              operationKey: operationKey,
+            ));
+      } else {
+        toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
+      }
     } finally {
       isLoading.value = false;
     }

@@ -11,6 +11,7 @@ import 'package:kivicare_patient/api/core_apis.dart';
 import '../../api/auth_apis.dart';
 import '../../generated/assets.dart';
 import '../../utils/common_base.dart';
+import '../../network/network_utils.dart';
 import '../home/home_controller.dart';
 import 'model/appointment_status_model.dart';
 import 'model/appointments_res_model.dart';
@@ -18,20 +19,23 @@ import 'model/appointments_res_model.dart';
 class AppointmentsController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isLastPage = false.obs;
-  Rx<Future<RxList<AppointmentData>>> getAppointments = Future(() => RxList<AppointmentData>()).obs;
+  Rx<Future<RxList<AppointmentData>>> getAppointments =
+      Future(() => RxList<AppointmentData>()).obs;
   RxList<AppointmentData> appointments = RxList();
   RxInt page = 1.obs;
   RxSet<String> selectedStatus = RxSet();
   RxSet<String> selectedService = RxSet();
 
   //Tabs
- // RxList<AppointmentStatusModel> filterStatus = RxList();
-  Rx<AppointmentStatusModel> selectedTab = AppointmentStatusModel(icon: Assets.iconsIcMenu, type: AppointmentStatus.all, name: (locale.value.all).obs).obs;
+  // RxList<AppointmentStatusModel> filterStatus = RxList();
+  Rx<AppointmentStatusModel> selectedTab = AppointmentStatusModel(
+          icon: Assets.iconsIcMenu,
+          type: AppointmentStatus.all,
+          name: (locale.value.all).obs)
+      .obs;
 
   @override
   void onInit() {
-
-
     if (filterStatus.isNotEmpty) {
       selectedTab(filterStatus.first);
       getAppointmentList(showLoader: false);
@@ -39,12 +43,13 @@ class AppointmentsController extends GetxController {
     super.onInit();
   }
 
-  Future<void> getAppointmentList({bool showLoader = true, String search = "", String status = ""}) async {
+  Future<void> getAppointmentList(
+      {bool showLoader = true, String search = "", String status = ""}) async {
     if (showLoader) {
       isLoading(true);
     }
     await getAppointments(CoreServiceApis.getAppointmentList(
-      filterByStatus: selectedTab.value.name!.toLowerCase(),
+      filterByStatus: selectedTab.value.type.name,
       page: page.value,
       appointments: appointments,
       lastPageCallBack: (p0) {
@@ -56,7 +61,10 @@ class AppointmentsController extends GetxController {
     }).whenComplete(() => isLoading(false));
   }
 
-  Future<void> updateStatus({required int appointmentId, required String status, VoidCallback? onUpdateBooking}) async {
+  Future<void> updateStatus(
+      {required int appointmentId,
+      required String status,
+      VoidCallback? onUpdateBooking}) async {
     isLoading(true);
     hideKeyBoardWithoutContext();
 
@@ -64,7 +72,9 @@ class AppointmentsController extends GetxController {
       "status": status,
     };
 
-    await CoreServiceApis.updateStatus(request: req, appointmentId: appointmentId).then((value) async {
+    await CoreServiceApis.updateStatus(
+            request: req, appointmentId: appointmentId)
+        .then((value) async {
       if (onUpdateBooking != null) {
         onUpdateBooking.call();
         toast(locale.value.appointmentCancelSuccessfully);
@@ -83,7 +93,11 @@ class AppointmentsController extends GetxController {
       isLoading(false);
     }).catchError((e) {
       isLoading(false);
-      toast(e.toString(), print: true);
+      toast(
+        sanitizeBackendMessage(
+            e, locale.value.somethingWentWrongPleaseTryAgainLater),
+        print: true,
+      );
     });
   }
 }

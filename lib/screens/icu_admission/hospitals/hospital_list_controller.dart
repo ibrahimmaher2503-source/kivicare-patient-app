@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../api/icu_apis.dart';
+import '../../../main.dart';
+import '../../../network/network_utils.dart';
 import '../filter/hospital_filter_controller.dart';
 import '../models/hospital_model.dart';
 
@@ -25,7 +27,8 @@ class HospitalListController extends GetxController {
         ? Get.find<HospitalFilterController>()
         : Get.put(HospitalFilterController());
 
-    debounce(searchStream, (_) => loadFirstPage(), time: const Duration(milliseconds: 400));
+    debounce(searchStream, (_) => loadFirstPage(),
+        time: const Duration(milliseconds: 400));
     loadFirstPage();
   }
 
@@ -44,7 +47,8 @@ class HospitalListController extends GetxController {
       hospitals.assignAll(res.data);
       lastPage = res.lastPage;
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(
+          e, locale.value.somethingWentWrongPleaseTryAgainLater));
     } finally {
       isLoading(false);
     }
@@ -67,7 +71,8 @@ class HospitalListController extends GetxController {
       hospitals.addAll(res.data);
       lastPage = res.lastPage;
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(
+          e, locale.value.somethingWentWrongPleaseTryAgainLater));
       currentPage--;
     } finally {
       isLoadingMore(false);
@@ -76,5 +81,11 @@ class HospitalListController extends GetxController {
 
   Future<void> refreshData() async {
     await loadFirstPage();
+  }
+
+  @override
+  void onClose() {
+    searchCont.dispose();
+    super.onClose();
   }
 }

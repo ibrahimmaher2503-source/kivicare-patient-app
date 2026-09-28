@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import 'app_common.dart';
+import 'locale_formatters.dart';
 
 class PriceWidget extends StatelessWidget {
   final num price;
   final String? priceText;
+  final String? currencyCode;
   final double? size;
   final Color? color;
   final Color? hourlyTextColor;
@@ -33,12 +35,14 @@ class PriceWidget extends StatelessWidget {
     this.isHourlyService = false,
     this.isFreeService = false,
     this.priceText,
+    this.currencyCode,
     this.fontStyle,
   });
 
   @override
   Widget build(BuildContext context) {
-    TextDecoration? textDecoration() => isLineThroughEnabled ? TextDecoration.lineThrough : null;
+    TextDecoration? textDecoration() =>
+        isLineThroughEnabled ? TextDecoration.lineThrough : null;
 
     TextStyle _textStyle({int? aSize}) {
       if (isSemiBoldText) {
@@ -74,7 +78,9 @@ class PriceWidget extends StatelessWidget {
         ),
         Text(
           priceText ??
-              "${leftCurrencyFormat()}${price.validate().toStringAsFixed(appCurrency.value.noOfDecimal).formatNumberWithComma(seperator: appCurrency.value.thousandSeparator)}${rightCurrencyFormat()}",
+              (currencyCode?.trim().isNotEmpty == true
+                  ? formatLocalizedCurrency(price, currencyCode)
+                  : formatCurrencyValue(price)),
           style: _textStyle(),
         ),
       ],
@@ -82,16 +88,29 @@ class PriceWidget extends StatelessWidget {
   }
 }
 
+String formatCurrencyValue(num? value) {
+  final amount = (value ?? 0)
+      .toStringAsFixed(appCurrency.value.noOfDecimal)
+      .formatNumberWithComma(
+        seperator: appCurrency.value.thousandSeparator,
+      );
+  return '${leftCurrencyFormat()}$amount${rightCurrencyFormat()}';
+}
+
 String leftCurrencyFormat() {
   if (isCurrencyPositionLeft || isCurrencyPositionLeftWithSpace) {
-    return isCurrencyPositionLeftWithSpace ? '${appCurrency.value.currencySymbol} ' : appCurrency.value.currencySymbol;
+    return isCurrencyPositionLeftWithSpace
+        ? '${appCurrency.value.currencySymbol} '
+        : appCurrency.value.currencySymbol;
   }
   return '';
 }
 
 String rightCurrencyFormat() {
   if (isCurrencyPositionRight || isCurrencyPositionRightWithSpace) {
-    return isCurrencyPositionRightWithSpace ? ' ${appCurrency.value.currencySymbol}' : appCurrency.value.currencySymbol;
+    return isCurrencyPositionRightWithSpace
+        ? ' ${appCurrency.value.currencySymbol}'
+        : appCurrency.value.currencySymbol;
   }
   return '';
 }

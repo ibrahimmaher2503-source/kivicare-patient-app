@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../api/labs_radiology_apis.dart';
+import '../../../main.dart';
+import '../../../network/network_utils.dart';
 import '../models/test_order_model.dart';
 import '../models/test_order_status.dart';
 
@@ -33,7 +35,7 @@ class TestOrdersListController extends GetxController {
 
       isLastPage.value = !res.hasMore;
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     } finally {
       isLoading.value = false;
     }

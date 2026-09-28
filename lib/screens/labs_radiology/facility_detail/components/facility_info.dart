@@ -26,7 +26,8 @@ class FacilityInfo extends StatelessWidget {
           ],
           if (facility.email.validate().isNotEmpty) ...[
             12.height,
-            _buildInfoRow(Icons.email_outlined, 'Email', facility.email!),
+            _buildInfoRow(
+                Icons.email_outlined, locale.value.email, facility.email!),
           ],
           16.height,
           AppButton(

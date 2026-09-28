@@ -13,7 +13,9 @@ class TimeSlotsRes {
     return TimeSlotsRes(
       status: json['status'] is bool ? json['status'] : false,
       message: json['message'] is String ? json['message'] : "",
-      slots: json['data'] is List ? List<String>.from(json['data'].map((x) => x)) : [],
+      slots: json['data'] is List
+          ? List<String>.from(json['data'].map((x) => x))
+          : [],
     );
   }
 
@@ -37,8 +39,12 @@ class Session {
 
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session(
-      sessionTitle: json['session_title'] is String ? json['session_title'] : "",
-      slots: json['slots'] is List ? List<SlotElement>.from(json['slots'].map((x) => SlotElement.fromJson(x))) : [],
+      sessionTitle:
+          json['session_title'] is String ? json['session_title'] : "",
+      slots: json['slots'] is List
+          ? List<SlotElement>.from(
+              json['slots'].map((x) => SlotElement.fromJson(x)))
+          : [],
     );
   }
 

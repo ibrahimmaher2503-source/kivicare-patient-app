@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../api/labs_radiology_apis.dart';
+import '../../../main.dart';
+import '../../../network/network_utils.dart';
 import '../models/facility_model.dart';
 import '../models/facility_type.dart';
 import '../models/slot_model.dart';
@@ -37,7 +39,7 @@ class SlotSelectionController extends GetxController {
         onDateSelected(availableDates.first);
       }
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     } finally {
       isLoading.value = false;
     }

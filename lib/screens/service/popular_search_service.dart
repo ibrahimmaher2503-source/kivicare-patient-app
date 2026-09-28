@@ -49,7 +49,7 @@ class PopularSearchServiceWidget extends StatelessWidget {
             popularServiceController.page(1);
             popularServiceController.getServiceList();
           },
-          size: 11,
+          size: 12,
         ).visible(popularServiceController.isSearchText.value),
       ),
       decoration: inputDecorationWithOutBorder(

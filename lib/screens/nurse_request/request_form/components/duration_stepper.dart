@@ -4,6 +4,8 @@ import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../components/nurse_request_design.dart';
+
 class DurationStepper extends StatelessWidget {
   final RxInt value;
   final int min;
@@ -18,32 +20,34 @@ class DurationStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _StepButton(
-          icon: Icons.remove,
-          onTap: () {
-            if (value.value > min) value.value--;
-          },
-          enabled: value.value > min,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            locale.value.durationHoursValue(value.value),
-            style: boldTextStyle(size: 16),
+    return Obx(
+      () => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _StepButton(
+            icon: Icons.remove,
+            onTap: () {
+              if (value.value > min) value.value--;
+            },
+            enabled: value.value > min,
           ),
-        ),
-        _StepButton(
-          icon: Icons.add,
-          onTap: () {
-            if (value.value < max) value.value++;
-          },
-          enabled: value.value < max,
-        ),
-      ],
-    ));
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              locale.value.durationHoursValue(value.value),
+              style: boldTextStyle(size: 16),
+            ),
+          ),
+          _StepButton(
+            icon: Icons.add,
+            onTap: () {
+              if (value.value < max) value.value++;
+            },
+            enabled: value.value < max,
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -52,7 +56,11 @@ class _StepButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool enabled;
 
-  const _StepButton({required this.icon, required this.onTap, required this.enabled});
+  const _StepButton({
+    required this.icon,
+    required this.onTap,
+    required this.enabled,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +73,17 @@ class _StepButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: enabled
               ? gradientStart.withValues(alpha: 0.15)
-              : Colors.grey.withValues(alpha: 0.1),
+              : nurseRequestSubtleSurface(context),
           borderRadius: BorderRadius.circular(22),
           border: Border.all(
-            color: enabled ? gradientStart : Colors.grey.withValues(alpha: 0.3),
+            color: enabled ? gradientStart : nurseRequestBorderColor(context),
           ),
         ),
-        child: Icon(icon, color: enabled ? gradientStart : Colors.grey, size: 20),
+        child: Icon(
+          icon,
+          color: enabled ? gradientStart : nurseRequestDisabledColor(context),
+          size: 20,
+        ),
       ),
     );
   }

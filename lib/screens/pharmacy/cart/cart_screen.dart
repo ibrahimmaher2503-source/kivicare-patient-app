@@ -5,7 +5,9 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../api/pharmacy_apis.dart';
 import '../../../components/app_scaffold.dart';
 import '../../../main.dart';
+import '../../../network/network_utils.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/price_widget.dart';
 import '../model/pharmacy_cart_model.dart';
 import '../pharmacy_controller.dart';
 import '../utils/pharmacy_constants.dart';
@@ -15,6 +17,7 @@ import 'available_pharmacies_screen.dart';
 
 class CartController extends GetxController {
   RxBool isLoading = false.obs;
+  RxBool isCartMutating = false.obs;
   Rx<PharmacyCart?> cart = Rx<PharmacyCart?>(null);
 
   @override
@@ -42,8 +45,10 @@ class CartController extends GetxController {
   }
 
   Future<void> updateQuantity(int itemId, int quantity) async {
+    if (isCartMutating.value || quantity < 1) return;
     final oldCart = cart.value;
     if (oldCart == null) return;
+    isCartMutating(true);
 
     // Optimistic update
     final newItems = oldCart.items.validate().map((item) {
@@ -70,18 +75,22 @@ class CartController extends GetxController {
       final res = await PharmacyApis.updateCartItem(itemId, quantity: quantity);
       if (res != null) {
         // Fetch fresh data to ensure server sync
-        fetchCart();
+        await fetchCart();
       }
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
       // Revert on failure
       cart(oldCart);
+    } finally {
+      isCartMutating(false);
     }
   }
 
   Future<void> removeItem(int itemId) async {
+    if (isCartMutating.value) return;
     final oldCart = cart.value;
     if (oldCart == null) return;
+    isCartMutating(true);
 
     // Optimistic remove
     final newItems =
@@ -99,11 +108,13 @@ class CartController extends GetxController {
     try {
       final res = await PharmacyApis.removeCartItem(itemId);
       if (res != null) {
-        fetchCart();
+        await fetchCart();
       }
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
       cart(oldCart);
+    } finally {
+      isCartMutating(false);
     }
   }
 }
@@ -196,7 +207,7 @@ class CartScreen extends StatelessWidget {
                   children: [
                     Text(locale.value.subtotal,
                         style: secondaryTextStyle(size: 13)),
-                    Text('${cart.subtotal} LE',
+                    Text(formatCurrencyValue(cart.subtotal),
                         style: boldTextStyle(size: 14)),
                   ],
                 ),
@@ -207,9 +218,10 @@ class CartScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(locale.value.total, style: boldTextStyle(size: 15)),
-                    Text('${(cart.subtotal ?? 0) - (cart.discount ?? 0)} LE',
-                        style:
-                            boldTextStyle(size: 22, color: appColorPrimary)),
+                    Text(
+                        formatCurrencyValue(
+                            (cart.subtotal ?? 0) - (cart.discount ?? 0)),
+                        style: boldTextStyle(size: 22, color: appColorPrimary)),
                   ],
                 ),
                 const SizedBox(height: 6),
@@ -217,7 +229,7 @@ class CartScreen extends StatelessWidget {
                   alignment: AlignmentDirectional.centerEnd,
                   child: Text(
                     locale.value.deliveryAtCheckout,
-                    style: secondaryTextStyle(size: 11),
+                    style: secondaryTextStyle(size: 12),
                   ),
                 ),
               ],
@@ -303,8 +315,22 @@ class _CartItemWidget extends StatelessWidget {
                   : Container(
                       height: 72,
                       width: 72,
-                      color: surfaceSubtle,
-                      child: const Icon(Icons.image_outlined, color: gray400)))
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            surfaceSubtle,
+                            appColorSecondary.withValues(alpha: 0.06),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.medication_outlined,
+                        color: appColorSecondary.withValues(alpha: 0.55),
+                        size: 28,
+                      )))
               .cornerRadiusWithClipRRect(12),
           const SizedBox(width: 12),
           Expanded(
@@ -312,8 +338,7 @@ class _CartItemWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(item.name ?? '',
-                    style:
-                        boldTextStyle(size: 14, color: appColorPrimary),
+                    style: boldTextStyle(size: 14, color: appColorPrimary),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 2),
@@ -322,85 +347,139 @@ class _CartItemWidget extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text('${item.unitPrice} LE',
-                        style: boldTextStyle(
-                            color: appColorSecondary, size: 14)),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: surfaceSubtle,
-                          borderRadius: BorderRadius.circular(999)),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              onPressed: () {
-                                if (item.quantity! > 1) {
-                                  controller.updateQuantity(
-                                      item.id!, item.quantity! - 1);
-                                }
-                              },
-                              icon: const Icon(Icons.remove,
-                                  size: 18, color: appColorSecondary),
+                Obx(() => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(formatCurrencyValue(item.unitPrice),
+                            style: boldTextStyle(
+                                color: appColorSecondary, size: 14)),
+                        Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            color: appColorSecondary.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(999),
+                            border: Border.all(
+                              color: appColorSecondary.withValues(alpha: 0.18),
+                              width: 1,
                             ),
                           ),
-                          Text('${item.quantity}',
-                                  style: boldTextStyle(size: 14))
-                              .paddingSymmetric(horizontal: 4),
-                          SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              onPressed: () {
-                                int max = item.product?.maxOrderQuantity ??
-                                    PharmacyConstants.defaultMaxQuantity;
-                                if (item.quantity! < max) {
-                                  controller.updateQuantity(
-                                      item.id!, item.quantity! + 1);
-                                }
-                              },
-                              icon: const Icon(Icons.add,
-                                  size: 18, color: appColorSecondary),
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _QtyStepperButton(
+                                icon: Icons.remove_rounded,
+                                onTap: controller.isCartMutating.value
+                                    ? null
+                                    : () {
+                                        if (item.quantity! > 1) {
+                                          controller.updateQuantity(
+                                              item.id!, item.quantity! - 1);
+                                        }
+                                      },
+                              ),
+                              Text('${item.quantity}',
+                                      style: boldTextStyle(
+                                          size: 14, color: appColorPrimary))
+                                  .paddingSymmetric(horizontal: 10),
+                              _QtyStepperButton(
+                                icon: Icons.add_rounded,
+                                filled: true,
+                                onTap: controller.isCartMutating.value
+                                    ? null
+                                    : () {
+                                        int max =
+                                            item.product?.maxOrderQuantity ??
+                                                PharmacyConstants
+                                                    .defaultMaxQuantity;
+                                        if (item.quantity! < max) {
+                                          controller.updateQuantity(
+                                              item.id!, item.quantity! + 1);
+                                        }
+                                      },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                        ),
+                      ],
+                    )),
                 const SizedBox(height: 8),
                 Align(
                   alignment: AlignmentDirectional.centerEnd,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => controller.removeItem(item.id!),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 2),
-                      child: Text(
-                        locale.value.delete,
-                        style: secondaryTextStyle(
-                            size: 12,
-                            color: cancelStatusColor.withValues(alpha: 0.85),
-                            weight: FontWeight.w600),
-                      ),
-                    ),
-                  ),
+                  child: Obx(() => GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: controller.isCartMutating.value
+                            ? null
+                            : () => controller.removeItem(item.id!),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 2),
+                          child: Text(
+                            locale.value.delete,
+                            style: secondaryTextStyle(
+                                size: 12,
+                                color:
+                                    cancelStatusColor.withValues(alpha: 0.85),
+                                weight: FontWeight.w600),
+                          ),
+                        ),
+                      )),
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _QtyStepperButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback? onTap;
+  final bool filled;
+
+  const _QtyStepperButton({
+    required this.icon,
+    required this.onTap,
+    this.filled = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: onTap == null
+          ? gray200
+          : filled
+              ? appColorSecondary
+              : surfaceElevated,
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Container(
+          width: 28,
+          height: 28,
+          alignment: Alignment.center,
+          decoration: filled
+              ? null
+              : BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: appColorSecondary.withValues(alpha: 0.25),
+                    width: 1,
+                  ),
+                ),
+          child: Icon(
+            icon,
+            size: 16,
+            color: onTap == null
+                ? gray400
+                : filled
+                    ? Colors.white
+                    : appColorSecondary,
+          ),
+        ),
       ),
     );
   }

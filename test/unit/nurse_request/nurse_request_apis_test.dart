@@ -20,7 +20,7 @@ void main() {
       expect(json['duration_hours'], 2);
       expect(json['address_line_1'], '12 Test St.');
       expect(json['city'], 'Cairo');
-      expect(json['contact_phone'], '+201001234567');
+      expect(json['contact_number'], '+201001234567');
     });
 
     test('trims whitespace from all string fields', () {
@@ -36,7 +36,7 @@ void main() {
       expect(json['service_description_en'], 'spaced description');
       expect(json['address_line_1'], '12 Test St.');
       expect(json['city'], 'Cairo');
-      expect(json['contact_phone'], '+201001234567');
+      expect(json['contact_number'], '+201001234567');
     });
 
     test('omits empty optional fields', () {
@@ -76,13 +76,26 @@ void main() {
       );
       final json = payload.toJson();
       final forbidden = [
-        'id', 'reference_number', 'status', 'assigned_nurse',
-        'total_amount', 'currency', 'payment_status', 'cancellation_reason',
-        'completed_at', 'created_at', 'updated_at', 'status_history',
-        'nurse_id', 'coupon_code', 'patient_id', 'patient_for',
+        'id',
+        'reference_number',
+        'status',
+        'assigned_nurse',
+        'total_amount',
+        'currency',
+        'payment_status',
+        'cancellation_reason',
+        'completed_at',
+        'created_at',
+        'updated_at',
+        'status_history',
+        'nurse_id',
+        'coupon_code',
+        'patient_id',
+        'patient_for',
       ];
       for (final key in forbidden) {
-        expect(json.containsKey(key), isFalse, reason: 'payload must not contain $key');
+        expect(json.containsKey(key), isFalse,
+            reason: 'payload must not contain $key');
       }
     });
 

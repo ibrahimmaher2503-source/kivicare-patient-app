@@ -68,7 +68,7 @@ class DoctorCard extends StatelessWidget {
                 child: commonLeadingWid(
                   imgPath: Assets.imagesConfirm,
                   color: whiteTextColor,
-                  size: 8,
+                  size: 12,
                 ).circularLightPrimaryBg(color: appColorPrimary, padding: 8),
               ).visible(doctorData.doctorId == doctorsListCont.selectedDoctor.value.doctorId),
               Positioned(

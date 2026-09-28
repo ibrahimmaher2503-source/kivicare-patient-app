@@ -1,10 +1,18 @@
-// UTC+02 — Africa/Cairo wall-clock. DST: Egypt suspended DST in 2011; if Egypt
-// reintroduces DST this helper must be updated to reflect the new offset.
-DateTime nowInCairo() => DateTime.now().toUtc().add(const Duration(hours: 2));
+import 'package:timezone/timezone.dart' as tz;
+
+const cairoTimeZoneName = 'Africa/Cairo';
+
+tz.Location get _cairoLocation => tz.getLocation(cairoTimeZoneName);
+
+DateTime nowInCairo() => tz.TZDateTime.now(_cairoLocation);
+
+DateTime cairoDateTimeFromUtc(DateTime value) =>
+    tz.TZDateTime.from(value.toUtc(), _cairoLocation);
 
 DateTime cairoTodayMidnight() {
   final now = nowInCairo();
-  return DateTime(now.year, now.month, now.day);
+  return tz.TZDateTime(_cairoLocation, now.year, now.month, now.day);
 }
 
-DateTime cairoMaxBookableDate() => cairoTodayMidnight().add(const Duration(days: 90));
+DateTime cairoMaxBookableDate() =>
+    cairoTodayMidnight().add(const Duration(days: 90));

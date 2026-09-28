@@ -90,7 +90,7 @@ class FacilityCard extends StatelessWidget {
                         child: Text(
                           '${locale.value.startingFrom} ${facility.priceFrom!.toStringAsFixed(0)} EGP',
                           style: primaryTextStyle(
-                              size: 11,
+                              size: 12,
                               color: appColorSecondary,
                               weight: FontWeight.bold),
                         ),

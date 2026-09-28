@@ -57,7 +57,7 @@ class DoctorInfoCard extends StatelessWidget {
                   Text(
                     subtitle!,
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 12,
                       color: gradientSecondaryStart,
                       fontWeight: FontWeight.w500,
                     ),

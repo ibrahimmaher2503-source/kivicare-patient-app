@@ -12,6 +12,7 @@ class PharmacyController extends GetxController {
   /// `Get.find<PharmacyController>().cachedCart.value` to avoid independent
   /// fetches instead of calling PharmacyApis.getCart() on their own.
   Rx<dynamic> cachedCart = Rx<dynamic>(null);
+  late final void Function() _sessionStateClearer;
 
   /// Ensures a single permanent instance is registered. Call this from the
   /// app entry point (or wherever the pharmacy module is first accessed) so
@@ -26,6 +27,8 @@ class PharmacyController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _sessionStateClearer = clearSessionState;
+    registerSessionStateClearer(_sessionStateClearer);
     if (isLoggedIn.value) {
       refreshPharmacyState();
     }
@@ -67,4 +70,22 @@ class PharmacyController extends GetxController {
   void incrementCartCount() => cartCount.value++;
   void decrementCartCount() => cartCount.value > 0 ? cartCount.value-- : null;
   void resetCartCount() => cartCount(0);
+
+  void clearCartAfterOrder() {
+    cartCount(0);
+    cachedCart.value = null;
+  }
+
+  void clearSessionState() {
+    cartCount(0);
+    unreadNotificationsCount(0);
+    cachedCart.value = null;
+    isLoading(false);
+  }
+
+  @override
+  void onClose() {
+    unregisterSessionStateClearer(_sessionStateClearer);
+    super.onClose();
+  }
 }

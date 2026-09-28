@@ -11,6 +11,8 @@ import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import '../../utils/common_base.dart';
 import '../../utils/constants.dart';
+import '../../network/network_utils.dart';
+import '../../network/critical_operation.dart';
 import '../home/home_controller.dart';
 import 'appointments_controller.dart';
 import 'model/appointment_detail_res.dart';
@@ -24,21 +26,26 @@ class AppointmentDetailController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool hasReview = false.obs;
   RxBool showWriteReview = false.obs;
+  RxBool isReviewSubmitting = false.obs;
+  RxBool isReviewDeleting = false.obs;
 
-  Rx<Future<AppointmentDetailRes>> getAppointmentDetails = Future(() => AppointmentDetailRes(data: AppointmentData())).obs;
+  Rx<Future<AppointmentDetailRes>> getAppointmentDetails =
+      Future(() => AppointmentDetailRes(data: AppointmentData())).obs;
   Rx<DoctorReviewData> yourReview = DoctorReviewData().obs;
 
   /// Reschedule Booking
-  Rx<Future<RxList<String>>> timeSlotsFuture = Future(() => RxList<String>()).obs;
+  Rx<Future<RxList<String>>> timeSlotsFuture =
+      Future(() => RxList<String>()).obs;
   RxList<String> slots = RxList();
-  RxString selectedDate = DateTime.now().formatDateYYYYmmdd().obs;
+  RxString selectedDate = DateTime.now().formatApiDateYYYYmmdd().obs;
   RxString selectedSlot = "".obs;
   RxBool updateBtnVisible = false.obs;
   RxBool isUpdateBookingLoading = false.obs;
   BookingReq bookingReq = BookingReq();
 
   /// Invoice
-  Rx<Future<Rx<AppointmentInvoiceResp>>> appointmentInvoiceFuture = Future(() => AppointmentInvoiceResp().obs).obs;
+  Rx<Future<Rx<AppointmentInvoiceResp>>> appointmentInvoiceFuture =
+      Future(() => AppointmentInvoiceResp().obs).obs;
   Rx<AppointmentInvoiceResp> appointmentInvoice = AppointmentInvoiceResp().obs;
 
   RxDouble selectedRating = (0.0).obs;
@@ -60,11 +67,21 @@ class AppointmentDetailController extends GetxController {
   }
 
   bool get isAdvancePaymentFailed =>
-      (appointmentDetail.value.paymentStatus.toLowerCase().contains(PaymentStatus.failed) && appointmentDetail.value.isEnableAdvancePayment) && appointmentDetail.value.status.toLowerCase().contains(StatusConst.pending.toLowerCase());
+      (appointmentDetail.value.paymentStatus
+              .toLowerCase()
+              .contains(PaymentStatus.failed) &&
+          appointmentDetail.value.isEnableAdvancePayment) &&
+      appointmentDetail.value.status
+          .toLowerCase()
+          .contains(StatusConst.pending.toLowerCase());
 
   num get payNowAmount => isAdvancePaymentFailed
-      ? (appointmentDetail.value.advancePaymentAmount * appointmentDetail.value.totalAmount) / 100
-      : appointmentDetail.value.paymentStatus.toLowerCase().contains(PaymentStatus.ADVANCE_PAID.toLowerCase())
+      ? (appointmentDetail.value.advancePaymentAmount *
+              appointmentDetail.value.totalAmount) /
+          100
+      : appointmentDetail.value.paymentStatus
+              .toLowerCase()
+              .contains(PaymentStatus.ADVANCE_PAID.toLowerCase())
           ? appointmentDetail.value.remainingPayableAmount
           : appointmentDetail.value.totalAmount;
 
@@ -74,9 +91,12 @@ class AppointmentDetailController extends GetxController {
       isLoading(true);
     }
     await getAppointmentDetails(
-      CoreServiceApis.getAppointmentDetail(appointmentId: appointmentDetail.value.id, notifyId: appointmentDetail.value.notificationId),
+      CoreServiceApis.getAppointmentDetail(
+          appointmentId: appointmentDetail.value.id,
+          notifyId: appointmentDetail.value.notificationId),
     ).then((value) {
-      if (appointmentDetail.value.notificationId.trim().isNotEmpty && unreadNotificationCount.value > 0) {
+      if (appointmentDetail.value.notificationId.trim().isNotEmpty &&
+          unreadNotificationCount.value > 0) {
         unreadNotificationCount(unreadNotificationCount.value - 1);
       }
       appointmentDetail(value.data);
@@ -96,9 +116,12 @@ class AppointmentDetailController extends GetxController {
     if (showLoader) {
       isLoading(true);
     }
-    await appointmentInvoiceFuture(CoreServiceApis.appointmentInvoice(appointmentDetail.value.id)).then((appointmentInvoices) {
+    await appointmentInvoiceFuture(
+            CoreServiceApis.appointmentInvoice(appointmentDetail.value.id))
+        .then((appointmentInvoices) {
       appointmentInvoice(appointmentInvoices.value);
-      if (appointmentInvoice.value.status == true && appointmentInvoice.value.link.isNotEmpty) {
+      if (appointmentInvoice.value.status == true &&
+          appointmentInvoice.value.link.isNotEmpty) {
         viewFiles(appointmentInvoice.value.link);
       } else {
         toast(locale.value.somethingWentWrongPleaseTryAgainLater);
@@ -125,7 +148,8 @@ class AppointmentDetailController extends GetxController {
 
   ///Save Review Api
   Future<void> saveReview() async {
-    isLoading(true);
+    if (isReviewSubmitting.value) return;
+    isReviewSubmitting(true);
     hideKeyBoardWithoutContext();
 
     Map<String, dynamic> req = {
@@ -137,8 +161,8 @@ class AppointmentDetailController extends GetxController {
       "review_msg": reviewCont.text.trim(),
     };
 
-    await CoreServiceApis.updateReview(request: req).then((value) async {
-      log('updateReview: ${value.toJson()}');
+    try {
+      await CoreServiceApis.updateReview(request: req);
       showWriteReview(false);
       hasReview(true);
       yourReview(DoctorReviewData(
@@ -150,12 +174,13 @@ class AppointmentDetailController extends GetxController {
         doctorId: appointmentDetail.value.doctorId,
         serviceId: appointmentDetail.value.serviceId,
       ));
-      init(showLoader: true);
-      isLoading(false);
-    }).catchError((e) {
-      isLoading(false);
-      log(e.toString());
-    });
+      await init(showLoader: false);
+    } catch (e) {
+      toast(sanitizeBackendMessage(
+          e, locale.value.somethingWentWrongPleaseTryAgainLater));
+    } finally {
+      isReviewSubmitting(false);
+    }
   }
 
   void handleEditReview() {
@@ -171,20 +196,22 @@ class AppointmentDetailController extends GetxController {
 
   ///Delete Review Api
   Future<void> deleteReview() async {
-    isLoading(true);
-    await CoreServiceApis.deleteReview(id: yourReview.value.id).then((value) async {
-      log('updateReview: ${value.toJson()}');
+    if (isReviewDeleting.value) return;
+    isReviewDeleting(true);
+    try {
+      await CoreServiceApis.deleteReview(id: yourReview.value.id);
       showWriteReview(false);
       hasReview(false);
       title.text = "";
       reviewCont.text = "";
       selectedRating(0);
       yourReview(DoctorReviewData());
-      isLoading(false);
-    }).catchError((e) {
-      isLoading(false);
-      log(e.toString());
-    });
+    } catch (e) {
+      toast(sanitizeBackendMessage(
+          e, locale.value.somethingWentWrongPleaseTryAgainLater));
+    } finally {
+      isReviewDeleting(false);
+    }
   }
 
   void onDateTimeChange() {
@@ -220,10 +247,10 @@ class AppointmentDetailController extends GetxController {
   }
 
   ///Reschedule Appointment
-  void handleUpdateClick(BuildContext context, {bool showLoader = true}) {
-    if (showLoader) {
-      isUpdateBookingLoading(true);
-    }
+  Future<void> handleUpdateClick(BuildContext context,
+      {bool showLoader = true}) async {
+    if (isUpdateBookingLoading.value) return;
+    if (showLoader) isUpdateBookingLoading(true);
 
     //BookingReq
     Map<String, dynamic> req = {
@@ -232,8 +259,21 @@ class AppointmentDetailController extends GetxController {
       'appointment_time': selectedSlot.value,
     };
 
-    CoreServiceApis.rescheduleBooking(request: req).then((value) {
-      isUpdateBookingLoading(false);
+    try {
+      final operationScope = 'reschedule:${appointmentDetail.value.id}';
+      final operationKey = await CriticalOperationStore.begin(
+        CriticalOperationType.appointment,
+        scope: operationScope,
+        requestFingerprint: criticalOperationFingerprint(req),
+      );
+      final value = await CoreServiceApis.rescheduleBooking(
+        request: req,
+        idempotencyKey: operationKey,
+      );
+      await CriticalOperationStore.complete(
+        CriticalOperationType.appointment,
+        scope: operationScope,
+      );
       toast(value.message.toString());
       Get.back();
       try {
@@ -249,14 +289,19 @@ class AppointmentDetailController extends GetxController {
       } catch (e) {
         log('onItemSelected Err: $e');
       }
-      init(showLoader: true);
-    }).catchError((e) {
-      isLoading(false);
-      log('Reschedule booking catch ${e.toString()}');
-    }).whenComplete(() => isLoading(false));
+      await init(showLoader: true);
+    } catch (e) {
+      toast(sanitizeBackendMessage(
+          e, locale.value.somethingWentWrongPleaseTryAgainLater));
+    } finally {
+      isUpdateBookingLoading(false);
+    }
   }
 
-  Future<void> updateStatus({required int appointmentId, required String status, VoidCallback? onUpdateBooking}) async {
+  Future<void> updateStatus(
+      {required int appointmentId,
+      required String status,
+      VoidCallback? onUpdateBooking}) async {
     isLoading(true);
     hideKeyBoardWithoutContext();
 
@@ -264,7 +309,9 @@ class AppointmentDetailController extends GetxController {
       "status": status,
     };
 
-    await CoreServiceApis.updateStatus(request: req, appointmentId: appointmentId).then((value) async {
+    await CoreServiceApis.updateStatus(
+            request: req, appointmentId: appointmentId)
+        .then((value) async {
       if (onUpdateBooking != null) {
         onUpdateBooking.call();
         toast(locale.value.appointmentCancelSuccessfully);
@@ -283,8 +330,17 @@ class AppointmentDetailController extends GetxController {
       isLoading(false);
     }).catchError((e) {
       isLoading(false);
-      toast(e.toString(), print: true);
+      toast(
+          sanitizeBackendMessage(
+              e, locale.value.somethingWentWrongPleaseTryAgainLater),
+          print: true);
     });
   }
 
+  @override
+  void onClose() {
+    title.dispose();
+    reviewCont.dispose();
+    super.onClose();
+  }
 }

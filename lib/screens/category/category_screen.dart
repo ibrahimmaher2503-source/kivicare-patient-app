@@ -25,7 +25,7 @@ class CategoryScreen extends StatelessWidget {
           future: categoryListController.categoryListFuture.value,
           errorBuilder: (error) {
             return NoDataWidget(
-              title: error,
+              title: locale.value.somethingWentWrongPleaseTryAgainLater,
               retryText: locale.value.reload,
               imageWidget: const ErrorStateWidget(),
               onRetry: () {

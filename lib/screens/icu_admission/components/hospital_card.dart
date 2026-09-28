@@ -13,6 +13,7 @@ class HospitalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final location = hospital.formattedLocation;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
@@ -45,43 +46,51 @@ class HospitalCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(hospital.name, style: boldTextStyle(), maxLines: 2, overflow: TextOverflow.ellipsis),
+                  Text(hospital.name,
+                      style: boldTextStyle(),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis),
                   4.height,
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on_outlined, size: 14, color: secondaryTextColor),
-                      4.width,
-                      Text(
-                        '${hospital.cityName.validate()}, ${hospital.governorateName.validate()}',
-                        style: secondaryTextStyle(size: 12),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ).expand(),
-                    ],
-                  ),
+                  if (location.isNotEmpty)
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on_outlined,
+                            size: 14, color: secondaryTextColor),
+                        4.width,
+                        Text(
+                          location,
+                          style: secondaryTextStyle(size: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ).expand(),
+                      ],
+                    ),
                   8.height,
                   if (hospital.hasAvailableBeds)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: icuStatusAcceptedColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         locale.value.hasAvailableBeds,
-                        style: boldTextStyle(color: icuStatusAcceptedColor, size: 10),
+                        style: boldTextStyle(
+                            color: icuStatusAcceptedColor, size: 12),
                       ),
                     )
                   else
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: grey.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         locale.value.noBedsAvailable,
-                        style: secondaryTextStyle(size: 10),
+                        style: secondaryTextStyle(size: 12),
                       ),
                     ),
                 ],

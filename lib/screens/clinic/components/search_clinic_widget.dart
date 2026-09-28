@@ -26,39 +26,50 @@ class SearchClinicWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppTextField(
-      controller: clinicController.searchClinicCont,
-      textFieldType: TextFieldType.OTHER,
-      textInputAction: TextInputAction.done,
-      textStyle: primaryTextStyle(decorationColor: appColorPrimary),
-      onTap: onTap,
-      onFieldSubmitted: onFieldSubmitted,
-      onChanged: (p0) {
-        clinicController.isSearchText(clinicController.searchClinicCont.text.trim().isNotEmpty);
-        clinicController.searchClinicStream.add(p0);
-      },
-      suffix: Obx(
-        () => appCloseIconButton(
+    final label = hintText ?? locale.value.searchClinicHere;
+    return Semantics(
+      textField: true,
+      label: label,
+      child: AppTextField(
+        controller: clinicController.searchClinicCont,
+        textFieldType: TextFieldType.OTHER,
+        textInputAction: TextInputAction.done,
+        textStyle: primaryTextStyle(decorationColor: appColorPrimary),
+        onTap: onTap,
+        onFieldSubmitted: onFieldSubmitted,
+        onChanged: (p0) {
+          clinicController.isSearchText(
+              clinicController.searchClinicCont.text.trim().isNotEmpty);
+          clinicController.searchClinicStream.add(p0);
+        },
+        suffix: Obx(
+          () => appCloseIconButton(
+            context,
+            onPressed: () {
+              if (onClearButton != null) {
+                onClearButton!.call();
+              }
+              hideKeyboard(context);
+              clinicController.searchClinicCont.clear();
+              clinicController.isSearchText(
+                  clinicController.searchClinicCont.text.trim().isNotEmpty);
+              clinicController.page(1);
+              clinicController.getClinicList();
+            },
+            size: 12,
+          ).visible(clinicController.isSearchText.value),
+        ),
+        decoration: inputDecorationWithOutBorder(
           context,
-          onPressed: () {
-            if (onClearButton != null) {
-              onClearButton!.call();
-            }
-            hideKeyboard(context);
-            clinicController.searchClinicCont.clear();
-            clinicController.isSearchText(clinicController.searchClinicCont.text.trim().isNotEmpty);
-            clinicController.page(1);
-            clinicController.getClinicList();
-          },
-          size: 11,
-        ).visible(clinicController.isSearchText.value),
-      ),
-      decoration: inputDecorationWithOutBorder(
-        context,
-        hintText: hintText ?? locale.value.searchHere,
-        filled: true,
-        fillColor: context.cardColor,
-        prefixIcon: commonLeadingWid(imgPath: Assets.iconsIcSearch, icon: Icons.search_outlined, size: 18).paddingAll(14),
+          hintText: label,
+          filled: true,
+          fillColor: context.cardColor,
+          prefixIcon: commonLeadingWid(
+                  imgPath: Assets.iconsIcSearch,
+                  icon: Icons.search_outlined,
+                  size: 18)
+              .paddingAll(14),
+        ),
       ),
     );
   }

@@ -5,15 +5,20 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../configs.dart';
+import '../main.dart';
+import '../network/network_utils.dart';
 import '../utils/app_common.dart';
 
 class PayPalService {
-  Future paypalCheckOut({required BuildContext context, required num totalAmount, required Function(Map<String, dynamic>) onComplete, required Function(bool) loderOnOFF}) async {
+  Future paypalCheckOut(
+      {required BuildContext context,
+      required num totalAmount,
+      required Function(Map<String, dynamic>) onComplete,
+      required Function(bool) loderOnOFF}) async {
     loderOnOFF(true);
-    String payPalClientId = appConfigs.value.paypalPay.paypalClientid.validate();
+    String payPalClientId =
+        appConfigs.value.paypalPay.paypalClientid.validate();
     String secretKey = appConfigs.value.paypalPay.paypalSecretkey.validate();
-    log('PAYPALCLIENTID: $payPalClientId');
-    log('SECRETKEY: $secretKey');
     PaypalCheckout(
       sandboxMode: (!kReleaseMode || isIqonicProduct),
       clientId: payPalClientId,
@@ -24,10 +29,17 @@ class PayPalService {
         {
           "amount": {
             "total": totalAmount,
-            "currency": isIqonicProduct ? payPalSupportedCurrency : appCurrency.value.currencyCode,
-            "details": {"subtotal": totalAmount, "shipping": '0', "shipping_discount": 0}
+            "currency": isIqonicProduct
+                ? payPalSupportedCurrency
+                : appCurrency.value.currencyCode,
+            "details": {
+              "subtotal": totalAmount,
+              "shipping": '0',
+              "shipping_discount": 0
+            }
           },
-          "description": 'Name: ${loginUserData.value.userName} - Email: ${loginUserData.value.email}',
+          "description":
+              'Name: ${loginUserData.value.userName} - Email: ${loginUserData.value.email}',
         }
       ],
       note: " - ",
@@ -35,7 +47,8 @@ class PayPalService {
         log("onSuccess: $params");
         loderOnOFF(false);
         if (params['message'] is String) {
-          toast(params['message']);
+          toast(sanitizeBackendMessage(
+              params['message'], locale.value.transactionFailed));
         }
         onComplete.call({
           'transaction_id': params['data']['id'],
@@ -44,16 +57,19 @@ class PayPalService {
       onError: (error) {
         log("onError: $error");
         loderOnOFF(false);
-        toast(error);
+        toast(sanitizeBackendMessage(error, locale.value.transactionFailed));
         Get.back();
       },
       onCancel: (params) {
         log("cancelled: $params");
-        toast('cancelled');
+        toast(locale.value.transactionCancelled);
         loderOnOFF(false);
       },
-    ).launch(context).whenComplete(() => loderOnOFF(false)).onError((e, stackTrace) {
-      toast(e.toString());
+    )
+        .launch(context)
+        .whenComplete(() => loderOnOFF(false))
+        .onError((e, stackTrace) {
+      toast(sanitizeBackendMessage(e, locale.value.transactionFailed));
       loderOnOFF(false);
     });
   }

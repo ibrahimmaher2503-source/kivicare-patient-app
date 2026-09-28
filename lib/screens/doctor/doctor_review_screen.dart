@@ -13,7 +13,8 @@ import 'doctor_review_controller.dart';
 class DoctorReviewScreen extends StatelessWidget {
   DoctorReviewScreen({super.key});
 
-  final DoctorReviewController doctorReviewCont = Get.put(DoctorReviewController());
+  final DoctorReviewController doctorReviewCont =
+      Get.put(DoctorReviewController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class DoctorReviewScreen extends StatelessWidget {
           future: doctorReviewCont.doctorReviewListFuture.value,
           errorBuilder: (error) {
             return NoDataWidget(
-              title: error,
+              title: locale.value.somethingWentWrong,
               retryText: locale.value.reload,
               imageWidget: const ErrorStateWidget(),
               onRetry: () {
@@ -36,7 +37,9 @@ class DoctorReviewScreen extends StatelessWidget {
               },
             ).paddingSymmetric(horizontal: 32);
           },
-          loadingWidget: doctorReviewCont.isLoading.value ? const Offstage() : const LoaderWidget(),
+          loadingWidget: doctorReviewCont.isLoading.value
+              ? const Offstage()
+              : const LoaderWidget(),
           onSuccess: (p0) {
             return AnimatedListView(
               shrinkWrap: true,
@@ -45,7 +48,8 @@ class DoctorReviewScreen extends StatelessWidget {
               physics: const AlwaysScrollableScrollPhysics(),
               emptyWidget: NoDataWidget(
                 title: locale.value.noReviewsFoundAtAMoment,
-                subTitle: locale.value.looksLikeThereIsNoReviewsWellKeepYouPostedWhe,
+                subTitle:
+                    locale.value.looksLikeThereIsNoReviewsWellKeepYouPostedWhe,
                 titleTextStyle: primaryTextStyle(),
                 imageWidget: const EmptyStateWidget(),
                 retryText: locale.value.reload,
@@ -55,8 +59,10 @@ class DoctorReviewScreen extends StatelessWidget {
                 },
               ).paddingSymmetric(horizontal: 32),
               itemBuilder: (context, index) {
-                DoctorReviewData doctorReviewData = doctorReviewCont.doctorReviewList[index];
-                return DoctorReviewCard(doctorReviewData: doctorReviewData).paddingBottom(16);
+                DoctorReviewData doctorReviewData =
+                    doctorReviewCont.doctorReviewList[index];
+                return DoctorReviewCard(doctorReviewData: doctorReviewData)
+                    .paddingBottom(16);
               },
               onNextPage: () async {
                 if (!doctorReviewCont.isLastPage.value) {
@@ -66,7 +72,8 @@ class DoctorReviewScreen extends StatelessWidget {
               },
               onSwipeRefresh: () async {
                 doctorReviewCont.page(1);
-                return await doctorReviewCont.getDoctorReviewList(showLoader: false);
+                return await doctorReviewCont.getDoctorReviewList(
+                    showLoader: false);
               },
             );
           },

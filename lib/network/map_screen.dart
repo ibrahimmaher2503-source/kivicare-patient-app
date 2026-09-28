@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:kivicare_patient/utils/constants.dart';
-import 'package:kivicare_patient/utils/local_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -12,6 +10,7 @@ import '../../components/app_scaffold.dart';
 import '../../components/loader_widget.dart';
 import '../../utils/colors.dart';
 import '../../utils/common_base.dart';
+import 'network_utils.dart';
 import '../main.dart';
 import 'location_service.dart';
 
@@ -25,7 +24,8 @@ class MapScreen extends StatefulWidget {
 }
 
 class MapScreenState extends State<MapScreen> {
-  final CameraPosition _initialLocation = const CameraPosition(target: LatLng(0.0, 0.0));
+  final CameraPosition _initialLocation =
+      const CameraPosition(target: LatLng(0.0, 0.0));
   late GoogleMapController mapController;
 
   String _currentAddress = '';
@@ -56,7 +56,9 @@ class MapScreenState extends State<MapScreen> {
 
       mapController.animateCamera(
         CameraUpdate.newCameraPosition(
-          CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 18.0),
+          CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: 18.0),
         ),
       );
 
@@ -64,13 +66,16 @@ class MapScreenState extends State<MapScreen> {
       markers.add(Marker(
         markerId: MarkerId(_currentAddress),
         position: LatLng(position.latitude, position.longitude),
-        infoWindow: InfoWindow(title: 'Start $_currentAddress', snippet: _destinationAddress),
+        infoWindow: InfoWindow(
+            title: '${locale.value.startLocation} $_currentAddress',
+            snippet: _destinationAddress),
         icon: BitmapDescriptor.defaultMarker,
       ));
 
       setState(() {});
     }).catchError((e) {
-      toast("$e");
+      toast(sanitizeBackendMessage(
+          e, locale.value.somethingWentWrongPleaseTryAgainLater));
     });
 
     isLoading(false);
@@ -82,12 +87,12 @@ class MapScreenState extends State<MapScreen> {
       Position position = await getUserLocationPosition().catchError((e) {
         //
       });
-      _currentAddress = await buildFullAddressFromLatLong(position.latitude, position.longitude).catchError((e) {
+      _currentAddress = await buildFullAddressFromLatLong(
+              position.latitude, position.longitude)
+          .catchError((e) {
         log(e);
       });
       destinationAddressController.text = _currentAddress;
-      setValueToLocal(LocatinKeys.LATITUDE, position.latitude);
-      setValueToLocal(LocatinKeys.LONGITUDE, position.longitude);
       _destinationAddress = _currentAddress;
 
       setState(() {});
@@ -106,7 +111,9 @@ class MapScreenState extends State<MapScreen> {
       icon: BitmapDescriptor.defaultMarker,
     ));
 
-    destinationAddressController.text = await buildFullAddressFromLatLong(point.latitude, point.longitude).catchError((e) {
+    destinationAddressController.text =
+        await buildFullAddressFromLatLong(point.latitude, point.longitude)
+            .catchError((e) {
       log(e);
     });
 
@@ -162,8 +169,10 @@ class MapScreenState extends State<MapScreen> {
                     child: Material(
                       color: Colors.blue.shade100,
                       child: InkWell(
-                        splashColor: context.primaryColor.withValues(alpha: 0.8),
-                        child: const SizedBox(width: 50, height: 50, child: Icon(Icons.add)),
+                        splashColor:
+                            context.primaryColor.withValues(alpha: 0.8),
+                        child: const SizedBox(
+                            width: 50, height: 50, child: Icon(Icons.add)),
                         onTap: () {
                           mapController.animateCamera(CameraUpdate.zoomIn());
                         },
@@ -175,8 +184,10 @@ class MapScreenState extends State<MapScreen> {
                     child: Material(
                       color: Colors.blue.shade100,
                       child: InkWell(
-                        splashColor: context.primaryColor.withValues(alpha: 0.8),
-                        child: const SizedBox(width: 50, height: 50, child: Icon(Icons.remove)),
+                        splashColor:
+                            context.primaryColor.withValues(alpha: 0.8),
+                        child: const SizedBox(
+                            width: 50, height: 50, child: Icon(Icons.remove)),
                         onTap: () {
                           mapController.animateCamera(CameraUpdate.zoomOut());
                         },
@@ -196,19 +207,24 @@ class MapScreenState extends State<MapScreen> {
                   ClipOval(
                     child: Material(
                       color: Colors.orange.shade100, // button color
-                      child: const Icon(Icons.my_location, size: 25).paddingAll(10),
+                      child: const Icon(Icons.my_location, size: 25)
+                          .paddingAll(10),
                     ),
                   ).paddingRight(8).onTap(() async {
                     isLoading(true);
                     await getUserLocationPosition().then((value) {
                       mapController.animateCamera(
                         CameraUpdate.newCameraPosition(
-                          CameraPosition(target: LatLng(value.latitude, value.longitude), zoom: 18.0),
+                          CameraPosition(
+                              target: LatLng(value.latitude, value.longitude),
+                              zoom: 18.0),
                         ),
                       );
 
                       _handleTap(LatLng(value.latitude, value.longitude));
-                    }).catchError(onError);
+                    }).catchError((_) {
+                      toast(locale.value.somethingWentWrongPleaseTryAgainLater);
+                    });
 
                     isLoading(false);
                   }),

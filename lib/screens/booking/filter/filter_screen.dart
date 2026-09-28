@@ -11,12 +11,19 @@ import '../../location_filter/governorate_selection_screen.dart';
 import '../../location_filter/models/location_filter_result.dart';
 import 'components/type_list_component.dart';
 import 'filter_controller.dart';
+import '../../service/service_list_controller.dart';
 
 class FilterScreen extends StatelessWidget {
   final String filterType;
   final String? displayName;
+  final ServiceListController? serviceController;
 
-  FilterScreen({super.key, this.filterType = 'service', this.displayName});
+  FilterScreen({
+    super.key,
+    this.filterType = 'service',
+    this.displayName,
+    this.serviceController,
+  });
 
   final FilterController filterCont = Get.put(FilterController());
 
@@ -42,7 +49,8 @@ class FilterScreen extends StatelessWidget {
         height: Get.height,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: isDarkMode.value ? appScreenBackgroundDark : appScreenBackground,
+          color:
+              isDarkMode.value ? appScreenBackgroundDark : appScreenBackground,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +58,8 @@ class FilterScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             16.height,
-            _LocationFilterTile(filterCont: filterCont).paddingSymmetric(horizontal: 16),
+            _LocationFilterTile(filterCont: filterCont)
+                .paddingSymmetric(horizontal: 16),
             const SizedBox(height: 12),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +78,8 @@ class FilterScreen extends StatelessWidget {
               ],
             ).expand(),
             Container(
-              decoration: boxDecorationDefault(borderRadius: radius(0), color: context.cardColor),
+              decoration: boxDecorationDefault(
+                  borderRadius: radius(0), color: context.cardColor),
               width: Get.width,
               padding: const EdgeInsets.all(16),
               child: AppButton(
@@ -80,7 +90,10 @@ class FilterScreen extends StatelessWidget {
                 onTap: () {
                   log('--------------------here000000000000000000');
                   log(filterType);
-                  filterCont.applyFilter(filterType);
+                  filterCont.applyFilter(
+                    filterType,
+                    serviceController: serviceController,
+                  );
                 },
               ),
             ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kivicare_patient/main.dart';
+import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../components/nurse_request_design.dart';
 import 'governorate_city_picker.dart';
 
 class AddressSection extends StatefulWidget {
@@ -42,20 +44,18 @@ class _AddressSectionState extends State<AddressSection> {
         TextFormField(
           controller: widget.addressLine1Controller,
           maxLength: 255,
-          decoration: InputDecoration(
+          decoration: nurseRequestInputDecoration(
+            context,
             labelText: '${locale.value.addressLine1} *',
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            counterText: '',
           ),
         ),
         12.height,
         TextFormField(
           controller: widget.addressLine2Controller,
           maxLength: 255,
-          decoration: InputDecoration(
+          decoration: nurseRequestInputDecoration(
+            context,
             labelText: locale.value.addressLine2,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            counterText: '',
           ),
         ),
         12.height,
@@ -67,6 +67,11 @@ class _AddressSectionState extends State<AddressSection> {
         4.height,
         TextButton.icon(
           onPressed: () => setState(() => _showMore = !_showMore),
+          style: TextButton.styleFrom(
+            foregroundColor: gradientStart,
+            minimumSize: const Size(44, 44),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+          ),
           icon: Icon(
             _showMore ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
             size: 18,
@@ -77,30 +82,27 @@ class _AddressSectionState extends State<AddressSection> {
           TextFormField(
             controller: widget.stateController,
             maxLength: 100,
-            decoration: InputDecoration(
+            decoration: nurseRequestInputDecoration(
+              context,
               labelText: locale.value.stateLabel,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              counterText: '',
             ),
           ),
           12.height,
           TextFormField(
             controller: widget.countryController,
             maxLength: 100,
-            decoration: InputDecoration(
+            decoration: nurseRequestInputDecoration(
+              context,
               labelText: locale.value.countryLabel,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              counterText: '',
             ),
           ),
           12.height,
           TextFormField(
             controller: widget.postalCodeController,
             maxLength: 20,
-            decoration: InputDecoration(
+            decoration: nurseRequestInputDecoration(
+              context,
               labelText: locale.value.postalCode,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              counterText: '',
             ),
           ),
         ],

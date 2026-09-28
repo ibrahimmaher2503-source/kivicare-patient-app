@@ -7,7 +7,7 @@ import '../../components/app_scaffold.dart';
 import '../../utils/empty_error_state_widget.dart';
 import '../../main.dart';
 import '../../utils/colors.dart';
-import '../../utils/common_base.dart';
+import '../../utils/price_widget.dart';
 import 'model/pharmacy_product_model.dart';
 import 'product_detail_screen.dart';
 
@@ -29,17 +29,18 @@ class ProductListController extends GetxController {
   RxMap filterParams = {}.obs;
   RxString currentSort = "newest".obs;
   RxInt activeFilterCount = 0.obs;
+  int _requestGeneration = 0;
 
   static const int perPage = 10;
 
   // Getter so labels are re-evaluated from the current locale on every access,
   // keeping them correct after a language change.
   List<Map<String, String>> get sortOptions => [
-    {'label': locale.value.sortNewest, 'value': 'newest'},
-    {'label': locale.value.sortPriceAsc, 'value': 'price_asc'},
-    {'label': locale.value.sortPriceDesc, 'value': 'price_desc'},
-    {'label': locale.value.sortRating, 'value': 'rating'},
-  ];
+        {'label': locale.value.sortNewest, 'value': 'newest'},
+        {'label': locale.value.sortPriceAsc, 'value': 'price_asc'},
+        {'label': locale.value.sortPriceDesc, 'value': 'price_desc'},
+        {'label': locale.value.sortRating, 'value': 'rating'},
+      ];
 
   ProductListController({this.categoryId, this.brandId, this.initialTitle});
 
@@ -55,13 +56,15 @@ class ProductListController extends GetxController {
   }
 
   Future<void> init() async {
+    final generation = ++_requestGeneration;
     page(1);
     isLastPage(false);
-    await fetchProducts();
+    await fetchProducts(generation: generation);
   }
 
-  Future<void> fetchProducts() async {
-    if (isLoading.value) return;
+  Future<void> fetchProducts({int? generation}) async {
+    final requestGeneration = generation ?? _requestGeneration;
+    if (page.value > 1 && isLoading.value) return;
     isLoading(true);
 
     try {
@@ -74,8 +77,8 @@ class ProductListController extends GetxController {
                 ? filterParams['brand_ids'][0]
                 : null),
         search: searchQuery.value,
-        productType: filterParams['product_types']?.isNotEmpty == true
-            ? filterParams['product_types'][0]
+        productTypeId: filterParams['product_type_ids']?.isNotEmpty == true
+            ? filterParams['product_type_ids'][0]
             : null,
         priceMin: filterParams['price_min'],
         priceMax: filterParams['price_max'],
@@ -83,6 +86,7 @@ class ProductListController extends GetxController {
         sort: currentSort.value,
       );
 
+      if (requestGeneration != _requestGeneration) return;
       if (res != null && res['data'] != null) {
         final List<PharmacyProduct> newProducts = (res['data'] as List)
             .map((e) => PharmacyProduct.fromJson(e))
@@ -95,9 +99,13 @@ class ProductListController extends GetxController {
         isLastPage(newProducts.length < perPage);
       }
     } catch (e) {
-      log('Error fetching products: $e');
+      if (requestGeneration == _requestGeneration) {
+        log('Error fetching products: $e');
+      }
     } finally {
-      isLoading(false);
+      if (requestGeneration == _requestGeneration) {
+        isLoading(false);
+      }
     }
   }
 
@@ -106,8 +114,8 @@ class ProductListController extends GetxController {
     // reopening it doesn't reset choices the user already made.
     final List<int> currentBrandIds =
         List<int>.from(filterParams['brand_ids'] ?? <int>[]);
-    final List<String> currentProductTypes =
-        List<String>.from(filterParams['product_types'] ?? <String>[]);
+    final List<int> currentProductTypeIds =
+        List<int>.from(filterParams['product_type_ids'] ?? <int>[]);
     final double priceMinVal =
         double.tryParse(filterParams['price_min'] ?? '0') ?? 0;
     final double priceMaxVal =
@@ -117,7 +125,7 @@ class ProductListController extends GetxController {
 
     final result = await Get.to(() => PharmacyFilterScreen(
           initialBrandIds: currentBrandIds,
-          initialProductTypes: currentProductTypes,
+          initialProductTypeIds: currentProductTypeIds,
           initialPriceRange: RangeValues(priceMinVal, priceMaxVal),
           initialPrescriptionRequired: currentPrescription,
         ));
@@ -126,7 +134,7 @@ class ProductListController extends GetxController {
 
       int count = 0;
       if (result['brand_ids']?.isNotEmpty == true) count++;
-      if (result['product_types']?.isNotEmpty == true) count++;
+      if (result['product_type_ids']?.isNotEmpty == true) count++;
       if (result['price_min'] != '0' || result['price_max'] != '5000') count++;
       if (result['prescription_required'] == true) count++;
       activeFilterCount(count);
@@ -151,7 +159,7 @@ class ProductListController extends GetxController {
   Future<void> loadMore() async {
     if (!isLastPage.value && !isLoading.value) {
       page.value++;
-      await fetchProducts();
+      await fetchProducts(generation: _requestGeneration);
     }
   }
 }
@@ -161,7 +169,8 @@ class ProductListScreen extends StatelessWidget {
   final int? brandId;
   final String? title;
 
-  const ProductListScreen({super.key, this.categoryId, this.brandId, this.title});
+  const ProductListScreen(
+      {super.key, this.categoryId, this.brandId, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -179,23 +188,26 @@ class ProductListScreen extends StatelessWidget {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: surfaceElevated,
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                        color: softShadowColor,
-                        blurRadius: 10,
-                        offset: const Offset(0, 4)),
-                  ],
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.tune_rounded,
-                      color: appColorSecondary, size: 20),
-                  onPressed: controller.openFilters,
+                  onTap: controller.openFilters,
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: appColorSecondary.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: appColorSecondary.withValues(alpha: 0.18),
+                        width: 1,
+                      ),
+                    ),
+                    child: const Icon(Icons.tune_rounded,
+                        color: appColorSecondary, size: 20),
+                  ),
                 ),
               ),
               Obx(() => controller.activeFilterCount.value > 0
@@ -223,7 +235,7 @@ class ProductListScreen extends StatelessWidget {
                         child: Text('${controller.activeFilterCount.value}',
                             style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w700)),
                       ),
                     )
@@ -236,29 +248,64 @@ class ProductListScreen extends StatelessWidget {
         children: [
           _buildSearchAndSort(controller, context),
           Expanded(
-            child: Obx(
-                () => controller.products.isEmpty && !controller.isLoading.value
-                    ? NoDataWidget(
-                        title: locale.value.noProductsFound,
-                        imageWidget: const ErrorStateWidget(),
-                        onRetry: () => controller.init(),
-                      ).paddingAll(16)
-                    : AnimatedScrollView(
-                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-                        onSwipeRefresh: () => controller.init(),
-                        onNextPage: () => controller.loadMore(),
-                        children: [
-                          AnimatedWrap(
-                            spacing: 16,
-                            runSpacing: 16,
-                            itemCount: controller.products.length,
-                            itemBuilder: (context, index) {
-                              return _ProductCard(
-                                  product: controller.products[index]);
-                            },
-                          ),
-                        ],
-                      )),
+            child: Obx(() => controller.products.isEmpty &&
+                    !controller.isLoading.value
+                ? NoDataWidget(
+                    title: locale.value.noProductsFound,
+                    imageWidget: const ErrorStateWidget(),
+                    onRetry: () => controller.init(),
+                  ).paddingAll(16)
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      final columnCount = constraints.maxWidth >= 900
+                          ? 5
+                          : constraints.maxWidth >= 650
+                              ? 3
+                              : 2;
+                      final textScale = MediaQuery.textScalerOf(context)
+                          .scale(1)
+                          .clamp(1.0, 2.0);
+                      return RefreshIndicator(
+                        onRefresh: controller.init,
+                        child: CustomScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          slivers: [
+                            SliverPadding(
+                              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                              sliver: SliverGrid.builder(
+                                itemCount: controller.products.length,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: columnCount,
+                                  crossAxisSpacing: 16,
+                                  mainAxisSpacing: 16,
+                                  mainAxisExtent: 230 + ((textScale - 1) * 55),
+                                ),
+                                itemBuilder: (context, index) {
+                                  if (index >= controller.products.length - 3) {
+                                    controller.loadMore();
+                                  }
+                                  return _ProductCard(
+                                    product: controller.products[index],
+                                  );
+                                },
+                              ),
+                            ),
+                            if (controller.isLoading.value &&
+                                controller.products.isNotEmpty)
+                              const SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  )),
           ),
         ],
       ),
@@ -289,8 +336,22 @@ class ProductListScreen extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: locale.value.searchProducts,
                 hintStyle: secondaryTextStyle(size: 14),
-                prefixIcon: const Icon(Icons.search_rounded,
-                    color: appColorSecondary, size: 20),
+                prefixIcon: Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 10, end: 4),
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: appColorSecondary.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(9),
+                    ),
+                    child: const Icon(Icons.search_rounded,
+                        color: appColorSecondary, size: 18),
+                  ),
+                ),
+                prefixIconConstraints:
+                    const BoxConstraints(minWidth: 46, minHeight: 32),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.clear_rounded,
                       color: secondaryTextColor, size: 18),
@@ -347,9 +408,8 @@ class ProductListScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 14, vertical: 8),
                         decoration: BoxDecoration(
-                          color: selected
-                              ? lightSecondaryColor
-                              : surfaceElevated,
+                          color:
+                              selected ? lightSecondaryColor : surfaceElevated,
                           borderRadius: BorderRadius.circular(999),
                           border: Border.all(
                               color: selected
@@ -383,11 +443,10 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = (MediaQuery.sizeOf(context).width - 48) / 2;
     return GestureDetector(
       onTap: () => Get.to(() => ProductDetailScreen(product: product)),
       child: Container(
-        width: width,
+        width: double.infinity,
         decoration: BoxDecoration(
           color: surfaceElevated,
           borderRadius: BorderRadius.circular(16),
@@ -407,42 +466,73 @@ class _ProductCard extends StatelessWidget {
                   CachedNetworkImage(
                           imageUrl: product.images![0],
                           height: 140,
-                          width: width,
+                          width: double.infinity,
                           fit: BoxFit.cover)
                       .cornerRadiusWithClipRRectOnly(topLeft: 16, topRight: 16)
                 else
                   Container(
-                          height: 140,
-                          width: width,
-                          color: surfaceSubtle,
-                          child: const Icon(Icons.medication_outlined,
-                              color: gray400, size: 32))
-                      .cornerRadiusWithClipRRectOnly(topLeft: 16, topRight: 16),
+                    height: 140,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          surfaceSubtle,
+                          appColorSecondary.withValues(alpha: 0.06),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Container(
+                      width: 56,
+                      height: 56,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: appColorSecondary.withValues(alpha: 0.14),
+                      ),
+                      child: const Icon(Icons.medication_outlined,
+                          color: appColorSecondary, size: 28),
+                    ),
+                  ).cornerRadiusWithClipRRectOnly(topLeft: 16, topRight: 16),
                 if (product.isPrescriptionRequired ?? false)
                   Positioned(
                     top: 8,
                     left: 8,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                          horizontal: 9, vertical: 5),
                       decoration: BoxDecoration(
-                        color: appColorSecondary.withValues(alpha: 0.95),
+                        gradient: const LinearGradient(colors: [
+                          gradientSecondaryStart,
+                          gradientSecondaryEnd,
+                        ]),
                         borderRadius: BorderRadius.circular(999),
                         boxShadow: [
                           BoxShadow(
-                              color: softShadowColor,
-                              blurRadius: 6,
-                              offset: const Offset(0, 2)),
+                              color: softShadowColorMedium,
+                              blurRadius: 8,
+                              offset: const Offset(0, 3)),
                         ],
                       ),
-                      child: const Text(
-                        'Rx',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.3,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Icon(Icons.medical_information_rounded,
+                              color: Colors.white, size: 12),
+                          SizedBox(width: 4),
+                          Text(
+                            'Rx',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.4,
+                              height: 1,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -467,19 +557,20 @@ class _ProductCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Flexible(
-                        child: Text('${product.price} LE',
-                            style: boldTextStyle(
-                                size: 15, color: appColorPrimary),
+                        child: Text(formatCurrencyValue(product.price),
+                            style:
+                                boldTextStyle(size: 15, color: appColorPrimary),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis),
                       ),
                       if (product.referencePrice != null) ...[
                         const SizedBox(width: 6),
                         Flexible(
-                          child: Text('${product.referencePrice} LE',
+                          child: Text(
+                              formatCurrencyValue(product.referencePrice),
                               style: secondaryTextStyle(
                                   decoration: TextDecoration.lineThrough,
-                                  size: 11,
+                                  size: 12,
                                   color: gray400),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis),

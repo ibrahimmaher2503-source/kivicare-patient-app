@@ -6,6 +6,7 @@ import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/cairo_time.dart';
+import '../../components/nurse_request_design.dart';
 import 'duration_stepper.dart';
 
 class ScheduleSection extends StatelessWidget {
@@ -27,59 +28,73 @@ class ScheduleSection extends StatelessWidget {
       children: [
         Text(locale.value.preferredDate, style: boldTextStyle()),
         8.height,
-        Obx(() => _PickerTile(
-              label: preferredDate.value != null
-                  ? DateFormat('yyyy-MM-dd').format(preferredDate.value!)
-                  : locale.value.preferredDate,
-              icon: Icons.calendar_today_outlined,
-              onTap: () async {
-                final picked = await showDatePicker(
-                  context: context,
-                  initialDate: preferredDate.value ?? cairoTodayMidnight(),
-                  firstDate: cairoTodayMidnight(),
-                  lastDate: cairoMaxBookableDate(),
-                  builder: (ctx, child) => Theme(
-                    data: Theme.of(ctx).copyWith(
-                      colorScheme: ColorScheme.fromSeed(seedColor: gradientStart),
+        Obx(
+          () => _PickerTile(
+            label: preferredDate.value != null
+                ? DateFormat('yyyy-MM-dd').format(preferredDate.value!)
+                : locale.value.preferredDate,
+            icon: Icons.calendar_today_outlined,
+            onTap: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: preferredDate.value ?? cairoTodayMidnight(),
+                firstDate: cairoTodayMidnight(),
+                lastDate: cairoMaxBookableDate(),
+                builder: (ctx, child) => Theme(
+                  data: Theme.of(ctx).copyWith(
+                    colorScheme: ColorScheme.fromSeed(
+                      seedColor: gradientStart,
+                      brightness: nurseRequestIsDark
+                          ? Brightness.dark
+                          : Brightness.light,
                     ),
-                    child: child!,
                   ),
-                );
-                if (picked != null) preferredDate.value = picked;
-              },
-            )),
+                  child: child!,
+                ),
+              );
+              if (picked != null) preferredDate.value = picked;
+            },
+          ),
+        ),
         12.height,
         Text(locale.value.preferredTime, style: boldTextStyle()),
         8.height,
-        Obx(() => Row(
-              children: [
-                Expanded(
-                  child: _PickerTile(
-                    label: preferredTime.value != null
-                        ? preferredTime.value!.format(context)
-                        : locale.value.preferredTime,
-                    icon: Icons.access_time_outlined,
-                    onTap: () async {
-                      final picked = await showTimePicker(
-                        context: context,
-                        initialTime: preferredTime.value ?? TimeOfDay.now(),
-                      );
-                      if (picked != null) preferredTime.value = picked;
-                    },
+        Obx(
+          () => Row(
+            children: [
+              Expanded(
+                child: _PickerTile(
+                  label: preferredTime.value != null
+                      ? preferredTime.value!.format(context)
+                      : locale.value.preferredTime,
+                  icon: Icons.access_time_outlined,
+                  onTap: () async {
+                    final picked = await showTimePicker(
+                      context: context,
+                      initialTime: preferredTime.value ?? TimeOfDay.now(),
+                    );
+                    if (picked != null) preferredTime.value = picked;
+                  },
+                ),
+              ),
+              if (preferredTime.value != null) ...[
+                8.width,
+                TextButton(
+                  onPressed: () => preferredTime.value = null,
+                  style: TextButton.styleFrom(
+                    foregroundColor: gradientStart,
+                    minimumSize: const Size(44, 44),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                  child: Text(
+                    locale.value.clear,
+                    style: TextStyle(color: gradientStart),
                   ),
                 ),
-                if (preferredTime.value != null) ...[
-                  8.width,
-                  TextButton(
-                    onPressed: () => preferredTime.value = null,
-                    child: Text(
-                      locale.value.clear,
-                      style: TextStyle(color: gradientStart),
-                    ),
-                  ),
-                ],
               ],
-            )),
+            ],
+          ),
+        ),
         12.height,
         Text(locale.value.durationHours, style: boldTextStyle()),
         8.height,
@@ -108,14 +123,21 @@ class _PickerTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.withValues(alpha: 0.4)),
-          borderRadius: BorderRadius.circular(12),
+          color: nurseRequestSubtleSurface(context),
+          border: Border.all(color: nurseRequestBorderColor(context)),
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
           children: [
             Icon(icon, color: gradientStart, size: 20),
             12.width,
-            Text(label, style: primaryTextStyle()),
+            Expanded(
+              child: Text(
+                label,
+                style: primaryTextStyle(),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
       ),

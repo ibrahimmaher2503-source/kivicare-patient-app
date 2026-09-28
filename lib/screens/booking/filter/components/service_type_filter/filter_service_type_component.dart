@@ -4,7 +4,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../filter_controller.dart';
 
 class FilterServiceTypeComponent extends StatelessWidget {
-  final FilterController filterCont = Get.put(FilterController());
+  final FilterController filterCont = Get.find<FilterController>();
 
   FilterServiceTypeComponent({super.key});
 
@@ -22,17 +22,23 @@ class FilterServiceTypeComponent extends StatelessWidget {
                   filterCont.selectedServiceType(statusData['value']);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   margin: const EdgeInsets.all(4),
                   decoration: boxDecorationDefault(
                     borderRadius: BorderRadius.circular(6),
-                    color: filterCont.selectedServiceType == statusData['value'] ? const Color.fromRGBO(86, 112, 204, 1) : context.cardColor,
+                    color: filterCont.selectedServiceType == statusData['value']
+                        ? const Color.fromRGBO(86, 112, 204, 1)
+                        : context.cardColor,
                   ),
                   child: Text(
                     statusData['title'].toString(),
                     style: primaryTextStyle(
                       size: 12,
-                      color: filterCont.selectedServiceType == statusData['value'] ? white : null,
+                      color:
+                          filterCont.selectedServiceType == statusData['value']
+                              ? white
+                              : null,
                     ),
                   ),
                 ),

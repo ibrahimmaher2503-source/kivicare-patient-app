@@ -76,9 +76,31 @@ class PrescriptionListScreen extends StatelessWidget {
       isLoading: controller.isLoading,
       scaffoldBackgroundColor: appLayoutBackground,
       actions: [
-        IconButton(
-          icon: const Icon(Icons.add_rounded, color: appColorSecondary),
-          onPressed: () => Get.to(() => PrescriptionUploadScreen()),
+        Padding(
+          padding: const EdgeInsets.only(right: 12, top: 6, bottom: 6),
+          child: Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => Get.to(() => PrescriptionUploadScreen()),
+              child: Container(
+                width: 40,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: appColorSecondary.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: appColorSecondary.withValues(alpha: 0.18),
+                    width: 1,
+                  ),
+                ),
+                child: const Icon(Icons.add_rounded,
+                    color: appColorSecondary, size: 20),
+              ),
+            ),
+          ),
         ),
       ],
       body: Obx(
@@ -137,8 +159,8 @@ class _PrescriptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color statusColor = PharmacyConstants.getPrescriptionStatusColor(
-        prescription.status ?? '');
+    final Color statusColor =
+        PharmacyConstants.getPrescriptionStatusColor(prescription.status ?? '');
     return GestureDetector(
       onTap: () =>
           Get.to(() => PrescriptionDetailScreen(prescription: prescription)),
@@ -161,15 +183,38 @@ class _PrescriptionWidget extends StatelessWidget {
             Container(
               height: 56,
               width: 56,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: surfaceSubtle,
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(14),
+                gradient: prescription.images.validate().isEmpty
+                    ? const LinearGradient(
+                        colors: [
+                          gradientSecondaryStart,
+                          gradientSecondaryEnd,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                    : null,
+                color: prescription.images.validate().isEmpty
+                    ? null
+                    : surfaceSubtle,
+                boxShadow: prescription.images.validate().isEmpty
+                    ? [
+                        BoxShadow(
+                          color: appColorSecondary.withValues(alpha: 0.22),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : null,
+              ),
               child: prescription.images.validate().isNotEmpty
                   ? CachedNetworkImage(
                           imageUrl: prescription.images![0], fit: BoxFit.cover)
-                      .cornerRadiusWithClipRRect(12)
-                  : const Icon(Icons.description_outlined,
-                      color: appColorSecondary, size: 28),
+                      .cornerRadiusWithClipRRect(14)
+                  : const Icon(Icons.medical_information_rounded,
+                      color: Colors.white, size: 28),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -203,8 +248,11 @@ class _PrescriptionWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    prescription.status.validate().capitalizeFirstLetter(),
-                    style: boldTextStyle(color: statusColor, size: 11),
+                    PharmacyConstants.prescriptionStatusLabel(
+                      locale.value,
+                      prescription.status.validate(),
+                    ),
+                    style: boldTextStyle(color: statusColor, size: 12),
                   ),
                 ],
               ),

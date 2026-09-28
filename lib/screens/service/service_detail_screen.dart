@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kivicare_patient/screens/service/service_list_controller.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../components/app_custom_dialog.dart';
@@ -44,7 +43,7 @@ class ServiceDetailScreen extends StatelessWidget {
               future: serviceDetailController.getServiceDetails.value,
               errorBuilder: (error) {
                 return NoDataWidget(
-                  title: error,
+                  title: locale.value.somethingWentWrongPleaseTryAgainLater,
                   retryText: locale.value.reload,
                   imageWidget: const ErrorStateWidget(),
                   onRetry: () {
@@ -157,7 +156,6 @@ class ServiceDetailScreen extends StatelessWidget {
                       onClickViewDetail: (clinicData) {
                         /// Store selected clinic in global variable
                         currentSelectedClinic(clinicData);
-                        Get.delete<ServiceListController>();
                         Get.to(() => ClinicDetailScreen(), arguments: clinicData);
                       },
                     ),

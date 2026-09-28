@@ -18,7 +18,8 @@ import 'notification_screen_controller.dart';
 
 class NotificationScreen extends StatelessWidget {
   NotificationScreen({super.key});
-  final NotificationScreenController notificationScreenController = Get.put(NotificationScreenController());
+  final NotificationScreenController notificationScreenController =
+      Get.put(NotificationScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class NotificationScreen extends StatelessWidget {
             future: notificationScreenController.getNotifications.value,
             errorBuilder: (error) {
               return NoDataWidget(
-                title: error,
+                title: locale.value.somethingWentWrongPleaseTryAgainLater,
                 retryText: locale.value.reload,
                 imageWidget: const ErrorStateWidget(),
                 onRetry: () {
@@ -43,7 +44,9 @@ class NotificationScreen extends StatelessWidget {
                 },
               ).paddingSymmetric(horizontal: 32);
             },
-            loadingWidget: notificationScreenController.isLoading.value ? const Offstage() : const LoaderWidget(),
+            loadingWidget: notificationScreenController.isLoading.value
+                ? const Offstage()
+                : const LoaderWidget(),
             onSuccess: (notifications) {
               return AnimatedListView(
                 shrinkWrap: true,
@@ -61,19 +64,25 @@ class NotificationScreen extends StatelessWidget {
                     notificationScreenController.isLoading(true);
                     notificationScreenController.init();
                   },
-                ).paddingSymmetric(horizontal: 32).paddingBottom(Get.height * 0.1),
+                )
+                    .paddingSymmetric(horizontal: 32)
+                    .paddingBottom(Get.height * 0.1),
                 itemBuilder: (context, index) {
-                  NotificationData notification = notificationScreenController.notificationDetail[index];
+                  NotificationData notification =
+                      notificationScreenController.notificationDetail[index];
                   return GestureDetector(
                     onTap: () async {
-                      if (notification.data.notificationDetail.type == "wallet_refund") {
+                      if (notification.data.notificationDetail.type ==
+                          "wallet_refund") {
                         Get.to(() => PatientWalletHistory());
                       } else if (notification.data.notificationDetail.id > 0) {
                         await Get.to(
                           () => AppointmentDetail(),
                           arguments: AppointmentData(
                             id: notification.data.notificationDetail.id,
-                            notificationId: notification.readAt.trim().isEmpty ? notification.id : "",
+                            notificationId: notification.readAt.trim().isEmpty
+                                ? notification.id
+                                : "",
                           ),
                         );
                         notificationScreenController.page(1);
@@ -82,7 +91,12 @@ class NotificationScreen extends StatelessWidget {
                     },
                     behavior: HitTestBehavior.translucent,
                     child: Container(
-                      decoration: notification.readAt.trim().isEmpty ? boxDecorationDefault(color: isDarkMode.value ? const Color.fromARGB(40, 78, 112, 247) : lightPrimaryColor) : boxDecorationDefault(color: context.cardColor),
+                      decoration: notification.readAt.trim().isEmpty
+                          ? boxDecorationDefault(
+                              color: isDarkMode.value
+                                  ? const Color.fromARGB(40, 78, 112, 247)
+                                  : lightPrimaryColor)
+                          : boxDecorationDefault(color: context.cardColor),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -91,14 +105,19 @@ class NotificationScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                decoration: boxDecorationDefault(color: isDarkMode.value ? canvasColor : lightPrimaryColor, shape: BoxShape.circle),
+                                decoration: boxDecorationDefault(
+                                    color: isDarkMode.value
+                                        ? canvasColor
+                                        : lightPrimaryColor,
+                                    shape: BoxShape.circle),
                                 padding: const EdgeInsets.all(8),
                                 alignment: Alignment.center,
                                 child: CachedImageWidget(
                                   url: Assets.assetsAppLogo,
                                   height: 20,
                                   width: 20,
-                                  firstName: "#${notification.data.notificationDetail.id}",
+                                  firstName:
+                                      "#${notification.data.notificationDetail.id}",
                                   fit: BoxFit.cover,
                                   color: appColorPrimary,
                                   circle: true,
@@ -109,25 +128,55 @@ class NotificationScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    getAppointmentNotification(notification: notification.data.notificationDetail.type),
+                                    getAppointmentNotification(
+                                        notification: notification
+                                            .data.notificationDetail.type),
                                     style: secondaryTextStyle(size: 14),
-                                  ).visible(notification.data.notificationDetail.type.isNotEmpty),
+                                  ).visible(notification
+                                      .data.notificationDetail.type.isNotEmpty),
                                   4.height,
                                   RichText(
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     text: TextSpan(
                                       children: [
-                                        TextSpan(text: notification.data.notificationDetail.id > 0 ? '#${notification.data.notificationDetail.id} - ' : "", style: primaryTextStyle(color: appColorSecondary, size: 12, decoration: TextDecoration.none)),
                                         TextSpan(
-                                            text: notification.data.notificationDetail.notificationMsg.trim().isNotEmpty ? notification.data.notificationDetail.notificationMsg : notification.data.notificationDetail.appointmentServicesNames,
+                                            text: notification.data
+                                                        .notificationDetail.id >
+                                                    0
+                                                ? '#${notification.data.notificationDetail.id} - '
+                                                : "",
+                                            style: primaryTextStyle(
+                                                color: appColorSecondary,
+                                                size: 12,
+                                                decoration:
+                                                    TextDecoration.none)),
+                                        TextSpan(
+                                            text: notification
+                                                    .data
+                                                    .notificationDetail
+                                                    .notificationMsg
+                                                    .trim()
+                                                    .isNotEmpty
+                                                ? notification
+                                                    .data
+                                                    .notificationDetail
+                                                    .notificationMsg
+                                                : notification
+                                                    .data
+                                                    .notificationDetail
+                                                    .appointmentServicesNames,
                                             style: primaryTextStyle(size: 12)),
                                       ],
                                     ),
                                   ),
                                   4.height,
                                   Text(
-                                    notification.createdAt.dateInyyyyMMddHHmmFormat.timeAgoWithLocalization,
+                                    notification
+                                            .createdAt
+                                            .dateInyyyyMMddHHmmFormat
+                                            ?.timeAgoWithLocalization ??
+                                        '-',
                                     style: secondaryTextStyle(),
                                   ),
                                 ],
@@ -142,7 +191,8 @@ class NotificationScreen extends StatelessWidget {
                 },
                 onNextPage: () async {
                   if (!notificationScreenController.isLastPage.value) {
-                    notificationScreenController.page(notificationScreenController.page.value + 1);
+                    notificationScreenController
+                        .page(notificationScreenController.page.value + 1);
                     notificationScreenController.isLoading(true);
                     notificationScreenController.init();
                     return await Future.delayed(const Duration(seconds: 2), () {

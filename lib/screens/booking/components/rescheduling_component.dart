@@ -34,7 +34,7 @@ class ReschedulingComponent extends StatelessWidget {
                 future: appointmentDetailCont.timeSlotsFuture.value,
                 errorBuilder: (error) {
                   return NoDataWidget(
-                    title: error,
+                    title: locale.value.somethingWentWrongPleaseTryAgainLater,
                     retryText: locale.value.reload,
                     imageWidget: const ErrorStateWidget(),
                     onRetry: () {
@@ -42,20 +42,28 @@ class ReschedulingComponent extends StatelessWidget {
                     },
                   ).paddingSymmetric(horizontal: 32);
                 },
-                loadingWidget: appointmentDetailCont.isLoading.value ? const Offstage() : const LoaderWidget(),
+                loadingWidget: appointmentDetailCont.isLoading.value
+                    ? const Offstage()
+                    : const LoaderWidget(),
                 onSuccess: (p0) {
                   if (appointmentDetailCont.slots.isEmpty) {
-                    return NoDataWidget(title: locale.value.noTimeSlotsAvailable).paddingTop(12);
+                    return NoDataWidget(
+                            title: locale.value.noTimeSlotsAvailable)
+                        .paddingTop(12);
                   }
 
                   return Obx(
                     () => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ViewAllLabel(label: locale.value.chooseTime, isShowAll: false).paddingOnly(right: 8),
+                        ViewAllLabel(
+                                label: locale.value.chooseTime,
+                                isShowAll: false)
+                            .paddingOnly(right: 8),
                         Container(
                           padding: const EdgeInsets.all(16),
-                          decoration: boxDecorationDefault(color: context.cardColor),
+                          decoration:
+                              boxDecorationDefault(color: context.cardColor),
                           child: Column(
                             children: [
                               AnimatedWrap(
@@ -64,26 +72,43 @@ class ReschedulingComponent extends StatelessWidget {
                                 children: List.generate(
                                   appointmentDetailCont.slots.length,
                                   (i) {
-                                    String slot = appointmentDetailCont.slots[i];
+                                    String slot =
+                                        appointmentDetailCont.slots[i];
                                     return Obx(
                                       () => GestureDetector(
                                         onTap: () {
-                                          appointmentDetailCont.selectedSlot(slot);
-                                          appointmentDetailCont.onDateTimeChange();
+                                          appointmentDetailCont
+                                              .selectedSlot(slot);
+                                          appointmentDetailCont
+                                              .onDateTimeChange();
                                         },
                                         child: Container(
                                           width: Get.width / 4 - 27,
-                                          padding: const EdgeInsets.symmetric(vertical: 12),
-                                          decoration: boxDecorationWithRoundedCorners(
-                                            backgroundColor: appointmentDetailCont.selectedSlot.value == slot ? appColorPrimary : context.scaffoldBackgroundColor,
-                                            borderRadius: BorderRadius.circular(defaultRadius / 2),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 12),
+                                          decoration:
+                                              boxDecorationWithRoundedCorners(
+                                            backgroundColor:
+                                                appointmentDetailCont
+                                                            .selectedSlot
+                                                            .value ==
+                                                        slot
+                                                    ? appColorPrimary
+                                                    : context
+                                                        .scaffoldBackgroundColor,
+                                            borderRadius: BorderRadius.circular(
+                                                defaultRadius / 2),
                                           ),
                                           child: Text(
                                             slot,
                                             textAlign: TextAlign.center,
                                             style: primaryTextStyle(
                                               size: 12,
-                                              color: (appointmentDetailCont.selectedSlot.value == slot) ? Colors.white : appColorPrimary,
+                                              color: (appointmentDetailCont
+                                                          .selectedSlot.value ==
+                                                      slot)
+                                                  ? Colors.white
+                                                  : appColorPrimary,
                                             ),
                                           ),
                                         ),
@@ -104,13 +129,18 @@ class ReschedulingComponent extends StatelessWidget {
             16.height,
           ],
         ),
-        Obx(() => const LoaderWidget().visible(appointmentDetailCont.isLoading.value)),
+        Obx(() => const LoaderWidget()
+            .visible(appointmentDetailCont.isLoading.value)),
       ],
     );
   }
 }
 
-void handleRescheduleClick({required BuildContext context, required RxBool isLoading, required Rx<AppointmentData> appointmentDetail, required AppointmentDetailController appointmentDetailCont}) {
+void handleRescheduleClick(
+    {required BuildContext context,
+    required RxBool isLoading,
+    required Rx<AppointmentData> appointmentDetail,
+    required AppointmentDetailController appointmentDetailCont}) {
   serviceCommonBottomSheet(
     context,
     child: BottomSelectionSheet(
@@ -118,18 +148,19 @@ void handleRescheduleClick({required BuildContext context, required RxBool isLoa
       title: locale.value.rescheduleBooking,
       hideSearchBar: true,
       hintText: locale.value.searchForService,
-      searchTextCont: TextEditingController(),
       hasError: false,
       isLoading: appointmentDetailCont.isUpdateBookingLoading,
       isEmpty: false,
       noDataTitle: locale.value.statusListIsEmpty,
-      noDataSubTitle: locale.value.thereAreNoStatusListedAtTheMomentStayTunedFor,
+      noDataSubTitle:
+          locale.value.thereAreNoStatusListedAtTheMomentStayTunedFor,
       listWidget: Stack(
         children: [
           SingleChildScrollView(
             child: Column(
               children: [
-                ViewAllLabel(label: locale.value.chooseDate, isShowAll: false).paddingOnly(right: 8),
+                ViewAllLabel(label: locale.value.chooseDate, isShowAll: false)
+                    .paddingOnly(right: 8),
                 Container(
                   decoration: boxDecorationDefault(color: context.cardColor),
                   child: DatePicker(
@@ -139,7 +170,8 @@ void handleRescheduleClick({required BuildContext context, required RxBool isLoa
                     selectedTextColor: appColorPrimary,
                     height: 90,
                     onDateChange: (date) {
-                      appointmentDetailCont.selectedDate(date.formatDateYYYYmmdd());
+                      appointmentDetailCont
+                          .selectedDate(date.formatApiDateYYYYmmdd());
                       appointmentDetailCont.selectedSlot("");
                       appointmentDetailCont.getTimeSlot();
                       appointmentDetailCont.onDateTimeChange();
@@ -159,14 +191,24 @@ void handleRescheduleClick({required BuildContext context, required RxBool isLoa
                 width: Get.width,
                 text: locale.value.update,
                 textStyle: appButtonTextStyleWhite,
-                color: appointmentDetailCont.updateBtnVisible.value ? appColorSecondary : null,
-                enabled: appointmentDetailCont.updateBtnVisible.value ? true : false,
-                disabledColor: appointmentDetailCont.updateBtnVisible.value ? null : appColorSecondary.withValues(alpha: 0.5),
-                shapeBorder: RoundedRectangleBorder(borderRadius: radius(defaultAppButtonRadius / 2)),
+                color: appointmentDetailCont.updateBtnVisible.value
+                    ? appColorSecondary
+                    : null,
+                enabled: appointmentDetailCont.updateBtnVisible.value &&
+                    !appointmentDetailCont.isUpdateBookingLoading.value,
+                disabledColor: appointmentDetailCont.updateBtnVisible.value
+                    ? null
+                    : appColorSecondary.withValues(alpha: 0.5),
+                shapeBorder: RoundedRectangleBorder(
+                    borderRadius: radius(defaultAppButtonRadius / 2)),
                 onTap: () {
+                  if (appointmentDetailCont.isUpdateBookingLoading.value) {
+                    return;
+                  }
                   showConfirmDialogCustom(
                     context,
-                    title: locale.value.doYouWantToChangeTheTimeSlotOfThisAppointment,
+                    title: locale
+                        .value.doYouWantToChangeTheTimeSlotOfThisAppointment,
                     positiveText: locale.value.yes,
                     negativeText: locale.value.no,
                     primaryColor: context.primaryColor,
@@ -183,7 +225,7 @@ void handleRescheduleClick({required BuildContext context, required RxBool isLoa
     ),
     onSheetClose: (p0) {
       appointmentDetailCont.updateBtnVisible(false);
-      appointmentDetailCont.selectedDate(DateTime.now().formatDateYYYYmmdd());
+      appointmentDetailCont.selectedDate(DateTime.now().formatApiDateYYYYmmdd());
       appointmentDetailCont.selectedSlot("");
     },
   );

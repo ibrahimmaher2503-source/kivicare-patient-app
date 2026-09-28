@@ -34,7 +34,8 @@ class FilterSearchClinicComponent extends StatelessWidget {
       onTap: onTap,
       onFieldSubmitted: onFieldSubmitted,
       onChanged: (p0) {
-        filterClinicController.isSearchClinicText(filterClinicController.searchClinicCont.text.trim().isNotEmpty);
+        filterClinicController.isSearchClinicText(
+            filterClinicController.searchClinicCont.text.trim().isNotEmpty);
         filterClinicController.searchClinicStream.add(p0);
       },
       suffix: Obx(
@@ -46,11 +47,12 @@ class FilterSearchClinicComponent extends StatelessWidget {
             }
             hideKeyboard(context);
             filterClinicController.searchClinicCont.clear();
-            filterClinicController.isSearchClinicText(filterClinicController.searchClinicCont.text.trim().isNotEmpty);
+            filterClinicController.isSearchClinicText(
+                filterClinicController.searchClinicCont.text.trim().isNotEmpty);
             filterClinicController.clinicPage(1);
             filterClinicController.getClinicsList();
           },
-          size: 11,
+          size: 12,
         ).visible(filterClinicController.isSearchClinicText.value),
       ),
       decoration: inputDecorationWithOutBorder(
@@ -58,7 +60,8 @@ class FilterSearchClinicComponent extends StatelessWidget {
         hintText: hintText ?? locale.value.searchClinicHere,
         filled: true,
         fillColor: context.cardColor,
-        prefixIcon: commonLeadingWid(imgPath: Assets.iconsIcSearch, size: 18).paddingAll(14),
+        prefixIcon: commonLeadingWid(imgPath: Assets.iconsIcSearch, size: 18)
+            .paddingAll(14),
       ),
     );
   }

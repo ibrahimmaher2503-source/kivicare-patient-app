@@ -33,7 +33,7 @@ if (flutterVersionName == null) {
 android {
     namespace "com.espitalia.patient"
     compileSdk 36
-    ndkVersion "27.0.12077973"
+    ndkVersion "28.2.13676358"
 
     compileOptions {
         coreLibraryDesugaringEnabled true
@@ -55,6 +55,10 @@ android {
         targetSdkVersion 35
         versionCode 20
         versionName "1.8.1"
+        manifestPlaceholders["MAPS_API_KEY"] =
+                project.findProperty("GOOGLE_MAPS_API_KEY") ?:
+                System.getenv("GOOGLE_MAPS_API_KEY") ?:
+                ""
     }
 
     signingConfigs {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../../../components/global_emergency_call_button.dart';
 import '../../../configs.dart';
 import '../../../main.dart';
 
@@ -10,11 +9,15 @@ class EmergencyBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (EMERGENCY_HOTLINE.trim().isEmpty) {
+      return const SizedBox.shrink();
+    }
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: errorColor.withValues(alpha: 0.1),
-        border: Border(bottom: BorderSide(color: errorColor.withValues(alpha: 0.2))),
+        border: Border(
+            bottom: BorderSide(color: errorColor.withValues(alpha: 0.2))),
       ),
       child: Row(
         children: [
@@ -40,15 +43,7 @@ class EmergencyBanner extends StatelessWidget {
             color: errorColor,
             textStyle: boldTextStyle(color: Colors.white, size: 12),
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            onTap: () async {
-              final uri = Uri.parse('tel:$EMERGENCY_HOTLINE');
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri);
-              } else {
-                await Clipboard.setData(ClipboardData(text: EMERGENCY_HOTLINE));
-                toast(locale.value.referenceCopied); // Or a specific "Number copied" toast
-              }
-            },
+            onTap: callEmergencyHotline,
           ),
         ],
       ),

@@ -11,7 +11,6 @@ import '../../../utils/colors.dart';
 import '../../../utils/common_base.dart';
 import '../clinic_detail_screen.dart';
 import '../model/clinics_res_model.dart';
-import '../../service/service_list_controller.dart';
 
 class PopularClinicCard extends StatelessWidget {
   final Clinic clinicElement;
@@ -39,7 +38,6 @@ class PopularClinicCard extends StatelessWidget {
                 height: Get.height * 0.24,
               ).onTap((){
                 currentSelectedClinic(clinicElement);
-                Get.delete<ServiceListController>();
                 Get.to(() => ClinicDetailScreen(), arguments: clinicElement);
               }),
             ],
@@ -96,7 +94,7 @@ class PopularClinicCard extends StatelessWidget {
                           ),
                           child: Text(
                             getClinicStatus(status: clinicElement.clinicStatus.toLowerCase()),
-                            style: boldTextStyle(size: 10, color: getClinicStatusColor(clinicStatus: clinicElement.clinicStatus.toLowerCase())),
+                            style: boldTextStyle(size: 12, color: getClinicStatusColor(clinicStatus: clinicElement.clinicStatus.toLowerCase())),
                           ),
                         )
                       ],
@@ -107,7 +105,6 @@ class PopularClinicCard extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   currentSelectedClinic(clinicElement);
-                  Get.delete<ServiceListController>();
                   Get.to(() => ClinicDetailScreen(), arguments: clinicElement);
                 },
                 style: const ButtonStyle(

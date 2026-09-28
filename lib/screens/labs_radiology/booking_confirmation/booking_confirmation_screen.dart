@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/screens/labs_radiology/labs_radiology_common.dart';
 import 'package:kivicare_patient/components/loader_widget.dart';
+import 'package:kivicare_patient/utils/locale_formatters.dart';
 import '../models/facility_model.dart';
 import '../models/lab_test_model.dart';
 import '../models/slot_model.dart';
@@ -92,14 +92,14 @@ class BookingConfirmationScreen extends StatelessWidget {
           _buildSummaryRow(locale.value.clinic, facility.name),
           Divider(height: 32, color: context.dividerColor),
           _buildSummaryRow(locale.value.date,
-              DateFormat('EEEE, d MMMM yyyy').format(selectedDate)),
+              formatLocalizedDate(selectedDate, 'EEEE, d MMMM yyyy')),
           8.height,
           _buildSummaryRow(locale.value.time,
               selectedSlot.formattedRange(selectedLanguageCode.value)),
           Divider(height: 32, color: context.dividerColor),
           _buildSummaryRow(
             locale.value.testPrice,
-            '${test.price?.toStringAsFixed(0)} ${test.currency}',
+            formatLocalizedCurrency(test.price ?? 0, test.currency),
             valueColor: context.primaryColor,
             isBold: true,
           ),

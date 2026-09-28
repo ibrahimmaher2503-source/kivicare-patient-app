@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../api/location_apis.dart';
+import '../../main.dart';
+import '../../network/network_utils.dart';
 import '../../utils/app_common.dart';
 import 'models/governorate_model.dart';
 import 'service/location_cache_service.dart';
@@ -63,7 +65,7 @@ class GovernorateSelectionController extends GetxController {
       _applyFilter();
       await _cache.cacheGovernorates(list);
     } catch (e) {
-      error.value = e.toString();
+      error.value = sanitizeBackendMessage(e, locale.value.somethingWentWrong);
       log('GovernorateSelectionController.loadGovernorates: $e');
     } finally {
       isLoading.value = false;

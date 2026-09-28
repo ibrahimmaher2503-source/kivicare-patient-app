@@ -15,9 +15,14 @@ import '../dashboard/dashboard_controller.dart';
 import 'payment_controller.dart';
 
 class PaymentScreen extends StatelessWidget {
-  final bool isQuickBook ;
-  const PaymentScreen({super.key, this.isQuickBook=false});
+  final bool isQuickBook;
+  final PaymentController paymentController;
 
+  const PaymentScreen({
+    super.key,
+    required this.paymentController,
+    this.isQuickBook = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,32 +44,32 @@ class PaymentScreen extends StatelessWidget {
               children: [
                 Text(
                   "* ${locale.value.noteForCashPaymentPurposesDontUseThePayNowBut}",
-                  style: secondaryTextStyle(color: appColorSecondary, size: 11, fontStyle: FontStyle.italic),
-                ).paddingTop(16).visible(paymentController.isFromBookingDetail && !paymentController.isAdvancePaymentFailed),
+                  style: secondaryTextStyle(
+                      color: appColorSecondary,
+                      size: 12,
+                      fontStyle: FontStyle.italic),
+                ).paddingTop(16).visible(
+                    paymentController.isFromBookingDetail &&
+                        !paymentController.isAdvancePaymentFailed),
                 16.height,
-                Text(locale.value.choosePaymentMethod, style: primaryTextStyle(size: 18)),
+                Text(locale.value.choosePaymentMethod,
+                    style: primaryTextStyle(size: 18)),
                 8.height,
-                Text(locale.value.chooseOurConvenientPaymentOptionAndUnlockUnli, style: secondaryTextStyle()),
+                Text(locale.value.chooseOurConvenientPaymentOptionAndUnlockUnli,
+                    style: secondaryTextStyle()),
                 32.height,
-                cashAfterService(context).visible(isQuickBook).paddingOnly(bottom: 8),
+                cashAfterService(context)
+                    .visible(isQuickBook)
+                    .paddingOnly(bottom: 8),
                 Column(
                   //spacing: 8,
                   children: [
-                    if (!paymentController.bookingData.isOnlineService && !paymentController.isFromBookingDetail && !paymentController.bookingData.isEnableAdvancePayment) cashAfterService(context).paddingOnly(bottom: 8),
-                    walletPayment(context).paddingOnly(bottom: 8),
-                    stripePaymentWidget(context).paddingOnly(bottom: 8).visible(appConfigs.value.stripePay.stripePublickey.isNotEmpty && appConfigs.value.stripePay.stripeSecretkey.isNotEmpty),
-                    razorPaymentWidget(context).paddingOnly(bottom: 8).visible(appConfigs.value.razorPay.razorpaySecretkey.isNotEmpty),
-                    phonePayPaymentWidget(context).visible(appConfigs.value.phonepe.phonepeAppId.isNotEmpty &&
-                        appConfigs.value.phonepe.phonepeMerchantId.isNotEmpty &&
-                        appConfigs.value.phonepe.phonepeSaltKey.isNotEmpty &&
-                        appConfigs.value.phonepe.phonepeSaltIndex.isNotEmpty),
-                    payStackPaymentWidget(context).visible(appConfigs.value.paystackPay.paystackPublickey.isNotEmpty && appConfigs.value.paystackPay.paystackSecretkey.isNotEmpty).paddingOnly(bottom: 8),
-                    payPalPaymentWidget(context).visible(appConfigs.value.paypalPay.paypalClientid.isNotEmpty && appConfigs.value.paypalPay.paypalSecretkey.isNotEmpty).paddingOnly(bottom: 8),
-                    flutterWavePaymentWidget(context).visible(appConfigs.value.flutterwavePay.flutterwaveSecretkey.isNotEmpty && appConfigs.value.flutterwavePay.flutterwavePublickey.isNotEmpty).paddingOnly(bottom: 8),
-                    airtelMoneyPaymentWidget(context).visible(appConfigs.value.airtelMoney.airtelSecretkey.isNotEmpty && appConfigs.value.airtelMoney.airtelClientid.isNotEmpty).paddingOnly(bottom: 8),
-                    midtransPay(context).visible(appConfigs.value.midtransPay.midtransClientKey.isNotEmpty).paddingOnly(bottom: 8),
-                    sadadPay(context).visible(appConfigs.value.sadadPay.sadadSecretKey.isNotEmpty && appConfigs.value.sadadPay.sadadId.isNotEmpty && appConfigs.value.sadadPay.sadadDomain.isNotEmpty).paddingOnly(bottom: 8),
-                    cinetPay(context).visible(appConfigs.value.cinetPay.siteId.isNotEmpty && appConfigs.value.cinetPay.cinetPayAPIKey.isNotEmpty),
+                    if (!paymentController.bookingData.isOnlineService &&
+                        !paymentController.isFromBookingDetail &&
+                        !paymentController.bookingData.isEnableAdvancePayment)
+                      cashAfterService(context).paddingOnly(bottom: 8),
+                    if (!paymentController.bookingData.isIndependent)
+                      walletPayment(context).paddingOnly(bottom: 8),
                   ],
                 ).visible(!isQuickBook)
               ],
@@ -81,10 +86,11 @@ class PaymentScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             color: appColorSecondary,
             onTap: () {
-              paymentController.handleBookNowClick(context,isQuickBook);
+              paymentController.handleBookNowClick(context, isQuickBook);
             },
             textStyle: appButtonFontColorText,
-            child: Text(locale.value.proceed, style: primaryTextStyle(color: Colors.white)),
+            child: Text(locale.value.proceed,
+                style: primaryTextStyle(color: Colors.white)),
           ),
         )
       ],
@@ -420,7 +426,7 @@ class PaymentScreen extends StatelessWidget {
             width: 24,
           ),
           fillColor: WidgetStateProperty.all(appColorPrimary),
-          title: Text("Cash after service", style: primaryTextStyle()),
+          title: Text(locale.value.cashAfterService, style: primaryTextStyle()),
           value: PaymentMethods.PAYMENT_METHOD_CASH,
           groupValue: paymentController.paymentOption.value,
           onChanged: (value) {
@@ -451,7 +457,7 @@ class PaymentScreen extends StatelessWidget {
           fillColor: WidgetStateProperty.all(appColorPrimary),
           title: Row(
             children: [
-              Text("Wallet", style: primaryTextStyle()),
+              Text(locale.value.pharmacyWallet, style: primaryTextStyle()),
               8.width,
               Text("( ", style: primaryTextStyle(color: completedStatusColor)),
               PriceWidget(
@@ -466,7 +472,12 @@ class PaymentScreen extends StatelessWidget {
           value: PaymentMethods.PAYMENT_METHOD_WALLET,
           groupValue: paymentController.paymentOption.value,
           onChanged: (value) {
-            if (userWalletData.value.walletAmount.toStringAsFixed(appCurrency.value.noOfDecimal).toDouble() >= paymentController.payAmount.toStringAsFixed(appCurrency.value.noOfDecimal).toDouble()) {
+            if (userWalletData.value.walletAmount
+                    .toStringAsFixed(appCurrency.value.noOfDecimal)
+                    .toDouble() >=
+                paymentController.payAmount
+                    .toStringAsFixed(appCurrency.value.noOfDecimal)
+                    .toDouble()) {
               paymentController.paymentOption(value.toString());
             } else {
               toast(locale.value.youDontHaveEnoughBalanceToCompleteThePaymentU);

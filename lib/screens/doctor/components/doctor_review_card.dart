@@ -63,12 +63,13 @@ class DoctorReviewCard extends StatelessWidget {
                       3.height,
                       Text(
                         doctorReviewData.createdAt.dateInyyyyMMddHHmmFormat
-                            .timeAgoWithLocalization,
+                                ?.timeAgoWithLocalization ??
+                            '-',
                         style: TextStyle(
                           color: isDarkMode.value
                               ? textTertiaryDark
                               : const Color(0xFF75818A),
-                          fontSize: 11,
+                          fontSize: 12,
                         ),
                       ),
                     ],
@@ -148,7 +149,7 @@ class DoctorReviewCard extends StatelessWidget {
                   doctorReviewData.serviceName,
                   style: const TextStyle(
                     color: appColorSecondary,
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
                   maxLines: 1,

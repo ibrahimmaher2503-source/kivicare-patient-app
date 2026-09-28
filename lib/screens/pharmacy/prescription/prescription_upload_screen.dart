@@ -5,9 +5,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../api/pharmacy_apis.dart';
 import '../../../components/app_scaffold.dart';
+import '../../../components/operation_verification_screen.dart';
 import '../../../main.dart';
+import '../../../network/critical_operation.dart';
+import '../../../network/network_utils.dart';
+import '../model/pharmacy_prescription_model.dart';
 import '../../../utils/colors.dart';
-import '../../../utils/common_base.dart';
 import '../utils/pharmacy_constants.dart';
 import 'prescription_list_screen.dart';
 
@@ -35,23 +38,65 @@ class PrescriptionUploadController extends GetxController {
     selectedImages.removeAt(index);
   }
 
-  Future<void> submitPrescription() async {
+  Future<PharmacyPrescription?> submitPrescription() async {
     if (selectedImages.isEmpty) {
       toast(locale.value.uploadPrescriptionInstructions);
-      return;
+      return null;
     }
 
     isUploading(true);
+    String? operationKey;
+    var operationResolved = false;
+    var retainOperationForReconciliation = false;
     try {
-      await PharmacyApis.uploadPrescriptionAsync(
+      operationKey = await CriticalOperationStore.begin(
+        CriticalOperationType.pharmacyPrescription,
+        requestFingerprint: criticalOperationFingerprint({
+          'notes': notesController.text.trim(),
+          'files': selectedImages
+              .map((file) => {
+                    'path': file.path,
+                    'size': file.existsSync() ? file.lengthSync() : 0,
+                  })
+              .toList(),
+        }),
+      );
+      final prescription = await PharmacyApis.uploadPrescriptionAsync(
         imagePaths: selectedImages.map((e) => e.path).toList(),
         notes: notesController.text,
+        idempotencyKey: operationKey,
       );
-      toast(locale.value.successfullyAdded);
-      Get.off(() => PrescriptionListScreen());
+      operationResolved = true;
+      await CriticalOperationStore.complete(
+        CriticalOperationType.pharmacyPrescription,
+      );
+      return prescription;
     } catch (e) {
-      toast(e.toString());
+      if ((e is AmbiguousRequestOutcomeException ||
+              e is PendingCriticalOperationException) &&
+          operationKey != null) {
+        retainOperationForReconciliation = true;
+        await Get.to(() => OperationVerificationScreen(
+              operationType: CriticalOperationType.pharmacyPrescription,
+              operationKey: operationKey,
+              recordsScreen: () => PrescriptionListScreen(),
+            ));
+      } else {
+        toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
+      }
+      return null;
     } finally {
+      if (!operationResolved &&
+          !retainOperationForReconciliation &&
+          operationKey != null) {
+        // Non-ambiguous validation/server errors have a definitive outcome;
+        // release the local reservation so the user can submit a corrected
+        // prescription. Ambiguous outcomes retain the key for reconciliation.
+        // The verification route above owns the pending reservation.
+        await CriticalOperationStore.complete(
+          CriticalOperationType.pharmacyPrescription,
+        );
+      }
       if (!isClosed) isUploading(false);
     }
   }
@@ -64,7 +109,9 @@ class PrescriptionUploadController extends GetxController {
 }
 
 class PrescriptionUploadScreen extends StatelessWidget {
-  PrescriptionUploadScreen({super.key});
+  PrescriptionUploadScreen({super.key, this.returnResult = false});
+
+  final bool returnResult;
 
   final PrescriptionUploadController controller =
       Get.put(PrescriptionUploadController());
@@ -81,8 +128,7 @@ class PrescriptionUploadScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               decoration: BoxDecoration(
                 color: lightSecondaryColor,
                 borderRadius: BorderRadius.circular(16),
@@ -90,12 +136,27 @@ class PrescriptionUploadScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.info_outline,
-                      color: appColorSecondary, size: 20),
-                  const SizedBox(width: 10),
+                  Container(
+                    width: 36,
+                    height: 36,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: appColorSecondary,
+                      borderRadius: BorderRadius.circular(11),
+                      boxShadow: [
+                        BoxShadow(
+                          color: appColorSecondary.withValues(alpha: 0.22),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.lightbulb_rounded,
+                        color: Colors.white, size: 18),
+                  ),
+                  const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                        locale.value.uploadPrescriptionInstructions,
+                    child: Text(locale.value.uploadPrescriptionInstructions,
                         style: primaryTextStyle(size: 13)),
                   ),
                 ],
@@ -104,8 +165,7 @@ class PrescriptionUploadScreen extends StatelessWidget {
             const SizedBox(height: 20),
             _buildImageGrid(context),
             const SizedBox(height: 24),
-            Text(locale.value.notesOptional,
-                style: boldTextStyle(size: 14)),
+            Text(locale.value.notesOptional, style: boldTextStyle(size: 14)),
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
@@ -122,8 +182,8 @@ class PrescriptionUploadScreen extends StatelessWidget {
                   hintStyle: secondaryTextStyle(size: 13),
                   filled: true,
                   fillColor: inputFillColor,
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 12),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -134,17 +194,16 @@ class PrescriptionUploadScreen extends StatelessWidget {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                        color: appColorSecondary, width: 1.5),
+                    borderSide:
+                        const BorderSide(color: appColorSecondary, width: 1.5),
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 32),
             Obx(() {
-              final bool enabled =
-                  controller.selectedImages.isNotEmpty &&
-                      !controller.isUploading.value;
+              final bool enabled = controller.selectedImages.isNotEmpty &&
+                  !controller.isUploading.value;
               return Opacity(
                 opacity: enabled ? 1 : 0.4,
                 child: Container(
@@ -155,10 +214,7 @@ class PrescriptionUploadScreen extends StatelessWidget {
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        gradientSecondaryStart,
-                        gradientSecondaryEnd
-                      ],
+                      colors: [gradientSecondaryStart, gradientSecondaryEnd],
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -172,15 +228,18 @@ class PrescriptionUploadScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(14),
-                      onTap: enabled
-                          ? controller.submitPrescription
-                          : null,
-                      child: Center(
-                        child: Text(
-                          locale.value.submitPrescription,
-                          style: boldTextStyle(
-                              color: Colors.white, size: 15),
-                        ),
+                      onTap: enabled ? _submitPrescription : null,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.cloud_upload_rounded,
+                              color: Colors.white, size: 18),
+                          const SizedBox(width: 8),
+                          Text(
+                            locale.value.submitPrescription,
+                            style: boldTextStyle(color: Colors.white, size: 15),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -191,6 +250,18 @@ class PrescriptionUploadScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _submitPrescription() async {
+    final prescription = await controller.submitPrescription();
+    if (prescription == null) return;
+
+    toast(locale.value.successfullyAdded);
+    if (returnResult) {
+      Get.back(result: prescription);
+    } else {
+      Get.off(() => PrescriptionListScreen());
+    }
   }
 
   Widget _buildImageGrid(BuildContext context) {
@@ -238,16 +309,44 @@ class PrescriptionUploadScreen extends StatelessWidget {
                 child: Container(
                   height: 100,
                   width: 100,
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: surfaceElevated,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: whiteBorderColor, width: 1),
+                    color: appColorSecondary.withValues(alpha: 0.06),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: appColorSecondary.withValues(alpha: 0.32),
+                      width: 1.4,
+                      strokeAlign: BorderSide.strokeAlignInside,
+                    ),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.add_a_photo_outlined,
-                          color: appColorSecondary, size: 28),
+                      Container(
+                        width: 40,
+                        height: 40,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: const LinearGradient(
+                            colors: [
+                              gradientSecondaryStart,
+                              gradientSecondaryEnd,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: appColorSecondary.withValues(alpha: 0.25),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(Icons.add_a_photo_rounded,
+                            color: Colors.white, size: 20),
+                      ),
                       const SizedBox(height: 6),
                       Text(locale.value.add,
                           style: boldTextStyle(
@@ -303,10 +402,25 @@ class PrescriptionUploadScreen extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
-            decoration: boxDecorationDefault(
-                color: lightSecondaryColor, shape: BoxShape.circle),
-            child: Icon(icon, color: appColorSecondary, size: 32),
+            width: 72,
+            height: 72,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: const LinearGradient(
+                colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: appColorSecondary.withValues(alpha: 0.25),
+                  blurRadius: 14,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Icon(icon, color: Colors.white, size: 30),
           ),
           const SizedBox(height: 8),
           Text(label, style: primaryTextStyle()),

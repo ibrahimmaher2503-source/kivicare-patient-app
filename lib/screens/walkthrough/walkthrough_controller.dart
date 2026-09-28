@@ -16,25 +16,40 @@ class WalkthroughController extends GetxController {
   double skipBtnSize = 54;
 
   List<WalkThroughElementModel> walkthroughDetails = [
-    WalkThroughElementModel(image: Assets.walkthroughImagesWalkImage1, title: locale.value.personalizedHealthPlansForYourJourney, subTitle: locale.value.customizeHealthPlansForATailoredApproachAlign),
-    WalkThroughElementModel(image: Assets.walkthroughImagesWalkImage2, title: locale.value.stayOnTrackAndSetPersonalGoals, subTitle: locale.value.focusOnYourPathSetClearGoalsAndStrideForwardW),
-    WalkThroughElementModel(image: Assets.walkthroughImagesWalkImage3, title: locale.value.discoverAndGetSupportWithin24Hours, subTitle: locale.value.exploreFindSolutionsAndReceiveAssistanceSwift),
+    WalkThroughElementModel(
+        image: Assets.walkthroughImagesWalkImage1,
+        title: locale.value.personalizedHealthPlansForYourJourney,
+        subTitle: locale.value.customizeHealthPlansForATailoredApproachAlign),
+    WalkThroughElementModel(
+        image: Assets.walkthroughImagesWalkImage2,
+        title: locale.value.stayOnTrackAndSetPersonalGoals,
+        subTitle: locale.value.focusOnYourPathSetClearGoalsAndStrideForwardW),
+    WalkThroughElementModel(
+        image: Assets.walkthroughImagesWalkImage3,
+        title: locale.value.discoverAndGetSupportWithin24Hours,
+        subTitle: locale.value.exploreFindSolutionsAndReceiveAssistanceSwift),
   ];
 
-  @override
-  void onInit() {
-    setValueToLocal(SharedPreferenceConst.FIRST_TIME, true);
-    super.onInit();
-  }
-
   void handleNext() {
-    pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
     if (currentPage.value == (walkthroughDetails.length - 1)) {
+      setValueToLocal(SharedPreferenceConst.FIRST_TIME, true);
       Get.offAll(() => WelcomeScreen());
+      return;
     }
+    pageController.nextPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutQuart,
+    );
   }
 
   void handleSkip() {
+    setValueToLocal(SharedPreferenceConst.FIRST_TIME, true);
     Get.offAll(() => WelcomeScreen());
+  }
+
+  @override
+  void onClose() {
+    pageController.dispose();
+    super.onClose();
   }
 }

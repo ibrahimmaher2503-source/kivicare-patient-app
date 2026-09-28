@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
+import 'package:kivicare_patient/utils/colors.dart';
 import '../models/nurse_status.dart';
 
 class NurseStatusChip extends StatelessWidget {
@@ -10,35 +11,66 @@ class NurseStatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (bg, textColor) = _colors(status);
+    final (bg, textColor, borderColor) = _colors(status);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      constraints: const BoxConstraints(minHeight: 28),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: borderColor),
       ),
       child: Text(
         status.displayLabel(locale.value),
-        style: TextStyle(color: textColor, fontSize: 12, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          color: textColor,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
 
-  (Color, Color) _colors(NurseStatus s) {
+  (Color, Color, Color) _colors(NurseStatus s) {
     final dark = isDarkMode.value;
+    final color = _statusColor(s);
+    final bg = color.withValues(alpha: dark ? 0.18 : 0.11);
+    final border = color.withValues(alpha: dark ? 0.42 : 0.22);
+    final text = dark ? color : _lightTextColor(s);
+    return (bg, text, border);
+  }
+
+  Color _statusColor(NurseStatus s) {
     switch (s) {
       case NurseStatus.pending:
-        return (dark ? const Color(0xFF4A3800) : const Color(0xFFFFF3CD), const Color(0xFFB8860B));
+        return nurseStatusPendingColor;
       case NurseStatus.assigned:
-        return (dark ? const Color(0xFF003450) : const Color(0xFFCCE5FF), const Color(0xFF004085));
+        return checkInStatusColor;
       case NurseStatus.confirmed:
-        return (dark ? const Color(0xFF1A3A00) : const Color(0xFFD4EDDA), const Color(0xFF155724));
+        return nurseStatusConfirmedColor;
       case NurseStatus.inProgress:
-        return (dark ? const Color(0xFF003450) : const Color(0xFFCCE5FF), const Color(0xFF0056B3));
+        return nurseStatusInProgressColor;
       case NurseStatus.completed:
-        return (dark ? const Color(0xFF1A3A00) : const Color(0xFFD4EDDA), const Color(0xFF28A745));
+        return nurseStatusCompletedColor;
       case NurseStatus.cancelled:
-        return (dark ? const Color(0xFF3A0000) : const Color(0xFFF8D7DA), const Color(0xFF721C24));
+        return nurseStatusCancelledColor;
+    }
+  }
+
+  Color _lightTextColor(NurseStatus s) {
+    switch (s) {
+      case NurseStatus.pending:
+        return pendingStatusColor;
+      case NurseStatus.assigned:
+        return checkInStatusColor;
+      case NurseStatus.confirmed:
+        return nurseStatusConfirmedColor;
+      case NurseStatus.inProgress:
+        return nurseStatusInProgressColor;
+      case NurseStatus.completed:
+        return appColorSecondary;
+      case NurseStatus.cancelled:
+        return nurseStatusCancelledColor;
     }
   }
 }

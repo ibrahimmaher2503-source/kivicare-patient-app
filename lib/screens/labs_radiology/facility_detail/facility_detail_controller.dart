@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../api/labs_radiology_apis.dart';
+import '../../../main.dart';
+import '../../../network/network_utils.dart';
 import '../models/facility_model.dart';
 import '../models/lab_test_model.dart';
 
@@ -31,10 +33,8 @@ class FacilityDetailController extends GetxController {
       final testsRes =
           await LabsRadiologyApis.getLabTests(facilityId: initialFacility.id);
       availableTests.assignAll(testsRes.data);
-    } catch (e, st) {
-      // ignore: avoid_print
-      print('[FacilityDetailController] fetchFacilityDetails ERROR: $e\n$st');
-      toast(e.toString());
+    } catch (e) {
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     } finally {
       isLoading.value = false;
     }

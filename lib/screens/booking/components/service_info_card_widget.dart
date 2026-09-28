@@ -26,17 +26,19 @@ class ServiceInfoCardWidget extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 82,
-                      height: 82,
-                      decoration: boxDecorationDefault(),
-                      child: CachedImageWidget(
-                        url: appointmentDet.serviceImage,
-                        fit: BoxFit.cover,
-                        radius: 6,
+                    if (appointmentDet.serviceImage.isNotEmpty) ...[
+                      Container(
+                        width: 82,
+                        height: 82,
+                        decoration: boxDecorationDefault(),
+                        child: CachedImageWidget(
+                          url: appointmentDet.serviceImage,
+                          fit: BoxFit.cover,
+                          radius: 6,
+                        ),
                       ),
-                    ),
-                    16.width,
+                      16.width,
+                    ],
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -46,12 +48,17 @@ class ServiceInfoCardWidget extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: boxDecorationDefault(
-                            color: isDarkMode.value ? Colors.grey.withValues(alpha: 0.1) : lightSecondaryColor,
+                            color: isDarkMode.value
+                                ? Colors.grey.withValues(alpha: 0.1)
+                                : lightSecondaryColor,
                             borderRadius: radius(8),
                           ),
                           child: Text(
                             appointmentDet.categoryName,
-                            style: boldTextStyle(size: 10, fontFamily: fontFamilyWeight700, color: appColorSecondary),
+                            style: boldTextStyle(
+                                size: 12,
+                                fontFamily: fontFamilyWeight700,
+                                color: appColorSecondary),
                           ),
                         ).visible(appointmentDet.categoryName.isNotEmpty),
                         8.height,
@@ -60,18 +67,29 @@ class ServiceInfoCardWidget extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Text(appointmentDet.serviceName, overflow: TextOverflow.ellipsis, maxLines: 2, style: boldTextStyle(size: 16)).expand(),
+                                Text(appointmentDet.serviceName,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: boldTextStyle(size: 16))
+                                    .expand(),
                               ],
                             ),
                             8.height,
                             Row(
                               spacing: 6,
                               children: [
-                                if (!appointmentDet.isInclusiveTaxesAvailable && appointmentDet.discountValue > 0 && appointmentDet.discountAmount > 0)
+                                if (!appointmentDet.isInclusiveTaxesAvailable &&
+                                    appointmentDet.discountValue > 0 &&
+                                    appointmentDet.discountAmount > 0)
                                   PriceWidget(
                                     price: appointmentDet.servicePrice,
                                     color: dividerColor,
-                                    isLineThroughEnabled: appointmentDet.discountValue > 0 && appointmentDet.discountAmount > 0 ? true : false,
+                                    isLineThroughEnabled:
+                                        appointmentDet.discountValue > 0 &&
+                                                appointmentDet.discountAmount >
+                                                    0
+                                            ? true
+                                            : false,
                                     size: 12,
                                     isBoldText: true,
                                   ),
@@ -86,7 +104,7 @@ class ServiceInfoCardWidget extends StatelessWidget {
                                     ' ${locale.value.includesInclusiveTax}',
                                     style: secondaryTextStyle(
                                       color: appColorSecondary,
-                                      size: 10,
+                                      size: 12,
                                       fontStyle: FontStyle.italic,
                                     ),
                                   ),
@@ -112,8 +130,12 @@ class ServiceInfoCardWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               return Container(
                 padding: const EdgeInsets.all(16),
-                margin: EdgeInsets.only(bottom: index == appointmentDet.billingItems.length - 1 ? 0 : 16),
-                decoration: boxDecorationDefault(borderRadius: BorderRadius.circular(6)),
+                margin: EdgeInsets.only(
+                    bottom: index == appointmentDet.billingItems.length - 1
+                        ? 0
+                        : 16),
+                decoration: boxDecorationDefault(
+                    borderRadius: BorderRadius.circular(6)),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -122,11 +144,17 @@ class ServiceInfoCardWidget extends StatelessWidget {
                       height: 62,
                       decoration: boxDecorationDefault(),
                       child: CachedImageWidget(
-                        url: appointmentDet.billingItems[index].serviceDetail != null ? appointmentDet.billingItems[index].serviceDetail!.serviceImage : "",
+                        url: appointmentDet.billingItems[index].serviceDetail !=
+                                null
+                            ? appointmentDet
+                                .billingItems[index].serviceDetail!.serviceImage
+                            : "",
                         fit: BoxFit.cover,
                         radius: 6,
                       ),
-                    ).paddingRight(16).visible(appointmentDet.billingItems[index].serviceDetail != null),
+                    ).paddingRight(16).visible(
+                        appointmentDet.billingItems[index].serviceDetail !=
+                            null),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -134,7 +162,11 @@ class ServiceInfoCardWidget extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(appointmentDet.billingItems[index].itemName, maxLines: 2, overflow: TextOverflow.ellipsis, style: boldTextStyle(size: 14)).expand(),
+                            Text(appointmentDet.billingItems[index].itemName,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: boldTextStyle(size: 14))
+                                .expand(),
                           ],
                         ),
                         Row(
@@ -144,29 +176,53 @@ class ServiceInfoCardWidget extends StatelessWidget {
                             Text(
                               locale.value.total,
                               overflow: TextOverflow.ellipsis,
-                              style: primaryTextStyle(size: 12, color: dividerColor),
+                              style: primaryTextStyle(
+                                  size: 12, color: dividerColor),
                             ),
                             16.width,
                             Flexible(
                               child: Marquee(
                                 child: Row(
                                   children: [
-                                    if (!appointmentDet.billingItems[index].isIncludesInclusiveTaxAvailable) ...[
+                                    if (!appointmentDet.billingItems[index]
+                                        .isIncludesInclusiveTaxAvailable) ...[
                                       PriceWidget(
-                                        price: appointmentDet.billingItems[index].serviceAmount,
+                                        price: appointmentDet
+                                            .billingItems[index].serviceAmount,
                                         color: dividerColor,
-                                        isLineThroughEnabled: appointmentDet.billingItems[index].serviceDetail != null && appointmentDet.billingItems[index].serviceDetail!.isDiscount ? true : false,
+                                        isLineThroughEnabled: appointmentDet
+                                                        .billingItems[index]
+                                                        .serviceDetail !=
+                                                    null &&
+                                                appointmentDet
+                                                    .billingItems[index]
+                                                    .serviceDetail!
+                                                    .isDiscount
+                                            ? true
+                                            : false,
                                         size: 12,
                                         isBoldText: true,
                                       ).paddingRight(6),
-                                      if (appointmentDet.billingItems[index].serviceDetail != null && appointmentDet.billingItems[index].serviceDetail!.isDiscount)
+                                      if (appointmentDet.billingItems[index]
+                                                  .serviceDetail !=
+                                              null &&
+                                          appointmentDet.billingItems[index]
+                                              .serviceDetail!.isDiscount)
                                         PriceWidget(
-                                          price: appointmentDet.billingItems[index].serviceDetail!.assignDoctor
+                                          price: appointmentDet
+                                              .billingItems[index]
+                                              .serviceDetail!
+                                              .assignDoctor
                                               .firstWhere(
-                                                (e) => e.doctorId == appointmentDet.doctorId,
+                                                (e) =>
+                                                    e.doctorId ==
+                                                    appointmentDet.doctorId,
                                                 orElse: () => AssignDoctor(
                                                   priceDetail: PriceDetail(
-                                                    serviceAmount: appointmentDet.billingItems[index].serviceAmount,
+                                                    serviceAmount:
+                                                        appointmentDet
+                                                            .billingItems[index]
+                                                            .serviceAmount,
                                                   ),
                                                 ),
                                               )
@@ -176,20 +232,25 @@ class ServiceInfoCardWidget extends StatelessWidget {
                                           size: 12,
                                           isBoldText: true,
                                         ),
-                                      Text(" x ${appointmentDet.billingItems[index].quantity} = ", style: primaryTextStyle(size: 12, color: dividerColor)),
+                                      Text(
+                                          " x ${appointmentDet.billingItems[index].quantity} = ",
+                                          style: primaryTextStyle(
+                                              size: 12, color: dividerColor)),
                                     ],
                                     PriceWidget(
-                                      price: appointmentDet.billingItems[index].totalAmount,
+                                      price: appointmentDet
+                                          .billingItems[index].totalAmount,
                                       color: appColorPrimary,
                                       size: 14,
                                       isBoldText: true,
                                     ),
-                                    if (appointmentDet.billingItems[index].isIncludesInclusiveTaxAvailable)
+                                    if (appointmentDet.billingItems[index]
+                                        .isIncludesInclusiveTaxAvailable)
                                       Text(
                                         ' ${locale.value.includesInclusiveTax}',
                                         style: secondaryTextStyle(
                                           color: appColorSecondary,
-                                          size: 10,
+                                          size: 12,
                                           fontStyle: FontStyle.italic,
                                         ),
                                       )
@@ -208,5 +269,8 @@ class ServiceInfoCardWidget extends StatelessWidget {
           );
   }
 
-  bool isAppointmentService(index) => appointmentDet.billingItems[index].serviceDetail != null && appointmentDet.billingItems[index].serviceDetail!.id == appointmentDet.serviceId;
+  bool isAppointmentService(int index) =>
+      appointmentDet.billingItems[index].serviceDetail != null &&
+      appointmentDet.billingItems[index].serviceDetail!.id ==
+          appointmentDet.serviceId;
 }

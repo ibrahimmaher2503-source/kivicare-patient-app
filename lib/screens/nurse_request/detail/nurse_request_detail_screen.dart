@@ -2,12 +2,13 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/empty_error_state_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../../utils/app_common.dart';
+import '../../../utils/locale_formatters.dart';
 import '../components/address_summary_card.dart';
 import '../components/assigned_nurse_card.dart';
 import '../components/nurse_cancellation_banner.dart';
@@ -81,7 +82,7 @@ class NurseRequestDetailScreen extends StatelessWidget {
     NurseRequestModel req,
     NurseRequestDetailController controller,
   ) {
-    final localeCode = locale.value.language == 'Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©' ? 'ar' : 'en';
+    final localeCode = selectedLanguageCode.value;
     final description = req.serviceDescriptionLocalized(localeCode) ?? '';
     final status = NurseStatusExtension.fromString(req.status);
 
@@ -94,6 +95,13 @@ class NurseRequestDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _DetailHeader(request: req, status: status),
+            if (controller.canPatientCancel) ...[
+              16.height,
+              _NurseCancellationAction(controller: controller),
+            ] else ...[
+              16.height,
+              _CancellationUnavailablePanel(status: status),
+            ],
             16.height,
             NurseStatusTimeline(request: req),
             if (description.isNotEmpty) ...[
@@ -181,6 +189,134 @@ class NurseRequestDetailScreen extends StatelessWidget {
   }
 }
 
+class _NurseCancellationAction extends StatelessWidget {
+  final NurseRequestDetailController controller;
+
+  const _NurseCancellationAction({required this.controller});
+
+  Future<void> _showCancellationDialog(BuildContext context) async {
+    final reasonController = TextEditingController();
+    String? validationMessage;
+    final reason = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            title: Text(locale.value.cancelRequest),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(locale.value.doYouWantToPerformThisAction),
+                const SizedBox(height: 12),
+                Semantics(
+                  textField: true,
+                  label: locale.value.cancelReason,
+                  child: TextField(
+                    controller: reasonController,
+                    autofocus: true,
+                    maxLines: 3,
+                    textInputAction: TextInputAction.newline,
+                    decoration: InputDecoration(
+                      labelText: locale.value.cancelReason,
+                      errorText: validationMessage,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: Text(locale.value.cancel),
+              ),
+              FilledButton(
+                onPressed: () {
+                  final value = reasonController.text.trim();
+                  if (value.isEmpty) {
+                    setState(() => validationMessage =
+                        locale.value.somethingWentWrongPleaseTryAgainLater);
+                    return;
+                  }
+                  Navigator.of(dialogContext).pop(value);
+                },
+                child: Text(locale.value.confirmCancellation),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    reasonController.dispose();
+    if (reason != null && context.mounted) {
+      await controller.cancel(reason);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final isCancelling = controller.isCancelling.value;
+      return Semantics(
+        button: true,
+        label: locale.value.cancelRequest,
+        child: SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed:
+                isCancelling ? null : () => _showCancellationDialog(context),
+            icon: isCancelling
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.cancel_outlined),
+            label: Text(
+              isCancelling
+                  ? locale.value.submitting
+                  : locale.value.cancelRequest,
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}
+
+class _CancellationUnavailablePanel extends StatelessWidget {
+  final NurseStatus status;
+
+  const _CancellationUnavailablePanel({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      liveRegion: true,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: nurseRequestCardDecoration(context),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.info_outline, color: gradientSecondaryStart),
+            10.width,
+            Expanded(
+              child: Text(
+                '${locale.value.cancelRequest}: ${locale.value.unavailable} '
+                '(${status.displayLabel(locale.value)})',
+                style: secondaryTextStyle(size: 13),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _DetailHeader extends StatelessWidget {
   final NurseRequestModel request;
   final NurseStatus status;
@@ -189,7 +325,7 @@ class _DetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final submittedDate = DateFormat('dd MMM yyyy').format(request.createdAt);
+    final submittedDate = formatLocalizedDate(request.createdAt, 'dd MMM yyyy');
 
     return Container(
       width: double.infinity,
@@ -382,7 +518,7 @@ class _CompletedPanel extends StatelessWidget {
           10.width,
           Expanded(
             child: Text(
-              '${locale.value.completedOn}: ${DateFormat('dd MMM yyyy').format(completedAt)}',
+              '${locale.value.completedOn}: ${formatLocalizedDate(completedAt, 'dd MMM yyyy')}',
               style: boldTextStyle(size: 14, color: completedStatusColor),
             ),
           ),

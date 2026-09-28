@@ -3,6 +3,10 @@ import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../api/doctor_visit_apis.dart';
+import '../../main.dart';
+import '../../screens/auth/sign_in_sign_up/signin_screen.dart';
+import '../../utils/app_common.dart';
+import '../../network/network_utils.dart';
 import 'models/visit_request_model.dart';
 import 'models/visit_status.dart';
 
@@ -21,7 +25,18 @@ class DoctorVisitListController extends GetxController {
   void onInit() {
     super.onInit();
     scrollController = ScrollController()..addListener(_onScroll);
-    fetchRequests();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (isLoggedIn.value) {
+        fetchRequests();
+      } else {
+        final loggedIn = await Get.to(() => SignInScreen()) ?? false;
+        if (loggedIn) {
+          fetchRequests();
+        } else {
+          Get.back();
+        }
+      }
+    });
   }
 
   void _onScroll() {
@@ -37,13 +52,18 @@ class DoctorVisitListController extends GetxController {
     isLoading(true);
     error('');
     try {
-      final res = await DoctorVisitApis.getRequests(page: 1);
-      requests.assignAll(_applyFilter(res.data));
+      final res = await DoctorVisitApis.getRequests(
+        page: 1,
+        status: statusFilter.value,
+      );
+      requests.assignAll(res.data);
       currentPage.value = 1;
       hasMore.value = res.hasMore;
     } catch (e) {
-      error(e.toString());
-      toast(e.toString());
+      final message =
+          sanitizeBackendMessage(e, locale.value.somethingWentWrong);
+      error(message);
+      toast(message);
     } finally {
       isLoading(false);
     }
@@ -54,12 +74,15 @@ class DoctorVisitListController extends GetxController {
     isLoadingMore(true);
     try {
       final nextPage = currentPage.value + 1;
-      final res = await DoctorVisitApis.getRequests(page: nextPage);
-      requests.addAll(_applyFilter(res.data));
+      final res = await DoctorVisitApis.getRequests(
+        page: nextPage,
+        status: statusFilter.value,
+      );
+      requests.addAll(res.data);
       currentPage.value = nextPage;
       hasMore.value = res.hasMore;
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     } finally {
       isLoadingMore(false);
     }
@@ -71,11 +94,6 @@ class DoctorVisitListController extends GetxController {
   void setFilter(VisitStatus? status) {
     statusFilter.value = status;
     fetchRequests();
-  }
-
-  List<VisitRequestModel> _applyFilter(List<VisitRequestModel> source) {
-    if (statusFilter.value == null) return source;
-    return source.where((r) => r.status == statusFilter.value).toList();
   }
 
   @override

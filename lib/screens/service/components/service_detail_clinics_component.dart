@@ -129,7 +129,7 @@ class ServiceDetailClinicsComponent extends StatelessWidget {
                                         ),
                                         child: Text(
                                           getClinicStatus(status: clinicData.clinicStatus.toLowerCase()),
-                                          style: boldTextStyle(size: 10, color: getClinicStatusColor(clinicStatus: clinicData.clinicStatus.toLowerCase())),
+                                          style: boldTextStyle(size: 12, color: getClinicStatusColor(clinicStatus: clinicData.clinicStatus.toLowerCase())),
                                         ),
                                       ).paddingLeft(4),
                                     ],
@@ -146,7 +146,7 @@ class ServiceDetailClinicsComponent extends StatelessWidget {
                           child: commonLeadingWid(
                             imgPath: Assets.imagesConfirm,
                             color: whiteTextColor,
-                            size: 8,
+                            size: 12,
                           ).circularLightPrimaryBg(color: appColorPrimary, padding: 8),
                         ).visible(clinicData.id == serviceDetailController.selectedClinic.value.id),
                       ],

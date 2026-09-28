@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
             initialData: homeScreenController.dashboardData.value.categories.isEmpty ? null : DashboardRes(data: homeScreenController.dashboardData.value),
             errorBuilder: (error) {
               return NoDataWidget(
-                title: error,
+                title: locale.value.somethingWentWrongPleaseTryAgainLater,
                 retryText: locale.value.reload,
                 imageWidget: const ErrorStateWidget(),
                 onRetry: () {

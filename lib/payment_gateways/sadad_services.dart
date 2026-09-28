@@ -54,10 +54,10 @@ class SadadServices {
       await createInvoice(context, accessToken: accessToken).then((value) async {
         //
       }).catchError((e) {
-        toast(e.toString());
+        toast(sanitizeBackendMessage(e, locale.value.transactionFailed));
       });
     }).catchError((e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.transactionFailed));
     });
   }
 
@@ -90,7 +90,8 @@ class SadadServices {
         toast(locale.value.transactionFailed, print: true);
       }
     }).catchError((e) {
-      toast('Error: $e', print: true);
+      toast(sanitizeBackendMessage(e, locale.value.transactionFailed),
+          print: true);
     });
   }
 }

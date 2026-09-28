@@ -3,6 +3,13 @@ import 'languages.dart';
 
 class LanguageEn extends BaseLanguage {
   @override
+  String get onlinePaymentUnavailable =>
+      'Online payment is temporarily unavailable. Please choose cash or wallet.';
+  @override
+  String get loading => 'Loading';
+  @override
+  String get cashAfterService => 'Cash after service';
+  @override
   String get pharmacy => 'Pharmacy';
   @override
   String get language => 'Language';
@@ -88,6 +95,13 @@ class LanguageEn extends BaseLanguage {
   String get somethingWentWrong => 'Something Went Wrong';
 
   @override
+  String get requestTimedOut => 'The request timed out. Please try again.';
+
+  @override
+  String get requestTimedOutAfterSubmission =>
+      'The request timed out after submission. Verify its status before retrying.';
+
+  @override
   String get yourInternetIsNotWorking => 'Your internet is not working';
 
   @override
@@ -106,6 +120,9 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get location => 'Location';
+
+  @override
+  String get startLocation => 'Start';
 
   @override
   String get yes => 'Yes';
@@ -134,6 +151,12 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get password => 'Password';
+
+  @override
+  String get showPassword => 'Show password';
+
+  @override
+  String get hidePassword => 'Hide password';
 
   @override
   String get newPassword => 'New Password';
@@ -254,6 +277,17 @@ class LanguageEn extends BaseLanguage {
   String get notifications => 'Notifications';
 
   @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
+  String get notificationPermissionDescription =>
+      'Get appointment reminders and updates about your care.';
+
+  @override
+  String get notificationPermissionDenied =>
+      'Notifications are off. You can enable them in app settings.';
+
+  @override
   String get contactUs => 'Contact Us';
 
   @override
@@ -277,6 +311,9 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get updateNow => 'Update Now';
+  @override
+  String get updateLinkUnavailable =>
+      'The update link is unavailable. Please try again later.';
 
   @override
   String get signInFailed => 'Sign in failed';
@@ -563,6 +600,9 @@ class LanguageEn extends BaseLanguage {
   String get tax => "Tax";
 
   @override
+  String get taxIncluded => 'Tax included';
+
+  @override
   String get total => "Total";
 
   @override
@@ -650,6 +690,13 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get noServicesFoundAtAMoment => "No services found at a moment";
+
+  @override
+  String get noServicesMatchFilters => "No services match your filters";
+
+  @override
+  String get tryChangingFiltersOrSearchAgain =>
+      "Try changing the filters or searching for another service.";
 
   @override
   String get looksLikeThereIsNoServicesForThis =>
@@ -765,6 +812,15 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get next => "Next";
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get finish => 'Finish';
+
+  @override
+  String pageOf(int current, int total) => 'Page $current of $total';
 
   @override
   String get personalizedHealthPlansForYourJourney =>
@@ -1307,6 +1363,16 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get refunded => 'Refunded';
+  @override
+  String get preparing => 'Preparing';
+  @override
+  String get outForDelivery => 'Out for delivery';
+  @override
+  String get delivered => 'Delivered';
+  @override
+  String get reviewed => 'Reviewed';
+  @override
+  String get processed => 'Processed';
 
   @override
   String get failed => 'Failed';
@@ -1499,9 +1565,6 @@ class LanguageEn extends BaseLanguage {
       'Request help for any mistake happen';
 
   @override
-  String get otp => 'OTP';
-
-  @override
   String get verify => 'Verify';
 
   @override
@@ -1537,15 +1600,6 @@ class LanguageEn extends BaseLanguage {
       'To submit your problems simply press add button and explain your concern';
 
   @override
-  String get tryToAnotherWay => 'Try to another way';
-
-  @override
-  String get pleaseEnterValid6digitOTP => 'Please enter a valid 6-digit OTP';
-
-  @override
-  String get otpFromAuthenticatorApp => 'OTP from Authenticator App';
-
-  @override
   String get open => 'Open';
 
   @override
@@ -1553,9 +1607,6 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get pleaseEnterValidEmail => 'Please enter a valid email';
-
-  @override
-  String get pleaseEnterOTP => 'Please Enter The OTP';
 
   @override
   String get passwordMustIncludeSpacialCharacter =>
@@ -1609,19 +1660,20 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get createdBy => 'Created by';
+  @override
+  String get createdOn => 'on';
 
   @override
   String get incident => "Incident";
+
+  @override
+  String get invalidIncidentType => 'Invalid incident type selected';
 
   @override
   String get reject => 'Reject';
 
   @override
   String get successfullyAdded => 'Successfully Added';
-
-  @override
-  String get otpSentToEmail =>
-      "OTP sent to your email, please verify to continue";
 
   @override
   String get rejected => "Rejected";
@@ -1791,6 +1843,10 @@ class LanguageEn extends BaseLanguage {
   String get paymentStatusUnpaid => 'Unpaid';
 
   @override
+  String get paymentContextUnavailable =>
+      'We couldn\'t open the payment screen. Please try again.';
+
+  @override
   String get paymentStatusPaid => 'Paid';
 
   @override
@@ -1817,6 +1873,14 @@ class LanguageEn extends BaseLanguage {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get paymentConfirmationFailedRetry =>
+      'Your payment was taken but confirming it with the server failed. Please retry to avoid losing your payment.';
+
+  @override
+  String get pleaseContactSupportWithTransactionId =>
+      'Please contact support and share this transaction ID:';
 
   @override
   String get phoneInvalid =>
@@ -1970,6 +2034,8 @@ class LanguageEn extends BaseLanguage {
   String get inStock => 'in stock';
   @override
   String get outOfStock => 'Out of stock';
+  @override
+  String get productUnavailable => 'This product is currently unavailable';
 
   // Pharmacy Prescription
   @override
@@ -2281,6 +2347,34 @@ class LanguageEn extends BaseLanguage {
   String get patientAge => 'Patient Age';
 
   @override
+  String get invalidPatientAge => 'Enter an age from 0 to 150';
+
+  @override
+  String get reportDownloadUnavailable => 'This report is not available yet';
+
+  @override
+  String get invalidReportDownloadUrl => 'The report link is not secure';
+
+  @override
+  String get reportDownloadFailed => 'Could not download the report';
+
+  @override
+  String get labTestRequired => 'Select a lab test before booking';
+
+  @override
+  String get preferredDatePast => 'Select today or a future date';
+
+  @override
+  String get preferredTimeInvalid => 'Select a valid appointment time';
+
+  @override
+  String get patientNotesTooLong =>
+      'Patient notes cannot exceed 1000 characters';
+
+  @override
+  String get selectedTest => 'Selected test';
+
+  @override
   String get patientGender => 'Patient Gender';
 
   @override
@@ -2422,7 +2516,13 @@ class LanguageEn extends BaseLanguage {
   String get emergencyHotline => 'Emergency Hotline';
 
   @override
+  String get emergencyNumberCopied => 'Emergency number copied';
+
+  @override
   String get callNow => 'Call Now';
+
+  @override
+  String get locationUnavailable => 'Location unavailable';
 
   @override
   String get myAdmissionRequests => 'My Admission Requests';
@@ -2532,9 +2632,11 @@ class LanguageEn extends BaseLanguage {
   @override
   String get labsAndRadiology => 'Labs & Radiology';
   @override
-  String get bookDiagnosticTestsSubtitle => 'Book diagnostic tests and view reports';
+  String get bookDiagnosticTestsSubtitle =>
+      'Book diagnostic tests and view reports';
   @override
-  String get orderMedicinesSubtitle => 'Order medicines and healthcare products';
+  String get orderMedicinesSubtitle =>
+      'Order medicines and healthcare products';
   @override
   String get radiologyCenters => 'Radiology Centers';
   @override

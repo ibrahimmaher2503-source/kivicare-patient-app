@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../generated/assets.dart';
+import '../main.dart';
 
 class EmptyStateWidget extends StatelessWidget {
   final double? height;
@@ -10,7 +11,16 @@ class EmptyStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Lottie.asset(Assets.lottieEmptyLottie, height: 150, repeat: true);
+    return Semantics(
+      label: locale.value.noDataFound,
+      image: true,
+      child: Lottie.asset(
+        Assets.lottieEmptyLottie,
+        height: height ?? 150,
+        width: width,
+        repeat: true,
+      ),
+    );
   }
 }
 
@@ -22,6 +32,15 @@ class ErrorStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Lottie.asset(Assets.lottieErrorLottie, height: 110, repeat: true);
+    return Semantics(
+      label: locale.value.somethingWentWrongPleaseTryAgainLater,
+      image: true,
+      child: Lottie.asset(
+        Assets.lottieErrorLottie,
+        height: height ?? 110,
+        width: width,
+        repeat: true,
+      ),
+    );
   }
 }

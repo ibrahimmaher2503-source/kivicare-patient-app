@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:get/get.dart' hide MultipartFile;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -18,25 +20,36 @@ import '../screens/auth/model/change_password_res.dart';
 import '../screens/auth/model/login_response.dart';
 import '../screens/auth/model/notification_model.dart';
 import '../utils/push_notification_service.dart';
+import '../utils/secure_session_storage.dart';
 
 class AuthServiceApis {
   static Future<UserResponse> createUser({required Map request}) async {
-    return UserResponse.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.register, request: request, method: HttpMethodType.POST)));
+    return UserResponse.fromJson(await handleResponse(await buildHttpResponse(
+        APIEndPoints.register,
+        request: request,
+        method: HttpMethodType.POST)));
   }
 
-  static Future<UserResponse> loginUser({required Map request, bool isSocialLogin = false}) async {
-    return UserResponse.fromJson(await handleResponse(await buildHttpResponse(isSocialLogin ? APIEndPoints.socialLogin : APIEndPoints.login, request: request, method: HttpMethodType.POST)));
-  }
-  static Future<UserResponse> verifyUser({required Map request}) async {
-    return UserResponse.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.verify, request: request, method: HttpMethodType.POST)));
+  static Future<UserResponse> loginUser(
+      {required Map request, bool isSocialLogin = false}) async {
+    return UserResponse.fromJson(await handleResponse(await buildHttpResponse(
+        isSocialLogin ? APIEndPoints.socialLogin : APIEndPoints.login,
+        request: request,
+        method: HttpMethodType.POST)));
   }
 
   static Future<ChangePassRes> changePasswordAPI({required Map request}) async {
-    return ChangePassRes.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.changePassword, request: request, method: HttpMethodType.POST)));
+    return ChangePassRes.fromJson(await handleResponse(await buildHttpResponse(
+        APIEndPoints.changePassword,
+        request: request,
+        method: HttpMethodType.POST)));
   }
 
-  static Future<BaseResponseModel> forgotPasswordAPI({required Map request}) async {
-    return BaseResponseModel.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.forgotPassword, request: request, method: HttpMethodType.POST)));
+  static Future<BaseResponseModel> forgotPasswordAPI(
+      {required Map request}) async {
+    return BaseResponseModel.fromJson(await handleResponse(
+        await buildHttpResponse(APIEndPoints.forgotPassword,
+            request: request, method: HttpMethodType.POST)));
   }
 
   static Future<List<NotificationData>> getNotificationDetail({
@@ -47,10 +60,14 @@ class AuthServiceApis {
     Function(int)? allUnreadNotification,
   }) async {
     if (isLoggedIn.value) {
-      final notificationRes = NotificationRes.fromJson(await handleResponse(await buildHttpResponse("${APIEndPoints.getNotification}?per_page=$perPage&page=$page", method: HttpMethodType.GET)));
+      final notificationRes = NotificationRes.fromJson(await handleResponse(
+          await buildHttpResponse(
+              "${APIEndPoints.getNotification}?per_page=$perPage&page=$page",
+              method: HttpMethodType.GET)));
       if (page == 1) notifications.clear();
       notifications.addAll(notificationRes.notificationData);
-      lastPageCallBack?.call(notificationRes.notificationData.length != perPage);
+      lastPageCallBack
+          ?.call(notificationRes.notificationData.length != perPage);
       allUnreadNotification?.call(notificationRes.allUnreadCount);
       return notifications;
     } else {
@@ -59,68 +76,97 @@ class AuthServiceApis {
   }
 
   static Future<NotificationData> clearAllNotification() async {
-    return NotificationData.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.clearAllNotification, method: HttpMethodType.GET)));
+    return NotificationData.fromJson(await handleResponse(
+        await buildHttpResponse(APIEndPoints.clearAllNotification,
+            method: HttpMethodType.GET)));
   }
 
-  static Future<NotificationData> removeNotification({required String notificationId}) async {
-    return NotificationData.fromJson(await handleResponse(await buildHttpResponse('${APIEndPoints.removeNotification}?id=$notificationId', method: HttpMethodType.GET)));
+  static Future<NotificationData> removeNotification(
+      {required String notificationId}) async {
+    return NotificationData.fromJson(await handleResponse(
+        await buildHttpResponse(
+            '${APIEndPoints.removeNotification}?id=$notificationId',
+            method: HttpMethodType.GET)));
   }
 
   static Future<void> clearData({bool isFromDeleteAcc = false}) async {
-    log("---------------- clear data---------------");
-    GoogleSignIn().signOut();
-    await PushNotificationService().unsubscribeFirebaseTopic();
+    final remembered = !isFromDeleteAcc &&
+        getValueFromLocal(SharedPreferenceConst.IS_REMEMBER_ME) == true;
+    final rememberedEmail = remembered ? loginUserData.value.email : '';
+    final rememberedUserName = remembered ? loginUserData.value.userName : '';
 
-    if (isFromDeleteAcc) {
-      localStorage.erase();
-      isLoggedIn(false);
-      loginUserData(UserData());
-    } else {
-      final tempEmail = loginUserData.value.email;
-      final tempPASSWORD = getValueFromLocal(SharedPreferenceConst.USER_PASSWORD);
-      final tempIsRemeberMe = getValueFromLocal(SharedPreferenceConst.IS_REMEMBER_ME);
-      final tempUserName = loginUserData.value.userName;
+    final pushService = PushNotificationService();
+    // Make the app a guest before any plugin/network work. In particular, the
+    // API logout may already have revoked this token, so do not call
+    // update-profile here to clear the device token.
+    isLoggedIn(false);
+    loginUserData(UserData());
+    pushService.clearPendingNavigation();
+    removeValueFromLocal(SharedPreferenceConst.USER_DATA);
+    removeValueFromLocal(SharedPreferenceConst.USER_PASSWORD);
+    setValueToLocal(SharedPreferenceConst.FIRST_TIME, true);
+    setValueToLocal(SharedPreferenceConst.USER_EMAIL, rememberedEmail);
+    setValueToLocal(SharedPreferenceConst.USER_NAME, rememberedUserName);
+    setValueToLocal(SharedPreferenceConst.USER_ID, '0');
+    setValueToLocal(SharedPreferenceConst.IS_LOGGED_IN, false);
+    setValueToLocal(SharedPreferenceConst.LOGIN_SUCCESSFULL, false);
+    setValueToLocal(SharedPreferenceConst.IS_REMEMBER_ME, remembered);
 
-      localStorage.erase();
-      isLoggedIn(false);
-      loginUserData(UserData());
+    try {
+      await clearSessionScopedState().timeout(const Duration(seconds: 2));
+    } catch (_) {
+      // Session state reset must not trap the user behind a loading overlay.
+    }
+    unawaited(_finishSignOutCleanup(pushService));
+  }
 
-      setValueToLocal(SharedPreferenceConst.FIRST_TIME, true);
-      setValueToLocal(SharedPreferenceConst.USER_EMAIL, tempEmail);
-      setValueToLocal(SharedPreferenceConst.USER_NAME, tempUserName);
-      setValueToLocal(SharedPreferenceConst.USER_ID, "0");
-      setValueToLocal(SharedPreferenceConst.LOGIN_SUCCESSFULL, false);
-
-      if (tempPASSWORD is String) {
-        setValueToLocal(SharedPreferenceConst.USER_PASSWORD, tempPASSWORD);
-      }
-      if (tempIsRemeberMe is bool) {
-        setValueToLocal(SharedPreferenceConst.IS_REMEMBER_ME, tempIsRemeberMe);
-      }
+  static Future<void> _finishSignOutCleanup(
+      PushNotificationService pushService) async {
+    try {
+      await Future.wait([
+        pushService.unsubscribeFirebaseTopic(),
+        GoogleSignIn().signOut(),
+        FirebaseAuth.instance.signOut(),
+        SecureSessionStorage.clear(),
+      ]).timeout(const Duration(seconds: 5));
+    } catch (_) {
+      // Durable guest state above prevents a stale plugin from restoring login.
     }
   }
 
   static Future<BaseResponseModel> logoutApi() async {
-    return BaseResponseModel.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.logout, method: HttpMethodType.GET)));
+    return BaseResponseModel.fromJson(await handleResponse(
+        await buildHttpResponse(APIEndPoints.logout,
+            request: {}, method: HttpMethodType.POST)));
   }
 
   static Future<BaseResponseModel> deleteAccountCompletely() async {
-    return BaseResponseModel.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.deleteUserAccount, request: {}, method: HttpMethodType.POST)));
+    return BaseResponseModel.fromJson(await handleResponse(
+        await buildHttpResponse(APIEndPoints.deleteUserAccount,
+            request: {}, method: HttpMethodType.POST)));
   }
 
   static Future<ConfigurationResponse> getAppConfigurations() async {
-    return ConfigurationResponse.fromJson(
-        await handleResponse(await buildHttpResponse('${APIEndPoints.appConfiguration}?is_authenticated=${(getValueFromLocal(SharedPreferenceConst.IS_LOGGED_IN) == true).getIntBool()}', request: {}, method: HttpMethodType.GET)));
+    return ConfigurationResponse.fromJson(await handleResponse(
+        await buildHttpResponse(
+            '${APIEndPoints.appConfiguration}?is_authenticated=${(getValueFromLocal(SharedPreferenceConst.IS_LOGGED_IN) == true).getIntBool()}',
+            request: {},
+            method: HttpMethodType.GET)));
   }
 
   static Future<UserResponse> viewProfile({int? id}) async {
-    var res = UserResponse.fromJson(await handleResponse(await buildHttpResponse('${APIEndPoints.userDetail}?id=${id ?? loginUserData.value.id}', method: HttpMethodType.GET)));
+    var res = UserResponse.fromJson(await handleResponse(
+        await buildHttpResponse(
+            '${APIEndPoints.userDetail}?id=${id ?? loginUserData.value.id}',
+            method: HttpMethodType.GET)));
     return res;
   }
 
   static Future<void> getUserWallet() async {
     try {
-      final res = UserWalletData.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.getPatientWallet, method: HttpMethodType.GET)));
+      final res = UserWalletData.fromJson(await handleResponse(
+          await buildHttpResponse(APIEndPoints.getPatientWallet,
+              method: HttpMethodType.GET)));
       userWalletData(res);
     } catch (e) {
       log('Err: $e');
@@ -137,7 +183,10 @@ class AuthServiceApis {
   }) async {
     String searchData = search.isNotEmpty ? '&search=$search' : '';
 
-    var res = PatientHistoryRes.fromJson(await handleResponse(await buildHttpResponse("${APIEndPoints.getWalletHistory}?per_page=$perPage&page=$page$searchData", method: HttpMethodType.GET)));
+    var res = PatientHistoryRes.fromJson(await handleResponse(
+        await buildHttpResponse(
+            "${APIEndPoints.getWalletHistory}?per_page=$perPage&page=$page$searchData",
+            method: HttpMethodType.GET)));
     if (page == 1) historyData.clear();
     historyData.addAll(res.data.validate());
     lastPageCallBack?.call(res.data.validate().length != perPage);
@@ -154,20 +203,40 @@ class AuthServiceApis {
     String email = '',
     String dateOfBirth = '',
     String playerId = '',
-    Function(dynamic)? onSuccess,
+    bool includePlayerId = false,
+    Future<void> Function(dynamic)? onSuccess,
   }) async {
     if (isLoggedIn.value) {
-      MultipartRequest multiPartRequest = await getMultiPartRequest(APIEndPoints.updateProfile);
-      if (firstName.trim().isNotEmpty) multiPartRequest.fields[UserKeys.firstName] = firstName;
-      if (lastName.trim().isNotEmpty) multiPartRequest.fields[UserKeys.lastName] = lastName;
-      if (mobile.trim().isNotEmpty) multiPartRequest.fields[UserKeys.mobile] = mobile;
-      if (address.trim().isNotEmpty) multiPartRequest.fields[UserKeys.address] = address;
-      if (gender.trim().isNotEmpty) multiPartRequest.fields[UserKeys.gender] = gender;
-      if (email.trim().isNotEmpty) multiPartRequest.fields[UserKeys.email] = email;
-      if (dateOfBirth.trim().isNotEmpty) multiPartRequest.fields[UserKeys.dateOfBirth] = dateOfBirth;
+      MultipartRequest multiPartRequest =
+          await getMultiPartRequest(APIEndPoints.updateProfile);
+      if (firstName.trim().isNotEmpty) {
+        multiPartRequest.fields[UserKeys.firstName] = firstName;
+      }
+      if (lastName.trim().isNotEmpty) {
+        multiPartRequest.fields[UserKeys.lastName] = lastName;
+      }
+      if (mobile.trim().isNotEmpty) {
+        multiPartRequest.fields[UserKeys.mobile] = mobile;
+      }
+      if (address.trim().isNotEmpty) {
+        multiPartRequest.fields[UserKeys.address] = address;
+      }
+      if (gender.trim().isNotEmpty) {
+        multiPartRequest.fields[UserKeys.gender] = gender;
+      }
+      if (email.trim().isNotEmpty) {
+        multiPartRequest.fields[UserKeys.email] = email;
+      }
+      if (dateOfBirth.trim().isNotEmpty) {
+        multiPartRequest.fields[UserKeys.dateOfBirth] = dateOfBirth;
+      }
+      if (includePlayerId || playerId.trim().isNotEmpty) {
+        multiPartRequest.fields[UserKeys.playerId] = playerId.trim();
+      }
 
       if (imageFile != null) {
-        multiPartRequest.files.add(await MultipartFile.fromPath(UserKeys.profileImage, imageFile.path));
+        multiPartRequest.files.add(await MultipartFile.fromPath(
+            UserKeys.profileImage, imageFile.path));
       }
 
       multiPartRequest.headers.addAll(buildHeaderTokens());
@@ -175,7 +244,7 @@ class AuthServiceApis {
       await sendMultiPartRequest(
         multiPartRequest,
         onSuccess: (data) async {
-          onSuccess?.call(data);
+          await onSuccess?.call(data);
         },
         onError: (error) {
           throw error;
@@ -187,6 +256,8 @@ class AuthServiceApis {
   }
 
   static Future<AboutPageRes> getAboutPageData() async {
-    return AboutPageRes.fromJson(await handleResponse(await buildHttpResponse(APIEndPoints.aboutPages, method: HttpMethodType.GET)));
+    return AboutPageRes.fromJson(await handleResponse(await buildHttpResponse(
+        APIEndPoints.aboutPages,
+        method: HttpMethodType.GET)));
   }
 }

@@ -12,7 +12,7 @@ import '../../../../../utils/empty_error_state_widget.dart';
 import '../filter_controller.dart';
 
 class FilterCategoryComponent extends StatelessWidget {
-  final FilterController filterCont = Get.put(FilterController());
+  final FilterController filterCont = Get.find<FilterController>();
 
   FilterCategoryComponent({super.key});
 
@@ -29,7 +29,7 @@ class FilterCategoryComponent extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   NoDataWidget(
-                    title: error,
+                    title: locale.value.somethingWentWrong,
                     retryText: locale.value.reload,
                     imageWidget: const ErrorStateWidget(),
                     onRetry: () {
@@ -58,8 +58,10 @@ class FilterCategoryComponent extends StatelessWidget {
                       AnimatedScrollView(
                         children: [
                           AnimatedWrap(
-                            children: List.generate(filterCont.serviceList.length, (index) {
-                              ServiceElement service = filterCont.serviceList[index];
+                            children: List.generate(
+                                filterCont.serviceList.length, (index) {
+                              ServiceElement service =
+                                  filterCont.serviceList[index];
                               return InkWell(
                                 onTap: () {
                                   // filterCont.selectedServiceData(service);
@@ -69,14 +71,17 @@ class FilterCategoryComponent extends StatelessWidget {
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.all(6),
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 10),
                                       decoration: boxDecorationDefault(
                                         color: context.cardColor,
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Text(
                                             service.name.toString(),
@@ -89,15 +94,18 @@ class FilterCategoryComponent extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                    Positioned(
+                                    PositionedDirectional(
                                       top: 0,
-                                      right: 0,
+                                      end: 0,
                                       child: commonLeadingWid(
                                         imgPath: Assets.imagesConfirm,
                                         color: whiteTextColor,
-                                        size: 8,
-                                      ).circularLightPrimaryBg(color: appColorPrimary, padding: 6),
-                                    ).visible(filterCont.selectedServiceData.value.id == service.id),
+                                        size: 12,
+                                      ).circularLightPrimaryBg(
+                                          color: appColorPrimary, padding: 6),
+                                    ).visible(filterCont
+                                            .selectedServiceData.value.id ==
+                                        service.id),
                                   ],
                                 ),
                               );
@@ -105,17 +113,21 @@ class FilterCategoryComponent extends StatelessWidget {
                           ),
                         ],
                         onNextPage: () async {
-                          if (!filterCont.isServiceLoading.value) {
-                            filterCont.servicePage(filterCont.servicePage.value + 1);
+                          if (!filterCont.isServiceLoading.value &&
+                              !filterCont.isServiceLastPage.value) {
+                            filterCont
+                                .servicePage(filterCont.servicePage.value + 1);
                             filterCont.getServicesList();
                           }
                         },
                         onSwipeRefresh: () async {
                           filterCont.servicePage(1);
-                          return await filterCont.getServicesList(showLoader: false);
+                          return await filterCont.getServicesList(
+                              showLoader: false);
                         },
                       ),
-                      if (filterCont.isServiceLoading.isTrue) const LoaderWidget()
+                      if (filterCont.isServiceLoading.isTrue)
+                        const LoaderWidget()
                     ],
                   ),
                 );

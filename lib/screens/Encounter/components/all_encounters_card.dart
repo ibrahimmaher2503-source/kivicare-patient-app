@@ -35,7 +35,7 @@ class AllEncountersCard extends StatelessWidget {
                 child: Text(
                   encounterElement.status ? locale.value.active : locale.value.closed,
                   style: boldTextStyle(
-                    size: 10,
+                    size: 12,
                     color: encounterElement.status ? completedStatusColor : pendingStatusColor,
                     weight: FontWeight.w700,
                   ),

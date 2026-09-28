@@ -19,12 +19,12 @@ class FacilityRatingBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.star, size: 10, color: Colors.amber),
+          const Icon(Icons.star, size: 12, color: Colors.amber),
           4.width,
           Text(
             rating.toStringAsFixed(1),
             style: secondaryTextStyle(
-                size: 10, color: Colors.amber, weight: FontWeight.bold),
+                size: 12, color: Colors.amber, weight: FontWeight.bold),
           ),
         ],
       ),

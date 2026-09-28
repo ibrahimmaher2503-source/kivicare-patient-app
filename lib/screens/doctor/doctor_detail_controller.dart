@@ -143,9 +143,8 @@ class DoctorDetailController extends GetxController {
   @override
   void onClose() {
     searchStream.close();
-    if (Get.context != null) {
-      _scrollController.removeListener(() => hideKeyboard(Get.context));
-    }
+    searchCont.dispose();
+    _scrollController.dispose();
     super.onClose();
   }
 }

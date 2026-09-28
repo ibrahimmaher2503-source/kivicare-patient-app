@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../main.dart';
+import '../../dashboard/dashboard_screen.dart';
 import '../../../utils/colors.dart';
 import '../order/pharmacy_order_detail_screen.dart';
 
@@ -23,27 +24,62 @@ class OrderSuccessScreen extends StatelessWidget {
             children: [
               const Spacer(),
               SizedBox(
-                height: 96,
-                width: 96,
+                height: 160,
+                width: 160,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      height: 96,
-                      width: 96,
-                      decoration: const BoxDecoration(
-                          color: lightSecondaryColor,
-                          shape: BoxShape.circle),
+                      height: 160,
+                      width: 160,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: completedStatusColor.withValues(alpha: 0.06),
+                      ),
                     ),
-                    const Icon(Icons.check_circle,
-                        color: completedStatusColor, size: 64),
+                    Container(
+                      height: 120,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: completedStatusColor.withValues(alpha: 0.10),
+                        border: Border.all(
+                          color: completedStatusColor.withValues(alpha: 0.18),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 84,
+                      width: 84,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            completedStatusColor,
+                            completedStatusColor.withValues(alpha: 0.78),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: completedStatusColor.withValues(alpha: 0.32),
+                            blurRadius: 22,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(Icons.check_rounded,
+                          color: Colors.white, size: 44),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
               Text(locale.value.orderSuccess,
-                  style:
-                      boldTextStyle(size: 24, color: appColorPrimary),
+                  style: boldTextStyle(size: 24, color: appColorPrimary),
                   textAlign: TextAlign.center),
               const SizedBox(height: 8),
               Padding(
@@ -51,8 +87,8 @@ class OrderSuccessScreen extends StatelessWidget {
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                    style: primaryTextStyle(
-                        size: 14, color: secondaryTextColor),
+                    style:
+                        primaryTextStyle(size: 14, color: secondaryTextColor),
                     children: [
                       TextSpan(
                           text: locale.value.pharmacyOrderSuccess
@@ -81,13 +117,25 @@ class OrderSuccessScreen extends StatelessWidget {
                   ],
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(locale.value.orderNumber,
-                        style: secondaryTextStyle(size: 13)),
+                    Container(
+                      width: 36,
+                      height: 36,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: appColorSecondary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.receipt_long_rounded,
+                          color: appColorSecondary, size: 18),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(locale.value.orderNumber,
+                          style: secondaryTextStyle(size: 13)),
+                    ),
                     Text(orderNumber,
-                        style: boldTextStyle(
-                            size: 14, color: appColorPrimary)),
+                        style: boldTextStyle(size: 14, color: appColorPrimary)),
                   ],
                 ),
               ),
@@ -98,10 +146,7 @@ class OrderSuccessScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                   gradient: const LinearGradient(
-                    colors: [
-                      gradientSecondaryStart,
-                      gradientSecondaryEnd
-                    ],
+                    colors: [gradientSecondaryStart, gradientSecondaryEnd],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),
@@ -117,17 +162,23 @@ class OrderSuccessScreen extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(14),
                     onTap: () {
-                      Get.off(() =>
-                          PharmacyOrderDetailScreen(orderId: orderId));
+                      Get.off(
+                          () => PharmacyOrderDetailScreen(orderId: orderId));
                     },
-                    child: Center(
-                      child: Text(
-                        locale.value.trackOrder,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 15),
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.local_shipping_rounded,
+                            color: Colors.white, size: 18),
+                        const SizedBox(width: 8),
+                        Text(
+                          locale.value.trackOrder,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -139,15 +190,14 @@ class OrderSuccessScreen extends StatelessWidget {
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     foregroundColor: appColorSecondary,
-                    side: const BorderSide(
-                        color: appColorSecondary, width: 1.2),
+                    side:
+                        const BorderSide(color: appColorSecondary, width: 1.2),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14)),
                   ),
-                  onPressed: () => Get.until((route) => route.isFirst),
-                  child: Text(locale.value.pharmacyBackToHome,
-                      style: boldTextStyle(
-                          color: appColorSecondary, size: 14)),
+                  onPressed: () => Get.offAll(() => DashboardScreen()),
+                  child: Text(locale.value.backToHome,
+                      style: boldTextStyle(color: appColorSecondary, size: 14)),
                 ),
               ),
               const SizedBox(height: 16),

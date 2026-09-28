@@ -8,7 +8,7 @@ import '../../../../../utils/price_widget.dart';
 import '../../filter_controller.dart';
 
 class FilterPriceComponent extends StatelessWidget {
-  final FilterController filterCont = Get.put(FilterController());
+  final FilterController filterCont = Get.find<FilterController>();
 
   FilterPriceComponent({super.key});
 
@@ -20,20 +20,28 @@ class FilterPriceComponent extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(locale.value.priceRange, style: boldTextStyle()).paddingAll(16),
+              Text(locale.value.priceRange, style: boldTextStyle())
+                  .paddingAll(16),
               Obx(
                 () => RangeSlider(
                   min: 1,
                   max: 5000,
                   divisions: (5000 ~/ 10).toInt(),
-                  labels: RangeLabels(filterCont.rangeValues.value.start.toInt().toString(), filterCont.rangeValues.value.end.toInt().toString()),
+                  labels: RangeLabels(
+                      filterCont.rangeValues.value.start.toInt().toString(),
+                      filterCont.rangeValues.value.end.toInt().toString()),
                   values: filterCont.rangeValues.value,
                   activeColor: appColorPrimary,
                   overlayColor: const WidgetStatePropertyAll(appColorPrimary),
                   onChanged: (values) {
-                    filterCont.rangeValues(values);
-                    filterCont.setMaxPrice(values.end);
-                    filterCont.setMinPrice(values.start);
+                    final rounded = RangeValues(
+                      values.start.roundToDouble(),
+                      values.end.roundToDouble(),
+                    );
+                    filterCont.priceFilterTouched(true);
+                    filterCont.rangeValues(rounded);
+                    filterCont.setMaxPrice(rounded.end);
+                    filterCont.setMinPrice(rounded.start);
                   },
                 ),
               ),

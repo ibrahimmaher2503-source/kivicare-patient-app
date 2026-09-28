@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
 import 'package:kivicare_patient/utils/colors.dart';
-import '../../../components/app_shader_widget.dart';
 import 'menu.dart';
 
 class BtmNavItem extends StatelessWidget {
@@ -23,50 +21,108 @@ class BtmNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      alignment: Alignment.center,
-      margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-      duration: const Duration(milliseconds: 300),
-      height: Get.height * 0.06,
-      width: selectedNav == navBar ? (Get.width / 3) : 52,
-      decoration: selectedNav == navBar
-          ? const BoxDecoration(
-              color: appColorPrimary,
-              borderRadius: BorderRadius.all(
-                Radius.circular(50),
-              ),
-            )
-          : null,
-      child: selectedNav == navBar
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: AppShaderWidget(
-                    color: white,
-                    child: Image.asset(
-                      navBar.activeIcon,
-                    ),
+    final isSelected = selectedNav == navBar;
+
+    return Expanded(
+      child: Semantics(
+        container: true,
+        button: true,
+        selected: isSelected,
+        label: navBar.title.value,
+        child: ExcludeSemantics(
+          child: Tooltip(
+            message: navBar.title.value,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: press,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 64),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeOutCubic,
+                        height: 3,
+                        width: isSelected ? 28 : 0,
+                        margin: const EdgeInsets.only(bottom: 10),
+                        decoration: BoxDecoration(
+                          gradient: isSelected
+                              ? const LinearGradient(
+                                  colors: [
+                                    gradientSecondaryStart,
+                                    gradientSecondaryEnd
+                                  ],
+                                )
+                              : null,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                      ),
+                      AnimatedScale(
+                        scale: isSelected ? 1.08 : 1.0,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOutCubic,
+                        child: SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: isSelected
+                              ? ShaderMask(
+                                  shaderCallback: (bounds) =>
+                                      const LinearGradient(
+                                    colors: [
+                                      gradientSecondaryStart,
+                                      gradientSecondaryEnd
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ).createShader(bounds),
+                                  blendMode: BlendMode.srcIn,
+                                  child: Image.asset(navBar.activeIcon),
+                                )
+                              : Image.asset(
+                                  navBar.icon,
+                                  color: isDarkMode.value
+                                      ? textTertiaryDark
+                                      : gray500,
+                                  colorBlendMode: BlendMode.srcIn,
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        style: isSelected
+                            ? const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: gradientSecondaryStart,
+                                height: 1.15,
+                              )
+                            : TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: isDarkMode.value
+                                    ? textTertiaryDark
+                                    : gray500,
+                                height: 1.15,
+                              ),
+                        child: Text(
+                          navBar.title.value,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
                   ),
                 ),
-                5.width,
-                Marquee(child: Text(navBar.title.value, overflow: TextOverflow.ellipsis, style: primaryTextStyle(color: white, size: 14))).flexible(),
-              ],
-            ).paddingSymmetric(horizontal: 6)
-          : IconButton(
-              onPressed: press,
-              icon: AppShaderWidget(
-                color: white.withValues(alpha: 0.5),
-                child: Image.asset(
-                  navBar.icon,
-                  height: 24,
-                  width: 24,
-                  fit: BoxFit.cover,
-                ),
               ),
-            ).paddingOnly(left: isFirst ? 8 : 0, right: isLast ? 8 : 0),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

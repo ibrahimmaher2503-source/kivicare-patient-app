@@ -39,7 +39,8 @@ class AppointmentCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: boxDecorationDefault(color: context.cardColor, shape: BoxShape.rectangle),
+            decoration: boxDecorationDefault(
+                color: context.cardColor, shape: BoxShape.rectangle),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -47,7 +48,7 @@ class AppointmentCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    '${locale.value.appointment} #${appointment.id.toString()}',
+                    '${locale.value.appointment} ${appointment.id}',
                     style: boldTextStyle(size: 14, color: appColorPrimary),
                   ),
                 ),
@@ -55,9 +56,12 @@ class AppointmentCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: boxDecorationDefault(
-                      color: isDarkMode.value ? Colors.grey.withValues(alpha: 0.1) : lightSecondaryColor,
+                      color: isDarkMode.value
+                          ? Colors.grey.withValues(alpha: 0.1)
+                          : lightSecondaryColor,
                       borderRadius: radius(22),
                     ),
                     child: Row(
@@ -65,17 +69,23 @@ class AppointmentCard extends StatelessWidget {
                       children: [
                         Text(
                           appointment.appointmentDate.dateInDMMMMyyyyFormat,
-                          style: boldTextStyle(size: 12, color: appColorSecondary),
+                          style:
+                              boldTextStyle(size: 12, color: appColorSecondary),
                         ),
                         6.width,
                         Text(
                           "|",
-                          style: boldTextStyle(size: 12, color: appColorSecondary),
+                          style:
+                              boldTextStyle(size: 12, color: appColorSecondary),
                         ),
                         6.width,
-                        Text(
-                          '${appointment.appointmentTime.format24HourtoAMPM} - ${appointment.endTime.format24HourtoAMPM}',
-                          style: boldTextStyle(size: 12, color: appColorSecondary),
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Text(
+                            '${appointment.appointmentTime.format24HourtoAMPM} - ${appointment.endTime.format24HourtoAMPM}',
+                            style: boldTextStyle(
+                                size: 12, color: appColorSecondary),
+                          ),
                         ),
                       ],
                     ),
@@ -87,22 +97,27 @@ class AppointmentCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        appointment.serviceName,
-                        style: boldTextStyle(size: 20),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        appointment.clinicName,
-                        style: primaryTextStyle(size: 14, color: secondaryTextColor),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ).paddingTop(8),
+                      if (appointment.serviceName.isNotEmpty)
+                        Text(
+                          appointment.serviceName,
+                          style: boldTextStyle(size: 20),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      if (appointment.clinicName.isNotEmpty)
+                        Text(
+                          appointment.clinicName,
+                          style: primaryTextStyle(
+                              size: 14, color: secondaryTextColor),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ).paddingTop(8),
                       Text(
                         appointment.appointmentExtraInfo,
                         style: secondaryTextStyle(size: 12),
-                      ).paddingTop(6).visible(appointment.appointmentExtraInfo.isNotEmpty),
+                      )
+                          .paddingTop(6)
+                          .visible(appointment.appointmentExtraInfo.isNotEmpty),
                     ],
                   ),
                 ),
@@ -115,16 +130,21 @@ class AppointmentCard extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            getServiceType(serviceType: appointment.serviceType),
-                            style: secondaryTextStyle(size: 12, color: secondaryTextColor),
-                          ),
-                          6.height,
+                          if (appointment.serviceType.isNotEmpty) ...[
+                            Text(
+                              getServiceType(
+                                  serviceType: appointment.serviceType),
+                              style: secondaryTextStyle(
+                                  size: 12, color: secondaryTextColor),
+                            ),
+                            6.height,
+                          ],
                           Row(
                             children: [
                               Text(
                                 '${locale.value.doctor}:',
-                                style: primaryTextStyle(size: 12, color: secondaryTextColor),
+                                style: primaryTextStyle(
+                                    size: 12, color: secondaryTextColor),
                               ),
                               6.width,
                               Text(
@@ -154,31 +174,43 @@ class AppointmentCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Icon(Icons.calendar_today_outlined, color: secondaryTextColor, size: 12),
+                        const Icon(Icons.calendar_today_outlined,
+                            color: secondaryTextColor, size: 12),
                         4.width,
-                        Text("${locale.value.appointment}:", style: secondaryTextStyle()),
+                        Text("${locale.value.appointment}:",
+                            style: secondaryTextStyle()),
                         4.width,
                         Text(
                           getBookingStatus(status: appointment.status),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: primaryTextStyle(size: 12, color: getBookingStatusColor(status: appointment.status)),
+                          style: primaryTextStyle(
+                              size: 12,
+                              color: getBookingStatusColor(
+                                  status: appointment.status)),
                         ).expand(),
                       ],
                     ).flexible(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const CachedImageWidget(url: Assets.iconsIcTotalPayout, height: 15),
+                        const CachedImageWidget(
+                            url: Assets.iconsIcTotalPayout, height: 15),
                         4.width,
-                        Text("${locale.value.payment}:", style: secondaryTextStyle()).flexible(),
+                        Text("${locale.value.payment}:",
+                                style: secondaryTextStyle())
+                            .flexible(),
                         4.width,
                         Text(
-                          getBookingPaymentStatus(status: appointment.paymentStatus),
+                          getBookingPaymentStatus(
+                              status: appointment.paymentStatus),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           textAlign: TextAlign.end,
-                          style: primaryTextStyle(size: 12, color: getPriceStatusColor(paymentStatus: appointment.paymentStatus)),
+                          style: primaryTextStyle(
+                              size: 12,
+                              color: getPriceStatusColor(
+                                  paymentStatus: appointment.paymentStatus)),
                         ).flexible(),
                       ],
                     ).flexible(),
@@ -215,11 +247,14 @@ class AppointmentCard extends StatelessWidget {
                 if (appointment.status.contains(StatusConst.pending)) ...[
                   24.height,
                   AppButton(
-                    color: isDarkMode.value ? Colors.grey.withValues(alpha: 0.1) : extraLightPrimaryColor,
+                    color: isDarkMode.value
+                        ? Colors.grey.withValues(alpha: 0.1)
+                        : extraLightPrimaryColor,
                     height: 48,
                     width: Get.width,
                     padding: EdgeInsets.zero,
-                    shapeBorder: RoundedRectangleBorder(borderRadius: radius(defaultAppButtonRadius / 2)),
+                    shapeBorder: RoundedRectangleBorder(
+                        borderRadius: radius(defaultAppButtonRadius / 2)),
                     onTap: () {
                       Get.bottomSheet(
                         isScrollControlled: true,
@@ -229,7 +264,9 @@ class AppointmentCard extends StatelessWidget {
                           ),
                           child: CancellationsBookingChargeDialog(
                             appointmentData: appointment,
-                            isDurationMode: checkTimeDifference(inputDateTime: DateTime.parse(appointment.appointmentDate.validate())),
+                            isDurationMode: checkTimeDifference(
+                                inputDateTime: DateTime.parse(
+                                    appointment.appointmentDate.validate())),
                             loaderOnOFF: (p0) {
                               appointmentsController.isLoading(p0);
                             },
@@ -258,9 +295,11 @@ class AppointmentCard extends StatelessWidget {
                 if (canLaunchVideoCall(status: appointment.status)) {
                   if (isOnlineService) {
                     if (appointment.googleLink.isNotEmpty) {
-                      commonLaunchUrl(appointment.googleLink, launchMode: LaunchMode.externalApplication);
+                      commonLaunchUrl(appointment.googleLink,
+                          launchMode: LaunchMode.externalApplication);
                     } else if (appointment.zoomLink.isNotEmpty) {
-                      commonLaunchUrl(appointment.zoomLink, launchMode: LaunchMode.externalApplication);
+                      commonLaunchUrl(appointment.zoomLink,
+                          launchMode: LaunchMode.externalApplication);
                     } else {
                       toast(locale.value.videoCallLinkIsNotFound);
                     }
@@ -268,17 +307,27 @@ class AppointmentCard extends StatelessWidget {
                     toast(locale.value.thisIsNotAOnlineService);
                   }
                 } else {
-                  if (appointment.status.toLowerCase().contains(StatusConst.pending)) {
+                  if (appointment.status
+                      .toLowerCase()
+                      .contains(StatusConst.pending)) {
                     toast(locale.value.oppsThisAppointmentIsNotConfirmedYet);
-                  } else if (appointment.status.toLowerCase().contains(StatusConst.cancel) || appointment.status.toLowerCase().contains(BookingStatusConst.CANCELLED)) {
+                  } else if (appointment.status
+                          .toLowerCase()
+                          .contains(StatusConst.cancel) ||
+                      appointment.status
+                          .toLowerCase()
+                          .contains(BookingStatusConst.CANCELLED)) {
                     toast(locale.value.oppsThisAppointmentHasBeenCancelled);
-                  } else if (appointment.status.toLowerCase().contains(StatusConst.completed)) {
+                  } else if (appointment.status
+                      .toLowerCase()
+                      .contains(StatusConst.completed)) {
                     toast(locale.value.oppsThisAppointmentHasBeenCompleted);
                   }
                 }
               },
               child: Container(
-                decoration: boxDecorationDefault(shape: BoxShape.circle, color: appColorPrimary),
+                decoration: boxDecorationDefault(
+                    shape: BoxShape.circle, color: appColorPrimary),
                 padding: const EdgeInsets.all(10),
                 child: const CachedImageWidget(
                   url: Assets.imagesVideoCamera,
@@ -295,5 +344,6 @@ class AppointmentCard extends StatelessWidget {
     );
   }
 
-  bool get isOnlineService => appointment.serviceType.toLowerCase() == ServiceTypeConst.online;
+  bool get isOnlineService =>
+      appointment.serviceType.toLowerCase() == ServiceTypeConst.online;
 }

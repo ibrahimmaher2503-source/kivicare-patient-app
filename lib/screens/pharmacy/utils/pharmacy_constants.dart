@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../utils/colors.dart';
+import '../../../locale/languages.dart';
 
 class PharmacyConstants {
   static const int defaultMaxQuantity = 10;
@@ -49,6 +50,27 @@ class PharmacyConstants {
     }
   }
 
+  static String orderStatusLabel(BaseLanguage language, String status) {
+    switch (status) {
+      case statusPending:
+        return language.pending;
+      case statusConfirmed:
+        return language.confirmed;
+      case statusPreparing:
+        return language.preparing;
+      case statusOutForDelivery:
+        return language.outForDelivery;
+      case statusDelivered:
+        return language.delivered;
+      case statusCancelled:
+        return language.cancelled;
+      case statusRefunded:
+        return language.refunded;
+      default:
+        return status.replaceAll('_', ' ');
+    }
+  }
+
   static Color getPrescriptionStatusColor(String status) {
     switch (status) {
       case prescriptionPending:
@@ -61,6 +83,21 @@ class PharmacyConstants {
         return _statusRed;
       default:
         return appColorPrimary;
+    }
+  }
+
+  static String prescriptionStatusLabel(BaseLanguage language, String status) {
+    switch (status) {
+      case prescriptionPending:
+        return language.pending;
+      case prescriptionReviewed:
+        return language.reviewed;
+      case prescriptionApproved:
+        return language.approved;
+      case prescriptionRejected:
+        return language.rejected;
+      default:
+        return status.replaceAll('_', ' ');
     }
   }
 
@@ -80,6 +117,33 @@ class PharmacyConstants {
       case refundPending:
       default:
         return _statusAmber;
+    }
+  }
+
+  static String refundStatusLabel(BaseLanguage language, String status) {
+    switch (status) {
+      case refundPending:
+        return language.pending;
+      case refundApproved:
+        return language.approved;
+      case refundProcessed:
+        return language.processed;
+      case refundRejected:
+        return language.rejected;
+      default:
+        return status.replaceAll('_', ' ');
+    }
+  }
+
+  static String paymentMethodLabel(BaseLanguage language, String method) {
+    switch (method) {
+      case 'cash':
+      case 'cash_on_delivery':
+        return language.pharmacyCashOnDelivery;
+      case 'wallet':
+        return language.pharmacyWallet;
+      default:
+        return method.replaceAll('_', ' ');
     }
   }
 }

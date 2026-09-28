@@ -21,7 +21,7 @@ class ClinicDoctorsComponent extends StatelessWidget {
             future: clinicDetailCont.doctorsFuture.value,
             errorBuilder: (error) {
               return NoDataWidget(
-                title: error,
+                title: locale.value.somethingWentWrong,
                 retryText: locale.value.reload,
                 imageWidget: const ErrorStateWidget(),
                 onRetry: () {
@@ -48,7 +48,8 @@ class ClinicDoctorsComponent extends StatelessWidget {
                 ],
                 onNextPage: () async {
                   if (!clinicDetailCont.isDoctorsLastPage.value) {
-                    clinicDetailCont.doctorsPage(clinicDetailCont.doctorsPage.value + 1);
+                    clinicDetailCont
+                        .doctorsPage(clinicDetailCont.doctorsPage.value + 1);
                     clinicDetailCont.getDoctors();
                   }
                 },
@@ -60,7 +61,10 @@ class ClinicDoctorsComponent extends StatelessWidget {
             },
           ),
         ).paddingOnly(top: 16, bottom: 80),
-        Obx(() => const LoaderWidget().center().paddingTop(Get.height * 0.12).visible(clinicDetailCont.isDoctorsLoading.value)),
+        Obx(() => const LoaderWidget()
+            .center()
+            .paddingTop(Get.height * 0.12)
+            .visible(clinicDetailCont.isDoctorsLoading.value)),
       ],
     );
   }

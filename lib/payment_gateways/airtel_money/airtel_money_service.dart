@@ -55,6 +55,12 @@ class _AirtelMoneyDialogState extends State<AirtelMoneyDialog> {
   }
 
   @override
+  void dispose() {
+    _textFieldMSISDN.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
@@ -70,23 +76,32 @@ class _AirtelMoneyDialogState extends State<AirtelMoneyDialog> {
                         Container(
                           width: 50,
                           height: 50,
-                          decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.redAccent),
-                          child: const Icon(Icons.close_sharp, color: Colors.white),
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.redAccent),
+                          child: const Icon(Icons.close_sharp,
+                              color: Colors.white),
                         ),
                         10.height,
-                        Text(getAirtelMoneyReasonTextFromCode(responseCode).$1, style: boldTextStyle()),
+                        Text(getAirtelMoneyReasonTextFromCode(responseCode).$1,
+                            style: boldTextStyle()),
                         16.height,
-                        Text(getAirtelMoneyReasonTextFromCode(responseCode).$2, textAlign: TextAlign.center, style: secondaryTextStyle()),
+                        Text(getAirtelMoneyReasonTextFromCode(responseCode).$2,
+                            textAlign: TextAlign.center,
+                            style: secondaryTextStyle()),
                       ],
                     ).paddingAll(16)
                   : isSuccess
                       ? Column(
                           children: [
-                            const CachedImageWidget(url: Assets.iconsIcVerified, height: 60),
+                            const CachedImageWidget(
+                                url: Assets.iconsIcVerified, height: 60),
                             10.height,
-                            Text(locale.value.paymentSuccess, style: boldTextStyle()),
+                            Text(locale.value.paymentSuccess,
+                                style: boldTextStyle()),
                             16.height,
-                            Text(locale.value.redirectingToBookings, textAlign: TextAlign.center, style: secondaryTextStyle()),
+                            Text(locale.value.redirectingToBookings,
+                                textAlign: TextAlign.center,
+                                style: secondaryTextStyle()),
                           ],
                         ).paddingAll(16)
                       : isTxnInProgress
@@ -94,9 +109,12 @@ class _AirtelMoneyDialogState extends State<AirtelMoneyDialog> {
                               children: [
                                 const LoaderWidget(),
                                 10.height,
-                                Text(locale.value.transactionIsInProcess, style: boldTextStyle()),
+                                Text(locale.value.transactionIsInProcess,
+                                    style: boldTextStyle()),
                                 16.height,
-                                Text(locale.value.pleaseCheckThePayment, textAlign: TextAlign.center, style: secondaryTextStyle()),
+                                Text(locale.value.pleaseCheckThePayment,
+                                    textAlign: TextAlign.center,
+                                    style: secondaryTextStyle()),
                               ],
                             ).paddingAll(16)
                           : Column(
@@ -104,11 +122,14 @@ class _AirtelMoneyDialogState extends State<AirtelMoneyDialog> {
                               children: [
                                 Form(
                                   key: formKey,
-                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   child: AppTextField(
                                     controller: _textFieldMSISDN,
                                     textFieldType: TextFieldType.NAME,
-                                    decoration: inputDecoration(context, labelText: locale.value.enterYourMsisdnHere),
+                                    decoration: inputDecoration(context,
+                                        labelText:
+                                            locale.value.enterYourMsisdnHere),
                                   ),
                                 ),
                                 16.height,
@@ -117,7 +138,8 @@ class _AirtelMoneyDialogState extends State<AirtelMoneyDialog> {
                                   height: 40,
                                   text: locale.value.submit,
                                   textStyle: boldTextStyle(color: Colors.white),
-                                  width: Get.width - context.navigationBarHeight,
+                                  width:
+                                      Get.width - context.navigationBarHeight,
                                   onTap: () {
                                     hideKeyboard(context);
                                     maxApiCallCount = 30;
@@ -130,7 +152,9 @@ class _AirtelMoneyDialogState extends State<AirtelMoneyDialog> {
           ),
         ),
         Obx(
-          () => const LoaderWidget().withSize(height: 80, width: 80).visible(isLoading.value && !isTxnInProgress),
+          () => const LoaderWidget()
+              .withSize(height: 80, width: 80)
+              .visible(isLoading.value && !isTxnInProgress),
         )
       ],
     );
@@ -146,7 +170,6 @@ class _AirtelMoneyDialogState extends State<AirtelMoneyDialog> {
       formKey.currentState!.save();
       isLoading(true);
       await authorizeAirtelClient().then((value) async {
-        log('acess tokn ${value.accessToken}');
         await paymentAirtelClient(
           reference: APP_NAME,
           txnId: transactionId,
@@ -154,7 +177,9 @@ class _AirtelMoneyDialogState extends State<AirtelMoneyDialog> {
           amount: widget.amount,
           accessToken: value.accessToken.validate(),
         ).then((value) async {
-          if (value.status != null && value.status!.responseCode == AirtelMoneyResponseCodes.IN_PROCESS) {
+          if (value.status != null &&
+              value.status!.responseCode ==
+                  AirtelMoneyResponseCodes.IN_PROCESS) {
             isTxnInProgress = true;
             setState(() {});
             isSuccess = await checkAirtelPaymentStatus(
@@ -183,8 +208,14 @@ class _AirtelMoneyDialogState extends State<AirtelMoneyDialog> {
 
 //region airtel pay
 Future<AirtelAuthModel> authorizeAirtelClient() async {
-  Map<dynamic, dynamic>? request = {"client_id": appConfigs.value.airtelMoney.airtelClientid, "client_secret": appConfigs.value.airtelMoney.airtelSecretkey, "grant_type": "client_credentials"};
-  return AirtelAuthModel.fromJson(await handleResponse(await airtelPayBuildHttpResponse('auth/oauth2/token', request: request, method: HttpMethodType.POST)));
+  Map<dynamic, dynamic>? request = {
+    "client_id": appConfigs.value.airtelMoney.airtelClientid,
+    "client_secret": appConfigs.value.airtelMoney.airtelSecretkey,
+    "grant_type": "client_credentials"
+  };
+  return AirtelAuthModel.fromJson(await handleResponse(
+      await airtelPayBuildHttpResponse('auth/oauth2/token',
+          request: request, method: HttpMethodType.POST)));
 }
 
 Future<AirtelPaymentResponse> paymentAirtelClient({
@@ -196,8 +227,17 @@ Future<AirtelPaymentResponse> paymentAirtelClient({
 }) async {
   Map<dynamic, dynamic>? request = {
     "reference": reference,
-    "subscriber": {"country": airtel_country_code, "currency": airtel_currency_code, "msisdn": msisdn},
-    "transaction": {"amount": amount, "country": airtel_country_code, "currency": airtel_currency_code, "id": txnId}
+    "subscriber": {
+      "country": airtel_country_code,
+      "currency": airtel_currency_code,
+      "msisdn": msisdn
+    },
+    "transaction": {
+      "amount": amount,
+      "country": airtel_country_code,
+      "currency": airtel_currency_code,
+      "id": txnId
+    }
   };
 
   return AirtelPaymentResponse.fromJson(
@@ -206,7 +246,12 @@ Future<AirtelPaymentResponse> paymentAirtelClient({
         'merchant/v1/payments/',
         request: request,
         method: HttpMethodType.POST,
-        extraKeys: {'X-Country': airtel_country_code, 'X-Currency': airtel_currency_code, 'access_token': accessToken, 'isAirtelMoney': true},
+        extraKeys: {
+          'X-Country': airtel_country_code,
+          'X-Currency': airtel_currency_code,
+          'access_token': accessToken,
+          'isAirtelMoney': true
+        },
       ),
     ),
   );
@@ -223,22 +268,28 @@ Future<bool> checkAirtelPaymentStatus(
     return isSuccess;
   }
   await authorizeAirtelClient().then((value) async {
-    log('acess tokn ${value.accessToken}');
-    log('maxApiCallCount is $maxApiCallCount');
-
     res = AirtelPaymentResponse.fromJson(await handleResponse(
-        await airtelPayBuildHttpResponse('standard/v1/payments/$txnId', extraKeys: {'X-Country': airtel_country_code, 'X-Currency': airtel_currency_code, 'access_token': '${value.accessToken}', 'isAirtelMoney': true}, method: HttpMethodType.GET)));
-    if (res.status != null && res.status!.responseCode == AirtelMoneyResponseCodes.SUCCESS) {
+        await airtelPayBuildHttpResponse('standard/v1/payments/$txnId',
+            extraKeys: {
+              'X-Country': airtel_country_code,
+              'X-Currency': airtel_currency_code,
+              'access_token': '${value.accessToken}',
+              'isAirtelMoney': true
+            },
+            method: HttpMethodType.GET)));
+    if (res.status != null &&
+        res.status!.responseCode == AirtelMoneyResponseCodes.SUCCESS) {
       isSuccess = true;
       return isSuccess;
-    } else if (maxApiCallCount > 0 && res.status != null && res.status!.responseCode == AirtelMoneyResponseCodes.IN_PROCESS) {
+    } else if (maxApiCallCount > 0 &&
+        res.status != null &&
+        res.status!.responseCode == AirtelMoneyResponseCodes.IN_PROCESS) {
       await Future.delayed(const Duration(seconds: 2));
       maxApiCallCount--;
       // toast("$maxApiCallCount");
       isSuccess = await checkAirtelPaymentStatus(txnId, loderOnOFF: loderOnOFF);
     } else {
       loderOnOFF(false);
-      log('return here');
       return isSuccess;
     }
   });
@@ -252,25 +303,35 @@ Future<Response> airtelPayBuildHttpResponse(
   Map? extraKeys,
 }) async {
   if (await isNetworkAvailable()) {
-    var headers = buildHeaderForAirtelMoney(extraKeys!['access_token'], extraKeys['X-Country'], extraKeys['X-Currency']);
+    final headers = extraKeys == null
+        ? <String, String>{
+            ...defaultHeaders(),
+            'Content-Type': 'application/json; charset=utf-8',
+          }
+        : buildHeaderForAirtelMoney(
+            extraKeys['access_token']?.toString() ?? '',
+            extraKeys['X-Country']?.toString() ?? '',
+            extraKeys['X-Currency']?.toString() ?? '',
+          );
     //  Uri url = buildBaseUrl(endPoint);
     Uri url = Uri.parse(endPoint);
     url = Uri.parse('$AIRTEL_BASE$endPoint');
 
     Response response;
-    log('url : $url');
     if (method == HttpMethodType.POST) {
-      log('Request: ${jsonEncode(request)}');
-      response = await http.post(url, body: jsonEncode(request), headers: headers);
+      response = await http
+          .post(url, body: jsonEncode(request), headers: headers)
+          .timeout(const Duration(seconds: 30));
     } else if (method == HttpMethodType.DELETE) {
-      response = await delete(url, headers: headers);
+      response = await delete(url, headers: headers)
+          .timeout(const Duration(seconds: 30));
     } else if (method == HttpMethodType.PUT) {
-      response = await put(url, body: jsonEncode(request), headers: headers);
+      response = await put(url, body: jsonEncode(request), headers: headers)
+          .timeout(const Duration(seconds: 30));
     } else {
-      response = await get(url, headers: headers);
+      response =
+          await get(url, headers: headers).timeout(const Duration(seconds: 30));
     }
-
-    log('Response (${method.name}) ${response.statusCode}: ${response.body}');
 
     return response;
   } else {
@@ -308,11 +369,17 @@ class AirtelMoneyResponseCodes {
     case AirtelMoneyResponseCodes.INCORRECT_PIN:
       return (locale.value.incorrectPin, locale.value.incorrectPinHasBeen);
     case AirtelMoneyResponseCodes.LIMIT_EXCEEDED:
-      return (locale.value.exceedsWithdrawalAmountLimit, locale.value.theUserHasExceeded);
+      return (
+        locale.value.exceedsWithdrawalAmountLimit,
+        locale.value.theUserHasExceeded
+      );
     case AirtelMoneyResponseCodes.INVALID_AMOUNT:
       return (locale.value.invalidAmount, locale.value.theAmountUserIs);
     case AirtelMoneyResponseCodes.INVALID_TRANSACTION_ID:
-      return (locale.value.transactionIdIsInvalid, locale.value.userDidnTEnterThePin);
+      return (
+        locale.value.transactionIdIsInvalid,
+        locale.value.userDidnTEnterThePin
+      );
     case AirtelMoneyResponseCodes.IN_PROCESS:
       return (locale.value.inProcess, locale.value.transactionInPendingState);
     case AirtelMoneyResponseCodes.INSUFFICIENT_BALANCE:
@@ -322,19 +389,37 @@ class AirtelMoneyResponseCodes {
     case AirtelMoneyResponseCodes.DO_NOT_HONOR:
       return (locale.value.doNotHonor, locale.value.thisIsAGeneric);
     case AirtelMoneyResponseCodes.TRANSACTION_NOT_PERMITTED:
-      return (locale.value.transactionNotPermittedTo, locale.value.payeeIsAlreadyInitiated);
+      return (
+        locale.value.transactionNotPermittedTo,
+        locale.value.payeeIsAlreadyInitiated
+      );
     case AirtelMoneyResponseCodes.TRANSACTION_TIMED_OUT:
-      return (locale.value.transactionTimedOut, locale.value.theTransactionWasTimed);
+      return (
+        locale.value.transactionTimedOut,
+        locale.value.theTransactionWasTimed
+      );
     case AirtelMoneyResponseCodes.TRANSACTION_NOT_FOUND:
-      return (locale.value.transactionNotFound, locale.value.theTransactionWasNot);
+      return (
+        locale.value.transactionNotFound,
+        locale.value.theTransactionWasNot
+      );
     case AirtelMoneyResponseCodes.FORBIDDEN:
       return (locale.value.forbidden, locale.value.xSignatureAndPayloadDid);
     case AirtelMoneyResponseCodes.FETCHED_ENCRYPTION_KEY_SUCCESSFULLY:
-      return (locale.value.successfullyFetchedEncryptionKey, locale.value.encryptionKeyHasBeen);
+      return (
+        locale.value.successfullyFetchedEncryptionKey,
+        locale.value.encryptionKeyHasBeen
+      );
     case AirtelMoneyResponseCodes.ERROR_FETCHING_ENCRYPTION_KEY:
-      return (locale.value.errorWhileFetchingEncryption, locale.value.couldNotFetchEncryption);
+      return (
+        locale.value.errorWhileFetchingEncryption,
+        locale.value.couldNotFetchEncryption
+      );
     case AirtelMoneyResponseCodes.TRANSACTION_EXPIRED:
-      return (locale.value.transactionExpired, locale.value.transactionHasBeenExpired);
+      return (
+        locale.value.transactionExpired,
+        locale.value.transactionHasBeenExpired
+      );
     default:
       return (locale.value.somethingWentWrong, locale.value.somethingWentWrong);
   }

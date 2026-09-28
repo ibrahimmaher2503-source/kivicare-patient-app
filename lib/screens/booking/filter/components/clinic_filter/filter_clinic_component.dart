@@ -14,7 +14,7 @@ import '../../filter_controller.dart';
 import 'filter_search_clinic_component.dart';
 
 class FilterClinicComponent extends StatelessWidget {
-  final FilterController filterCont = Get.put(FilterController());
+  final FilterController filterCont = Get.find<FilterController>();
 
   FilterClinicComponent({super.key});
 
@@ -38,7 +38,7 @@ class FilterClinicComponent extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   NoDataWidget(
-                    title: error,
+                    title: locale.value.somethingWentWrong,
                     retryText: locale.value.reload,
                     imageWidget: const ErrorStateWidget(),
                     onRetry: () {
@@ -57,7 +57,8 @@ class FilterClinicComponent extends StatelessWidget {
                   children: [
                     NoDataWidget(
                       title: locale.value.noClinicsFoundAtAMoment,
-                      subTitle: locale.value.looksLikeThereIsNoClinicForThisServiceWellKee,
+                      subTitle: locale
+                          .value.looksLikeThereIsNoClinicForThisServiceWellKee,
                       retryText: locale.value.reload,
                       imageWidget: const EmptyStateWidget(),
                       onRetry: () async {
@@ -66,7 +67,9 @@ class FilterClinicComponent extends StatelessWidget {
                       },
                     ),
                   ],
-                ).paddingSymmetric(horizontal: 32).visible(!filterCont.isClinicLoading.value);
+                )
+                    .paddingSymmetric(horizontal: 32)
+                    .visible(!filterCont.isClinicLoading.value);
               } else {
                 return Obx(
                   () => Stack(
@@ -74,14 +77,14 @@ class FilterClinicComponent extends StatelessWidget {
                       AnimatedScrollView(
                         children: [
                           AnimatedWrap(
-                            children: List.generate(filterCont.clinicList.length, (index) {
+                            children: List.generate(
+                                filterCont.clinicList.length, (index) {
                               Clinic clinic = filterCont.clinicList[index];
                               return InkWell(
                                 onTap: () {
                                   // filterCont.selectedClinicData(clinic);
                                   filterCont.selectedClinicDataFunc(clinic);
                                 },
-
                                 child: Stack(
                                   children: [
                                     Container(
@@ -91,7 +94,8 @@ class FilterClinicComponent extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           CachedImageWidget(
                                             url: clinic.clinicImage,
@@ -103,8 +107,10 @@ class FilterClinicComponent extends StatelessWidget {
                                           ),
                                           8.width,
                                           Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               8.height,
                                               Text(
@@ -118,26 +124,46 @@ class FilterClinicComponent extends StatelessWidget {
                                               6.height,
                                               Row(
                                                 children: [
-                                                  const CachedImageWidget(url: Assets.iconsIcLocation, color: iconColor, width: 12, height: 12),
+                                                  const CachedImageWidget(
+                                                      url: Assets
+                                                          .iconsIcLocation,
+                                                      color: iconColor,
+                                                      width: 12,
+                                                      height: 12),
                                                   8.width,
                                                   Text(
                                                     clinic.address,
                                                     style: secondaryTextStyle(),
                                                     maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ).expand(),
                                                 ],
                                               ),
                                               6.height,
                                               Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                                decoration: boxDecorationDefault(
-                                                  color: getClinicStatusLightColor(clinicStatus: clinic.clinicStatus.toLowerCase()),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                        vertical: 4),
+                                                decoration:
+                                                    boxDecorationDefault(
+                                                  color:
+                                                      getClinicStatusLightColor(
+                                                          clinicStatus: clinic
+                                                              .clinicStatus
+                                                              .toLowerCase()),
                                                   borderRadius: radius(22),
                                                 ),
                                                 child: Text(
-                                                  getClinicStatus(status: clinic.clinicStatus.toLowerCase()),
-                                                  style: boldTextStyle(size: 10, color: Colors.green.shade600),
+                                                  getClinicStatus(
+                                                      status: clinic
+                                                          .clinicStatus
+                                                          .toLowerCase()),
+                                                  style: boldTextStyle(
+                                                      size: 12,
+                                                      color: Colors
+                                                          .green.shade600),
                                                 ),
                                               ),
                                               6.height,
@@ -147,15 +173,18 @@ class FilterClinicComponent extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                    Positioned(
+                                    PositionedDirectional(
                                       top: 0,
-                                      right: 0,
+                                      end: 0,
                                       child: commonLeadingWid(
                                         imgPath: Assets.imagesConfirm,
                                         color: whiteTextColor,
-                                        size: 8,
-                                      ).circularLightPrimaryBg(color: appColorPrimary, padding: 6),
-                                    ).visible(filterCont.selectedClinicData.value.id == clinic.id),
+                                        size: 12,
+                                      ).circularLightPrimaryBg(
+                                          color: appColorPrimary, padding: 6),
+                                    ).visible(filterCont
+                                            .selectedClinicData.value.id ==
+                                        clinic.id),
                                   ],
                                 ),
                               );
@@ -164,16 +193,19 @@ class FilterClinicComponent extends StatelessWidget {
                         ],
                         onNextPage: () async {
                           if (!filterCont.isClinicLoading.value) {
-                            filterCont.clinicPage(filterCont.clinicPage.value + 1);
+                            filterCont
+                                .clinicPage(filterCont.clinicPage.value + 1);
                             filterCont.getClinicsList();
                           }
                         },
                         onSwipeRefresh: () async {
                           filterCont.clinicPage(1);
-                          return await filterCont.getClinicsList(showLoader: false);
+                          return await filterCont.getClinicsList(
+                              showLoader: false);
                         },
                       ),
-                      if (filterCont.isClinicLoading.isTrue) const LoaderWidget()
+                      if (filterCont.isClinicLoading.isTrue)
+                        const LoaderWidget()
                     ],
                   ),
                 );

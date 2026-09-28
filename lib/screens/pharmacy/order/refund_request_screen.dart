@@ -4,8 +4,9 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../api/pharmacy_apis.dart';
 import '../../../components/app_scaffold.dart';
 import '../../../main.dart';
+import '../../../network/network_utils.dart';
 import '../../../utils/colors.dart';
-import '../../../utils/common_base.dart';
+import '../../../utils/price_widget.dart';
 import '../model/pharmacy_order_model.dart';
 import 'refund_list_screen.dart';
 
@@ -24,7 +25,8 @@ class RefundRequestController extends GetxController {
 
   List<RefundReason> get reasons => [
         RefundReason('damaged_product', locale.value.damagedProduct),
-        RefundReason('wrong_product_received', locale.value.wrongProductReceived),
+        RefundReason(
+            'wrong_product_received', locale.value.wrongProductReceived),
         RefundReason('expired_product', locale.value.expiredProduct),
         RefundReason('quality_issue', locale.value.qualityIssue),
         RefundReason('other', locale.value.other),
@@ -52,7 +54,7 @@ class RefundRequestController extends GetxController {
         Get.off(() => RefundListScreen());
       }
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     } finally {
       isLoading(false);
     }
@@ -125,6 +127,18 @@ class RefundRequestScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Container(
+                width: 40,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: appColorSecondary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.receipt_long_rounded,
+                    color: appColorSecondary, size: 20),
+              ),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   '${locale.value.orderNumber} #${order.orderNumber}',
@@ -133,7 +147,7 @@ class RefundRequestScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Text('${order.totalAmount} LE',
+              Text(formatCurrencyValue(order.totalAmount),
                   style: boldTextStyle(size: 16, color: appColorPrimary)),
             ],
           ),
@@ -143,10 +157,8 @@ class RefundRequestScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(locale.value.placedOn,
-                  style: secondaryTextStyle(size: 12)),
-              Text(order.createdAt ?? '',
-                  style: primaryTextStyle(size: 12)),
+              Text(locale.value.placedOn, style: secondaryTextStyle(size: 12)),
+              Text(order.createdAt ?? '', style: primaryTextStyle(size: 12)),
             ],
           ),
         ],
@@ -166,16 +178,13 @@ class RefundRequestScreen extends StatelessWidget {
                 behavior: HitTestBehavior.opaque,
                 onTap: () => controller.selectedReasonCode(r.code),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                   decoration: BoxDecoration(
-                    color:
-                        isSelected ? lightSecondaryColor : surfaceElevated,
+                    color: isSelected ? lightSecondaryColor : surfaceElevated,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isSelected
-                          ? appColorSecondary
-                          : whiteBorderColor,
+                      color: isSelected ? appColorSecondary : whiteBorderColor,
                       width: isSelected ? 1.5 : 1,
                     ),
                   ),
@@ -190,9 +199,7 @@ class RefundRequestScreen extends StatelessWidget {
                               ? appColorSecondary
                               : Colors.transparent,
                           border: Border.all(
-                              color: isSelected
-                                  ? appColorSecondary
-                                  : gray400,
+                              color: isSelected ? appColorSecondary : gray400,
                               width: 1.5),
                         ),
                         child: isSelected
@@ -205,8 +212,7 @@ class RefundRequestScreen extends StatelessWidget {
                         child: Text(
                           r.label,
                           style: isSelected
-                              ? boldTextStyle(
-                                  size: 14, color: appColorPrimary)
+                              ? boldTextStyle(size: 14, color: appColorPrimary)
                               : primaryTextStyle(size: 14),
                         ),
                       ),
@@ -278,8 +284,15 @@ class RefundRequestScreen extends StatelessWidget {
                   offset: const Offset(0, 6)),
             ],
           ),
-          child: Text(locale.value.submitRequest,
-              style: boldTextStyle(color: Colors.white, size: 15)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.send_rounded, color: Colors.white, size: 18),
+              const SizedBox(width: 8),
+              Text(locale.value.submitRequest,
+                  style: boldTextStyle(color: Colors.white, size: 15)),
+            ],
+          ),
         ),
       ),
     );

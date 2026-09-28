@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:get/get.dart';
 import 'package:kivicare_patient/utils/app_common.dart';
@@ -9,8 +8,8 @@ import '../../../configs.dart';
 import '../../../generated/assets.dart';
 import '../../../main.dart';
 import '../../../utils/constants.dart';
-import 'sign_in_controller.dart';
 import '../../../utils/colors.dart';
+import 'sign_in_controller.dart';
 import '../../../utils/common_base.dart';
 import '../password/forget_password_screen.dart';
 import 'signup_screen.dart';
@@ -23,7 +22,7 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScaffoldNew(
       isLoading: signInController.isLoading,
-      hasLeadingWidget: false,
+      hasLeadingWidget: true,
       clipBehaviorSplitRegion: Clip.none,
       body: Stack(
         clipBehavior: Clip.none,
@@ -32,7 +31,7 @@ class SignInScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                '${locale.value.hello} ${signInController.userName.value.isNotEmpty ? signInController.userName.value : locale.value.guest}!',
+                '${locale.value.hello}${signInController.userName.value.isNotEmpty ? ' ${signInController.userName.value}' : ''}!',
                 style: primaryTextStyle(size: 24),
               ),
               8.height,
@@ -47,99 +46,69 @@ class SignInScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AppTextField(
-                      title: locale.value.email,
-                      textStyle: primaryTextStyle(size: 12),
-                      controller: signInController.emailCont,
-                      focus: signInController.emailFocus,
-                      nextFocus: signInController.passwordFocus,
-                      textFieldType: TextFieldType.EMAIL_ENHANCED,
-                      decoration: inputDecoration(
-                        context,
-                        fillColor: context.cardColor,
-                        filled: true,
-                        hintText: "${locale.value.eG} merry_456@gmail.com",
+                    Semantics(
+                      label: locale.value.email,
+                      child: AppTextField(
+                        title: locale.value.email,
+                        textStyle: primaryTextStyle(size: 12),
+                        controller: signInController.emailCont,
+                        focus: signInController.emailFocus,
+                        nextFocus: signInController.passwordFocus,
+                        textFieldType: TextFieldType.EMAIL_ENHANCED,
+                        validator: (value) => value.validate().isEmpty
+                            ? locale.value.thisFieldIsRequired
+                            : null,
+                        decoration: inputDecoration(
+                          context,
+                          fillColor: context.cardColor,
+                          filled: true,
+                          hintText: "${locale.value.eG} merry_456@gmail.com",
+                        ),
+                        suffix: commonLeadingWid(
+                                imgPath: Assets.iconsIcMail, size: 14)
+                            .paddingAll(14),
                       ),
-                      suffix: commonLeadingWid(imgPath: Assets.iconsIcMail, size: 14).paddingAll(14),
                     ),
                     16.height,
-                    AppTextField(
-                      title: locale.value.password,
-                      textStyle: primaryTextStyle(size: 12),
-                      controller: signInController.passwordCont,
-                      focus: signInController.passwordFocus,
-                      // Optional
-                      textFieldType: TextFieldType.PASSWORD,
-                      obscureText: true,
-                      decoration: inputDecoration(
-                        context,
-                        fillColor: context.cardColor,
-                        filled: true,
-                        hintText: "••••••••",
+                    Semantics(
+                      label: locale.value.password,
+                      child: AppTextField(
+                        title: locale.value.password,
+                        textStyle: primaryTextStyle(size: 12),
+                        controller: signInController.passwordCont,
+                        focus: signInController.passwordFocus,
+                        textFieldType: TextFieldType.PASSWORD,
+                        obscureText: true,
+                        validator: (value) => value.validate().isEmpty
+                            ? locale.value.thisFieldIsRequired
+                            : null,
+                        decoration: inputDecoration(
+                          context,
+                          fillColor: context.cardColor,
+                          filled: true,
+                          hintText: "••••••••",
+                        ),
+                        suffixPasswordVisibleWidget: Semantics(
+                          button: true,
+                          label: locale.value.hidePassword,
+                          child: ExcludeSemantics(
+                            child: commonLeadingWid(
+                                    imgPath: Assets.iconsIcEye, size: 14)
+                                .paddingAll(12),
+                          ),
+                        ),
+                        suffixPasswordInvisibleWidget: Semantics(
+                          button: true,
+                          label: locale.value.showPassword,
+                          child: ExcludeSemantics(
+                            child: commonLeadingWid(
+                                    imgPath: Assets.iconsIcEyeSlash, size: 14)
+                                .paddingAll(12),
+                          ),
+                        ),
                       ),
-                      suffixPasswordVisibleWidget: commonLeadingWid(imgPath: Assets.iconsIcEye, size: 14).paddingAll(12),
-                      suffixPasswordInvisibleWidget: commonLeadingWid(imgPath: Assets.iconsIcEyeSlash, size: 14).paddingAll(12),
-                    ),
-                    Column(
-                      children: [
-                        Obx(() => Visibility(
-                              visible: signInController.loginSucessfull.isTrue,
-                              child: Column(
-                                children: [
-                                  16.height,
-                                  AppTextField(
-                                    title: signInController.tryToAnother.isTrue ? locale.value.otpFromAuthenticatorApp : locale.value.otp,
-                                    textStyle: primaryTextStyle(size: 12),
-                                    controller: signInController.otpCont,
-                                    focus: signInController.otpFocus,
-                                    textFieldType: TextFieldType.NUMBER,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      LengthLimitingTextInputFormatter(6),
-                                    ],
-                                    validator: (value) {
-                                      if (value == null || value.length != 6) {
-                                        return locale.value.pleaseEnterValid6digitOTP;
-                                      }
-                                      return null;
-                                    },
-                                    decoration: inputDecoration(
-                                      context,
-                                      fillColor: context.cardColor,
-                                      filled: true,
-                                      hintText: "123456",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
-                      ],
                     ),
                     8.height,
-                    Obx(
-                      () => Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          signInController.isGoogleAuthentication.value == 1
-                              ? TextButton(
-                                  onPressed: () {
-                                    signInController.tryToAnother.value = !signInController.tryToAnother.value;
-                                  },
-                                  child: Text(
-                                    locale.value.tryToAnotherWay,
-                                    style: primaryTextStyle(
-                                      size: 12,
-                                      color: appColorPrimary,
-                                      // decoration: TextDecoration.underline,
-                                      fontStyle: FontStyle.italic,
-                                      decorationColor: appColorPrimary,
-                                    ),
-                                  ),
-                                )
-                              : SizedBox(),
-                        ],
-                      ),
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -155,8 +124,10 @@ class SignInScreen extends StatelessWidget {
                             onChanged: (val) async {
                               signInController.toggleSwitch();
                             },
-                            checkboxShape: RoundedRectangleBorder(borderRadius: radius(0)),
-                            side: const BorderSide(color: secondaryTextColor, width: 1.5),
+                            checkboxShape:
+                                RoundedRectangleBorder(borderRadius: radius(0)),
+                            side: BorderSide(
+                                color: secondaryTextColor, width: 1.5),
                             title: Text(
                               locale.value.rememberMe,
                               style: secondaryTextStyle(color: darkGrayGeneral),
@@ -185,64 +156,56 @@ class SignInScreen extends StatelessWidget {
                       children: [
                         Obx(() => AppButton(
                             height: 54,
-                            text: signInController.loginSucessfull.isTrue ? locale.value.verify : locale.value.signIn,
+                            text: locale.value.signIn,
                             color: appColorSecondary,
+                            enabled: !signInController.isLoading.value,
                             textStyle: appButtonTextStyleWhite,
                             onTap: () {
-                              if (signInController.loginSucessfull.isTrue) {
-                                if (signInController.signInformKey.currentState!.validate()) {
-                                  if (signInController.tryToAnother.isTrue) {
-                                    signInController.verifyUser(authentication: "google2fa");
-                                  } else {
-                                    signInController.verifyUser(authentication: "email");
-                                  }
-                                }
-                              } else {
-                                if (signInController.signInformKey.currentState!.validate()) {
-                                  signInController.signInformKey.currentState!.save();
-                                  signInController.saveForm();
-                                }
+                              if (signInController.signInformKey.currentState!
+                                  .validate()) {
+                                signInController.signInformKey.currentState!
+                                    .save();
+                                signInController.saveForm();
                               }
                             }).expand()),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (appConfigs.value.googleLoginStatus == 1)
-                              GestureDetector(
-                                onTap: () {
-                                  signInController.googleSignIn();
-                                },
-                                child: Container(
-                                  height: 54,
-                                  width: 54,
-                                  padding: const EdgeInsets.all(18),
-                                  decoration: boxDecorationWithRoundedCorners(
-                                    backgroundColor: bodyWhite.withValues(alpha: 0.1),
-                                    boxShape: BoxShape.circle,
-                                  ),
-                                  child: GoogleLogoWidget(size: 24),
+                            if (ENABLE_GOOGLE_SIGN_IN)
+                              IconButton(
+                                tooltip: locale.value.signInWithGoogle,
+                                onPressed: signInController.isLoading.value
+                                    ? null
+                                    : signInController.googleSignIn,
+                                style: IconButton.styleFrom(
+                                  fixedSize: const Size.square(54),
+                                  backgroundColor:
+                                      bodyWhite.withValues(alpha: 0.1),
                                 ),
+                                icon: GoogleLogoWidget(size: 24),
                               ),
-                            GestureDetector(
-                              onTap: () {
-                                signInController.appleSignIn();
-                              },
-                              child: Container(
-                                height: 54,
-                                width: 54,
-                                padding: const EdgeInsets.all(16),
-                                decoration: boxDecorationWithRoundedCorners(
-                                  backgroundColor: bodyWhite.withValues(alpha: 0.1),
-                                  boxShape: BoxShape.circle,
+                            Padding(
+                              padding:
+                                  const EdgeInsetsDirectional.only(start: 16),
+                              child: IconButton(
+                                tooltip: locale.value.signInWithApple,
+                                onPressed: signInController.isLoading.value
+                                    ? null
+                                    : signInController.appleSignIn,
+                                style: IconButton.styleFrom(
+                                  fixedSize: const Size.square(54),
+                                  padding: const EdgeInsets.all(16),
+                                  backgroundColor:
+                                      bodyWhite.withValues(alpha: 0.1),
                                 ),
-                                child: Image.asset(
+                                icon: Image.asset(
                                   Assets.imagesAppleLogo,
                                   color: isDarkMode.value ? null : black,
-                                ).center(),
-                              ).paddingLeft(16).visible(isApple),
-                            ),
+                                ),
+                              ),
+                            ).visible(isApple),
                           ],
-                        ).paddingLeft(16)
+                        ).paddingDirectional(start: 16)
                       ],
                     ),
                     8.height,
@@ -250,7 +213,8 @@ class SignInScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(locale.value.notAMember, style: secondaryTextStyle()),
+                        Text(locale.value.notAMember,
+                            style: secondaryTextStyle()),
                         4.width,
                         InkWell(
                           onTap: () {

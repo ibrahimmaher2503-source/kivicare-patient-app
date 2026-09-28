@@ -48,7 +48,7 @@ class DoctorDetailScreen extends StatelessWidget {
                           horizontal: 16, vertical: 120),
                       children: [
                         NoDataWidget(
-                          title: error,
+                          title: locale.value.somethingWentWrongPleaseTryAgainLater,
                           retryText: locale.value.reload,
                           imageWidget: const ErrorStateWidget(),
                           onRetry: doctorDetailCont.init,
@@ -778,7 +778,7 @@ class _MetaPill extends StatelessWidget {
         text,
         style: TextStyle(
           color: _mutedColor(context),
-          fontSize: 11,
+          fontSize: 12,
           height: 1,
           fontWeight: FontWeight.w600,
         ),

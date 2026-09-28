@@ -36,7 +36,8 @@ class ClinicListScreen extends StatelessWidget {
             },
           ).paddingAll(16),
           ViewAllLabel(
-            label: "${locale.value.availableClinicsFor} ${clinicListCont.service.value.name}",
+            label:
+                "${locale.value.availableClinicsFor} ${clinicListCont.service.value.name}",
             isShowAll: false,
             maxLines: 1,
             expandedText: true,
@@ -48,7 +49,7 @@ class ClinicListScreen extends StatelessWidget {
               future: clinicListCont.clinicsFuture.value,
               errorBuilder: (error) {
                 return NoDataWidget(
-                  title: error,
+                  title: locale.value.somethingWentWrong,
                   retryText: locale.value.reload,
                   imageWidget: const ErrorStateWidget(),
                   onRetry: () {
@@ -57,17 +58,21 @@ class ClinicListScreen extends StatelessWidget {
                   },
                 ).paddingSymmetric(horizontal: 32);
               },
-              loadingWidget: clinicListCont.isLoading.value ? const Offstage() : const LoaderWidget(),
+              loadingWidget: clinicListCont.isLoading.value
+                  ? const Offstage()
+                  : const LoaderWidget(),
               onSuccess: (p0) {
                 return AnimatedListView(
                   shrinkWrap: true,
-                  padding: const EdgeInsets.only(left: 22, right: 22, top: 16, bottom: 80),
+                  padding: const EdgeInsets.only(
+                      left: 22, right: 22, top: 16, bottom: 80),
                   itemCount: clinicListCont.clinics.length,
                   physics: const AlwaysScrollableScrollPhysics(),
                   emptyWidget: SingleChildScrollView(
                     child: NoDataWidget(
                       title: locale.value.noClinicsFoundAtAMoment,
-                      subTitle: locale.value.looksLikeThereIsNoClinicForThisServiceWellKee,
+                      subTitle: locale
+                          .value.looksLikeThereIsNoClinicForThisServiceWellKee,
                       titleTextStyle: primaryTextStyle(),
                       imageWidget: const EmptyStateWidget(),
                       retryText: locale.value.reload,
@@ -89,7 +94,8 @@ class ClinicListScreen extends StatelessWidget {
                   },
                   onSwipeRefresh: () async {
                     clinicListCont.page(1);
-                    return await clinicListCont.getClinicList(showLoader: false);
+                    return await clinicListCont.getClinicList(
+                        showLoader: false);
                   },
                 );
               },
@@ -102,11 +108,13 @@ class ClinicListScreen extends StatelessWidget {
           backgroundColor: appColorSecondary,
           onPressed: () {
             if (!clinicListCont.selectedClinic.value.id.isNegative) {
-              Get.to(() => DoctorsListScreen(), arguments: clinicListCont.selectedClinic.value.id);
+              Get.to(() => DoctorsListScreen(),
+                  arguments: clinicListCont.selectedClinic.value.id);
             }
           },
           child: const Icon(Icons.arrow_forward_ios, color: Colors.white),
-        ).visible(clinicListCont.clinics.isNotEmpty && (!clinicListCont.selectedClinic.value.id.isNegative)),
+        ).visible(clinicListCont.clinics.isNotEmpty &&
+            (!clinicListCont.selectedClinic.value.id.isNegative)),
       ),
     );
   }

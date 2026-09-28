@@ -15,7 +15,8 @@ import 'model/appointment_status_model.dart';
 class AppointmentsScreen extends StatelessWidget {
   AppointmentsScreen({super.key});
 
-  final AppointmentsController appointmentsCont = Get.put(AppointmentsController());
+  final AppointmentsController appointmentsCont =
+      Get.put(AppointmentsController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +28,12 @@ class AppointmentsScreen extends StatelessWidget {
       body: Obx(
         () => SnapHelperWidget(
           future: appointmentsCont.getAppointments.value,
-          initialData: appointmentsCont.appointments.isNotEmpty ? appointmentsCont.appointments : null,
+          initialData: appointmentsCont.appointments.isNotEmpty
+              ? appointmentsCont.appointments
+              : null,
           errorBuilder: (error) {
             return NoDataWidget(
-              title: error,
+              title: locale.value.somethingWentWrongPleaseTryAgainLater,
               retryText: locale.value.reload,
               imageWidget: const ErrorStateWidget(),
               onRetry: () {
@@ -39,7 +42,9 @@ class AppointmentsScreen extends StatelessWidget {
               },
             ).paddingSymmetric(horizontal: 16);
           },
-          loadingWidget: appointmentsCont.isLoading.value ? const Offstage() : const LoaderWidget(),
+          loadingWidget: appointmentsCont.isLoading.value
+              ? const Offstage()
+              : const LoaderWidget(),
           onSuccess: (booking) {
             return Obx(
               () => Column(
@@ -48,16 +53,21 @@ class AppointmentsScreen extends StatelessWidget {
                   HorizontalList(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     spacing: 16,
-                    itemCount:filterStatus.length,
+                    itemCount: filterStatus.length,
                     itemBuilder: (ctx, index) {
-                      AppointmentStatusModel filterStatus1 = filterStatus[index];
+                      AppointmentStatusModel filterStatus1 =
+                          filterStatus[index];
                       return Obx(
                         () => Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             FilterChip(
-                              shape: RoundedRectangleBorder(borderRadius: radius(6), side: const BorderSide(color: Colors.transparent)),
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: radius(6),
+                                  side: const BorderSide(
+                                      color: Colors.transparent)),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
                               label: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -65,24 +75,40 @@ class AppointmentsScreen extends StatelessWidget {
                                     url: filterStatus1.icon,
                                     fit: BoxFit.fitHeight,
                                     height: 14,
-                                    color: appointmentsCont.selectedTab.value.type == filterStatus1.type ? whiteTextColor : secondaryTextColor,
+                                    color: appointmentsCont
+                                                .selectedTab.value.type ==
+                                            filterStatus1.type
+                                        ? whiteTextColor
+                                        : secondaryTextColor,
                                   ),
                                   4.width,
                                   Text(
                                     filterStatus1.name!.value,
                                     style: boldTextStyle(
                                       size: 14,
-                                      color: appointmentsCont.selectedTab.value.type == filterStatus1.type ? whiteTextColor : secondaryTextColor,
+                                      color: appointmentsCont
+                                                  .selectedTab.value.type ==
+                                              filterStatus1.type
+                                          ? whiteTextColor
+                                          : secondaryTextColor,
                                     ),
                                   ),
                                 ],
                               ),
                               selected: false,
-                              backgroundColor: appointmentsCont.selectedTab.value.type == filterStatus1.type ? appColorSecondary : context.cardColor,
+                              backgroundColor:
+                                  appointmentsCont.selectedTab.value.type ==
+                                          filterStatus1.type
+                                      ? appColorSecondary
+                                      : context.cardColor,
                               onSelected: (bool selected) {
-                                appointmentsCont.selectedTab(filterStatus[index]);
+                                appointmentsCont
+                                    .selectedTab(filterStatus[index]);
                                 appointmentsCont.page(1);
-                                appointmentsCont.getAppointmentList(status: appointmentsCont.selectedTab.value.type.toString());
+                                appointmentsCont.getAppointmentList(
+                                    status: appointmentsCont
+                                        .selectedTab.value.type
+                                        .toString());
                               },
                             ),
                           ],
@@ -96,12 +122,16 @@ class AppointmentsScreen extends StatelessWidget {
                     itemCount: appointmentsCont.appointments.length,
                     listAnimationType: ListAnimationType.None,
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 80),
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, bottom: 80),
                     emptyWidget: NoDataWidget(
                       title: locale.value.noAppointmentsFound,
                       imageWidget: const EmptyStateWidget(),
-                      subTitle: locale.value.thereAreCurrentlyNoAppointmentsAvailableStart,
-                    ).paddingSymmetric(horizontal: 16).paddingBottom(Get.height * 0.1),
+                      subTitle: locale
+                          .value.thereAreCurrentlyNoAppointmentsAvailableStart,
+                    )
+                        .paddingSymmetric(horizontal: 16)
+                        .paddingBottom(Get.height * 0.1),
                     itemBuilder: (context, index) {
                       return AppointmentCard(
                         appointment: appointmentsCont.appointments[index],
@@ -119,7 +149,8 @@ class AppointmentsScreen extends StatelessWidget {
                     },
                     onSwipeRefresh: () async {
                       appointmentsCont.page(1);
-                      return await appointmentsCont.getAppointmentList(showLoader: false);
+                      return await appointmentsCont.getAppointmentList(
+                          showLoader: false);
                     },
                   ).expand(),
                 ],

@@ -1,6 +1,6 @@
 // ignore_for_file: body_might_complete_normally_catch_error, depend_on_referenced_packages
 
-import 'dart:io';
+import 'dart:async';
 
 import 'package:country_picker/country_picker.dart';
 import 'package:file_picker/file_picker.dart';
@@ -8,12 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 import 'package:kivicare_patient/utils/price_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../components/new_update_dialog.dart';
@@ -52,8 +50,7 @@ Widget get bottomSheetDivider => Column(
       ],
     );
 
-final fontFamilyWeight700 =
-    GoogleFonts.interTight(fontWeight: FontWeight.w700).fontFamily;
+const fontFamilyWeight700 = 'Outfit';
 
 void handleRate() async {
   if (isAndroid) {
@@ -111,7 +108,7 @@ List<LanguageDataModel> languageList() {
         id: 2,
         name: 'العربية',
         languageCode: 'ar',
-        fullLanguageCode: 'ar-AR',
+        fullLanguageCode: 'ar-EG',
         flag: Assets.flagsIcAr),
   ];
 }
@@ -119,6 +116,7 @@ List<LanguageDataModel> languageList() {
 Widget appCloseIconButton(BuildContext context,
     {required void Function() onPressed, double size = 12}) {
   return IconButton(
+    tooltip: locale.value.clearSearch,
     iconSize: size,
     padding: EdgeInsets.zero,
     onPressed: onPressed,
@@ -239,7 +237,7 @@ SystemUiOverlayStyle defaultSystemUiOverlayStyle(BuildContext context) {
 
 void launchMail(String url) {
   if (url.validate().isNotEmpty) {
-    launchUrl(mailTo(to: []), mode: LaunchMode.externalApplication);
+    launchUrl(mailTo(to: [url]), mode: LaunchMode.externalApplication);
   }
 }
 
@@ -255,124 +253,88 @@ extension DateData on String {
   /// Formats the given [DateTime] object in the [dd-MM-yy] format.
   ///
   /// Returns a string representing the formatted date.
-  DateTime get dateInyyyyMMddFormat {
+  DateTime? get dateInyyyyMMddFormat {
     try {
-      return DateFormat(DateFormatConst.yyyy_MM_dd).parse(this);
-    } catch (e) {
-      return DateTime.now();
+      return DateFormat(DateFormatConst.yyyy_MM_dd).parseStrict(this);
+    } on FormatException {
+      return null;
     }
   }
 
   String get dateInMMMMDyyyyFormat {
-    try {
-      return DateFormat(DateFormatConst.MMMM_D_yyyy)
-          .format(dateInyyyyMMddHHmmFormat);
-    } catch (e) {
-      return this;
-    }
+    final parsed = dateInyyyyMMddHHmmFormat;
+    return parsed == null
+        ? this
+        : DateFormat(DateFormatConst.MMMM_D_yyyy).format(parsed);
   }
 
   String get dateInEEEEDMMMMAtHHmmAmPmFormat {
-    try {
-      return DateFormat(DateFormatConst.EEEE_D_MMMM_At_HH_mm_a)
-          .format(dateInyyyyMMddHHmmFormat);
-    } catch (e) {
-      return this;
-    }
+    final parsed = dateInyyyyMMddHHmmFormat;
+    return parsed == null
+        ? this
+        : DateFormat(DateFormatConst.EEEE_D_MMMM_At_HH_mm_a).format(parsed);
   }
 
   String get dateInDMMMMyyyyFormat {
-    try {
-      return DateFormat(DateFormatConst.D_MMMM_yyyy)
-          .format(dateInyyyyMMddHHmmFormat);
-    } catch (e) {
-      return this;
-    }
+    final parsed = dateInyyyyMMddHHmmFormat;
+    return parsed == null
+        ? this
+        : DateFormat(DateFormatConst.D_MMMM_yyyy).format(parsed);
   }
 
   String get dateInDDMMYYYYFormat {
-    try {
-      return DateFormat(DateFormatConst.DD_MM_YYYY)
-          .format(dateInyyyyMMddHHmmFormat);
-    } catch (e) {
-      return this;
-    }
+    final parsed = dateInyyyyMMddHHmmFormat;
+    return parsed == null
+        ? this
+        : DateFormat(DateFormatConst.DD_MM_YYYY).format(parsed);
   }
 
   String get dateInYYYYMMDDFormat {
-    try {
-      return DateFormat('yyyy-MM-dd').format(dateInyyyyMMddHHmmFormat);
-    } catch (e) {
-      return this;
-    }
+    final parsed = dateInyyyyMMddHHmmFormat;
+    return parsed == null ? this : DateFormat('yyyy-MM-dd').format(parsed);
   }
 
   String get monthMMMFormat {
-    try {
-      return dateInyyyyMMddHHmmFormat.month.toMonthName(isHalfName: true);
-    } catch (e) {
-      return "";
-    }
+    final parsed = dateInyyyyMMddHHmmFormat;
+    return parsed?.month.toMonthName(isHalfName: true) ?? '';
   }
 
   String get dateInMMMMDyyyyAtHHmmAmPmFormat {
-    try {
-      return DateFormat(DateFormatConst.MMMM_D_yyyy_At_HH_mm_a)
-          .format(dateInyyyyMMddHHmmFormat);
-    } catch (e) {
-      return this;
-    }
+    final parsed = dateInyyyyMMddHHmmFormat;
+    return parsed == null
+        ? this
+        : DateFormat(DateFormatConst.MMMM_D_yyyy_At_HH_mm_a).format(parsed);
   }
 
   String get dateInddMMMyyyyHHmmAmPmFormat {
+    final parsed = dateInyyyyMMddHHmmFormat;
+    return parsed == null
+        ? this
+        : DateFormat(DateFormatConst.dd_MMM_yyyy_HH_mm_a).format(parsed);
+  }
+
+  DateTime? get dateInyyyyMMddHHmmFormat {
     try {
-      return DateFormat(DateFormatConst.dd_MMM_yyyy_HH_mm_a)
-          .format(dateInyyyyMMddHHmmFormat);
-    } catch (e) {
-      try {
-        return "$dateInyyyyMMddHHmmFormat";
-      } catch (e) {
-        return this;
-      }
+      return DateFormat(DateFormatConst.yyyy_MM_dd_HH_mm).parseStrict(this);
+    } on FormatException {
+      final parsed = DateTime.tryParse(this);
+      return parsed?.isUtc == true ? parsed?.toLocal() : parsed;
     }
   }
 
-  DateTime get dateInyyyyMMddHHmmFormat {
+  DateTime? get dateInHHmm24HourFormat {
     try {
-      return DateFormat(DateFormatConst.yyyy_MM_dd_HH_mm).parse(this);
-    } catch (e) {
-      try {
-        try {
-          if (DateTime.parse(this).isUtc) {
-            return DateFormat(DateFormatConst.yyyy_MM_dd_HH_mm)
-                .parse(DateTime.parse(this).toLocal().toString());
-          } else {
-            return DateFormat(DateFormatConst.yyyy_MM_dd_HH_mm)
-                .parse(DateTime.parse(this).toString());
-          }
-        } catch (e) {
-          log('dateInyyyyMMddHHmmFormat Check isUtc Error in $this: $e');
-          return DateFormat(DateFormatConst.yyyy_MM_dd_HH_mm)
-              .parse(DateTime.parse(this).toString());
-        }
-      } catch (e) {
-        log('dateInyyyyMMddHHmmFormat Error in $this: $e');
-        return DateTime.now();
-      }
+      return DateFormat(DateFormatConst.HH_mm24Hour).parseStrict(this);
+    } on FormatException {
+      return null;
     }
-  }
-
-  DateTime get dateInHHmm24HourFormat {
-    return DateFormat(DateFormatConst.HH_mm24Hour).parse(this);
   }
 
   String get timeInHHmmAmPmFormat {
-    try {
-      return DateFormat(DateFormatConst.HH_mm12Hour)
-          .format(dateInyyyyMMddHHmmFormat);
-    } catch (e) {
-      return this;
-    }
+    final parsed = dateInyyyyMMddHHmmFormat;
+    return parsed == null
+        ? this
+        : DateFormat(DateFormatConst.HH_mm12Hour).format(parsed);
   }
 
   TimeOfDay get timeOfDay24Format {
@@ -393,8 +355,8 @@ extension DateData on String {
 
   String get format24HourtoAMPM {
     try {
-      final format12 = DateFormat('h:mm a');
-      final format24 = DateFormat('HH:mm');
+      final format12 = DateFormat('h:mm a', 'en_US');
+      final format24 = DateFormat('HH:mm', 'en_US');
       final time = format24.parse(this);
       return format12.format(time);
     } catch (e) {
@@ -422,12 +384,14 @@ extension DateData on String {
   }
 
   bool get isAfterCurrentDateTime {
-    return dateInyyyyMMddHHmmFormat.isAfter(DateTime.now());
+    return dateInyyyyMMddHHmmFormat?.isAfter(DateTime.now()) ?? false;
   }
 
   bool get isToday {
     try {
-      return "$dateInyyyyMMddFormat" == DateTime.now().formatDateYYYYmmdd();
+      final parsed = dateInyyyyMMddFormat;
+      return parsed != null &&
+          parsed.formatDateYYYYmmdd() == DateTime.now().formatDateYYYYmmdd();
     } catch (e) {
       return false;
     }
@@ -485,6 +449,11 @@ extension DateExtension on DateTime {
   String formatDateYYYYmmdd() {
     final formatter = DateFormat(DateFormatConst.yyyy_MM_dd);
     return formatter.format(this);
+  }
+
+  /// API date format must keep ASCII digits even when the UI locale is Arabic.
+  String formatApiDateYYYYmmdd() {
+    return DateFormat(DateFormatConst.yyyy_MM_dd, 'en_US').format(this);
   }
 
   /// Formats the given [DateTime] object in the [DateFormatConst.yyyy_MM_dd_HH_mm] format.
@@ -547,10 +516,22 @@ DateTime? getDateTimeFromAboveFormat(String date) {
       log('getDateTimeFromAboveFormat => Invalid date format => DATE: $date');
       return null;
     }
-    int day = int.parse(dateParts[0]);
-    int month = int.parse(dateParts[1]);
-    int year = int.parse(dateParts[2]);
-    return DateTime.tryParse('$year-$month-$day');
+    final day = int.tryParse(dateParts[0]);
+    final month = int.tryParse(dateParts[1]);
+    final year = int.tryParse(dateParts[2]);
+    if (day == null || month == null || year == null) return null;
+    final parsed = DateTime.tryParse(
+      '${year.toString().padLeft(4, '0')}-'
+      '${month.toString().padLeft(2, '0')}-'
+      '${day.toString().padLeft(2, '0')}',
+    );
+    if (parsed == null ||
+        parsed.year != year ||
+        parsed.month != month ||
+        parsed.day != day) {
+      return null;
+    }
+    return parsed;
   }
 }
 
@@ -693,42 +674,27 @@ InputDecoration inputDecorationWithOutBorder(BuildContext context,
 }
 
 Future<List<PlatformFile>> pickFiles({FileType type = FileType.custom}) async {
-  List<PlatformFile> filePath0 = [];
+  const maxFileSizeBytes = 10 * 1024 * 1024;
   try {
-    FilePickerResult? filePickerResult = await FilePicker.platform.pickFiles(
+    final filePickerResult = await FilePicker.platform.pickFiles(
       type: type,
       allowMultiple: true,
       allowedExtensions: ['jpg', 'pdf', 'doc', 'png', 'docx'],
-      withData: true,
-      onFileLoading: (FilePickerStatus status) => log(status),
+      withData: false,
     );
-    if (filePickerResult != null) {
-      if (Platform.isAndroid) {
-        filePath0 = filePickerResult.files;
-      } else {
-        Directory cacheDir = await getTemporaryDirectory();
-        for (PlatformFile file in filePickerResult.files) {
-          if (file.bytes != null) {
-            String filePath = '${cacheDir.path}/${file.name}';
-            File cacheFile = File(filePath);
-            await cacheFile.writeAsBytes(file.bytes!.toList());
-            PlatformFile cachedFile = PlatformFile(
-              path: cacheFile.path,
-              name: file.name,
-              size: cacheFile.lengthSync(),
-              bytes: Uint8List.fromList(cacheFile.readAsBytesSync()),
-            );
-            filePath0.add(cachedFile);
-          }
-        }
-      }
-    }
+    if (filePickerResult == null) return [];
+    return filePickerResult.files
+        .where((file) =>
+            file.size > 0 &&
+            file.size <= maxFileSizeBytes &&
+            file.path.validate().isNotEmpty)
+        .toList();
   } on PlatformException catch (e) {
     log('Unsupported operation$e');
   } catch (e) {
     log(e.toString());
   }
-  return filePath0;
+  return [];
 }
 
 Widget backButton({Object? result}) {
@@ -882,8 +848,8 @@ void pickCountry(BuildContext context, {required Function(Country) onSelect}) {
       inputDecoration: InputDecoration(
         // fillColor: context.cardColor,
         filled: true,
-        labelText: 'Search',
-        hintText: 'Search',
+        labelText: locale.value.searchHere,
+        hintText: locale.value.searchHere,
         hintStyle: TextStyle(color: textPrimaryColorGlobal),
         labelStyle: TextStyle(color: textPrimaryColorGlobal),
         prefixIcon: Icon(Icons.search, color: textPrimaryColorGlobal),
@@ -934,34 +900,30 @@ Future<void> showForceUpdateDialog(BuildContext context) async {
 }
 
 void ifNotTester(VoidCallback callback) {
-  if (loginUserData.value.email != Constants.DEFAULT_EMAIL) {
-    callback.call();
-  } else {
-    toast(locale.value.demoUserCannotBeGrantedForThis);
-  }
+  callback.call();
 }
 
-void doIfLoggedIn(VoidCallback callback) async {
-  if (isLoggedIn.value) {
-    callback.call();
-  } else {
-    bool? res = await Get.to(
-      () => SignInScreen(),
-      binding: BindingsBuilder(
-        () {
-          setStatusBarColor(
-            transparentColor,
-            statusBarIconBrightness: Brightness.light,
-            statusBarBrightness: Brightness.light,
-          );
-        },
-      ),
-    );
-    log('doIfLoggedIn RES: $res');
+Future<bool> requireAuthenticated() async {
+  if (isLoggedIn.value) return true;
 
-    if (res ?? false) {
-      callback.call();
-    }
+  final result = await Get.to<bool>(
+    () => SignInScreen(),
+    binding: BindingsBuilder(
+      () {
+        setStatusBarColor(
+          transparentColor,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.light,
+        );
+      },
+    ),
+  );
+  return result == true && isLoggedIn.value;
+}
+
+Future<void> doIfLoggedIn(FutureOr<dynamic> Function() callback) async {
+  if (await requireAuthenticated()) {
+    await callback.call();
   }
 }
 
@@ -1251,11 +1213,19 @@ String formatBookingDate(
   bool isTime = false,
   bool showDateWithTime = false,
 }) {
+  final raw = dateTime?.trim() ?? '';
+  if (raw.isEmpty) return '';
   final parsedDateTime = isFromMicrosecondsSinceEpoch
-      ? DateTime.fromMicrosecondsSinceEpoch(dateTime.validate().toInt() * 1000)
-      : DateTime.parse(dateTime.validate());
-
-  return DateFormat(format).format(parsedDateTime);
+      ? int.tryParse(raw) == null
+          ? null
+          : DateTime.fromMicrosecondsSinceEpoch(int.parse(raw) * 1000)
+      : DateTime.tryParse(raw);
+  return parsedDateTime == null
+      ? ''
+      : DateFormat(
+          format,
+          isLanguageNeeded ? selectedLanguageCode.value : null,
+        ).format(parsedDateTime);
 }
 
 extension TimeConversion on String {

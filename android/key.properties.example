@@ -1,0 +1,4 @@
+storePassword=SET_IN_CI
+keyPassword=SET_IN_CI
+keyAlias=SET_IN_CI
+storeFile=SET_IN_CI

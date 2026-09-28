@@ -30,18 +30,57 @@ class PharmacyEmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 88,
-              height: 88,
-              decoration: BoxDecoration(
-                color: surfaceSubtle,
-                shape: BoxShape.circle,
-                border: Border.all(color: whiteBorderColor, width: 1),
+            SizedBox(
+              width: 152,
+              height: 152,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    width: 152,
+                    height: 152,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: appColorSecondary.withValues(alpha: 0.05),
+                    ),
+                  ),
+                  Container(
+                    width: 116,
+                    height: 116,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: appColorSecondary.withValues(alpha: 0.08),
+                      border: Border.all(
+                        color: appColorSecondary.withValues(alpha: 0.12),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 76,
+                    height: 76,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: appColorSecondary.withValues(alpha: 0.25),
+                          blurRadius: 22,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Icon(icon, size: 36, color: Colors.white),
+                  ),
+                ],
               ),
-              alignment: Alignment.center,
-              child: Icon(icon, size: 36, color: appColorSecondary),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             Text(title,
                 style: boldTextStyle(size: 18, color: appColorPrimary),
                 textAlign: TextAlign.center),

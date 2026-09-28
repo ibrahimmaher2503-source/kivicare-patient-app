@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:kivicare_patient/utils/locale_formatters.dart';
 import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -7,6 +7,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../models/nurse_request_model.dart';
 import '../models/nurse_status.dart';
 import '../models/status_history_entry.dart';
+import 'nurse_request_design.dart';
 
 class NurseStatusTimeline extends StatelessWidget {
   final NurseRequestModel request;
@@ -25,26 +26,37 @@ class NurseStatusTimeline extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentStatus = NurseStatusExtension.fromString(request.status);
     final isCancelled = currentStatus == NurseStatus.cancelled;
+    final steps =
+        isCancelled ? [..._forwardSteps, NurseStatus.cancelled] : _forwardSteps;
 
-    final steps = isCancelled ? [..._forwardSteps, NurseStatus.cancelled] : _forwardSteps;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: nurseRequestCardDecoration(context),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(locale.value.statusTimeline, style: boldTextStyle(size: 15)),
+          16.height,
+          ...List.generate(steps.length, (i) {
+            final step = steps[i];
+            final isCancelledStep = step == NurseStatus.cancelled;
+            final isReached = _isReached(step, currentStatus, isCancelled);
+            final isLast = i == steps.length - 1;
+            final timestamp = _timestampFor(step, request.statusHistory);
 
-    return Column(
-      children: List.generate(steps.length, (i) {
-        final step = steps[i];
-        final isCancelledStep = step == NurseStatus.cancelled;
-        final isReached = _isReached(step, currentStatus, isCancelled);
-        final isLast = i == steps.length - 1;
-        final timestamp = _timestampFor(step, request.statusHistory);
-
-        return _TimelineStep(
-          label: step.displayLabel(locale.value),
-          timestamp: timestamp,
-          isReached: isReached,
-          isCancelled: isCancelledStep,
-          showLine: !isLast,
-          nextReached: !isLast && _isReached(steps[i + 1], currentStatus, isCancelled),
-        );
-      }),
+            return _TimelineStep(
+              label: step.displayLabel(locale.value),
+              timestamp: timestamp,
+              isReached: isReached,
+              isCancelled: isCancelledStep,
+              showLine: !isLast,
+              nextReached: !isLast &&
+                  _isReached(steps[i + 1], currentStatus, isCancelled),
+            );
+          }),
+        ],
+      ),
     );
   }
 
@@ -63,7 +75,7 @@ class NurseStatusTimeline extends StatelessWidget {
   String? _timestampFor(NurseStatus step, List<StatusHistoryEntry> history) {
     for (final entry in history.reversed) {
       if (NurseStatusExtension.fromString(entry.newStatus) == step) {
-        return DateFormat('dd MMM HH:mm').format(entry.changedAt);
+        return formatLocalizedDate(entry.changedAt, 'dd MMM HH:mm');
       }
     }
     return null;
@@ -89,9 +101,14 @@ class _TimelineStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeColor = isCancelled ? Colors.red : gradientStart;
-    final circleColor = isReached ? activeColor : Colors.grey.shade300;
-    final lineColor = nextReached ? gradientStart : Colors.grey.shade300;
+    final activeColor =
+        isCancelled ? nurseStatusCancelledColor : gradientSecondaryStart;
+    final inactiveColor = nurseRequestBorderColor(context);
+    final circleColor = isReached ? activeColor : inactiveColor;
+    final lineColor =
+        nextReached ? activeColor : nurseRequestBorderColor(context);
+    final labelColor =
+        isReached ? activeColor : nurseRequestMutedColor(context);
 
     return IntrinsicHeight(
       child: Row(
@@ -100,15 +117,15 @@ class _TimelineStep extends StatelessWidget {
           Column(
             children: [
               Container(
-                width: 20,
-                height: 20,
+                width: 22,
+                height: 22,
                 decoration: BoxDecoration(
-                  color: isReached ? activeColor : Colors.transparent,
+                  color: isReached ? activeColor : appTransparentColor,
                   shape: BoxShape.circle,
                   border: Border.all(color: circleColor, width: 2),
                 ),
                 child: isReached
-                    ? const Icon(Icons.check, color: Colors.white, size: 12)
+                    ? const Icon(Icons.check, color: whiteTextColor, size: 13)
                     : null,
               ),
               if (showLine)
@@ -124,13 +141,16 @@ class _TimelineStep extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: boldTextStyle(
-                      size: 14,
-                      color: isReached ? activeColor : Colors.grey,
-                    ),
+                    style: boldTextStyle(size: 14, color: labelColor),
                   ),
                   if (timestamp != null)
-                    Text(timestamp!, style: secondaryTextStyle(size: 11)),
+                    Text(
+                      timestamp!,
+                      style: secondaryTextStyle(
+                        size: 12,
+                        color: nurseRequestMutedColor(context),
+                      ),
+                    ),
                 ],
               ),
             ),

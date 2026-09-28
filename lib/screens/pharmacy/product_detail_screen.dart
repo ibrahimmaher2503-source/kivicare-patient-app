@@ -5,11 +5,14 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../api/pharmacy_apis.dart';
 import '../../components/app_scaffold.dart';
 import '../../main.dart';
+import '../../network/network_utils.dart';
 import '../../utils/colors.dart';
 import '../../utils/common_base.dart';
+import '../../utils/price_widget.dart';
 import 'model/pharmacy_product_model.dart';
 import 'pharmacy_controller.dart';
 import 'utils/pharmacy_constants.dart';
+import 'utils/pharmacy_product_rules.dart';
 
 class ProductDetailController extends GetxController {
   final PharmacyProduct product;
@@ -50,7 +53,11 @@ class ProductDetailController extends GetxController {
 
   Future<void> addToCart() async {
     if (product.id == null) {
-      toast('Product unavailable');
+      toast(locale.value.productUnavailable);
+      return;
+    }
+    if (pharmacyProductIsOutOfStock(product.stockQuantity)) {
+      toast(locale.value.outOfStock);
       return;
     }
     if (isAddingToCart.value) return;
@@ -65,7 +72,7 @@ class ProductDetailController extends GetxController {
         Get.back();
       }
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     } finally {
       isAddingToCart(false);
     }
@@ -79,6 +86,10 @@ class ProductDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final discountPercentage = pharmacyDiscountPercentage(
+      price: product.price,
+      referencePrice: product.referencePrice,
+    );
     final controller = Get.put(ProductDetailController(product: product),
         tag: product.id.toString());
 
@@ -98,29 +109,44 @@ class ProductDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(product.name ?? '',
-                          style: boldTextStyle(
-                              size: 22, color: appColorPrimary)),
+                          style:
+                              boldTextStyle(size: 22, color: appColorPrimary)),
                       const SizedBox(height: 4),
                       Text(product.brandName ?? '',
                           style: secondaryTextStyle(size: 14)),
                       if (product.isPrescriptionRequired ?? false) ...[
                         const SizedBox(height: 12),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                          padding: const EdgeInsetsDirectional.only(
+                              start: 6, end: 12, top: 6, bottom: 6),
                           decoration: BoxDecoration(
-                            color: pendingStatusColor.withValues(alpha: 0.12),
+                            color: pendingStatusColor.withValues(alpha: 0.10),
                             borderRadius: BorderRadius.circular(999),
+                            border: Border.all(
+                              color: pendingStatusColor.withValues(alpha: 0.22),
+                              width: 1,
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.warning_amber_rounded,
-                                  color: pendingStatusColor, size: 14),
-                              const SizedBox(width: 6),
+                              Container(
+                                width: 22,
+                                height: 22,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: pendingStatusColor,
+                                ),
+                                child: const Icon(
+                                    Icons.medical_information_rounded,
+                                    color: Colors.white,
+                                    size: 13),
+                              ),
+                              const SizedBox(width: 8),
                               Text(locale.value.prescriptionRequired,
                                   style: boldTextStyle(
-                                      color: pendingStatusColor, size: 11)),
+                                      color: pendingStatusColor, size: 12)),
                             ],
                           ),
                         ),
@@ -129,14 +155,15 @@ class ProductDetailScreen extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('${product.price} LE',
+                          Text(formatCurrencyValue(product.price),
                               style: boldTextStyle(
                                   size: 26, color: appColorSecondary)),
-                          if (product.referencePrice != null) ...[
+                          if (discountPercentage != null) ...[
                             const SizedBox(width: 10),
                             Padding(
                               padding: const EdgeInsets.only(bottom: 4),
-                              child: Text('${product.referencePrice} LE',
+                              child: Text(
+                                  formatCurrencyValue(product.referencePrice),
                                   style: secondaryTextStyle(
                                       decoration: TextDecoration.lineThrough,
                                       size: 14,
@@ -149,14 +176,14 @@ class ProductDetailScreen extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: completedStatusColor
-                                      .withValues(alpha: 0.15),
+                                  color: completedStatusColor.withValues(
+                                      alpha: 0.15),
                                   borderRadius: BorderRadius.circular(999),
                                 ),
                                 child: Text(
-                                  '${(((product.referencePrice! - product.price!) / product.referencePrice!) * 100).toInt()}% OFF',
+                                  '$discountPercentage% ${locale.value.off}',
                                   style: boldTextStyle(
-                                      color: completedStatusColor, size: 10),
+                                      color: completedStatusColor, size: 12),
                                 ),
                               ),
                             ),
@@ -191,9 +218,7 @@ class ProductDetailScreen extends StatelessWidget {
                           ],
                         ),
                       const SizedBox(height: 24),
-                      Container(
-                          height: 1,
-                          color: whiteBorderColor),
+                      Container(height: 1, color: whiteBorderColor),
                       const SizedBox(height: 20),
                       Text(locale.value.description,
                           style:
@@ -229,8 +254,7 @@ class ProductDetailScreen extends StatelessWidget {
                                 _buildInfoRow(
                                     locale.value.dosage, product.dosage!),
                               if (product.unit != null)
-                                _buildInfoRow(
-                                    locale.value.unit, product.unit!),
+                                _buildInfoRow(locale.value.unit, product.unit!),
                             ],
                           ),
                         ),
@@ -253,6 +277,8 @@ class ProductDetailScreen extends StatelessWidget {
 
   Widget _buildBottomBar(
       BuildContext context, ProductDetailController controller) {
+    final isOutOfStock =
+        pharmacyProductIsOutOfStock(controller.product.stockQuantity);
     return Container(
       padding: EdgeInsets.fromLTRB(
           16, 16, 16, 16 + MediaQuery.paddingOf(context).bottom),
@@ -269,67 +295,117 @@ class ProductDetailScreen extends StatelessWidget {
       child: Row(
         children: [
           Container(
+            padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-                color: surfaceSubtle,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: whiteBorderColor, width: 1)),
+              color: appColorSecondary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(
+                color: appColorSecondary.withValues(alpha: 0.18),
+                width: 1,
+              ),
+            ),
             child: Row(
               children: [
-                SizedBox(
-                  width: 36,
-                  height: 36,
-                  child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: controller.decrementQuantity,
-                      icon: const Icon(Icons.remove_rounded,
-                          color: appColorSecondary, size: 20)),
+                Material(
+                  color: surfaceElevated,
+                  shape: const CircleBorder(),
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: isOutOfStock ? null : controller.decrementQuantity,
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: appColorSecondary.withValues(alpha: 0.25),
+                          width: 1,
+                        ),
+                      ),
+                      child: const Icon(Icons.remove_rounded,
+                          color: appColorSecondary, size: 18),
+                    ),
+                  ),
                 ),
                 Obx(() => SizedBox(
-                      width: 28,
+                      width: 36,
                       child: Text('${controller.quantity.value}',
                           textAlign: TextAlign.center,
-                          style: boldTextStyle(size: 16)),
+                          style:
+                              boldTextStyle(size: 16, color: appColorPrimary)),
                     )),
-                SizedBox(
-                  width: 36,
-                  height: 36,
-                  child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: controller.incrementQuantity,
-                      icon: const Icon(Icons.add_rounded,
-                          color: appColorSecondary, size: 20)),
+                Material(
+                  color: appColorSecondary,
+                  shape: const CircleBorder(),
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: isOutOfStock ? null : controller.incrementQuantity,
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      alignment: Alignment.center,
+                      child: const Icon(Icons.add_rounded,
+                          color: Colors.white, size: 18),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: GestureDetector(
-              onTap: () => doIfLoggedIn(controller.addToCart),
-              child: Container(
-                height: 52,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [gradientSecondaryStart, gradientSecondaryEnd],
+            child: Semantics(
+              button: true,
+              enabled: !isOutOfStock,
+              label: isOutOfStock
+                  ? locale.value.outOfStock
+                  : locale.value.addToCart,
+              child: GestureDetector(
+                onTap: isOutOfStock
+                    ? null
+                    : () => doIfLoggedIn(controller.addToCart),
+                child: Container(
+                  height: 52,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    gradient: isOutOfStock
+                        ? null
+                        : const LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              gradientSecondaryStart,
+                              gradientSecondaryEnd,
+                            ],
+                          ),
+                    color: isOutOfStock ? gray400 : null,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                          color: softShadowColor,
+                          blurRadius: 12,
+                          offset: const Offset(0, 4)),
+                    ],
                   ),
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                        color: softShadowColor,
-                        blurRadius: 12,
-                        offset: const Offset(0, 4)),
-                  ],
-                ),
-                child: Text(
-                  locale.value.addToCart,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.shopping_cart_rounded,
+                          color: Colors.white, size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        isOutOfStock
+                            ? locale.value.outOfStock
+                            : locale.value.addToCart,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -347,11 +423,42 @@ class ProductDetailScreen extends StatelessWidget {
         borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24)),
         child: Container(
-            height: 300,
-            width: Get.width,
-            color: surfaceSubtle,
-            child: const Icon(Icons.medication_outlined,
-                color: gray400, size: 64)),
+          height: 300,
+          width: Get.width,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                surfaceSubtle,
+                appColorSecondary.withValues(alpha: 0.08),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Container(
+            width: 110,
+            height: 110,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: const LinearGradient(
+                colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: appColorSecondary.withValues(alpha: 0.25),
+                  blurRadius: 22,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: const Icon(Icons.medication_rounded,
+                color: Colors.white, size: 50),
+          ),
+        ),
       );
     }
 

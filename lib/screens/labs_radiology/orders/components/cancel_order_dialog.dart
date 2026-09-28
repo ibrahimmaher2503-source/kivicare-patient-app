@@ -14,6 +14,12 @@ class _CancelOrderDialogState extends State<CancelOrderDialog> {
   final formKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    reasonController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(locale.value.cancelOrderTitle, style: boldTextStyle()),
@@ -28,9 +34,10 @@ class _CancelOrderDialogState extends State<CancelOrderDialog> {
             AppTextField(
               controller: reasonController,
               textFieldType: TextFieldType.MULTILINE,
+              isValidationRequired: true,
               maxLines: 3,
-              decoration: inputDecoration(context,
-                  labelText: locale.value.cancelReasonOptional),
+              errorThisFieldRequired: locale.value.thisFieldIsRequired,
+              decoration: inputDecoration(context, labelText: locale.value.cancelReason),
             ),
           ],
         ),
@@ -46,6 +53,7 @@ class _CancelOrderDialogState extends State<CancelOrderDialog> {
           color: Colors.red,
           textStyle: boldTextStyle(color: Colors.white),
           onTap: () {
+            if (formKey.currentState?.validate() != true) return;
             finish(context, reasonController.text.trim());
           },
         ),

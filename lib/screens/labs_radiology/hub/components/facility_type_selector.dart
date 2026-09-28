@@ -33,22 +33,41 @@ class FacilityTypeSelector extends StatelessWidget {
   Widget _buildItem(BuildContext context, FacilityType type, String label) {
     final isSelected = selectedType == type;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: isSelected
-          ? boxDecorationWithRoundedCorners(
-              backgroundColor: context.primaryColor,
-              borderRadius: radius(8),
-            )
-          : null,
-      child: Text(
-        label,
-        style: boldTextStyle(
-          color: isSelected ? Colors.white : secondaryTextColor,
-          size: 14,
+    return Semantics(
+      container: true,
+      button: true,
+      selected: isSelected,
+      label: label,
+      child: ExcludeSemantics(
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => onTypeChanged(type),
+            borderRadius: radius(8),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 48),
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: isSelected
+                    ? boxDecorationWithRoundedCorners(
+                        backgroundColor: context.primaryColor,
+                        borderRadius: radius(8),
+                      )
+                    : null,
+                child: Text(
+                  label,
+                  style: boldTextStyle(
+                    color: isSelected ? Colors.white : secondaryTextColor,
+                    size: 14,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
         ),
-        textAlign: TextAlign.center,
-      ).center(),
-    ).onTap(() => onTypeChanged(type)).expand();
+      ),
+    ).expand();
   }
 }

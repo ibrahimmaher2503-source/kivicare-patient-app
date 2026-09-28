@@ -5,6 +5,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/locale_formatters.dart';
 import '../models/status_history_model.dart';
 
 class StatusHistoryTile extends StatelessWidget {
@@ -48,7 +49,7 @@ class StatusHistoryTile extends StatelessWidget {
             6.height,
             Text(
               '${locale.value.visitChangedBy}: ${history.changedBy!.name}',
-              style: secondaryTextStyle(size: 11),
+              style: secondaryTextStyle(size: 12),
             ),
           ],
           if (history.note != null && history.note!.isNotEmpty) ...[
@@ -57,9 +58,9 @@ class StatusHistoryTile extends StatelessWidget {
           ],
           4.height,
           Text(
-            DateFormat('d MMM yyyy, hh:mm a')
+            DateFormat('d MMM yyyy, hh:mm a', activeIntlLocale)
                 .format(history.changedAt.toLocal()),
-            style: secondaryTextStyle(size: 11),
+            style: secondaryTextStyle(size: 12),
           ),
         ],
       ),
@@ -87,7 +88,7 @@ class _StatusBadge extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: FontWeight.w600,
           color: isNew
               ? gradientSecondaryStart

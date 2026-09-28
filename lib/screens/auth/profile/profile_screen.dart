@@ -8,6 +8,7 @@ import '../../../components/app_scaffold.dart';
 import '../../../generated/assets.dart';
 import '../../../main.dart';
 import '../../Encounter/all_encounters_screen.dart';
+import '../../labs_radiology/orders/test_orders_list_screen.dart';
 import '../../other_patient/manage_other_patient_screen.dart';
 import 'common_horizontal_profile_widget.dart';
 import 'edit_user_profile_controller.dart';
@@ -111,6 +112,19 @@ class ProfileScreen extends StatelessWidget {
                   },
                   titleTextStyle: boldTextStyle(size: 14),
                   leading: commonLeadingWid(imgPath: Assets.iconsIcEncounter, color: appColorPrimary).circularLightPrimaryBg(),
+                  trailing: trailing,
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                ).paddingTop(16),
+                SettingItemWidget(
+                  decoration: boxDecorationDefault(color: context.cardColor),
+                  title: locale.value.myTestOrders,
+                  subTitle: locale.value.myOrders,
+                  splashColor: transparentColor,
+                  onTap: () {
+                    Get.to(() => const TestOrdersListScreen());
+                  },
+                  titleTextStyle: boldTextStyle(size: 14),
+                  leading: const Icon(Icons.history_edu_outlined, color: appColorPrimary).circularLightPrimaryBg(),
                   trailing: trailing,
                   padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
                 ).paddingTop(16),

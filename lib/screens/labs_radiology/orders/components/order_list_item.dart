@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/screens/labs_radiology/labs_radiology_common.dart';
+import 'package:kivicare_patient/utils/locale_formatters.dart';
 import '../../models/test_order_model.dart';
 import 'order_status_badge.dart';
 
@@ -41,7 +41,7 @@ class OrderListItem extends StatelessWidget {
                   size: 14, color: secondaryTextColor),
               8.width,
               Text(
-                '${locale.value.bookedOn}: ${DateFormat('d MMM yyyy').format(order.createdAt)}',
+                '${locale.value.bookedOn}: ${formatLocalizedDate(order.createdAt, 'd MMM yyyy')}',
                 style: secondaryTextStyle(size: 12),
               ),
             ],
@@ -51,7 +51,7 @@ class OrderListItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${order.totalAmount?.toStringAsFixed(0)} ${order.currency}',
+                formatLocalizedCurrency(order.totalAmount ?? 0, order.currency),
                 style: primaryTextStyle(
                     color: context.primaryColor, weight: FontWeight.bold),
               ),

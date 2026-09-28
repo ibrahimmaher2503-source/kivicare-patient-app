@@ -68,7 +68,7 @@ class NurseRequestFormPayload {
     final postalVal = postalCode?.trim() ?? '';
     if (postalVal.isNotEmpty) map['postal_code'] = postalVal;
 
-    map['contact_phone'] = contactPhone.trim();
+    map['contact_number'] = contactPhone.trim();
 
     final notes = patientNotes?.trim() ?? '';
     if (notes.isNotEmpty) map['patient_notes'] = notes;

@@ -49,7 +49,7 @@ class SearchClinicWidget extends StatelessWidget {
             clinicListController.page(1);
             clinicListController.getClinicList();
           },
-          size: 11,
+          size: 12,
         ).visible(clinicListController.isSearchClinicText.value),
       ),
       decoration: inputDecorationWithOutBorder(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/screens/labs_radiology/labs_radiology_common.dart';
+import 'package:kivicare_patient/utils/locale_formatters.dart';
 
 class CalendarStrip extends StatelessWidget {
   final List<DateTime> availableDates;
@@ -43,24 +43,24 @@ class CalendarStrip extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                DateFormat('EEE').format(date).toUpperCase(),
+                formatLocalizedDate(date, 'EEE').toUpperCase(),
                 style: secondaryTextStyle(
                     color: isSelected ? Colors.white70 : secondaryTextColor,
-                    size: 10),
+                    size: 12),
               ),
               8.height,
               Text(
-                date.day.toString(),
+                formatLocalizedDate(date, 'd'),
                 style: boldTextStyle(
                     color: isSelected ? Colors.white : context.iconColor,
                     size: 18),
               ),
               4.height,
               Text(
-                DateFormat('MMM').format(date),
+                formatLocalizedDate(date, 'MMM'),
                 style: secondaryTextStyle(
                     color: isSelected ? Colors.white70 : secondaryTextColor,
-                    size: 10),
+                    size: 12),
               ),
             ],
           ),

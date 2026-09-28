@@ -14,7 +14,8 @@ import 'model/clinic_gallery_model.dart';
 class ClinicGalleryListScreen extends StatelessWidget {
   ClinicGalleryListScreen({super.key});
 
-  final ClinicGalleryListController galleryListCont = Get.put(ClinicGalleryListController());
+  final ClinicGalleryListController galleryListCont =
+      Get.put(ClinicGalleryListController());
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class ClinicGalleryListScreen extends StatelessWidget {
           future: galleryListCont.galleryListFuture.value,
           errorBuilder: (error) {
             return NoDataWidget(
-              title: error,
+              title: locale.value.somethingWentWrong,
               retryText: locale.value.reload,
               imageWidget: const ErrorStateWidget(),
               onRetry: () {
@@ -37,12 +38,15 @@ class ClinicGalleryListScreen extends StatelessWidget {
               },
             ).paddingSymmetric(horizontal: 32);
           },
-          loadingWidget: galleryListCont.isLoading.value ? const Offstage() : const LoaderWidget(),
+          loadingWidget: galleryListCont.isLoading.value
+              ? const Offstage()
+              : const LoaderWidget(),
           onSuccess: (data) {
             if (galleryListCont.galleryList.isEmpty) {
               return NoDataWidget(
                 title: locale.value.noGalleryFoundAtAMoment,
-                subTitle: locale.value.looksLikeThereIsNoGalleryForThisClinicWellKee,
+                subTitle:
+                    locale.value.looksLikeThereIsNoGalleryForThisClinicWellKee,
                 titleTextStyle: primaryTextStyle(),
                 imageWidget: const EmptyStateWidget(),
                 retryText: locale.value.reload,
@@ -62,7 +66,8 @@ class ClinicGalleryListScreen extends StatelessWidget {
                   children: List.generate(
                     galleryListCont.galleryList.length,
                     (index) {
-                      GalleryData galleryData = galleryListCont.galleryList[index];
+                      GalleryData galleryData =
+                          galleryListCont.galleryList[index];
                       return CachedImageWidget(
                         url: galleryData.fullUrl,
                         height: 115,
@@ -71,7 +76,9 @@ class ClinicGalleryListScreen extends StatelessWidget {
                       ).cornerRadiusWithClipRRect(defaultRadius).onTap(() {
                         if (galleryData.fullUrl.validate().isNotEmpty) {
                           ZoomImageScreen(
-                            galleryImages: galleryListCont.galleryList.map((e) => e.fullUrl.validate()).toList(),
+                            galleryImages: galleryListCont.galleryList
+                                .map((e) => e.fullUrl.validate())
+                                .toList(),
                             index: index,
                           ).launch(context);
                         }

@@ -5,10 +5,12 @@ import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/screens/auth/model/login_response.dart';
 import 'package:kivicare_patient/utils/constants.dart';
 import 'package:kivicare_patient/utils/local_storage.dart';
+import 'package:kivicare_patient/utils/secure_session_storage.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../utils/app_common.dart';
 import '../../utils/colors.dart';
 import '../../utils/common_base.dart';
+import '../../network/network_utils.dart';
 import '../booking/appointments_controller.dart';
 import '../home/home_controller.dart';
 import 'components/btm_nav_item.dart';
@@ -17,66 +19,65 @@ import 'components/menu.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
-  final DashboardController dashboardController = Get.put(DashboardController());
+  final DashboardController dashboardController =
+      Get.put(DashboardController());
 
   @override
   Widget build(BuildContext context) {
     return DoublePressBackWidget(
       message: locale.value.pressBackAgainToExitApp,
       child: Scaffold(
-        body: Stack(
-          children: [
-            Obx(() => dashboardController.screen[dashboardController.currentIndex.value]),
-            Obx(
-              () => Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 24),
-                  decoration: BoxDecoration(
-                    color: isDarkMode.value ? fullDarkCanvasColor.withValues(alpha: 0.9) : canvasColor.withValues(alpha: 0.9),
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: isDarkMode.value ? transparentColor : canvasColor.withValues(alpha: 0.3),
-                        offset: const Offset(0, 20),
-                        blurRadius: 20,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ...List.generate(
-                        bottomNavItems.length,
-                        (index) {
-                          BottomBarItem navBar = bottomNavItems[index];
-                          return Obx(
-                            () => BtmNavItem(
-                              navBar: navBar,
-                              isFirst: index == 0,
-                              isLast: index == bottomNavItems.length - 1,
-                              press: () {
-                                if (!isLoggedIn.value && index == 1) {
-                                  doIfLoggedIn(() {
-                                    handleChangeTabIndex(index);
-                                  });
-                                } else {
-                                  handleChangeTabIndex(index);
-                                }
-                              },
-                              selectedNav: dashboardController.selectedBottomNav.value,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ).fit(),
+        body: Obx(() =>
+            dashboardController.screen[dashboardController.currentIndex.value]),
+        bottomNavigationBar: Obx(
+          () => Container(
+            decoration: BoxDecoration(
+              color: isDarkMode.value ? surfaceElevatedDark : surfaceElevated,
+              border: Border(
+                top: BorderSide(
+                  color: isDarkMode.value ? borderColorDark : gray200,
+                  width: 1,
                 ),
-              ).paddingSymmetric(vertical: 15),
-            )
-          ],
+              ),
+              boxShadow: isDarkMode.value
+                  ? const []
+                  : [
+                      BoxShadow(
+                        color: softShadowColorMedium,
+                        offset: const Offset(0, -2),
+                        blurRadius: 16,
+                        spreadRadius: 0,
+                      ),
+                    ],
+            ),
+            child: SafeArea(
+              top: false,
+              child: Row(
+                children: List.generate(
+                  bottomNavItems.length,
+                  (index) {
+                    final BottomBarItem navBar = bottomNavItems[index];
+                    return BtmNavItem(
+                      navBar: navBar,
+                      isFirst: index == 0,
+                      isLast: index == bottomNavItems.length - 1,
+                      press: () {
+                        if (!isLoggedIn.value && index == 1) {
+                          doIfLoggedIn(() {
+                            handleChangeTabIndex(index);
+                          });
+                        } else {
+                          handleChangeTabIndex(index);
+                        }
+                      },
+                      selectedNav: dashboardController.selectedBottomNav.value,
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
         ),
-        extendBody: true,
       ),
     );
   }
@@ -93,7 +94,7 @@ class DashboardScreen extends StatelessWidget {
         aCont.getAppointmentList(showLoader: false);
       }
       if (index == 2 && isLoggedIn.value) {
-        AuthServiceApis.viewProfile().then((data) {
+        AuthServiceApis.viewProfile().then((data) async {
           loginUserData(UserData(
             id: loginUserData.value.id,
             firstName: data.userData.firstName,
@@ -109,9 +110,11 @@ class DashboardScreen extends StatelessWidget {
             profileImage: data.userData.profileImage,
             loginType: loginUserData.value.loginType,
           ));
-          setValueToLocal(SharedPreferenceConst.USER_DATA, loginUserData.toJson());
+          await SecureSessionStorage.writeUser(loginUserData.value);
+          removeValueFromLocal(SharedPreferenceConst.USER_DATA);
         }).catchError((e) {
-          toast(e.toString());
+          toast(sanitizeBackendMessage(
+              e, locale.value.somethingWentWrongPleaseTryAgainLater));
         });
       }
     } catch (e) {

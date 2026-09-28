@@ -88,6 +88,7 @@ class Doctor {
   int status;
   int isBanned;
   int isManager;
+  bool isIndependent;
   String createdAt;
   String updatedAt;
   String deletedAt;
@@ -137,6 +138,7 @@ class Doctor {
     this.status = -1,
     this.isBanned = -1,
     this.isManager = -1,
+    this.isIndependent = false,
     this.createdAt = "",
     this.updatedAt = "",
     this.deletedAt = "",
@@ -189,6 +191,8 @@ class Doctor {
       status: json['status'] is int ? json['status'] : -1,
       isBanned: json['is_banned'] is int ? json['is_banned'] : -1,
       isManager: json['is_manager'] is int ? json['is_manager'] : -1,
+      isIndependent:
+          json['is_independent'] == true || json['is_independent'] == 1,
       createdAt: json['created_at'] is String ? json['created_at'] : "",
       updatedAt: json['updated_at'] is String ? json['updated_at'] : "",
       deletedAt: json['deleted_at'] is String ? json['deleted_at'] : "",

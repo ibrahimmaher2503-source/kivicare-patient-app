@@ -74,14 +74,16 @@ class SlotSelectionScreen extends StatelessWidget {
               textStyle: boldTextStyle(color: Colors.white),
               width: double.infinity,
               enabled: controller.selectedSlot.value != null,
-              onTap: () {
+              onTap: () async {
                 if (controller.selectedSlot.value != null &&
                     controller.selectedDate.value != null) {
-                  Get.to(() => BookingConfirmationScreen(
-                        facility: facility,
-                        test: test,
-                        selectedDate: controller.selectedDate.value!,
-                        selectedSlot: controller.selectedSlot.value!,
+                  await doIfLoggedIn(() => Get.to(
+                        () => BookingConfirmationScreen(
+                          facility: facility,
+                          test: test,
+                          selectedDate: controller.selectedDate.value!,
+                          selectedSlot: controller.selectedSlot.value!,
+                        ),
                       ));
                 } else {
                   toast(locale.value.selectASlot);

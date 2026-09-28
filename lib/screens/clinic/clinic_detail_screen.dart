@@ -33,7 +33,7 @@ class ClinicDetailScreen extends StatelessWidget {
             future: clinicDetailCont.getClinicDetail.value,
             errorBuilder: (error) {
               return NoDataWidget(
-                title: error,
+                title: locale.value.somethingWentWrongPleaseTryAgainLater,
                 retryText: locale.value.reload,
                 imageWidget: const ErrorStateWidget(),
                 onRetry: () {
@@ -88,7 +88,13 @@ class ClinicDetailScreen extends StatelessWidget {
                                     ).paddingTop(8).visible(clinicDetailCont.clinicData.value.name.isNotEmpty),
                                     GestureDetector(
                                       onTap: () {
-                                        launchMap(clinicDetailCont.clinicData.value.address);
+                                        final latitude = double.tryParse(clinicDetailCont.clinicData.value.latitude);
+                                        final longitude = double.tryParse(clinicDetailCont.clinicData.value.longitude);
+                                        if (latitude != null && longitude != null) {
+                                          openMap(latitude, longitude);
+                                        } else {
+                                          launchMap(clinicDetailCont.clinicData.value.address);
+                                        }
                                       },
                                       child: Row(
                                         children: [
@@ -128,7 +134,7 @@ class ClinicDetailScreen extends StatelessWidget {
                                           ),
                                           child: Text(
                                             getClinicStatus(status: clinicDetailCont.clinicData.value.clinicStatus.toLowerCase()),
-                                            style: boldTextStyle(size: 10, color: Colors.green.shade600),
+                                            style: boldTextStyle(size: 12, color: Colors.green.shade600),
                                           ),
                                         ),
                                       ],
@@ -221,7 +227,7 @@ class ClinicDetailScreen extends StatelessWidget {
   Widget _buildInfoTile(BuildContext context, {required String title, required String subtitle, required IconData icon}) {
     return Container(
         width: (Get.width / 3) - 24,
-        height: 100,
+        height: 124,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: boxDecorationDefault(
           color: context.cardColor,

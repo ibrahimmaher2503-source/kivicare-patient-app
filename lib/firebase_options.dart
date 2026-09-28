@@ -15,15 +15,18 @@ import 'package:flutter/foundation.dart'
 /// );
 /// ```
 class DefaultFirebaseOptions {
+  static bool get isSupportedPlatform =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+
   static FirebaseOptions get currentPlatform {
-    if (kIsWeb) {
-      return web;
-    }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'Firebase is not configured for iOS. Supply Espitalia production '
+          'options before enabling Firebase features.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -47,31 +50,10 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyALc5PVpZREhlwyJqDcYK4WoObJd0qVBEk',
-    appId: '1:225863527931:android:2e74af2473221f49802f5e',
-    messagingSenderId: '225863527931',
-    projectId: 'espitalia-eb27a',
-    storageBucket: 'espitalia-eb27a.firebasestorage.app',
+    apiKey: 'AIzaSyAc-AUl_jdOhXty_ikiSh2cHMHL9MJ-4yg',
+    appId: '1:544365620844:android:b93bc9d3da577950a8b249',
+    messagingSenderId: '544365620844',
+    projectId: 'espitalia-patient-2026',
+    storageBucket: 'espitalia-patient-2026.firebasestorage.app',
   );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC-7FmkHHum3uG8sKMwrXEgxtA76BvR3xc',
-    appId: '1:225863527931:ios:21fb6dc348163d31802f5e',
-    messagingSenderId: '225863527931',
-    projectId: 'espitalia-eb27a',
-    storageBucket: 'espitalia-eb27a.firebasestorage.app',
-    iosClientId: '225863527931-3fctgvin4faehpme15l6hakdfds2lc90.apps.googleusercontent.com',
-    iosBundleId: 'com.wellness.customer',
-  );
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAFTPXrG-rNgIkjsQsOhZa_qp-Z_wf8qcs',
-    appId: '1:225863527931:web:d889194e693a8a29802f5e',
-    messagingSenderId: '225863527931',
-    projectId: 'espitalia-eb27a',
-    authDomain: 'espitalia-eb27a.firebaseapp.com',
-    storageBucket: 'espitalia-eb27a.firebasestorage.app',
-    measurementId: 'G-HD6LB2TYGM',
-  );
-
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kivicare_patient/main.dart';
 
+import '../../components/nurse_request_design.dart';
+
 class ContactSection extends StatelessWidget {
   final TextEditingController controller;
   final String? errorText;
@@ -13,11 +15,10 @@ class ContactSection extends StatelessWidget {
       controller: controller,
       maxLength: 20,
       keyboardType: TextInputType.phone,
-      decoration: InputDecoration(
+      decoration: nurseRequestInputDecoration(
+        context,
         labelText: '${locale.value.contactPhone} *',
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         errorText: errorText,
-        counterText: '',
       ),
     );
   }

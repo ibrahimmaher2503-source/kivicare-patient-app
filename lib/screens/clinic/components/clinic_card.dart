@@ -8,7 +8,6 @@ import '../../../generated/assets.dart';
 import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/common_base.dart';
-import '../../service/service_list_controller.dart';
 import '../clinic_detail_screen.dart';
 import '../clinic_list_controller.dart';
 import '../model/clinic_detail_model.dart';
@@ -71,7 +70,7 @@ class ClinicCard extends StatelessWidget {
                     child: commonLeadingWid(
                       imgPath: Assets.imagesConfirm,
                       color: whiteTextColor,
-                      size: 8,
+                      size: 12,
                     ).circularLightPrimaryBg(color: appColorPrimary, padding: 8),
                   ).visible(clinicData.id == clinicListCont.selectedClinic.value.id),
                 ],
@@ -130,7 +129,7 @@ class ClinicCard extends StatelessWidget {
                         ),
                         child: Text(
                           getClinicStatus(status: clinicData.clinicStatus.toLowerCase()),
-                          style: boldTextStyle(size: 10, color: getClinicStatusColor(clinicStatus: clinicData.clinicStatus.toLowerCase())),
+                          style: boldTextStyle(size: 12, color: getClinicStatusColor(clinicStatus: clinicData.clinicStatus.toLowerCase())),
                         ),
                       )
                     ],
@@ -139,7 +138,6 @@ class ClinicCard extends StatelessWidget {
                     onPressed: () {
                       /// Store selected clinic in global variable
                       currentSelectedClinic(clinicData);
-                      Get.delete<ServiceListController>();
                       Get.to(() => ClinicDetailScreen(), arguments: clinicData);
                     },
                     style: const ButtonStyle(

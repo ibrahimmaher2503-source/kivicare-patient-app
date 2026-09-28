@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
+import '../../../components/accessible_filter_button.dart';
 import '../../../main.dart';
 import '../../../utils/common_base.dart';
 import '../components/emergency_banner.dart';
@@ -12,7 +13,12 @@ import 'hospital_detail_screen.dart';
 import 'hospital_list_controller.dart';
 
 class HospitalListScreen extends StatefulWidget {
-  const HospitalListScreen({super.key});
+  final bool selectionMode;
+
+  const HospitalListScreen({
+    super.key,
+    this.selectionMode = false,
+  });
 
   @override
   State<HospitalListScreen> createState() => _HospitalListScreenState();
@@ -26,7 +32,8 @@ class _HospitalListScreenState extends State<HospitalListScreen> {
   void initState() {
     super.initState();
     scrollController.addListener(() {
-      if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
         controller.loadNextPage();
       }
     });
@@ -49,38 +56,30 @@ class _HospitalListScreenState extends State<HospitalListScreen> {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                AppTextField(
-                  controller: controller.searchCont,
-                  textFieldType: TextFieldType.NAME,
-                  decoration: inputDecoration(context, labelText: locale.value.searchHospitals).copyWith(
-                    prefixIcon: const Icon(Icons.search),
+                Semantics(
+                  textField: true,
+                  label: locale.value.searchHospitals,
+                  child: AppTextField(
+                    controller: controller.searchCont,
+                    textFieldType: TextFieldType.NAME,
+                    decoration: inputDecoration(context,
+                            labelText: locale.value.searchHospitals)
+                        .copyWith(
+                      prefixIcon: const Icon(Icons.search),
+                    ),
+                    onChanged: (val) => controller.searchStream.value = val,
                   ),
-                  onChanged: (val) => controller.searchStream.value = val,
                 ).expand(),
                 16.width,
-                Obx(() => Stack(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Get.to(() => const HospitalFilterScreen())?.then((_) => controller.loadFirstPage());
-                          },
-                          icon: const Icon(Icons.filter_list_rounded),
-                        ),
-                        if (controller.filter.activeFilterCount > 0)
-                          Positioned(
-                            right: 8,
-                            top: 8,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: const BoxDecoration(color: errorColor, shape: BoxShape.circle),
-                              child: Text(
-                                controller.filter.activeFilterCount.toString(),
-                                style: boldTextStyle(color: Colors.white, size: 10),
-                              ),
-                            ),
-                          ),
-                      ],
-                    )),
+                Obx(
+                  () => AccessibleFilterButton(
+                    count: controller.filter.activeFilterCount,
+                    onPressed: () {
+                      Get.to(() => const HospitalFilterScreen())
+                          ?.then((_) => controller.loadFirstPage());
+                    },
+                  ),
+                ),
               ],
             ),
           ),
@@ -100,14 +99,20 @@ class _HospitalListScreenState extends State<HospitalListScreen> {
                 child: ListView.builder(
                   controller: scrollController,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: controller.hospitals.length + (controller.isLoadingMore.value ? 1 : 0),
+                  itemCount: controller.hospitals.length +
+                      (controller.isLoadingMore.value ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index < controller.hospitals.length) {
                       final hospital = controller.hospitals[index];
                       return HospitalCard(
                         hospital: hospital,
                         onTap: () {
-                          Get.to(() => HospitalDetailScreen(hospitalId: hospital.id));
+                          if (widget.selectionMode) {
+                            Get.back(result: hospital);
+                          } else {
+                            Get.to(() =>
+                                HospitalDetailScreen(hospitalId: hospital.id));
+                          }
                         },
                       );
                     } else {

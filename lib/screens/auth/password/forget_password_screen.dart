@@ -11,7 +11,8 @@ import 'forget_pass_controller.dart';
 
 class ForgetPassword extends StatelessWidget {
   ForgetPassword({super.key});
-  final ForgetPasswordController forgetPassController = Get.put(ForgetPasswordController());
+  final ForgetPasswordController forgetPassController =
+      Get.put(ForgetPasswordController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,8 @@ class ForgetPassword extends StatelessWidget {
           children: [
             SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 80, top: 46),
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, bottom: 80, top: 46),
               child: Form(
                 key: forgetPassController.forgotPassFormKey,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -47,7 +49,8 @@ class ForgetPassword extends StatelessWidget {
                     SizedBox(
                       width: Get.width * 0.8,
                       child: Text(
-                        locale.value.enterYourEmailAddressToResetYourNewPassword,
+                        locale
+                            .value.enterYourEmailAddressToResetYourNewPassword,
                         textAlign: TextAlign.center,
                         style: secondaryTextStyle(),
                       ),
@@ -65,22 +68,33 @@ class ForgetPassword extends StatelessWidget {
                       textStyle: primaryTextStyle(size: 12),
                       controller: forgetPassController.emailCont,
                       textFieldType: TextFieldType.EMAIL,
-                      decoration: inputDecoration(context, fillColor: context.cardColor, filled: true, hintText: "${locale.value.eG}  merry_456@gmail.com"),
-                      suffix: commonLeadingWid(imgPath: Assets.iconsIcMail, size: 14).paddingAll(14),
+                      errorThisFieldRequired: locale.value.thisFieldIsRequired,
+                      decoration: inputDecoration(context,
+                          fillColor: context.cardColor,
+                          filled: true,
+                          hintText: "${locale.value.eG}  merry_456@gmail.com"),
+                      suffix: commonLeadingWid(
+                              imgPath: Assets.iconsIcMail, size: 14)
+                          .paddingAll(14),
                     ),
                     64.height,
-                    AppButton(
-                      width: Get.width,
-                      text: locale.value.sendCode,
-                      color: appColorSecondary,
-                      textStyle: appButtonTextStyleWhite,
-                      onTap: () {
-                        if (forgetPassController.forgotPassFormKey.currentState!.validate()) {
-                          forgetPassController.forgotPassFormKey.currentState!.save();
-                          forgetPassController.saveForm();
-                        }
-                      },
-                    ),
+                    Obx(() => AppButton(
+                          width: Get.width,
+                          text: locale.value.sendCode,
+                          enabled: !forgetPassController.isLoading.value,
+                          color: appColorSecondary,
+                          textStyle: appButtonTextStyleWhite,
+                          onTap: () {
+                            if (forgetPassController
+                                .forgotPassFormKey.currentState!
+                                .validate()) {
+                              forgetPassController
+                                  .forgotPassFormKey.currentState!
+                                  .save();
+                              forgetPassController.saveForm();
+                            }
+                          },
+                        )),
                   ],
                 ),
               ),

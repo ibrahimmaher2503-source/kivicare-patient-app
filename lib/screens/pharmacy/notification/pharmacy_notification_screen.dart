@@ -5,6 +5,7 @@ import '../../../api/pharmacy_apis.dart';
 import '../../../components/app_scaffold.dart';
 import '../../../models/base_response_model.dart';
 import '../../../main.dart';
+import '../../../network/network_utils.dart';
 import '../../../utils/colors.dart';
 import '../model/pharmacy_notification_model.dart';
 import '../model/pharmacy_parsers.dart';
@@ -60,7 +61,7 @@ class PharmacyNotificationController extends GetxController {
         Get.find<PharmacyController>().unreadNotificationsCount(0);
       }
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     } finally {
       isLoading(false);
     }
@@ -187,14 +188,37 @@ class _NotificationWidget extends StatelessWidget {
             Container(
               height: 44,
               width: 44,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: unread ? lightSecondaryColor : surfaceSubtle,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(13),
+                gradient: unread
+                    ? const LinearGradient(
+                        colors: [
+                          gradientSecondaryStart,
+                          gradientSecondaryEnd,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                    : null,
+                color: unread ? null : surfaceSubtle,
+                border: unread
+                    ? null
+                    : Border.all(color: whiteBorderColor, width: 1),
+                boxShadow: unread
+                    ? [
+                        BoxShadow(
+                          color: appColorSecondary.withValues(alpha: 0.22),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : null,
               ),
               child: Icon(
                 _getIconForType(notification.type),
-                color: appColorSecondary,
-                size: 22,
+                color: unread ? Colors.white : appColorSecondary,
+                size: 20,
               ),
             ),
             const SizedBox(width: 12),
@@ -203,8 +227,7 @@ class _NotificationWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(notification.title ?? '',
-                      style: boldTextStyle(
-                          size: 14, color: appColorPrimary)),
+                      style: boldTextStyle(size: 14, color: appColorPrimary)),
                   const SizedBox(height: 4),
                   Text(
                     notification.body ?? '',
@@ -214,7 +237,7 @@ class _NotificationWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(notification.createdAt ?? '',
-                      style: secondaryTextStyle(size: 11)),
+                      style: secondaryTextStyle(size: 12)),
                 ],
               ),
             ),
@@ -236,13 +259,13 @@ class _NotificationWidget extends StatelessWidget {
   IconData _getIconForType(String? type) {
     switch (type) {
       case 'order_update':
-        return Icons.shopping_bag_outlined;
+        return Icons.local_shipping_rounded;
       case 'prescription_update':
-        return Icons.assignment_outlined;
+        return Icons.medical_information_rounded;
       case 'refund_update':
-        return Icons.monetization_on_outlined;
+        return Icons.replay_rounded;
       default:
-        return Icons.notifications_outlined;
+        return Icons.notifications_active_rounded;
     }
   }
 }

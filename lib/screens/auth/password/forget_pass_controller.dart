@@ -7,6 +7,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../api/auth_apis.dart';
 import '../../../main.dart';
 import '../../../utils/common_base.dart';
+import '../../../network/network_utils.dart';
 
 class ForgetPasswordController extends GetxController {
   RxBool isLoading = false.obs;
@@ -15,6 +16,7 @@ class ForgetPasswordController extends GetxController {
   TextEditingController emailCont = TextEditingController();
 
   Future<void> saveForm() async {
+    if (isLoading.value) return;
     isLoading(true);
     hideKeyBoardWithoutContext();
 
@@ -24,11 +26,19 @@ class ForgetPasswordController extends GetxController {
 
     await AuthServiceApis.forgotPasswordAPI(request: req).then((value) async {
       isLoading(false);
-      toast(value.message.isNotEmpty ? value.message : locale.value.weHaveEmailedYourPasswordResetLink);
+      toast(sanitizeBackendMessage(
+          value.message, locale.value.weHaveEmailedYourPasswordResetLink));
       Get.back();
     }).catchError((e) {
       isLoading(false);
-      toast(e.toString(), print: true);
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong),
+          print: true);
     });
+  }
+
+  @override
+  void onClose() {
+    emailCont.dispose();
+    super.onClose();
   }
 }

@@ -1,3 +1,4 @@
+import '../../../utils/localized_field.dart';
 import 'pharmacy_parsers.dart';
 
 class PharmacyProduct {
@@ -44,21 +45,52 @@ class PharmacyProduct {
   });
 
   factory PharmacyProduct.fromJson(Map<String, dynamic> json) {
+    final brand = json['brand'] is Map ? json['brand'] as Map : null;
+    final category = json['category'] is Map ? json['category'] as Map : null;
+    final productTypeObj =
+        json['product_type'] is Map ? json['product_type'] as Map : null;
+
+    final image = json['image'];
+    final List<String> imageList;
+    if (json['images'] != null) {
+      imageList = pharmacyStringList(json['images']);
+    } else if (image is String && image.trim().isNotEmpty) {
+      imageList = [image];
+    } else {
+      imageList = const [];
+    }
+
+    final bool? inStock = json.containsKey('is_in_stock')
+        ? pharmacyBool(json['is_in_stock'])
+        : null;
+    int? stockQty;
+    if (json['stock_quantity'] != null) {
+      stockQty = pharmacyInt(json['stock_quantity']);
+    } else if (inStock == false) {
+      stockQty = 0;
+    }
+
     return PharmacyProduct(
       id: pharmacyInt(json['id']),
-      name: json['name'],
-      brandName: json['brand_name'],
-      brandId: pharmacyInt(json['brand_id']),
-      categoryName: json['category_name'],
-      categoryId: pharmacyInt(json['category_id']),
-      productType: json['product_type'],
-      price: pharmacyDouble(json['price']),
-      referencePrice: pharmacyDouble(json['reference_price']),
-      stockQuantity: pharmacyInt(json['stock_quantity']),
+      name: pickLocalized(json, 'name', fallback: json['name']?.toString() ?? ''),
+      brandName: brand != null ? brand['name']?.toString() : json['brand_name'],
+      brandId: pharmacyInt(brand?['id'] ?? json['brand_id']),
+      categoryName:
+          category != null ? category['name']?.toString() : json['category_name'],
+      categoryId: pharmacyInt(category?['id'] ?? json['category_id']),
+      productType: productTypeObj != null
+          ? productTypeObj['name']?.toString()
+          : (json['product_type'] is String ? json['product_type'] : null),
+      price: pharmacyDouble(json['price'] ?? json['price_from']),
+      referencePrice:
+          pharmacyDouble(json['reference_price'] ?? json['price_to']),
+      stockQuantity: stockQty,
       maxOrderQuantity: pharmacyInt(json['max_order_quantity']),
-      images: pharmacyStringList(json['images']),
-      isPrescriptionRequired: pharmacyBool(json['prescription_required']),
-      description: json['description'],
+      images: imageList,
+      isPrescriptionRequired: pharmacyBool(
+          json['requires_prescription'] ?? json['prescription_required']),
+      description: pickLocalized(json, 'description',
+          fallback: json['description']?.toString() ?? ''),
       unit: json['unit'],
       dosage: json['dosage'],
       manufacturer: json['manufacturer'],

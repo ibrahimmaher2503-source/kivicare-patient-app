@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:kivicare_patient/main.dart';
-import 'package:kivicare_patient/utils/colors.dart';
+import 'package:kivicare_patient/utils/locale_formatters.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../models/nurse_request_model.dart';
+import 'nurse_request_design.dart';
 
 class ScheduleSummaryCard extends StatelessWidget {
   final NurseRequestModel request;
@@ -14,21 +14,18 @@ class ScheduleSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // preferredDate is wall-clock in Africa/Cairo — render as-is without timezone conversion
-    final dateStr = DateFormat('dd MMM yyyy').format(request.preferredDate);
+    final dateStr = formatLocalizedDate(request.preferredDate, 'dd MMM yyyy');
     final durationStr = locale.value.durationHoursValue(request.durationHours);
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: context.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: softShadowColor, blurRadius: 8, offset: const Offset(0, 2))],
-      ),
+      decoration: nurseRequestCardDecoration(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _Row(locale.value.preferredDate, dateStr),
-          if (request.preferredTime != null && request.preferredTime!.isNotEmpty)
+          if (request.preferredTime != null &&
+              request.preferredTime!.isNotEmpty)
             _Row(locale.value.preferredTime, request.preferredTime!),
           _Row(locale.value.durationHours, durationStr),
         ],
@@ -52,7 +49,13 @@ class _Row extends StatelessWidget {
         children: [
           SizedBox(
             width: 110,
-            child: Text('$label:', style: secondaryTextStyle(size: 13)),
+            child: Text(
+              '$label:',
+              style: secondaryTextStyle(
+                size: 13,
+                color: nurseRequestMutedColor(context),
+              ),
+            ),
           ),
           Expanded(child: Text(value, style: primaryTextStyle(size: 13))),
         ],

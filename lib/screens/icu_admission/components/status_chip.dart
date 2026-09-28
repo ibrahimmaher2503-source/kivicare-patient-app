@@ -13,14 +13,10 @@ class StatusChip extends StatelessWidget {
     switch (status) {
       case AdmissionStatus.pending:
         return icuStatusPendingColor;
-      case AdmissionStatus.underReview:
+      case AdmissionStatus.infoRequested:
         return icuStatusInfoRequestedColor;
-      case AdmissionStatus.approved:
+      case AdmissionStatus.accepted:
         return icuStatusAcceptedColor;
-      case AdmissionStatus.admitted:
-        return appColorPrimary;
-      case AdmissionStatus.discharged:
-        return icuStatusCancelledColor;
       case AdmissionStatus.rejected:
       case AdmissionStatus.cancelled:
         return icuStatusRejectedColor;
@@ -31,14 +27,10 @@ class StatusChip extends StatelessWidget {
     switch (status) {
       case AdmissionStatus.pending:
         return locale.value.pending;
-      case AdmissionStatus.underReview:
+      case AdmissionStatus.infoRequested:
         return locale.value.underReview;
-      case AdmissionStatus.approved:
+      case AdmissionStatus.accepted:
         return locale.value.approved;
-      case AdmissionStatus.admitted:
-        return locale.value.admitted;
-      case AdmissionStatus.discharged:
-        return locale.value.discharged;
       case AdmissionStatus.rejected:
         return locale.value.rejected;
       case AdmissionStatus.cancelled:
@@ -58,7 +50,7 @@ class StatusChip extends StatelessWidget {
       ),
       child: Text(
         _getStatusLabel().toUpperCase(),
-        style: boldTextStyle(color: color, size: 10),
+        style: boldTextStyle(color: color, size: 12),
       ),
     );
   }

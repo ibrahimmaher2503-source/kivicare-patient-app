@@ -51,7 +51,7 @@ class OfferDiscountCard extends StatelessWidget {
             children: [
               Text(
                 locale.value.youSaved,
-                style: secondaryTextStyle(size: 11, color: white),
+                style: secondaryTextStyle(size: 12, color: white),
               ),
               Text(
                 '${discount.toStringAsFixed(0)}%',

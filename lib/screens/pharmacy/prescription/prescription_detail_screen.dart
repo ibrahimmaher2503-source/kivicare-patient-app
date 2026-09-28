@@ -47,8 +47,8 @@ class PrescriptionDetailScreen extends StatelessWidget {
                         offset: const Offset(0, 6))
                   ],
                 ),
-                child:
-                    Text(prescription.notes!, style: primaryTextStyle(size: 14)),
+                child: Text(prescription.notes!,
+                    style: primaryTextStyle(size: 14)),
               ),
               const SizedBox(height: 20),
             ],
@@ -65,7 +65,8 @@ class PrescriptionDetailScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Text(prescription.rejectionReason!,
-                    style: primaryTextStyle(color: cancelStatusColor, size: 14)),
+                    style:
+                        primaryTextStyle(color: cancelStatusColor, size: 14)),
               ),
             ],
           ],
@@ -89,40 +90,79 @@ class PrescriptionDetailScreen extends StatelessWidget {
               offset: const Offset(0, 6))
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            width: 56,
+            height: 56,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: statusColor.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  height: 8,
-                  width: 8,
-                  decoration: BoxDecoration(
-                      color: statusColor, shape: BoxShape.circle),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  prescription.status.validate().capitalizeFirstLetter(),
-                  style: boldTextStyle(color: statusColor, size: 13),
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                colors: [
+                  statusColor,
+                  statusColor.withValues(alpha: 0.78),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: statusColor.withValues(alpha: 0.28),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
+            child: Icon(_prescriptionHeroIcon(prescription.status ?? ''),
+                color: Colors.white, size: 28),
           ),
-          const SizedBox(height: 12),
-          Text(
-              '${locale.value.pharmacyUploadedOn} ${prescription.createdAt ?? ''}',
-              style: secondaryTextStyle(size: 12)),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    PharmacyConstants.prescriptionStatusLabel(
+                      locale.value,
+                      prescription.status.validate(),
+                    ),
+                    style: boldTextStyle(color: statusColor, size: 12),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                    '${locale.value.pharmacyUploadedOn} ${prescription.createdAt ?? ''}',
+                    style: secondaryTextStyle(size: 12)),
+              ],
+            ),
+          ),
         ],
       ),
     );
+  }
+}
+
+IconData _prescriptionHeroIcon(String status) {
+  switch (status) {
+    case PharmacyConstants.prescriptionPending:
+      return Icons.hourglass_top_rounded;
+    case PharmacyConstants.prescriptionReviewed:
+      return Icons.visibility_rounded;
+    case PharmacyConstants.prescriptionApproved:
+      return Icons.verified_rounded;
+    case PharmacyConstants.prescriptionRejected:
+      return Icons.gpp_bad_rounded;
+    default:
+      return Icons.medical_information_rounded;
   }
 }
 
@@ -151,9 +191,29 @@ class _PrescriptionImageGalleryState extends State<_PrescriptionImageGallery> {
       return Container(
         height: 200,
         width: Get.width,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: surfaceSubtle, borderRadius: BorderRadius.circular(16)),
-        child: const Icon(Icons.image_outlined, color: gray400, size: 48),
+          gradient: LinearGradient(
+            colors: [
+              surfaceSubtle,
+              appColorSecondary.withValues(alpha: 0.06),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Container(
+          width: 72,
+          height: 72,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: appColorSecondary.withValues(alpha: 0.14),
+          ),
+          child: const Icon(Icons.photo_library_rounded,
+              color: appColorSecondary, size: 32),
+        ),
       );
     }
     return Column(

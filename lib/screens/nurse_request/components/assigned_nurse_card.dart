@@ -6,6 +6,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../models/assigned_nurse_model.dart';
 import 'nurse_request_phone_actions.dart';
+import 'nurse_request_design.dart';
 
 class AssignedNurseCard extends StatelessWidget {
   final AssignedNurseModel nurse;
@@ -16,16 +17,10 @@ class AssignedNurseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: context.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: softShadowColor, blurRadius: 8, offset: const Offset(0, 2))],
-      ),
+      decoration: nurseRequestCardDecoration(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(locale.value.assignedNurse, style: boldTextStyle(size: 14)),
-          12.height,
           Row(
             children: [
               nurse.avatarUrl != null
@@ -40,10 +35,14 @@ class AssignedNurseCard extends StatelessWidget {
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: gradientStart.withValues(alpha: 0.15),
+                        color: gradientSecondaryStart.withValues(alpha: 0.13),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.person, color: gradientStart, size: 28),
+                      child: Icon(
+                        Icons.person_outline,
+                        color: gradientSecondaryStart,
+                        size: 28,
+                      ),
                     ),
               12.width,
               Expanded(
@@ -54,11 +53,14 @@ class AssignedNurseCard extends StatelessWidget {
                     if (nurse.rating != null)
                       Row(
                         children: [
-                          const Icon(Icons.star, color: Colors.amber, size: 16),
+                          const Icon(Icons.star, color: ratingColor, size: 16),
                           4.width,
                           Text(
                             nurse.rating!.toStringAsFixed(1),
-                            style: secondaryTextStyle(size: 12),
+                            style: secondaryTextStyle(
+                              size: 12,
+                              color: nurseRequestMutedColor(context),
+                            ),
                           ),
                         ],
                       ),
@@ -67,6 +69,10 @@ class AssignedNurseCard extends StatelessWidget {
               ),
               if (nurse.phone != null)
                 IconButton(
+                  constraints: const BoxConstraints(
+                    minWidth: 44,
+                    minHeight: 44,
+                  ),
                   icon: Icon(Icons.call, color: gradientStart),
                   onPressed: () => launchDialer(nurse.phone!),
                   tooltip: locale.value.nursePhone,
@@ -74,8 +80,14 @@ class AssignedNurseCard extends StatelessWidget {
             ],
           ),
           if (nurse.bio != null && nurse.bio!.isNotEmpty) ...[
-            8.height,
-            Text(nurse.bio!, style: secondaryTextStyle(size: 13)),
+            12.height,
+            Text(
+              nurse.bio!,
+              style: secondaryTextStyle(
+                size: 13,
+                color: nurseRequestMutedColor(context),
+              ),
+            ),
           ],
         ],
       ),

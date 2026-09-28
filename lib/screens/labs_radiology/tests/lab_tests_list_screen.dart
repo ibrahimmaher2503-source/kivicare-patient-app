@@ -77,8 +77,14 @@ class LabTestsListScreen extends StatelessWidget {
                         backgroundColor: Colors.transparent,
                         builder: (_) => TestDetailBottomSheet(
                           test: test,
-                          onBook: () => Get.to(
-                              () => LabsRadiologyHubScreen()),
+                          onBook: () {
+                            Get.back();
+                            Get.to(
+                              () => LabsRadiologyHubScreen(
+                                initialTest: test,
+                              ),
+                            );
+                          },
                         ),
                       ),
                     );

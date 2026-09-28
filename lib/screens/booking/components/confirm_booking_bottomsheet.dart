@@ -39,6 +39,14 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
   });
 
   RxBool isAgree = false.obs;
+  final RxBool isProcessing = false.obs;
+
+  void _handleConfirm() {
+    if (isProcessing.value) return;
+    isProcessing(true);
+    onConfirm.call();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -174,10 +182,10 @@ class ConfirmBookingBottomSheet extends StatelessWidget {
                   text: locale.value.continueText,
                   onTap: () {
                     if (hideAgree) {
-                      onConfirm.call();
+                      _handleConfirm();
                     } else {
                       if (isAgree.value) {
-                        onConfirm.call();
+                        _handleConfirm();
                       } else {
                         toast(changeToastMessage ?? locale.value.pleaseAcceptTermsAnd);
                       }

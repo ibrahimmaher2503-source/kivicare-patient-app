@@ -23,21 +23,20 @@ class CriticalUrgencyAlert extends StatelessWidget {
           onPressed: () => finish(context),
           child: Text(locale.value.continueForm),
         ),
-        AppButton(
-          text: locale.value.callEmergencyHotline,
-          color: errorColor,
-          textStyle: boldTextStyle(color: Colors.white, size: 14),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          onTap: () async {
-            final uri = Uri.parse('tel:$EMERGENCY_HOTLINE');
-            if (await canLaunchUrl(uri)) {
-              await launchUrl(uri);
-            } else {
-              toast(EMERGENCY_HOTLINE);
-            }
-            if (context.mounted) finish(context);
-          },
-        ),
+        if (EMERGENCY_HOTLINE.trim().isNotEmpty)
+          AppButton(
+            text: locale.value.callEmergencyHotline,
+            color: errorColor,
+            textStyle: boldTextStyle(color: Colors.white, size: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            onTap: () async {
+              final uri = Uri.parse('tel:$EMERGENCY_HOTLINE');
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri);
+              }
+              if (context.mounted) finish(context);
+            },
+          ),
       ],
     );
   }

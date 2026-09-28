@@ -72,8 +72,8 @@ class AddOtherPatientController extends GetxController {
     }
 
     try {
-      log(argument.contactNumber.extractPhoneCodeAndNumber.$1);
-      pickedPhoneCode(CountryParser.parsePhoneCode(argument.contactNumber.extractPhoneCodeAndNumber.$1));
+      pickedPhoneCode(CountryParser.parsePhoneCode(
+          argument.contactNumber.extractPhoneCodeAndNumber.$1));
     } catch (e) {
       pickedPhoneCode(Country.from(json: defaultCountry.toJson()));
       log('CountryParser.parsePhoneCode Err: $e');
@@ -81,7 +81,9 @@ class AddOtherPatientController extends GetxController {
 
     selectedGender(
       genders.firstWhere(
-        (element) => element.slug.toString().toLowerCase() == argument.gender.toLowerCase(),
+        (element) =>
+            element.slug.toString().toLowerCase() ==
+            argument.gender.toLowerCase(),
         orElse: () => CMNModel(
           id: 3,
           name: RelationConstant.others.capitalizeFirstLetter(),
@@ -93,7 +95,9 @@ class AddOtherPatientController extends GetxController {
     dateOfBirthCont.text = argument.birthDate;
     selectedRelation(
       relation.firstWhere(
-        (element) => element.slug.toString().toLowerCase() == argument.relation.toLowerCase(),
+        (element) =>
+            element.slug.toString().toLowerCase() ==
+            argument.relation.toLowerCase(),
         orElse: () => CMNModel(
           id: 5,
           name: RelationConstant.others.capitalizeFirstLetter(),
@@ -109,13 +113,16 @@ class AddOtherPatientController extends GetxController {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       fieldHintText: DateTime.now().formatDateYYYYmmdd(),
-      initialDate: dateOfBirthCont.text.isNotEmpty ? DateTime.parse(dateOfBirthCont.text) : null,
+      initialDate: dateOfBirthCont.text.isNotEmpty
+          ? DateTime.parse(dateOfBirthCont.text)
+          : null,
       firstDate: DateTime(1900),
       lastDate: now,
       confirmText: locale.value.confirm,
       cancelText: locale.value.cancel,
       helpText: locale.value.selectBirthdate,
-      locale: Locale(selectedLanguageDataModel?.languageCode ?? getStringAsync(SELECTED_LANGUAGE_CODE)),
+      locale: Locale(selectedLanguageDataModel?.languageCode ??
+          getStringAsync(SELECTED_LANGUAGE_CODE)),
       builder: (_, child) {
         return Theme(
           data: isDarkMode.value ? AppTheme.darkTheme : AppTheme.lightTheme,
@@ -133,14 +140,16 @@ class AddOtherPatientController extends GetxController {
   }
 
   void _getFromGallery() async {
-    pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 1800, maxHeight: 1800);
+    pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery, maxWidth: 1800, maxHeight: 1800);
     if (pickedFile != null) {
       imageFile(File(pickedFile!.path));
     }
   }
 
   Future<void> _getFromCamera() async {
-    pickedFile = await ImagePicker().pickImage(source: ImageSource.camera, maxWidth: 1800, maxHeight: 1800);
+    pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, maxWidth: 1800, maxHeight: 1800);
     if (pickedFile != null) {
       imageFile(File(pickedFile!.path));
     }
@@ -189,38 +198,60 @@ class AddOtherPatientController extends GetxController {
       UserKeys.lastName: lNameCont.text,
       OtherPatientConst.relation: selectedRelation.value.name,
       OtherPatientConst.dob: dateOfBirthCont.text,
-      OtherPatientConst.contactNumber: '+${mobileCont.text.trim().formatPhoneNumber(pickedPhoneCode.value.phoneCode)}',
+      OtherPatientConst.contactNumber:
+          '+${mobileCont.text.trim().formatPhoneNumber(pickedPhoneCode.value.phoneCode)}',
       UserKeys.gender: selectedGender.value.name,
       UserKeys.userId: loginUserData.value.id,
     };
 
     if ((Get.arguments is UserData)) {
-      memberData.putIfAbsent(OtherPatientConst.idKey, () => (Get.arguments as UserData).id);
+      memberData.putIfAbsent(
+          OtherPatientConst.idKey, () => (Get.arguments as UserData).id);
     }
 
-    await CoreServiceApis.addUpdateOtherPatientApi(
-      request: memberData,
-      profileImage: imageFile.value,
-    ).whenComplete(() => isLoading(false)).then(
-      (value) {
-        if (isEdit.value) {
-          toast(locale.value.patientUpdatedSuccessfully);
-        } else {
-          toast(locale.value.patientAddedSuccessfully);
-        }
-        Get.back(result: true);
-      },
-    ).catchError((e) {
+    try {
+      final response = await CoreServiceApis.addUpdateOtherPatientApi(
+        request: memberData,
+        profileImage: imageFile.value,
+      );
+      if (!response.status) {
+        throw StateError(response.message);
+      }
+      toast(isEdit.value
+          ? locale.value.patientUpdatedSuccessfully
+          : locale.value.patientAddedSuccessfully);
+      Get.back(result: true);
+    } catch (e) {
+      log('addOtherPatient failed: ${e.runtimeType}');
+      toast(e is StateError
+          ? e.message
+          : locale.value.somethingWentWrongPleaseTryAgainLater);
+    } finally {
       isLoading(false);
-      log('addOtherPatientController: ${e.toString()}');
-      throw e;
-    });
+    }
   }
 
   Future<void> handleAddOtherPatient() async {
-    if (addMemberFormKey.currentState!.validate()) {
-      addMemberFormKey.currentState!.save();
+    if (isLoading.value) return;
+    final form = addMemberFormKey.currentState;
+    if (form != null && form.validate()) {
+      form.save();
       await addMember();
     }
+  }
+
+  @override
+  void onClose() {
+    fNameCont.dispose();
+    lNameCont.dispose();
+    phoneCodeCont.dispose();
+    mobileCont.dispose();
+    dateOfBirthCont.dispose();
+    fNameFocus.dispose();
+    lNameFocus.dispose();
+    phoneCodeFocus.dispose();
+    mobileFocus.dispose();
+    dateOfBirthFocus.dispose();
+    super.onClose();
   }
 }

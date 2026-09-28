@@ -18,11 +18,12 @@ class AssignedNurseModel {
   factory AssignedNurseModel.fromJson(Map<String, dynamic> json) {
     return AssignedNurseModel(
       id: json['id'] ?? 0,
-      displayName: json['display_name'] ?? '',
+      displayName: json['display_name'] ?? json['name'] ?? '',
       avatarUrl: json['avatar_url'],
       phone: json['phone'],
-      rating: json['rating'] != null ? (json['rating'] as num).toDouble() : null,
-      bio: json['bio'],
+      rating:
+          json['rating'] != null ? (json['rating'] as num).toDouble() : null,
+      bio: json['bio'] ?? json['specialization'],
     );
   }
 }

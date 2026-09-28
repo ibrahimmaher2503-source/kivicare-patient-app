@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kivicare_patient/api/nurse_request_apis.dart';
+import 'package:kivicare_patient/main.dart';
+import 'package:kivicare_patient/screens/auth/sign_in_sign_up/signin_screen.dart';
+import 'package:kivicare_patient/utils/app_common.dart';
+import 'package:kivicare_patient/network/network_utils.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import 'models/nurse_request_model.dart';
@@ -23,7 +27,18 @@ class NurseRequestListController extends GetxController {
   void onInit() {
     super.onInit();
     scrollController.addListener(_onScroll);
-    fetchFirstPage();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (isLoggedIn.value) {
+        fetchFirstPage();
+      } else {
+        final loggedIn = await Get.to(() => SignInScreen()) ?? false;
+        if (loggedIn) {
+          fetchFirstPage();
+        } else {
+          Get.back();
+        }
+      }
+    });
   }
 
   @override
@@ -33,7 +48,8 @@ class NurseRequestListController extends GetxController {
   }
 
   void _onScroll() {
-    if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 200) {
       if (hasMore.value && !isLoadingMore.value) {
         loadMore();
       }
@@ -54,10 +70,12 @@ class NurseRequestListController extends GetxController {
       hasMore.value = res.hasMore;
       currentPage.value = res.currentPage;
     } catch (e) {
+      final message =
+          sanitizeBackendMessage(e, locale.value.somethingWentWrong);
       if (items.isEmpty) {
-        error.value = e.toString();
+        error.value = message;
       } else {
-        toast(e.toString());
+        toast(message);
       }
     } finally {
       isLoading(false);
@@ -78,7 +96,7 @@ class NurseRequestListController extends GetxController {
       hasMore.value = res.hasMore;
       currentPage.value = res.currentPage;
     } catch (e) {
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     } finally {
       isLoadingMore(false);
     }

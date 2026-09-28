@@ -4,7 +4,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.8.1+20
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -12,7 +12,6 @@ dependencies:
 
   #Commons
   nb_utils: ^7.1.4
-  google_fonts: ^6.2.1
   html: ^0.15.6
   http: ^1.4.0
   intl: ^0.20.2
@@ -48,7 +47,9 @@ dependencies:
 
   #Storage
   get_storage: ^2.1.1
+  flutter_secure_storage: ^10.3.1
   path: ^1.9.1
+  timezone: ^0.10.1
 
   #PhotoViewGallery
   photo_view: ^0.15.0
@@ -57,6 +58,7 @@ dependencies:
   file_picker: ^10.1.9
   image_picker: ^1.1.2
   country_picker: ^2.0.27
+  open_filex: ^4.5.0
 
   # Google Map
   google_maps_flutter: ^2.12.2
@@ -70,38 +72,31 @@ dependencies:
   flutterwave_standard:
     git:
       url: https://github.com/iqonic-design/flutterwave_standard.git
-      ref: main
+      ref: b9458abfd1a189c4e692ce3f16f45d4258a54a77
 
   flutter_paypal_checkout:
     git:
       url: https://github.com/iqonic-design/flutter_paypal_checkout.git
-      ref: main
-
-  cinetpay:
-    git:
-      url: https://github.com/iqonic-design/cinetpay.git
-      ref: main
+      ref: 0fd819dd0ffcea9b04ea306fc67a7afdd21bf2f5
 
   flutter_paystack:
     git:
       url: https://github.com/iqonic-design/flutter_paystack.git
-      ref: 1.5.0
+      ref: 0d59884fc9cabf204b005c254af2a138dd4de144
  
-  midpay:
-    git:
-      url: https://github.com/iqonic-design/midpay.git
-      ref: main
   flutter_localizations:
     sdk: flutter
   percent_indicator: ^4.2.5
 
-  uuid: any
-  crypto: any
-  path_provider: any
+  uuid: ^4.5.1
+  crypto: ^3.0.6
+  path_provider: ^2.1.5
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^6.0.0
+    flutter_test:
+      sdk: flutter
+    integration_test:
+      sdk: flutter
+    flutter_lints: ^6.0.0
 
 
 # The following section is specific to Flutter packages.
@@ -121,3 +116,26 @@ flutter:
     - assets/images/walkthrough_images/
     - assets/icons/upi_payment/
     - assets/fonts/
+    - assets/config/
+
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+          weight: 700
+    - family: Outfit
+      fonts:
+        - asset: assets/fonts/Outfit-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Outfit-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Outfit-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Outfit-Bold.ttf
+          weight: 700

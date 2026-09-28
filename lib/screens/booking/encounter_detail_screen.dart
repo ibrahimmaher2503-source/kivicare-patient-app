@@ -19,7 +19,8 @@ import 'model/encounter_detail_model.dart';
 class EncounterDetailScreen extends StatelessWidget {
   EncounterDetailScreen({super.key});
 
-  final EncounterDetailController encounterDetailCont = Get.put(EncounterDetailController());
+  final EncounterDetailController encounterDetailCont =
+      Get.put(EncounterDetailController());
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class EncounterDetailScreen extends StatelessWidget {
             future: encounterDetailCont.getEncounterDetails.value,
             errorBuilder: (error) {
               return NoDataWidget(
-                title: error,
+                title: locale.value.somethingWentWrongPleaseTryAgainLater,
                 retryText: locale.value.reload,
                 imageWidget: const ErrorStateWidget(),
                 onRetry: () {
@@ -52,7 +53,10 @@ class EncounterDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 30),
                 children: [
                   14.height,
-                  ViewAllLabel(label: locale.value.basicInformation, isShowAll: false).paddingOnly(left: 16, right: 8),
+                  ViewAllLabel(
+                          label: locale.value.basicInformation,
+                          isShowAll: false)
+                      .paddingOnly(left: 16, right: 8),
                   Container(
                     width: Get.width,
                     padding: const EdgeInsets.all(16),
@@ -65,10 +69,12 @@ class EncounterDetailScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${locale.value.doctorName}: ', style: secondaryTextStyle()),
+                              Text('${locale.value.doctorName}: ',
+                                  style: secondaryTextStyle()),
                               Marquee(
                                 child: Text(
-                                  encounterDetailCont.encounterDetail.value.doctorName,
+                                  encounterDetailCont
+                                      .encounterDetail.value.doctorName,
                                   style: boldTextStyle(size: 12),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -77,22 +83,30 @@ class EncounterDetailScreen extends StatelessWidget {
                             ],
                           ).expand(flex: 3),
                           trailingWidget: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 6),
                             decoration: boxDecorationDefault(
-                              color: encounterDetailCont.encounterDetail.value.status
+                              color: encounterDetailCont
+                                      .encounterDetail.value.status
                                   ? isDarkMode.value
                                       ? lightGreenColor.withValues(alpha: 0.1)
                                       : lightGreenColor
                                   : isDarkMode.value
-                                      ? lightSecondaryColor.withValues(alpha: 0.1)
+                                      ? lightSecondaryColor.withValues(
+                                          alpha: 0.1)
                                       : lightSecondaryColor,
                               borderRadius: radius(22),
                             ),
                             child: Text(
-                              encounterDetailCont.encounterDetail.value.status ? locale.value.active : locale.value.closed,
+                              encounterDetailCont.encounterDetail.value.status
+                                  ? locale.value.active
+                                  : locale.value.closed,
                               style: boldTextStyle(
                                 size: 12,
-                                color: encounterDetailCont.encounterDetail.value.status ? completedStatusColor : pendingStatusColor,
+                                color: encounterDetailCont
+                                        .encounterDetail.value.status
+                                    ? completedStatusColor
+                                    : pendingStatusColor,
                               ),
                             ),
                           ).paddingLeft(16),
@@ -101,24 +115,32 @@ class EncounterDetailScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${locale.value.clinicName}: ', style: secondaryTextStyle()),
+                            Text('${locale.value.clinicName}: ',
+                                style: secondaryTextStyle()),
                             Text(
-                              encounterDetailCont.encounterDetail.value.clinicName,
+                              encounterDetailCont
+                                  .encounterDetail.value.clinicName,
                               style: boldTextStyle(size: 12),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ).expand(),
                           ],
                         ),
-                        if (encounterDetailCont.encounterDetail.value.description.isNotEmpty) ...[
+                        if (encounterDetailCont
+                            .encounterDetail.value.description.isNotEmpty) ...[
                           commonDivider.paddingSymmetric(vertical: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${locale.value.description}: ', style: secondaryTextStyle()),
+                              Text('${locale.value.description}: ',
+                                  style: secondaryTextStyle()),
                               Text(
-                                encounterDetailCont.encounterDetail.value.description.isNotEmpty ? encounterDetailCont.encounterDetail.value.description : 'No Records Found',
+                                encounterDetailCont.encounterDetail.value
+                                        .description.isNotEmpty
+                                    ? encounterDetailCont
+                                        .encounterDetail.value.description
+                                    : locale.value.noDataFound,
                                 style: boldTextStyle(size: 12),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -134,61 +156,95 @@ class EncounterDetailScreen extends StatelessWidget {
                   Column(
                     children: [
                       16.height,
-                      ViewAllLabel(label: locale.value.problems, isShowAll: false).paddingOnly(left: 16, right: 8),
+                      ViewAllLabel(
+                              label: locale.value.problems, isShowAll: false)
+                          .paddingOnly(left: 16, right: 8),
                       Container(
                         width: Get.width,
-                        padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 14),
-                        decoration: boxDecorationDefault(color: context.cardColor),
+                        padding: const EdgeInsets.only(
+                            left: 16, right: 16, top: 16, bottom: 14),
+                        decoration:
+                            boxDecorationDefault(color: context.cardColor),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: List.generate(encounterDetailCont.encounterDetail.value.problems.length, (index) {
-                            String problemsData = encounterDetailCont.encounterDetail.value.problems[index].title;
-                            return Text('${index + 1}. ${problemsData.capitalizeFirstLetter()}', style: secondaryTextStyle()).paddingBottom(2);
+                          children: List.generate(
+                              encounterDetailCont.encounterDetail.value.problems
+                                  .length, (index) {
+                            String problemsData = encounterDetailCont
+                                .encounterDetail.value.problems[index].title;
+                            return Text(
+                                    '${index + 1}. ${problemsData.capitalizeFirstLetter()}',
+                                    style: secondaryTextStyle())
+                                .paddingBottom(2);
                           }),
                         ),
                       ).paddingSymmetric(horizontal: 16),
                     ],
-                  ).visible(encounterDetailCont.encounterDetail.value.problems.isNotEmpty),
+                  ).visible(encounterDetailCont
+                      .encounterDetail.value.problems.isNotEmpty),
 
                   /// Observation
                   Column(
                     children: [
                       16.height,
-                      ViewAllLabel(label: locale.value.observations, isShowAll: false).paddingOnly(left: 16, right: 8),
+                      ViewAllLabel(
+                              label: locale.value.observations,
+                              isShowAll: false)
+                          .paddingOnly(left: 16, right: 8),
                       Container(
                         width: Get.width,
                         padding: const EdgeInsets.all(16),
-                        decoration: boxDecorationDefault(color: context.cardColor),
+                        decoration:
+                            boxDecorationDefault(color: context.cardColor),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: List.generate(encounterDetailCont.encounterDetail.value.observations.length, (index) {
-                            String observationData = encounterDetailCont.encounterDetail.value.observations[index].title;
-                            return Text('${index + 1}. ${observationData.capitalizeFirstLetter()}', style: secondaryTextStyle()).paddingBottom(2);
+                          children: List.generate(
+                              encounterDetailCont.encounterDetail.value
+                                  .observations.length, (index) {
+                            String observationData = encounterDetailCont
+                                .encounterDetail
+                                .value
+                                .observations[index]
+                                .title;
+                            return Text(
+                                    '${index + 1}. ${observationData.capitalizeFirstLetter()}',
+                                    style: secondaryTextStyle())
+                                .paddingBottom(2);
                           }),
                         ),
                       ).paddingSymmetric(horizontal: 16),
                     ],
-                  ).visible(encounterDetailCont.encounterDetail.value.observations.isNotEmpty),
+                  ).visible(encounterDetailCont
+                      .encounterDetail.value.observations.isNotEmpty),
 
                   /// Notes
                   Column(
                     children: [
                       16.height,
-                      ViewAllLabel(label: locale.value.notes, isShowAll: false).paddingOnly(left: 16, right: 8),
+                      ViewAllLabel(label: locale.value.notes, isShowAll: false)
+                          .paddingOnly(left: 16, right: 8),
                       Container(
                         width: Get.width,
                         padding: const EdgeInsets.all(16),
-                        decoration: boxDecorationDefault(color: context.cardColor),
+                        decoration:
+                            boxDecorationDefault(color: context.cardColor),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: List.generate(encounterDetailCont.encounterDetail.value.notes.length, (index) {
-                            String notesData = encounterDetailCont.encounterDetail.value.notes[index].title;
-                            return Text('${index + 1}. ${notesData.capitalizeFirstLetter()}', style: secondaryTextStyle()).paddingBottom(2);
+                          children: List.generate(
+                              encounterDetailCont
+                                  .encounterDetail.value.notes.length, (index) {
+                            String notesData = encounterDetailCont
+                                .encounterDetail.value.notes[index].title;
+                            return Text(
+                                    '${index + 1}. ${notesData.capitalizeFirstLetter()}',
+                                    style: secondaryTextStyle())
+                                .paddingBottom(2);
                           }),
                         ),
                       ).paddingSymmetric(horizontal: 16),
                     ],
-                  ).visible(encounterDetailCont.encounterDetail.value.notes.isNotEmpty),
+                  ).visible(encounterDetailCont
+                      .encounterDetail.value.notes.isNotEmpty),
 
                   /// Medical Report
                   Column(
@@ -196,23 +252,30 @@ class EncounterDetailScreen extends StatelessWidget {
                       16.height,
                       medicalReportWidget().paddingSymmetric(horizontal: 16),
                     ],
-                  ).visible(encounterDetailCont.encounterDetail.value.medicalReport.isNotEmpty),
+                  ).visible(encounterDetailCont
+                      .encounterDetail.value.medicalReport.isNotEmpty),
 
                   /// Prescription
                   Column(
                     children: [
                       16.height,
-                      ViewAllLabel(label: locale.value.prescription, isShowAll: false).paddingOnly(left: 16, right: 8),
+                      ViewAllLabel(
+                              label: locale.value.prescription,
+                              isShowAll: false)
+                          .paddingOnly(left: 16, right: 8),
                       AnimatedWrap(
                         runSpacing: 16,
-                        itemCount: encounterDetailCont.encounterDetail.value.prescriptions.length,
+                        itemCount: encounterDetailCont
+                            .encounterDetail.value.prescriptions.length,
                         itemBuilder: (ctx, index) {
-                          Prescriptions prescriptionsData = encounterDetailCont.encounterDetail.value.prescriptions[index];
+                          Prescriptions prescriptionsData = encounterDetailCont
+                              .encounterDetail.value.prescriptions[index];
 
                           return Container(
                             width: Get.width,
                             padding: const EdgeInsets.all(16),
-                            decoration: boxDecorationDefault(color: context.cardColor),
+                            decoration:
+                                boxDecorationDefault(color: context.cardColor),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -223,27 +286,39 @@ class EncounterDetailScreen extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 8.height,
-                                Text(prescriptionsData.instruction, style: secondaryTextStyle()),
+                                Text(prescriptionsData.instruction,
+                                    style: secondaryTextStyle()),
                                 commonDivider.paddingSymmetric(vertical: 16),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text("${locale.value.frequency}:", style: secondaryTextStyle(size: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
+                                        Text("${locale.value.frequency}:",
+                                            style: secondaryTextStyle(size: 12),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis),
                                         6.height,
-                                        Text(' ${prescriptionsData.frequency}', style: boldTextStyle(size: 12)),
+                                        Text(' ${prescriptionsData.frequency}',
+                                            style: boldTextStyle(size: 12)),
                                       ],
                                     ).expand(flex: 3),
                                     16.width,
                                     Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text("${locale.value.days}:", style: secondaryTextStyle(size: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
+                                        Text("${locale.value.days}:",
+                                            style: secondaryTextStyle(size: 12),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis),
                                         6.height,
-                                        Text(' ${prescriptionsData.duration}', style: boldTextStyle(size: 12)),
+                                        Text(' ${prescriptionsData.duration}',
+                                            style: boldTextStyle(size: 12)),
                                       ],
                                     ).expand(flex: 2),
                                   ],
@@ -254,21 +329,30 @@ class EncounterDetailScreen extends StatelessWidget {
                         },
                       ),
                     ],
-                  ).visible(encounterDetailCont.encounterDetail.value.prescriptions.isNotEmpty),
+                  ).visible(encounterDetailCont
+                      .encounterDetail.value.prescriptions.isNotEmpty),
 
                   /// Other Details
                   Column(
                     children: [
                       16.height,
-                      ViewAllLabel(label: locale.value.otherInformation, isShowAll: false).paddingOnly(left: 16, right: 8),
+                      ViewAllLabel(
+                              label: locale.value.otherInformation,
+                              isShowAll: false)
+                          .paddingOnly(left: 16, right: 8),
                       Container(
                         width: Get.width,
                         padding: const EdgeInsets.all(16),
-                        decoration: boxDecorationDefault(color: context.cardColor),
-                        child: Text(encounterDetailCont.encounterDetail.value.otherDetails, style: secondaryTextStyle()),
+                        decoration:
+                            boxDecorationDefault(color: context.cardColor),
+                        child: Text(
+                            encounterDetailCont
+                                .encounterDetail.value.otherDetails,
+                            style: secondaryTextStyle()),
                       ).paddingSymmetric(horizontal: 16),
                     ],
-                  ).visible(encounterDetailCont.encounterDetail.value.otherDetails.isNotEmpty),
+                  ).visible(encounterDetailCont
+                      .encounterDetail.value.otherDetails.isNotEmpty),
 
                   /// Body Charts
                   Column(
@@ -276,13 +360,16 @@ class EncounterDetailScreen extends StatelessWidget {
                       16.height,
                       bodyChartWidget().paddingSymmetric(horizontal: 16),
                     ],
-                  ).visible(encounterDetailCont.encounterDetail.value.bodyCharts.isNotEmpty),
+                  ).visible(encounterDetailCont
+                      .encounterDetail.value.bodyCharts.isNotEmpty),
 
                   /// SOAP
                   Column(
                     children: [
                       16.height,
-                      ViewAllLabel(label: locale.value.patientSoap, isShowAll: false).paddingOnly(left: 16, right: 8),
+                      ViewAllLabel(
+                              label: locale.value.patientSoap, isShowAll: false)
+                          .paddingOnly(left: 16, right: 8),
                       10.height,
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,59 +377,92 @@ class EncounterDetailScreen extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(locale.value.subjective, style: primaryTextStyle()),
+                              Text(locale.value.subjective,
+                                  style: primaryTextStyle()),
                               8.height,
                               Container(
                                 width: Get.width,
                                 padding: const EdgeInsets.all(16),
-                                decoration: boxDecorationDefault(color: context.cardColor),
-                                child: Text(encounterDetailCont.encounterDetail.value.soap.subjective, style: secondaryTextStyle()),
+                                decoration: boxDecorationDefault(
+                                    color: context.cardColor),
+                                child: Text(
+                                    encounterDetailCont
+                                        .encounterDetail.value.soap.subjective,
+                                    style: secondaryTextStyle()),
                               ),
                             ],
-                          ).paddingBottom(16).visible(encounterDetailCont.encounterDetail.value.soap.subjective.isNotEmpty),
+                          ).paddingBottom(16).visible(encounterDetailCont
+                              .encounterDetail
+                              .value
+                              .soap
+                              .subjective
+                              .isNotEmpty),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(locale.value.objective, style: primaryTextStyle()),
+                              Text(locale.value.objective,
+                                  style: primaryTextStyle()),
                               8.height,
                               Container(
                                 width: Get.width,
                                 padding: const EdgeInsets.all(16),
-                                decoration: boxDecorationDefault(color: context.cardColor),
-                                child: Text(encounterDetailCont.encounterDetail.value.soap.objective, style: secondaryTextStyle()),
+                                decoration: boxDecorationDefault(
+                                    color: context.cardColor),
+                                child: Text(
+                                    encounterDetailCont
+                                        .encounterDetail.value.soap.objective,
+                                    style: secondaryTextStyle()),
                               ),
                             ],
-                          ).paddingBottom(16).visible(encounterDetailCont.encounterDetail.value.soap.objective.isNotEmpty),
+                          ).paddingBottom(16).visible(encounterDetailCont
+                              .encounterDetail.value.soap.objective.isNotEmpty),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(locale.value.assessment, style: primaryTextStyle()),
+                              Text(locale.value.assessment,
+                                  style: primaryTextStyle()),
                               8.height,
                               Container(
                                 width: Get.width,
                                 padding: const EdgeInsets.all(16),
-                                decoration: boxDecorationDefault(color: context.cardColor),
-                                child: Text(encounterDetailCont.encounterDetail.value.soap.assessment, style: secondaryTextStyle()),
+                                decoration: boxDecorationDefault(
+                                    color: context.cardColor),
+                                child: Text(
+                                    encounterDetailCont
+                                        .encounterDetail.value.soap.assessment,
+                                    style: secondaryTextStyle()),
                               ),
                             ],
-                          ).paddingBottom(16).visible(encounterDetailCont.encounterDetail.value.soap.assessment.isNotEmpty),
+                          ).paddingBottom(16).visible(encounterDetailCont
+                              .encounterDetail
+                              .value
+                              .soap
+                              .assessment
+                              .isNotEmpty),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(locale.value.plan, style: primaryTextStyle()),
+                              Text(locale.value.plan,
+                                  style: primaryTextStyle()),
                               8.height,
                               Container(
                                 width: Get.width,
                                 padding: const EdgeInsets.all(16),
-                                decoration: boxDecorationDefault(color: context.cardColor),
-                                child: Text(encounterDetailCont.encounterDetail.value.soap.plan, style: secondaryTextStyle()),
+                                decoration: boxDecorationDefault(
+                                    color: context.cardColor),
+                                child: Text(
+                                    encounterDetailCont
+                                        .encounterDetail.value.soap.plan,
+                                    style: secondaryTextStyle()),
                               ),
                             ],
-                          ).visible(encounterDetailCont.encounterDetail.value.soap.plan.isNotEmpty),
+                          ).visible(encounterDetailCont
+                              .encounterDetail.value.soap.plan.isNotEmpty),
                         ],
                       ).paddingSymmetric(horizontal: 16),
                     ],
-                  ).visible(!encounterDetailCont.encounterDetail.value.soap.id.isNegative),
+                  ).visible(!encounterDetailCont
+                      .encounterDetail.value.soap.id.isNegative),
                 ],
               );
             },
@@ -362,9 +482,11 @@ class EncounterDetailScreen extends StatelessWidget {
           listAnimationType: ListAnimationType.None,
           spacing: 16,
           runSpacing: 16,
-          itemCount: encounterDetailCont.encounterDetail.value.medicalReport.length,
+          itemCount:
+              encounterDetailCont.encounterDetail.value.medicalReport.length,
           itemBuilder: (ctx, index) {
-            MedicalReport medicalReportData = encounterDetailCont.encounterDetail.value.medicalReport[index];
+            MedicalReport medicalReportData =
+                encounterDetailCont.encounterDetail.value.medicalReport[index];
             return Stack(
               clipBehavior: Clip.none,
               alignment: Alignment.center,
@@ -377,7 +499,8 @@ class EncounterDetailScreen extends StatelessWidget {
                   behavior: HitTestBehavior.translucent,
                   child: medicalReportData.fileUrl.isImage
                       ? Container(
-                          decoration: boxDecorationWithRoundedCorners(backgroundColor: transparentColor),
+                          decoration: boxDecorationWithRoundedCorners(
+                              backgroundColor: transparentColor),
                           child: CachedImageWidget(
                             url: medicalReportData.fileUrl,
                             height: 80,
@@ -386,7 +509,8 @@ class EncounterDetailScreen extends StatelessWidget {
                             radius: defaultRadius,
                           ),
                         )
-                      : CommonPdfPlaceHolder(text: medicalReportData.name, height: 80, width: 80),
+                      : CommonPdfPlaceHolder(
+                          text: medicalReportData.name, height: 80, width: 80),
                 ),
               ],
             );
@@ -406,9 +530,11 @@ class EncounterDetailScreen extends StatelessWidget {
           listAnimationType: ListAnimationType.None,
           spacing: 16,
           runSpacing: 16,
-          itemCount: encounterDetailCont.encounterDetail.value.bodyCharts.length,
+          itemCount:
+              encounterDetailCont.encounterDetail.value.bodyCharts.length,
           itemBuilder: (ctx, index) {
-            BodyCharts bodyChartsData = encounterDetailCont.encounterDetail.value.bodyCharts[index];
+            BodyCharts bodyChartsData =
+                encounterDetailCont.encounterDetail.value.bodyCharts[index];
             return Stack(
               clipBehavior: Clip.none,
               alignment: Alignment.center,
@@ -421,7 +547,8 @@ class EncounterDetailScreen extends StatelessWidget {
                   behavior: HitTestBehavior.translucent,
                   child: bodyChartsData.fileUrl.isImage
                       ? Container(
-                          decoration: boxDecorationWithRoundedCorners(backgroundColor: transparentColor),
+                          decoration: boxDecorationWithRoundedCorners(
+                              backgroundColor: transparentColor),
                           child: CachedImageWidget(
                             url: bodyChartsData.fileUrl,
                             height: 80,
@@ -430,7 +557,8 @@ class EncounterDetailScreen extends StatelessWidget {
                             radius: defaultRadius,
                           ),
                         )
-                      : CommonPdfPlaceHolder(text: bodyChartsData.name, height: 80, width: 80),
+                      : CommonPdfPlaceHolder(
+                          text: bodyChartsData.name, height: 80, width: 80),
                 ),
               ],
             );

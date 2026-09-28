@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 import 'package:kivicare_patient/main.dart';
 import 'package:kivicare_patient/network/network_utils.dart';
 import 'package:kivicare_patient/utils/api_end_points.dart';
+import 'package:kivicare_patient/utils/colors.dart';
 import 'package:nb_utils/nb_utils.dart';
+
+import '../../components/nurse_request_design.dart';
 
 class _GovModel {
   final int id;
@@ -65,10 +68,12 @@ class _GovernorateCityPickerState extends State<GovernorateCityPicker> {
       final list = (data['data'] as List<dynamic>? ?? [])
           .map((e) => _GovModel.fromJson(e as Map<String, dynamic>))
           .toList();
+      if (!mounted) return;
       setState(() {
         _governorates = list;
       });
     } catch (_) {
+      if (!mounted) return;
       setState(() {
         _govFailed = true;
       });
@@ -84,18 +89,23 @@ class _GovernorateCityPickerState extends State<GovernorateCityPicker> {
     try {
       final data = await handleResponse(
         await buildHttpResponse(
-          '${APIEndPoints.cities}?governorate_id=$govId',
+          endpointWithQuery(
+            APIEndPoints.cities,
+            {'governorate_id': govId},
+          ),
           method: HttpMethodType.GET,
         ),
       );
       final list = (data['data'] as List<dynamic>? ?? [])
           .map((e) => _CityModel.fromJson(e as Map<String, dynamic>))
           .toList();
+      if (!mounted) return;
       setState(() {
         _cities = list;
         _cityLoading = false;
       });
     } catch (_) {
+      if (!mounted) return;
       setState(() {
         _cityFailed = true;
         _cityLoading = false;
@@ -120,9 +130,9 @@ class _GovernorateCityPickerState extends State<GovernorateCityPicker> {
         if (!_govFailed && _governorates.isNotEmpty)
           DropdownButtonFormField<int>(
             initialValue: widget.governorateId.value,
-            decoration: InputDecoration(
+            decoration: nurseRequestInputDecoration(
+              context,
               labelText: locale.value.governorate,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             ),
             items: _governorates
                 .map((g) => DropdownMenuItem(value: g.id, child: Text(g.name)))
@@ -136,16 +146,15 @@ class _GovernorateCityPickerState extends State<GovernorateCityPicker> {
             },
           )
         else
-          Text(locale.value.governorate, style: primaryTextStyle(color: Colors.grey)),
+          _DisabledSelector(label: locale.value.governorate),
         12.height,
         if (_showFreeTextCity)
           TextFormField(
             controller: _freeCityController,
             maxLength: 100,
-            decoration: InputDecoration(
+            decoration: nurseRequestInputDecoration(
+              context,
               labelText: locale.value.city,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              counterText: '',
             ),
             onChanged: (val) {
               widget.cityText.value = val.trim();
@@ -155,11 +164,10 @@ class _GovernorateCityPickerState extends State<GovernorateCityPicker> {
         else
           DropdownButtonFormField<int>(
             initialValue: widget.cityId.value,
-            decoration: InputDecoration(
-              labelText: _cityLoading
-                  ? '${locale.value.city}...'
-                  : locale.value.city,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            decoration: nurseRequestInputDecoration(
+              context,
+              labelText:
+                  _cityLoading ? '${locale.value.city}...' : locale.value.city,
             ),
             items: _cities
                 .map((c) => DropdownMenuItem(value: c.id, child: Text(c.name)))
@@ -174,6 +182,42 @@ class _GovernorateCityPickerState extends State<GovernorateCityPicker> {
             },
           ),
       ],
+    );
+  }
+}
+
+class _DisabledSelector extends StatelessWidget {
+  final String label;
+
+  const _DisabledSelector({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(minHeight: 52),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: nurseRequestSubtleSurface(context),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: nurseRequestBorderColor(context)),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.location_city_outlined,
+            color: gradientSecondaryStart,
+            size: 20,
+          ),
+          12.width,
+          Expanded(
+            child: Text(
+              label,
+              style: primaryTextStyle(color: nurseRequestMutedColor(context)),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

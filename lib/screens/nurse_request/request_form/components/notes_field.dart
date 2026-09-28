@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kivicare_patient/main.dart';
 
+import '../../components/nurse_request_design.dart';
+
 class NotesField extends StatelessWidget {
   final TextEditingController controller;
 
@@ -12,11 +14,10 @@ class NotesField extends StatelessWidget {
       controller: controller,
       maxLines: 4,
       maxLength: 2000,
-      decoration: InputDecoration(
+      decoration: nurseRequestInputDecoration(
+        context,
         labelText: locale.value.patientNotes,
         alignLabelWithHint: true,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        counterText: '',
       ),
     );
   }

@@ -6,13 +6,14 @@ import '../../../components/app_scaffold.dart';
 import '../../../components/loader_widget.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/price_widget.dart';
 
 class PharmacyFilterController extends GetxController {
   RxList<dynamic> brands = <dynamic>[].obs;
   RxList<dynamic> productTypes = <dynamic>[].obs;
 
   RxList<int> selectedBrandIds = <int>[].obs;
-  RxList<String> selectedProductTypes = <String>[].obs;
+  RxList<int> selectedProductTypeIds = <int>[].obs;
   Rx<RangeValues> priceRange = const RangeValues(0, 5000).obs;
   RxBool prescriptionRequired = false.obs;
 
@@ -23,13 +24,13 @@ class PharmacyFilterController extends GetxController {
   // Pre-populated from ProductListController when reopening the filter screen
   PharmacyFilterController({
     List<int>? initialBrandIds,
-    List<String>? initialProductTypes,
+    List<int>? initialProductTypeIds,
     RangeValues? initialPriceRange,
     bool? initialPrescriptionRequired,
   }) {
     if (initialBrandIds != null) selectedBrandIds.assignAll(initialBrandIds);
-    if (initialProductTypes != null) {
-      selectedProductTypes.assignAll(initialProductTypes);
+    if (initialProductTypeIds != null) {
+      selectedProductTypeIds.assignAll(initialProductTypeIds);
     }
     if (initialPriceRange != null) priceRange(initialPriceRange);
     if (initialPrescriptionRequired != null) {
@@ -66,7 +67,7 @@ class PharmacyFilterController extends GetxController {
 
   void reset() {
     selectedBrandIds.clear();
-    selectedProductTypes.clear();
+    selectedProductTypeIds.clear();
     priceRange(const RangeValues(0, 5000));
     prescriptionRequired(false);
   }
@@ -74,7 +75,7 @@ class PharmacyFilterController extends GetxController {
   void apply() {
     Get.back(result: {
       'brand_ids': selectedBrandIds.toList(),
-      'product_types': selectedProductTypes.toList(),
+      'product_type_ids': selectedProductTypeIds.toList(),
       'price_min': priceRange.value.start.toInt().toString(),
       'price_max': priceRange.value.end.toInt().toString(),
       'prescription_required': prescriptionRequired.value,
@@ -84,14 +85,14 @@ class PharmacyFilterController extends GetxController {
 
 class PharmacyFilterScreen extends StatefulWidget {
   final List<int> initialBrandIds;
-  final List<String> initialProductTypes;
+  final List<int> initialProductTypeIds;
   final RangeValues initialPriceRange;
   final bool initialPrescriptionRequired;
 
   const PharmacyFilterScreen({
     super.key,
     this.initialBrandIds = const [],
-    this.initialProductTypes = const [],
+    this.initialProductTypeIds = const [],
     this.initialPriceRange = const RangeValues(0, 5000),
     this.initialPrescriptionRequired = false,
   });
@@ -110,7 +111,7 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
     controller = Get.put(
       PharmacyFilterController(
         initialBrandIds: widget.initialBrandIds,
-        initialProductTypes: widget.initialProductTypes,
+        initialProductTypeIds: widget.initialProductTypeIds,
         initialPriceRange: widget.initialPriceRange,
         initialPrescriptionRequired: widget.initialPrescriptionRequired,
       ),
@@ -136,10 +137,10 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Failed to load filters', style: primaryTextStyle()),
+              Text(locale.value.loadFailed, style: primaryTextStyle()),
               const SizedBox(height: 16),
               AppButton(
-                text: 'Retry',
+                text: locale.value.retry,
                 color: appColorPrimary,
                 textColor: Colors.white,
                 onTap: controller.fetchFilters,
@@ -177,14 +178,12 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
                 child: Container(
                   padding: EdgeInsets.fromLTRB(
                       16, 16, 16, 16 + MediaQuery.paddingOf(context).bottom),
-                  decoration: BoxDecoration(
-                      color: surfaceElevated,
-                      boxShadow: [
-                        BoxShadow(
-                            color: softShadowColor,
-                            blurRadius: 16,
-                            offset: const Offset(0, -4))
-                      ]),
+                  decoration: BoxDecoration(color: surfaceElevated, boxShadow: [
+                    BoxShadow(
+                        color: softShadowColor,
+                        blurRadius: 16,
+                        offset: const Offset(0, -4))
+                  ]),
                   child: Row(
                     children: [
                       Expanded(
@@ -257,8 +256,8 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Text(title,
-          style: boldTextStyle(size: 16, color: appColorPrimary)),
+      child:
+          Text(title, style: boldTextStyle(size: 16, color: appColorPrimary)),
     );
   }
 
@@ -285,8 +284,7 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
                   overlayColor: appColorSecondary.withValues(alpha: 0.12),
                   trackHeight: 4,
                   rangeThumbShape: const RoundRangeSliderThumbShape(
-                      enabledThumbRadius: 9,
-                      elevation: 2),
+                      enabledThumbRadius: 9, elevation: 2),
                 ),
                 child: RangeSlider(
                   values: controller.priceRange.value,
@@ -294,8 +292,8 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
                   max: 5000,
                   divisions: 50,
                   labels: RangeLabels(
-                    '${controller.priceRange.value.start.toInt()} LE',
-                    '${controller.priceRange.value.end.toInt()} LE',
+                    formatCurrencyValue(controller.priceRange.value.start),
+                    formatCurrencyValue(controller.priceRange.value.end),
                   ),
                   onChanged: (val) => controller.priceRange(val),
                 ),
@@ -305,12 +303,12 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('${controller.priceRange.value.start.toInt()} LE',
-                        style: boldTextStyle(
-                            size: 13, color: appColorSecondary)),
-                    Text('${controller.priceRange.value.end.toInt()} LE',
-                        style: boldTextStyle(
-                            size: 13, color: appColorSecondary)),
+                    Text(formatCurrencyValue(controller.priceRange.value.start),
+                        style:
+                            boldTextStyle(size: 13, color: appColorSecondary)),
+                    Text(formatCurrencyValue(controller.priceRange.value.end),
+                        style:
+                            boldTextStyle(size: 13, color: appColorSecondary)),
                   ],
                 ),
               ),
@@ -350,17 +348,20 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
           spacing: 8,
           runSpacing: 8,
           children: controller.brands.map((brand) {
-            bool isSelected =
-                controller.selectedBrandIds.contains(brand['id']);
+            final brandId = brand['id'] is int
+                ? brand['id'] as int
+                : int.tryParse(brand['id']?.toString() ?? '');
+            if (brandId == null || brandId <= 0) {
+              return const SizedBox.shrink();
+            }
+            bool isSelected = controller.selectedBrandIds.contains(brandId);
             return _buildPillChip(
               label: brand['name'] ?? '',
               selected: isSelected,
               onTap: () {
-                if (!isSelected) {
-                  controller.selectedBrandIds.add(brand['id']);
-                } else {
-                  controller.selectedBrandIds.remove(brand['id']);
-                }
+                controller.selectedBrandIds.assignAll(
+                  isSelected ? const <int>[] : <int>[brandId],
+                );
               },
             );
           }).toList(),
@@ -372,17 +373,21 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
           spacing: 8,
           runSpacing: 8,
           children: controller.productTypes.map((type) {
+            final typeId = type['id'] is int
+                ? type['id'] as int
+                : int.tryParse(type['id']?.toString() ?? '');
+            if (typeId == null || typeId <= 0) {
+              return const SizedBox.shrink();
+            }
             bool isSelected =
-                controller.selectedProductTypes.contains(type);
+                controller.selectedProductTypeIds.contains(typeId);
             return _buildPillChip(
-              label: type.toString().capitalizeFirstLetter(),
+              label: type['name']?.toString() ?? '',
               selected: isSelected,
               onTap: () {
-                if (!isSelected) {
-                  controller.selectedProductTypes.add(type);
-                } else {
-                  controller.selectedProductTypes.remove(type);
-                }
+                controller.selectedProductTypeIds.assignAll(
+                  isSelected ? const <int>[] : <int>[typeId],
+                );
               },
             );
           }).toList(),
@@ -408,9 +413,9 @@ class _PharmacyFilterScreenState extends State<PharmacyFilterScreen> {
                 style: boldTextStyle(size: 14, color: appColorPrimary)),
             value: controller.prescriptionRequired.value,
             onChanged: (val) => controller.prescriptionRequired(val),
-            activeColor: appColorSecondary,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16)),
+            activeThumbColor: appColorSecondary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           )),
     );
   }

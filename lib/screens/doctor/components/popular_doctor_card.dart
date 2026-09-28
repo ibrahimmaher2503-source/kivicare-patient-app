@@ -82,7 +82,7 @@ class PopularDoctorCard extends StatelessWidget {
                   doctorElement.expert,
                   style: const TextStyle(
                     color: appColorSecondary,
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
                   maxLines: 1,
@@ -119,7 +119,7 @@ class PopularDoctorCard extends StatelessWidget {
                     color: isDarkMode.value
                         ? textTertiaryDark
                         : const Color(0xFF75818A),
-                    fontSize: 11,
+                    fontSize: 12,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

@@ -9,7 +9,8 @@ import '../home/model/system_service_res.dart';
 import 'model/service_list_model.dart';
 
 class ServiceListController extends GetxController {
-  Rx<Future<RxList<ServiceElement>>> serviceListFuture = Future(() => RxList<ServiceElement>()).obs;
+  Rx<Future<RxList<ServiceElement>>> serviceListFuture =
+      Future(() => RxList<ServiceElement>()).obs;
   RxBool isLoading = false.obs;
   RxList<ServiceElement> serviceList = RxList();
   RxBool isLastPage = false.obs;
@@ -20,11 +21,23 @@ class ServiceListController extends GetxController {
   RxInt clinicId = (-1).obs;
   RxInt categoryId = (-1).obs;
   RxInt isPopular = (-1).obs;
-  RxInt selectedFilterCount = 0.obs;
+
   ///Service Filter
   RxString serviceType = "".obs;
   RxString priceMin = ''.obs;
   RxString priceMax = ''.obs;
+  final Rxn<int> governorateId = Rxn<int>();
+  final Rxn<int> cityId = Rxn<int>();
+
+  int get activeFilterCount {
+    var count = 0;
+    if (clinicId.value > 0) count++;
+    if (category.value.id > 0) count++;
+    if (priceMin.value.isNotEmpty || priceMax.value.isNotEmpty) count++;
+    if (governorateId.value != null) count++;
+    if (cityId.value != null) count++;
+    return count;
+  }
 
   ///Search
   TextEditingController searchCont = TextEditingController();
@@ -34,7 +47,6 @@ class ServiceListController extends GetxController {
 
   @override
   void onInit() {
-
     if (Get.arguments is CategoryElement) {
       category(Get.arguments);
       getServiceList();
@@ -44,17 +56,14 @@ class ServiceListController extends GetxController {
     } else if (Get.arguments is ServiceElement) {
       serviceData(Get.arguments);
       getServiceList();
-    }
-    else if (Get.arguments is int) {
+    } else if (Get.arguments is int) {
       clinicId(Get.arguments as int);
       log('clinicId==== $clinicId');
       getServiceList();
-    }
-    else if(Get.arguments   is Map) {
-
+    } else if (Get.arguments is Map) {
       getServiceList();
     }
-   // getServiceList();
+    // getServiceList();
     super.onInit();
   }
 
@@ -75,15 +84,16 @@ class ServiceListController extends GetxController {
         servicePriceMin: priceMin.value,
         servicePriceMax: priceMax.value,
         isPopulars: isPopular.value,
+        governorateId: governorateId.value,
+        cityId: cityId.value,
         lastPageCallBack: (p0) {
           isLastPage(p0);
         },
       ),
-    ).catchError((e) {
-
+    ).catchError((e, stackTrace) {
       isLoading(false);
       log('ServiceList getServiceList err ==> $e');
-      return e;
+      Error.throwWithStackTrace(e, stackTrace);
     }).whenComplete(() => isLoading(false));
   }
 
@@ -91,10 +101,8 @@ class ServiceListController extends GetxController {
   void onClose() {
     searchStream.close();
     page(1);
-    searchCont.clear();
-    if (Get.context != null) {
-      scrollController.removeListener(() => hideKeyboard(Get.context));
-    }
+    searchCont.dispose();
+    scrollController.dispose();
     super.onClose();
   }
 }

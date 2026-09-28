@@ -2,27 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/utils/colors.dart';
+import 'package:kivicare_patient/main.dart';
 import '../filter_controller.dart';
 
 class FilterRatingComponent extends StatelessWidget {
-  final FilterController filterCont = Get.put(FilterController());
+  final FilterController filterCont = Get.find<FilterController>();
 
   FilterRatingComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Obx(
-          () => Column(
+      () => Column(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Rating", style: boldTextStyle()).paddingAll(16),
-              Obx(() => RangeSlider(
+              Text(locale.value.filterRating, style: boldTextStyle())
+                  .paddingAll(16),
+              Obx(
+                () => RangeSlider(
                   min: 1,
                   max: 5,
                   divisions: 4,
-                  labels: RangeLabels(filterCont.rangeRatingValues.value.start.toInt().toString(), filterCont.rangeRatingValues.value.end.toInt().toString()),
+                  labels: RangeLabels(
+                      filterCont.rangeRatingValues.value.start
+                          .toInt()
+                          .toString(),
+                      filterCont.rangeRatingValues.value.end
+                          .toInt()
+                          .toString()),
                   values: filterCont.rangeRatingValues.value,
                   activeColor: appColorPrimary,
                   overlayColor: const WidgetStatePropertyAll(appColorPrimary),
@@ -38,9 +47,11 @@ class FilterRatingComponent extends StatelessWidget {
                 child: Row(
                   children: [
                     Text("[ ", style: primaryTextStyle()),
-                    Text(filterCont.rangeRatingValues.value.start.toString(), style: primaryTextStyle()),
+                    Text(filterCont.rangeRatingValues.value.start.toString(),
+                        style: primaryTextStyle()),
                     Text(" - ", style: primaryTextStyle()),
-                    Text(filterCont.rangeRatingValues.value.end.toString(), style: primaryTextStyle()),
+                    Text(filterCont.rangeRatingValues.value.end.toString(),
+                        style: primaryTextStyle()),
                     Text(" ]", style: primaryTextStyle()),
                   ],
                 ),

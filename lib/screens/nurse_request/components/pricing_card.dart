@@ -4,6 +4,8 @@ import 'package:kivicare_patient/utils/colors.dart';
 import 'package:kivicare_patient/utils/price_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import 'nurse_request_design.dart';
+
 class PricingCard extends StatelessWidget {
   final double totalAmount;
   final String? currency;
@@ -21,11 +23,7 @@ class PricingCard extends StatelessWidget {
     final statusLabel = _paymentLabel(paymentStatus);
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: context.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: softShadowColor, blurRadius: 8, offset: const Offset(0, 2))],
-      ),
+      decoration: nurseRequestCardDecoration(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -34,12 +32,25 @@ class PricingCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              PriceWidget(price: totalAmount, size: 20),
+              Flexible(
+                child: PriceWidget(
+                  price: totalAmount,
+                  currencyCode: currency,
+                  size: 20,
+                ),
+              ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                constraints: const BoxConstraints(minHeight: 30),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: _statusColor(paymentStatus).withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: _statusColor(paymentStatus).withValues(alpha: 0.26),
+                  ),
                 ),
                 child: Text(
                   statusLabel,
@@ -71,11 +82,11 @@ class PricingCard extends StatelessWidget {
   Color _statusColor(String? s) {
     switch (s) {
       case 'paid':
-        return Colors.green;
+        return completedStatusColor;
       case 'refunded':
-        return Colors.blue;
+        return checkInStatusColor;
       default:
-        return Colors.orange;
+        return pendingStatusColor;
     }
   }
 }

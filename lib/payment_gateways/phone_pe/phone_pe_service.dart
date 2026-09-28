@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
+import '../../main.dart';
 import '../../utils/app_common.dart';
+import '../../network/network_utils.dart';
 
 class PhonePeServices {
   int bookingId;
@@ -30,7 +32,8 @@ class PhonePeServices {
   }) {
     isTest = kDebugMode;
     environmentValue = isTest ? phonePeTestEnvironment : phonePeLiveEnvironment;
-    appId = isTest ? "" : appConfigs.value.phonepe.phonepeAppId.validate().trim();
+    appId =
+        isTest ? "" : appConfigs.value.phonepe.phonepeAppId.validate().trim();
     merchantId = appConfigs.value.phonepe.phonepeMerchantId.validate().trim();
     saltKey = appConfigs.value.phonepe.phonepeSaltKey.validate().trim();
     saltIndex = appConfigs.value.phonepe.phonepeSaltIndex.validate().trim();
@@ -51,10 +54,13 @@ class PhonePeServices {
   Future<void> createBodyAndCheckSum(num amount) async {
     try {
       if (txnId.trim().isEmpty) {
-        txnId = "${generateRandomString(5).toUpperCase()}${bookingId > 0 ? bookingId : loginUserData.value.id}";
+        txnId =
+            "${generateRandomString(5).toUpperCase()}${bookingId > 0 ? bookingId : loginUserData.value.id}";
       }
       if (generatedUsersId.trim().isEmpty) {
-        generatedUsersId = loginUserData.value.email.isNotEmpty ? loginUserData.value.email : "${generateRandomString(6).toUpperCase()}${loginUserData.value.id}";
+        generatedUsersId = loginUserData.value.email.isNotEmpty
+            ? loginUserData.value.email
+            : "${generateRandomString(6).toUpperCase()}${loginUserData.value.id}";
       }
       Map<String, dynamic> requestBody = {
         "merchantId": merchantId,
@@ -64,8 +70,12 @@ class PhonePeServices {
         "redirectUrl": "https://webhook.site/redirect-url",
         "redirectMode": "REDIRECT",
         "callbackUrl": "https://webhook.site/callback-url",
-        if (loginUserData.value.mobile.isNotEmpty) "mobileNumber": loginUserData.value.mobile,
-        "paymentInstrument": {"type": "UPI_INTENT", "targetApp": "com.phonepe.app"},
+        if (loginUserData.value.mobile.isNotEmpty)
+          "mobileNumber": loginUserData.value.mobile,
+        "paymentInstrument": {
+          "type": "UPI_INTENT",
+          "targetApp": "com.phonepe.app"
+        },
       };
 
       String jsonString = jsonEncode(requestBody);
@@ -76,14 +86,15 @@ class PhonePeServices {
       checkSum = '$shaString###$saltIndex';
     } catch (e) {
       log('createBodyAndCheckSum error: ${e.toString()}');
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.transactionFailed));
     }
   }
 
   Future<void> phonePeCheckout(BuildContext context) async {
     bool isInitialized = false;
     try {
-      isInitialized = await PhonePePaymentSdk.init(environmentValue, appId, merchantId, kDebugMode);
+      isInitialized = await PhonePePaymentSdk.init(
+          environmentValue, appId, merchantId, kDebugMode);
       log('isInitialized  $isInitialized');
       if (isInitialized) {
         log('context.mounted  ${context.mounted}');
@@ -92,18 +103,20 @@ class PhonePeServices {
       }
     } catch (e) {
       log('phonePeCheckout error: ${e.toString()}');
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.transactionFailed));
       Get.back();
     }
   }
 
   Future<void> handlePayClick(BuildContext context) async {
     await createBodyAndCheckSum(totalAmount);
-    Future<Map<dynamic, dynamic>?> response = PhonePePaymentSdk.startTransaction(body, callback, checkSum, packageName).catchError((e) {
+    Future<Map<dynamic, dynamic>?> response =
+        PhonePePaymentSdk.startTransaction(
+                body, callback, checkSum, packageName)
+            .catchError((e) {
       log("Error in payment start transaction =============> ${e.toString()}");
     });
     await response.then((val) {
-      log('startPGTransaction response: $val');
       if (val?['status'] == 'SUCCESS') {
         onComplete.call({
           'transaction_id': txnId,
@@ -111,15 +124,17 @@ class PhonePeServices {
       }
     }).catchError((error) {
       log('startPGTransaction error: ${error.toString()}');
-      toast(error.toString());
+      toast(sanitizeBackendMessage(error, locale.value.transactionFailed));
     });
   }
 
   //generateRandomString
   String generateRandomString(int len) {
-    const chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    const chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
     Random rnd = Random();
-    var s = String.fromCharCodes(Iterable.generate(len, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
+    var s = String.fromCharCodes(Iterable.generate(
+        len, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
     log('generateRandomString(len:$len) --> ${s.toUpperCase()}');
     return s;
   }

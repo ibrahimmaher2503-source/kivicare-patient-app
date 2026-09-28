@@ -7,6 +7,8 @@ import '../../../components/app_scaffold.dart';
 import '../../../utils/empty_error_state_widget.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/common_base.dart';
+import '../../../utils/price_widget.dart';
 import '../model/pharmacy_model.dart';
 import 'pharmacy_checkout_screen.dart';
 
@@ -96,15 +98,28 @@ class _PharmacyWidget extends StatelessWidget {
               Container(
                 height: 56,
                 width: 56,
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    color: surfaceSubtle,
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(14),
+                  gradient: const LinearGradient(
+                    colors: [gradientSecondaryStart, gradientSecondaryEnd],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: appColorSecondary.withValues(alpha: 0.22),
+                      blurRadius: 12,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
                 child: pharmacy.image != null
                     ? CachedNetworkImage(
                             imageUrl: pharmacy.image!, fit: BoxFit.cover)
-                        .cornerRadiusWithClipRRect(12)
-                    : const Icon(Icons.local_pharmacy_outlined,
-                        color: appColorSecondary),
+                        .cornerRadiusWithClipRRect(14)
+                    : const Icon(Icons.local_pharmacy_rounded,
+                        color: Colors.white, size: 26),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -112,8 +127,7 @@ class _PharmacyWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(pharmacy.name ?? '',
-                        style: boldTextStyle(
-                            size: 15, color: appColorPrimary),
+                        style: boldTextStyle(size: 15, color: appColorPrimary),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 4),
@@ -133,8 +147,7 @@ class _PharmacyWidget extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        const Icon(Icons.star,
-                            color: ratingColor, size: 14),
+                        const Icon(Icons.star, color: ratingColor, size: 14),
                         const SizedBox(width: 4),
                         Text('${pharmacy.rating ?? 0.0}',
                             style: secondaryTextStyle(size: 12)),
@@ -144,16 +157,27 @@ class _PharmacyWidget extends StatelessWidget {
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsetsDirectional.only(
+                    start: 8, end: 10, top: 4, bottom: 4),
                 decoration: BoxDecoration(
-                  color: surfaceSubtle,
+                  color: appColorSecondary.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(999),
+                  border: Border.all(
+                    color: appColorSecondary.withValues(alpha: 0.18),
+                    width: 1,
+                  ),
                 ),
-                child: Text(
-                  '${pharmacy.distance?.toStringAsFixed(1) ?? "-"} km',
-                  style:
-                      boldTextStyle(size: 12, color: appColorSecondary),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.near_me_rounded,
+                        size: 12, color: appColorSecondary),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${pharmacy.distance?.toStringAsFixed(1) ?? "-"} km',
+                      style: boldTextStyle(size: 12, color: appColorSecondary),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -169,11 +193,10 @@ class _PharmacyWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(locale.value.deliveryFee,
-                      style: secondaryTextStyle(size: 11)),
+                      style: secondaryTextStyle(size: 12)),
                   const SizedBox(height: 2),
-                  Text('${pharmacy.deliveryFee} LE',
-                      style: boldTextStyle(
-                          size: 14, color: appColorSecondary)),
+                  Text(formatCurrencyValue(pharmacy.deliveryFee),
+                      style: boldTextStyle(size: 14, color: appColorSecondary)),
                 ],
               ),
               Row(
@@ -189,10 +212,9 @@ class _PharmacyWidget extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: (canFulfill
-                          ? completedStatusColor
-                          : pendingStatusColor)
-                      .withValues(alpha: 0.12),
+                  color:
+                      (canFulfill ? completedStatusColor : pendingStatusColor)
+                          .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
@@ -203,7 +225,7 @@ class _PharmacyWidget extends StatelessWidget {
                       color: canFulfill
                           ? completedStatusColor
                           : pendingStatusColor,
-                      size: 11),
+                      size: 12),
                 ),
               ),
             ],
@@ -232,7 +254,9 @@ class _PharmacyWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
                 onTap: () {
                   if (canFulfill) {
-                    Get.to(() => PharmacyCheckoutScreen(pharmacy: pharmacy));
+                    doIfLoggedIn(() => Get.to(
+                          () => PharmacyCheckoutScreen(pharmacy: pharmacy),
+                        ));
                   } else {
                     showConfirmDialog(
                       context,
@@ -240,8 +264,9 @@ class _PharmacyWidget extends StatelessWidget {
                       positiveText: locale.value.proceed,
                       negativeText: locale.value.chooseAnother,
                       onAccept: () {
-                        Get.to(() =>
-                            PharmacyCheckoutScreen(pharmacy: pharmacy));
+                        doIfLoggedIn(() => Get.to(
+                              () => PharmacyCheckoutScreen(pharmacy: pharmacy),
+                            ));
                       },
                     );
                   }
@@ -249,12 +274,20 @@ class _PharmacyWidget extends StatelessWidget {
                 child: Container(
                   height: 48,
                   alignment: Alignment.center,
-                  child: Text(
-                    locale.value.select,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        locale.value.select,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.arrow_forward_rounded,
+                          color: Colors.white, size: 18),
+                    ],
                   ),
                 ),
               ),

@@ -34,7 +34,7 @@ class DepartmentChip extends StatelessWidget {
               ),
               child: Text(
                 department.availableBeds.toString(),
-                style: boldTextStyle(size: 10, color: department.availableBeds! > 0 ? icuStatusAcceptedColor : grey),
+                style: boldTextStyle(size: 12, color: department.availableBeds! > 0 ? icuStatusAcceptedColor : grey),
               ),
             ),
           ],

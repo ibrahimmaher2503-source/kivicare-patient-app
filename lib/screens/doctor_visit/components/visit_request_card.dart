@@ -4,6 +4,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/locale_formatters.dart';
 import '../models/visit_request_model.dart';
 import 'visit_status_chip.dart';
 
@@ -78,7 +79,8 @@ class VisitRequestCard extends StatelessWidget {
                       ),
                       6.width,
                       Text(
-                        DateFormat('d MMM yyyy').format(request.preferredDate),
+                        DateFormat('d MMM yyyy', activeIntlLocale)
+                            .format(request.preferredDate),
                         style: secondaryTextStyle(size: 12),
                       ),
                       if (request.assignedDoctor != null) ...[

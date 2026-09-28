@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseLanguage {
+  String get onlinePaymentUnavailable;
+  String get loading;
+  String get cashAfterService;
   static BaseLanguage of(BuildContext context) =>
       Localizations.of<BaseLanguage>(context, BaseLanguage)!;
 
@@ -58,6 +61,10 @@ abstract class BaseLanguage {
 
   String get somethingWentWrong;
 
+  String get requestTimedOut;
+
+  String get requestTimedOutAfterSubmission;
+
   String get yourInternetIsNotWorking;
 
   String get profileUpdatedSuccessfully;
@@ -69,6 +76,8 @@ abstract class BaseLanguage {
   String get yourNewPasswordDoesnT;
 
   String get location;
+
+  String get startLocation;
 
   String get yes;
 
@@ -87,6 +96,10 @@ abstract class BaseLanguage {
   String get yourNewPasswordMust;
 
   String get password;
+
+  String get showPassword;
+
+  String get hidePassword;
 
   String get newPassword;
 
@@ -164,6 +177,12 @@ abstract class BaseLanguage {
 
   String get notifications;
 
+  String get enableNotifications;
+
+  String get notificationPermissionDescription;
+
+  String get notificationPermissionDenied;
+
   String get contactUs;
 
   String get getInTouchWithSupport;
@@ -179,6 +198,7 @@ abstract class BaseLanguage {
   String get closeApp;
 
   String get updateNow;
+  String get updateLinkUnavailable;
 
   String get signInFailed;
 
@@ -358,6 +378,8 @@ abstract class BaseLanguage {
 
   String get tax;
 
+  String get taxIncluded;
+
   String get total;
 
   String get yourReview;
@@ -415,6 +437,10 @@ abstract class BaseLanguage {
   String get viewDetail;
 
   String get noServicesFoundAtAMoment;
+
+  String get noServicesMatchFilters;
+
+  String get tryChangingFiltersOrSearchAgain;
 
   String get looksLikeThereIsNoServicesForThis;
 
@@ -487,6 +513,12 @@ abstract class BaseLanguage {
   String get asPerDoctorCharges;
 
   String get next;
+
+  String get skip;
+
+  String get finish;
+
+  String pageOf(int current, int total);
 
   String get personalizedHealthPlansForYourJourney;
 
@@ -823,6 +855,11 @@ abstract class BaseLanguage {
   String get advanceRefunded;
 
   String get refunded;
+  String get preparing;
+  String get outForDelivery;
+  String get delivered;
+  String get reviewed;
+  String get processed;
 
   String get failed;
 
@@ -946,8 +983,6 @@ abstract class BaseLanguage {
 
   String get requestHelpForAnyMistakeHappen;
 
-  String get otp;
-
   String get verify;
 
   String get closedOn;
@@ -970,19 +1005,11 @@ abstract class BaseLanguage {
 
   String get toSubmitYourProblemsSimplyPressAddButtonAndExplainYourConcern;
 
-  String get tryToAnotherWay;
-
-  String get pleaseEnterValid6digitOTP;
-
-  String get otpFromAuthenticatorApp;
-
   String get open;
 
   String get close;
 
   String get pleaseEnterValidEmail;
-
-  String get pleaseEnterOTP;
 
   String get passwordMustIncludeSpacialCharacter;
 
@@ -1015,14 +1042,15 @@ abstract class BaseLanguage {
   String get showMessage;
 
   String get createdBy;
+  String get createdOn;
 
   String get incident;
+
+  String get invalidIncidentType;
 
   String get reject;
 
   String get successfullyAdded;
-
-  String get otpSentToEmail;
 
   String get rejected;
 
@@ -1087,6 +1115,7 @@ abstract class BaseLanguage {
   String get nursePhone;
   String get estimatedTotal;
   String get paymentStatusUnpaid;
+  String get paymentContextUnavailable;
   String get paymentStatusPaid;
   String get paymentStatusRefunded;
   String get cancellationReason;
@@ -1096,6 +1125,8 @@ abstract class BaseLanguage {
   String get emptyRequestsSubtitle;
   String get loadFailed;
   String get retry;
+  String get paymentConfirmationFailedRetry;
+  String get pleaseContactSupportWithTransactionId;
   String get phoneInvalid;
   String get noDialerAvailable;
   String get descriptionTooLong;
@@ -1167,6 +1198,7 @@ abstract class BaseLanguage {
   String get unit;
   String get inStock;
   String get outOfStock;
+  String get productUnavailable;
 
   // Pharmacy Prescription
   String get notesOptional;
@@ -1389,6 +1421,15 @@ abstract class BaseLanguage {
   String get departmentDescription;
   String get patientName;
   String get patientAge;
+  String get invalidPatientAge;
+  String get reportDownloadUnavailable;
+  String get invalidReportDownloadUrl;
+  String get reportDownloadFailed;
+  String get labTestRequired;
+  String get preferredDatePast;
+  String get preferredTimeInvalid;
+  String get patientNotesTooLong;
+  String get selectedTest;
   String get patientGender;
   String get diagnosis;
   String get urgencyLevel;
@@ -1432,7 +1473,9 @@ abstract class BaseLanguage {
   String get keepRequest;
   String get requestCancelled;
   String get emergencyHotline;
+  String get emergencyNumberCopied;
   String get callNow;
+  String get locationUnavailable;
   String get myAdmissionRequests;
   String get statusTimeline;
   String get admissionDetails;

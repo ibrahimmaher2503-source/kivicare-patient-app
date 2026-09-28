@@ -112,7 +112,7 @@ class PopularServiceCard extends StatelessWidget {
                           locale.value.includesInclusiveTax,
                           style: secondaryTextStyle(
                             color: appColorSecondary,
-                            size: 10,
+                            size: 12,
                             fontStyle: FontStyle.italic,
                           ),
                         ),

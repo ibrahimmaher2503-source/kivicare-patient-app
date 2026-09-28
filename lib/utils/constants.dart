@@ -11,9 +11,8 @@ class Constants {
   static const perPageItem = 20;
   static var labelTextSize = 16;
   static const mapLinkForIOS = 'http://maps.apple.com/?q=';
-  static var googleMapPrefix = 'https://www.google.com/maps/search/?api=1&query=';
-  static const DEFAULT_EMAIL = 'john@gmail.com';
-  static const DEFAULT_PASS = '12345678';
+  static var googleMapPrefix =
+      'https://www.google.com/maps/search/?api=1&query=';
   static const appLogoSize = 120.0;
   static const DECIMAL_POINT = 2;
 }
@@ -25,9 +24,12 @@ class DateFormatConst {
   static const DD_MM_YYYY = "dd/MM/yyyy"; //Use to show only in UI
   static const MMMM_D_yyyy = "MMMM d, y"; //Use to show only in UI
   static const D_MMMM_yyyy = "d MMMM, y"; //Use to show only in UI
-  static const MMMM_D_yyyy_At_HH_mm_a = "MMMM d, y @ hh:mm a"; //Use to show only in UI
-  static const EEEE_D_MMMM_At_HH_mm_a = "EEEE d MMMM @ hh:mm a"; //Use to show only in UI
-  static const dd_MMM_yyyy_HH_mm_a = "dd MMM y, hh:mm a"; //Use to show only in UI
+  static const MMMM_D_yyyy_At_HH_mm_a =
+      "MMMM d, y @ hh:mm a"; //Use to show only in UI
+  static const EEEE_D_MMMM_At_HH_mm_a =
+      "EEEE d MMMM @ hh:mm a"; //Use to show only in UI
+  static const dd_MMM_yyyy_HH_mm_a =
+      "dd MMM y, hh:mm a"; //Use to show only in UI
   static const yyyy_MM_dd_HH_mm = 'yyyy-MM-dd HH:mm';
   static const yyyy_MM_dd = 'yyyy-MM-dd';
   static const HH_mm12Hour = 'hh:mm a';
@@ -61,7 +63,9 @@ class UserKeys {
   static String loginType = 'login_type';
   static String contactNumber = 'contact_number';
   static String dateOfBirth = 'date_of_birth';
+  static String playerId = 'player_id';
   static String userId = 'user_id';
+  static String idToken = 'id_token';
 }
 //endregion
 
@@ -91,10 +95,8 @@ class SharedPreferenceConst {
   static const USER_NAME = 'USER_NAME';
   static const LOGIN_SUCCESSFULL = 'LOGIN_SUCCESSFULL';
   static const USER_ID = 'USER_ID';
-  // static const ONE_TIME_PASSWORD = 'ONE_TIME_PASSWORD';
-  static const IS_GOOGLE_AUTHENTICATION = 'IS_GOOGLE_AUTHENTICATION';
-  static const GOOGLE_AUTHENTICATION_TYPE = 'IS_GOOGLE_AUTHENTICATION_TYPE';
   static const lastIcuRequestReferenceKey = 'lastIcuRequestReference';
+  static const lastIcuRequestRecoveryKey = 'lastIcuRequestRecovery';
 }
 //endregion
 
@@ -106,17 +108,17 @@ class SettingsLocalConst {
 
 //region defaultCountry
 Country get defaultCountry => Country(
-      phoneCode: '91',
-      countryCode: 'IN',
-      e164Sc: 91,
+      phoneCode: '20',
+      countryCode: 'EG',
+      e164Sc: 0,
       geographic: true,
       level: 1,
-      name: 'India',
-      example: '23456789',
-      displayName: 'India (IN) [+91]',
-      displayNameNoCountryCode: 'India (IN)',
-      e164Key: '91-IN-0',
-      fullExampleWithPlusSign: '+919123456789',
+      name: 'Egypt',
+      example: '1001234567',
+      displayName: 'Egypt (EG) [+20]',
+      displayNameNoCountryCode: 'Egypt (EG)',
+      e164Key: '20-EG-0',
+      fullExampleWithPlusSign: '+201001234567',
     );
 //endregion
 

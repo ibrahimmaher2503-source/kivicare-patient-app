@@ -17,111 +17,190 @@ class GreetingsComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PharmacyController pharmacyController = Get.isRegistered<PharmacyController>() ? Get.find() : Get.put(PharmacyController());
+    final pharmacyController = Get.find<PharmacyController>();
 
     return SizedBox(
       width: Get.width,
       child: Row(
         children: [
-          Obx(
-            () => CachedImageWidget(
-              url: loginUserData.value.profileImage,
-              fit: BoxFit.cover,
-              width: 48,
-              height: 48,
-              circle: true,
-            ).paddingRight(8).visible(loginUserData.value.profileImage.contains("http")),
-          ),
+          const _GreetingAvatar(),
+          12.width,
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Obx(
                 () => Text(
-                  '👋 ${locale.value.hey}, ${isLoggedIn.value ? loginUserData.value.userName.validate() : locale.value.guest.validate()}',
-                  style: primaryTextStyle(color: white, size: 20),
+                  '👋 ${locale.value.hey}${isLoggedIn.value && loginUserData.value.userName.validate().isNotEmpty ? ', ${loginUserData.value.userName.validate()}' : ''}',
+                  style: boldTextStyle(color: white, size: 18),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              2.height,
               Obx(
-                () => GestureDetector(
-                  onLongPress: () {
-                    loginUserData.value.address.copyToClipboard();
-                  },
-                  child: Row(
-                    children: [
-                      const CachedImageWidget(
-                        url: Assets.imagesLocationPin,
-                        height: 14,
+                () => loginUserData.value.address.isNotEmpty
+                    ? GestureDetector(
+                        onLongPress: () =>
+                            loginUserData.value.address.copyToClipboard(),
+                        child: Row(
+                          children: [
+                            Icon(Icons.location_on_outlined,
+                                size: 14, color: white.withValues(alpha: 0.75)),
+                            4.width,
+                            Text(
+                              loginUserData.value.address,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: secondaryTextStyle(
+                                  color: white.withValues(alpha: 0.85),
+                                  size: 13),
+                            ).flexible(),
+                          ],
+                        ),
+                      )
+                    : Text(
+                        locale.value.quicklyBookYourAppointmentNow,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: secondaryTextStyle(
+                            color: white.withValues(alpha: 0.75), size: 12),
                       ),
-                      8.width,
-                      Text(loginUserData.value.address, maxLines: 1, overflow: TextOverflow.ellipsis, style: secondaryTextStyle(color: white, size: 14)).flexible(),
-                    ],
-                  ),
-                ).paddingTop(4).visible(loginUserData.value.address.isNotEmpty),
               ),
             ],
           ).expand(),
-          16.width,
-          GestureDetector(
-            onTap: () {
-              doIfLoggedIn(() => Get.to(() => CartScreen()));
-            },
-            behavior: HitTestBehavior.translucent,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                const Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 24),
-                Positioned(
-                  top: -6,
-                  right: -6,
-                  child: Obx(
-                    () => Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: boxDecorationDefault(color: appColorSecondary, shape: BoxShape.circle),
-                      child: Text(
-                        pharmacyController.cartCount.value > 99 ? '99+' : pharmacyController.cartCount.value.toString(),
-                        style: secondaryTextStyle(color: white, size: 10),
-                      ),
-                    ).visible(pharmacyController.cartCount.value > 0),
-                  ),
-                )
-              ],
-            ),
-          ).paddingRight(12),
-          GestureDetector(
-            onTap: () {
-              doIfLoggedIn(() {
-                Get.to(() => NotificationScreen());
-              });
-            },
-            behavior: HitTestBehavior.translucent,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                const CachedImageWidget(
-                  url: Assets.navigationIcNotifyOutlined,
-                  color: Colors.white,
-                  height: 24,
-                ),
-                Positioned(
-                  top: -6,
-                  right: -6,
-                  child: Obx(
-                    () => Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: boxDecorationDefault(color: appColorSecondary, shape: BoxShape.circle),
-                      child: Text(
-                        unreadNotificationCount.value > 99 ? '99+' : unreadNotificationCount.value.toString(),
-                        style: secondaryTextStyle(color: white, size: 10),
-                      ),
-                    ).visible(unreadNotificationCount.value > 0),
-                  ),
-                )
-              ],
+          12.width,
+          _GreetingActionButton(
+            semanticLabel: locale.value.cart,
+            onTap: () => doIfLoggedIn(() => Get.to(() => CartScreen())),
+            badgeCount: pharmacyController.cartCount,
+            child: const Icon(Icons.shopping_cart_outlined,
+                color: Colors.white, size: 22),
+          ),
+          10.width,
+          _GreetingActionButton(
+            semanticLabel: locale.value.notifications,
+            onTap: () => doIfLoggedIn(() => Get.to(() => NotificationScreen())),
+            badgeCount: unreadNotificationCount,
+            child: const CachedImageWidget(
+              url: Assets.navigationIcNotifyOutlined,
+              color: Colors.white,
+              height: 22,
             ),
           ),
         ],
-      ).paddingSymmetric(horizontal: 24),
+      ).paddingSymmetric(horizontal: 20),
+    );
+  }
+}
+
+/// Circular avatar in the home top bar. Shows the user's photo when logged in,
+/// otherwise a default user glyph inside a soft translucent ring.
+class _GreetingAvatar extends StatelessWidget {
+  const _GreetingAvatar();
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final hasImage = loginUserData.value.profileImage.contains('http');
+      return Container(
+        width: 46,
+        height: 46,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white.withValues(alpha: 0.15),
+          border:
+              Border.all(color: Colors.white.withValues(alpha: 0.30), width: 1),
+        ),
+        child: hasImage
+            ? CachedImageWidget(
+                url: loginUserData.value.profileImage,
+                fit: BoxFit.cover,
+                width: 46,
+                height: 46,
+                circle: true,
+              )
+            : const Icon(Icons.person_rounded, color: Colors.white, size: 26),
+      );
+    });
+  }
+}
+
+/// Rounded translucent icon button used for the top-bar actions (cart, bell),
+/// with an optional count badge.
+class _GreetingActionButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final Widget child;
+  final RxInt badgeCount;
+  final String semanticLabel;
+
+  const _GreetingActionButton({
+    required this.onTap,
+    required this.child,
+    required this.badgeCount,
+    required this.semanticLabel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      button: true,
+      label: semanticLabel,
+      child: ExcludeSemantics(
+        child: Tooltip(
+          message: semanticLabel,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(14),
+              child: SizedBox.square(
+                dimension: 48,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.22),
+                            width: 1),
+                      ),
+                      child: child,
+                    ),
+                    PositionedDirectional(
+                      top: -5,
+                      end: -5,
+                      child: Obx(
+                        () => Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: boxDecorationDefault(
+                            color: appColorSecondary,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 1.4),
+                          ),
+                          child: Text(
+                            badgeCount.value > 99
+                                ? '99+'
+                                : badgeCount.value.toString(),
+                            style: secondaryTextStyle(color: white, size: 12),
+                          ),
+                        ).visible(badgeCount.value > 0),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

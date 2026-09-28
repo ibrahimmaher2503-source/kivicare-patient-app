@@ -8,12 +8,10 @@ import '../../../../../main.dart';
 import '../../../../../utils/empty_error_state_widget.dart';
 import '../filter_controller.dart';
 
-
 class FilterServiceComponent extends StatelessWidget {
-  final FilterController filterCont = Get.put(FilterController());
+  final FilterController filterCont = Get.find<FilterController>();
 
   FilterServiceComponent({super.key});
-  
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +19,14 @@ class FilterServiceComponent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(
-              () => SnapHelperWidget(
+          () => SnapHelperWidget(
             future: filterCont.categoryListFuture.value,
             errorBuilder: (error) {
               return AnimatedScrollView(
                 padding: const EdgeInsets.all(16),
                 children: [
                   NoDataWidget(
-                    title: error,
+                    title: locale.value.somethingWentWrong,
                     retryText: locale.value.reload,
                     imageWidget: const ErrorStateWidget(),
                     onRetry: () {
@@ -47,62 +45,66 @@ class FilterServiceComponent extends StatelessWidget {
                   retryText: locale.value.reload,
                   onRetry: () {
                     filterCont.categoryPage(1);
-                    filterCont.getServicesList();
+                    filterCont.getCategoryList();
                   },
                 );
               } else {
                 return Obx(
-                      () => Stack(
+                  () => Stack(
                     children: [
                       AnimatedScrollView(
                         children: [
                           AnimatedWrap(
-                            children: List.generate(filterCont.categoryList.length, (index) {
-                              CategoryElement service = filterCont.categoryList[index];
+                            children: List.generate(
+                                filterCont.categoryList.length, (index) {
+                              CategoryElement service =
+                                  filterCont.categoryList[index];
                               return InkWell(
                                 onTap: () {
                                   // filterCont.selectedCategoryData(service);
                                   filterCont.selectedCategoryDataFunc(service);
-
                                 },
                                 child: Stack(
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.all(6),
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 10),
                                       decoration: boxDecorationDefault(
                                         color: context.cardColor,
                                         borderRadius: BorderRadius.circular(6),
                                       ),
-                                      child:
-                                          Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-
-                                              Text(
-                                                service.name.toString(),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: primaryTextStyle(
-                                                  size: 12,
-                                                ),
-                                              ),
-
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            service.name.toString(),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: primaryTextStyle(
+                                              size: 12,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
-                                    if (filterCont.selectedCategoryData.value.id == service.id)
-                                      Positioned(
+                                    if (filterCont
+                                            .selectedCategoryData.value.id ==
+                                        service.id)
+                                      PositionedDirectional(
                                         top: 0,
-                                        right: 0,
+                                        end: 0,
                                         child: Container(
                                           decoration: const BoxDecoration(
                                             shape: BoxShape.circle,
                                             color: Colors.green,
                                           ),
                                           padding: const EdgeInsets.all(4),
-                                          child: const Icon(Icons.check, color: Colors.white, size: 14),
+                                          child: const Icon(Icons.check,
+                                              color: Colors.white, size: 14),
                                         ),
                                       ),
                                   ],
@@ -112,17 +114,22 @@ class FilterServiceComponent extends StatelessWidget {
                           ),
                         ],
                         onNextPage: () async {
-                          if (!filterCont.isServiceLoading.value) {
-                            filterCont.servicePage(filterCont.servicePage.value + 1);
-                            filterCont.getClinicsList();
+                          if (!filterCont.isCategoryLoading.value &&
+                              !filterCont.isCategoryLastPage.value) {
+                            filterCont.categoryPage(
+                              filterCont.categoryPage.value + 1,
+                            );
+                            filterCont.getCategoryList(showLoader: false);
                           }
                         },
                         onSwipeRefresh: () async {
-                          filterCont.clinicPage(1);
-                          return await filterCont.getCategoryList(showLoader: false);
+                          filterCont.categoryPage(1);
+                          return await filterCont.getCategoryList(
+                              showLoader: false);
                         },
                       ),
-                      if (filterCont.isCategoryLoading.isTrue) const LoaderWidget()
+                      if (filterCont.isCategoryLoading.isTrue)
+                        const LoaderWidget()
                     ],
                   ),
                 );

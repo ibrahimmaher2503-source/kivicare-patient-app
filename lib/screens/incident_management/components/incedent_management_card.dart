@@ -6,6 +6,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../../../api/core_apis.dart';
 import '../../../main.dart';
+import '../../../network/network_utils.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/constants.dart';
 import '../../booking/appointments_controller.dart';
@@ -27,8 +28,12 @@ class IncidentManagementCard extends StatelessWidget {
 
   final AppointmentsController appointmentsController = Get.find();
 
-  bool get isClosed => incidentData.incidenceTypeName.toLowerCase().toString().contains("close");
-  bool get isRejected => incidentData.incidenceTypeName.toLowerCase().toString().contains("reject");
+  String get statusName => incidentData.statusName.isNotEmpty
+      ? incidentData.statusName
+      : incidentData.incidenceTypeName;
+
+  bool get isClosed => statusName.toLowerCase().contains("close");
+  bool get isRejected => statusName.toLowerCase().contains("reject");
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +65,8 @@ class IncidentManagementCard extends StatelessWidget {
                 ),
                 if (isClosed)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(10),
@@ -72,7 +78,8 @@ class IncidentManagementCard extends StatelessWidget {
                   )
                 else if (isRejected)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.deepOrange,
                       borderRadius: BorderRadius.circular(10),
@@ -86,7 +93,9 @@ class IncidentManagementCard extends StatelessWidget {
                   DropdownButtonHideUnderline(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: incidentData.incidenceTypeName.toLowerCase() == 'open' ? context.primaryColor : Colors.red,
+                        color: statusName.toLowerCase() == 'open'
+                            ? context.primaryColor
+                            : Colors.red,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -99,8 +108,9 @@ class IncidentManagementCard extends StatelessWidget {
                         iconSize: 20,
                         value: incidentStatuses
                             .firstWhere(
-                              (e) => incidentData.incidenceTypeName.toLowerCase().contains(e.slug),
-                              orElse: () => CMNModel(slug: incidentData.incidenceTypeName.toLowerCase()),
+                              (e) => statusName.toLowerCase().contains(e.slug),
+                              orElse: () =>
+                                  CMNModel(slug: statusName.toLowerCase()),
                             )
                             .slug,
                         onChanged: (String? newValue) async {
@@ -114,25 +124,31 @@ class IncidentManagementCard extends StatelessWidget {
                               "reject": 3,
                             };
 
-                            final incidentType = incidentTypeMap[newValue.toLowerCase().trim()];
+                            final incidentType =
+                                incidentTypeMap[newValue.toLowerCase().trim()];
 
                             if (incidentType != null) {
                               final request = {
                                 "incident_type": incidentType,
                               };
                               incidentController.isLoading(true);
-                              await CoreServiceApis.updateIncidentStatus(incidentId: incidentData.id, request: request).then((res) {
-                                toast(res.message);
+                              await CoreServiceApis.updateIncidentStatus(
+                                      incidentId: incidentData.id,
+                                      request: request)
+                                  .then((res) {
+                                toast(sanitizeBackendMessage(res.message,
+                                    locale.value.somethingWentWrong));
                                 incidentController.incidencePage(1);
                                 incidentController.getIncidents();
                               }).catchError((e) {
-                                toast(e.toString());
+                                toast(sanitizeBackendMessage(
+                                    e, locale.value.somethingWentWrong));
                               }).whenComplete(() {
                                 incidentController.isLoading(false);
                               });
                             } else {
                               incidentController.isLoading(false);
-                              toast("Invalid incident type selected");
+                              toast(locale.value.invalidIncidentType);
                             }
                           }
                         },
@@ -150,7 +166,8 @@ class IncidentManagementCard extends StatelessWidget {
                           return incidentStatuses.map((status) {
                             return Text(
                               status.name,
-                              style: boldTextStyle(color: Colors.white, size: 12),
+                              style:
+                                  boldTextStyle(color: Colors.white, size: 12),
                             );
                           }).toList();
                         },
@@ -186,7 +203,9 @@ class IncidentManagementCard extends StatelessWidget {
                     style: boldTextStyle(color: Colors.green, size: 14),
                   ),
                   Text(
-                    incidentData.incidentCloseDate.validate().dateInDDMMYYYYFormat,
+                    incidentData.incidentCloseDate
+                        .validate()
+                        .dateInDDMMYYYYFormat,
                     style: secondaryTextStyle(),
                   )
                 ],
@@ -213,7 +232,8 @@ class IncidentManagementCard extends StatelessWidget {
               16.height,
               Row(
                 children: [
-                  Text("${locale.value.closedOn}: ", style: secondaryTextStyle()),
+                  Text("${locale.value.closedOn}: ",
+                      style: secondaryTextStyle()),
                   8.width,
                   Text(
                     incidentData.updatedAt.toString().dateInDDMMYYYYFormat,

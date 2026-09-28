@@ -1,13 +1,12 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:get/get.dart';
-import 'package:kivicare_patient/utils/constants.dart';
-import 'package:kivicare_patient/utils/local_storage.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../utils/app_common.dart';
-import '../../dashboard/dashboard_screen.dart';
-import '../../home/home_controller.dart';
 import '../../../api/auth_apis.dart';
+import '../../../network/network_utils.dart';
+import '../../../main.dart';
+import 'logout_flow.dart';
 
 class ProfileController extends GetxController {
   RxBool isLoading = false.obs;
@@ -26,20 +25,14 @@ class ProfileController extends GetxController {
 
   Future<void> handleLogout() async {
     if (isLoading.value) return;
-    isLoading(true);
-    log('HANDLELOGOUT: called');
-    await AuthServiceApis.logoutApi().then((value) {
-      isLoading(false);
-    }).catchError((e) {
-      toast(e.toString());
-    }).whenComplete(() {
-      AuthServiceApis.clearData();
-      isLoggedIn.value = false;
-      setValueToLocal(SharedPreferenceConst.IS_LOGGED_IN, false);
-      Get.offAll(() => DashboardScreen(), binding: BindingsBuilder(() {
-        Get.put(HomeController());
-      }));
-    });
+    await runLogoutFlow(
+      sendLogout: () async => AuthServiceApis.logoutApi(),
+      clearLocalSession: AuthServiceApis.clearData,
+      navigateToSignedOutHome: navigateToSignedOutHome,
+      setLoading: (loading) => isLoading(loading),
+      onRemoteFailure: (error) => toast(sanitizeBackendMessage(
+          error, locale.value.somethingWentWrongPleaseTryAgainLater)),
+    );
   }
 
   ///Get About Pages
@@ -53,7 +46,8 @@ class ProfileController extends GetxController {
       aboutPages(value.data);
     }).onError((error, stackTrace) {
       isLoading(false);
-      toast(error.toString());
+      toast(sanitizeBackendMessage(
+          error, locale.value.somethingWentWrongPleaseTryAgainLater));
     });
   }
 }

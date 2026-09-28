@@ -23,7 +23,7 @@ class FacilityTypeBadge extends StatelessWidget {
       child: Text(
         isRadiology ? locale.value.radiology : locale.value.labs,
         style: secondaryTextStyle(
-          size: 10,
+          size: 12,
           color: isRadiology ? context.primaryColor : Colors.green,
           weight: FontWeight.bold,
         ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:kivicare_patient/screens/auth/model/user_wallet_model.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -13,7 +15,10 @@ import '../screens/doctor/model/doctor_list_res.dart';
 import '../screens/service/model/service_list_model.dart';
 import 'constants.dart';
 
-bool isIqonicProduct = DOMAIN_URL.contains("apps.iqonic.design") || DOMAIN_URL.contains("iqonic.design") || DOMAIN_URL.contains("innoquad.in") || DOMAIN_URL.contains("192.168");
+bool isIqonicProduct = DOMAIN_URL.contains("apps.iqonic.design") ||
+    DOMAIN_URL.contains("iqonic.design") ||
+    DOMAIN_URL.contains("innoquad.in") ||
+    DOMAIN_URL.contains("192.168");
 
 RxString selectedLanguageCode = DEFAULT_LANGUAGE.obs;
 RxBool isLoggedIn = false.obs;
@@ -22,14 +27,40 @@ Rx<UserWalletData> userWalletData = UserWalletData().obs;
 RxBool isDarkMode = false.obs;
 RxInt unreadNotificationCount = 0.obs;
 
+typedef SessionStateClearer = FutureOr<void> Function();
+
+final Set<SessionStateClearer> _sessionStateClearers = <SessionStateClearer>{};
+Future<void> Function()? signedOutNavigationHandler;
+
+void registerSessionStateClearer(SessionStateClearer clearer) {
+  _sessionStateClearers.add(clearer);
+}
+
+void unregisterSessionStateClearer(SessionStateClearer clearer) {
+  _sessionStateClearers.remove(clearer);
+}
+
+Future<void> clearSessionScopedState() async {
+  for (final clearer in List<SessionStateClearer>.of(_sessionStateClearers)) {
+    await clearer();
+  }
+  unreadNotificationCount(0);
+  userWalletData(UserWalletData());
+}
+
+Future<void> navigateToSignedOutHome() async {
+  await signedOutNavigationHandler?.call();
+}
+
 // Global language list variable
 
 // Firebase Constants
 String get appNameTopic => APP_NAME
     .toLowerCase()
-    .replaceAll(RegExp(r'[^a-z0-9]+'), '-') // replace non-alphanumerics with '-'
-    .replaceAll(RegExp(r'-+'), '-')         // collapse multiple dashes into one
-    .replaceAll(RegExp(r'^-+|-+$'), '');    // trim leading/trailing dashes
+    .replaceAll(
+        RegExp(r'[^a-z0-9]+'), '-') // replace non-alphanumerics with '-'
+    .replaceAll(RegExp(r'-+'), '-') // collapse multiple dashes into one
+    .replaceAll(RegExp(r'^-+|-+$'), ''); // trim leading/trailing dashes
 //endregion
 
 Rx<Currency> appCurrency = Currency().obs;
@@ -55,13 +86,21 @@ Rx<SystemService> selectedSysService = SystemService().obs;
 Rx<PackageInfoData> currentPackageinfo = PackageInfoData().obs;
 
 // Currency position common
-bool get isCurrencyPositionLeft => appCurrency.value.currencyPosition == CurrencyPosition.CURRENCY_POSITION_LEFT;
+bool get isCurrencyPositionLeft =>
+    appCurrency.value.currencyPosition ==
+    CurrencyPosition.CURRENCY_POSITION_LEFT;
 
-bool get isCurrencyPositionRight => appCurrency.value.currencyPosition == CurrencyPosition.CURRENCY_POSITION_RIGHT;
+bool get isCurrencyPositionRight =>
+    appCurrency.value.currencyPosition ==
+    CurrencyPosition.CURRENCY_POSITION_RIGHT;
 
-bool get isCurrencyPositionLeftWithSpace => appCurrency.value.currencyPosition == CurrencyPosition.CURRENCY_POSITION_LEFT_WITH_SPACE;
+bool get isCurrencyPositionLeftWithSpace =>
+    appCurrency.value.currencyPosition ==
+    CurrencyPosition.CURRENCY_POSITION_LEFT_WITH_SPACE;
 
-bool get isCurrencyPositionRightWithSpace => appCurrency.value.currencyPosition == CurrencyPosition.CURRENCY_POSITION_RIGHT_WITH_SPACE;
+bool get isCurrencyPositionRightWithSpace =>
+    appCurrency.value.currencyPosition ==
+    CurrencyPosition.CURRENCY_POSITION_RIGHT_WITH_SPACE;
 //endregion
 
 Rx<ServiceElement> currentSelectedService = ServiceElement().obs;
@@ -72,7 +111,17 @@ RxList<AboutDataModel> aboutPages = RxList();
 
 //Booking Success
 RxString bookingSuccessDate = "".obs;
-Rx<SaveBookingRes> saveBookingRes = SaveBookingRes(saveBookingResData: SaveBookingResData()).obs;
+Rx<SaveBookingRes> saveBookingRes =
+    SaveBookingRes(saveBookingResData: SaveBookingResData()).obs;
 //
 
-bool canLaunchVideoCall({required String status}) => status.toLowerCase().contains(StatusConst.confirmed) || status.toLowerCase().contains(StatusConst.checkIn);
+bool canLaunchVideoCall({required String status}) =>
+    status.toLowerCase().contains(StatusConst.confirmed) ||
+    status.toLowerCase().contains(StatusConst.checkIn);
+
+/// The production backend currently accepts only cash and wallet payments.
+/// Keep all client flows on the server-supported wallet path until a payment
+/// gateway has a server-created transaction and verified webhook contract.
+String defaultOnlinePaymentMethod() {
+  return PaymentMethods.PAYMENT_METHOD_WALLET;
+}

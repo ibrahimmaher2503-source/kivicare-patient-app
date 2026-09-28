@@ -46,8 +46,11 @@ class FacilityLocationMap extends StatelessWidget {
                 const Icon(Icons.map_outlined,
                     size: 50, color: secondaryTextColor),
                 Text(
-                  'Map preview for $latitude, $longitude',
-                  style: secondaryTextStyle(size: 10),
+                  facilityName,
+                  style: secondaryTextStyle(size: 12),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                 ).paddingTop(80),
               ],
             ),

@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../network/network_utils.dart';
+import '../network/critical_operation.dart';
 import '../screens/labs_radiology/models/booking_payload.dart';
 import '../screens/labs_radiology/models/facility_list_response.dart';
 import '../screens/labs_radiology/models/facility_type.dart';
@@ -14,10 +16,17 @@ import '../utils/api_end_points.dart';
 
 class LabsRadiologyApis {
   static void _logError(String method, dynamic e, StackTrace? st) {
-    // ignore: avoid_print
-    print('[LabsRadiologyApis] $method ERROR: $e');
-    // ignore: avoid_print
-    if (st != null) print(st);
+    if (kDebugMode) {
+      debugPrint(
+        '[LabsRadiologyApis] $method failed (${e.runtimeType})',
+      );
+    }
+  }
+
+  static void _logStatus(String method, int statusCode) {
+    if (kDebugMode) {
+      debugPrint('[LabsRadiologyApis] $method status=$statusCode');
+    }
   }
 
   static Future<FacilityListResponse> searchLabs({
@@ -35,9 +44,7 @@ class LabsRadiologyApis {
 
     try {
       final raw = await buildHttpResponse('${APIEndPoints.labsSearch}$params');
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] searchLabs status=${raw.statusCode} body=${raw.body}');
+      _logStatus('searchLabs', raw.statusCode);
       final handled = await handleResponse(raw);
       return FacilityListResponse.fromJson(
         handled,
@@ -65,9 +72,7 @@ class LabsRadiologyApis {
     try {
       final raw =
           await buildHttpResponse('${APIEndPoints.radiologySearch}$params');
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] searchRadiology status=${raw.statusCode} body=${raw.body}');
+      _logStatus('searchRadiology', raw.statusCode);
       final handled = await handleResponse(raw);
       return FacilityListResponse.fromJson(
         handled,
@@ -82,9 +87,7 @@ class LabsRadiologyApis {
   static Future<List<LabTestCategoryModel>> getTestCategories() async {
     try {
       final raw = await buildHttpResponse(APIEndPoints.labTestCategories);
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] getTestCategories status=${raw.statusCode} body=${raw.body}');
+      _logStatus('getTestCategories', raw.statusCode);
       final response = await handleResponse(raw);
       return (response['data'] as List)
           .map((i) => LabTestCategoryModel.fromJson(i))
@@ -108,9 +111,7 @@ class LabsRadiologyApis {
 
     try {
       final raw = await buildHttpResponse('${APIEndPoints.labTests}$params');
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] getLabTests status=${raw.statusCode} body=${raw.body}');
+      _logStatus('getLabTests', raw.statusCode);
       final handled = await handleResponse(raw);
       return LabTestListResponse.fromJson(handled);
     } catch (e, st) {
@@ -122,9 +123,7 @@ class LabsRadiologyApis {
   static Future<LabTestModel> getLabTestById(int id) async {
     try {
       final raw = await buildHttpResponse('${APIEndPoints.labTests}/$id');
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] getLabTestById status=${raw.statusCode} body=${raw.body}');
+      _logStatus('getLabTestById', raw.statusCode);
       final response = await handleResponse(raw);
       return LabTestModel.fromJson(response['data']);
     } catch (e, st) {
@@ -137,9 +136,7 @@ class LabsRadiologyApis {
     try {
       final raw = await buildHttpResponse(
           '${APIEndPoints.facilityBookings}/labs/$labId/slots');
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] getLabSlots status=${raw.statusCode} body=${raw.body}');
+      _logStatus('getLabSlots', raw.statusCode);
       final response = await handleResponse(raw);
       return SlotsResponse.fromJson(response);
     } catch (e, st) {
@@ -152,9 +149,7 @@ class LabsRadiologyApis {
     try {
       final raw = await buildHttpResponse(
           '${APIEndPoints.facilityBookings}/radiology-centers/$centerId/slots');
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] getRadiologySlots status=${raw.statusCode} body=${raw.body}');
+      _logStatus('getRadiologySlots', raw.statusCode);
       final response = await handleResponse(raw);
       return SlotsResponse.fromJson(response);
     } catch (e, st) {
@@ -163,21 +158,53 @@ class LabsRadiologyApis {
     }
   }
 
-  static Future<TestOrderModel> createTestOrder(BookingPayload payload) async {
+  static Future<TestOrderModel> createTestOrder(
+    BookingPayload payload, {
+    required String idempotencyKey,
+  }) async {
     try {
       final raw = await buildHttpResponse(
         APIEndPoints.testOrders,
         method: HttpMethodType.POST,
         request: payload.toJson(),
+        header: {
+          ...buildHeaderTokens(),
+          ...criticalOperationHeaders(idempotencyKey),
+        },
       );
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] createTestOrder status=${raw.statusCode} body=${raw.body}');
+      _logStatus('createTestOrder', raw.statusCode);
       final response = await handleResponse(raw);
-      return TestOrderModel.fromJson(response['data']);
+      return parseCreatedTestOrderResponse(response);
     } catch (e, st) {
       _logError('createTestOrder', e, st);
       rethrow;
+    }
+  }
+
+  /// A 2xx response without a usable order receipt is still ambiguous: the
+  /// backend may have committed the order before losing its response body.
+  static TestOrderModel parseCreatedTestOrderResponse(dynamic response) {
+    if (response is! Map || response['data'] is! Map) {
+      throw const AmbiguousRequestOutcomeException(
+        'The server accepted the order but returned an invalid confirmation. Verify its status before retrying.',
+      );
+    }
+    try {
+      final order = TestOrderModel.fromJson(
+        (response['data'] as Map).cast<String, dynamic>(),
+      );
+      if (order.id <= 0 || order.referenceNumber.trim().isEmpty) {
+        throw const AmbiguousRequestOutcomeException(
+          'The server accepted the order but returned an invalid confirmation. Verify its status before retrying.',
+        );
+      }
+      return order;
+    } on AmbiguousRequestOutcomeException {
+      rethrow;
+    } on Object {
+      throw const AmbiguousRequestOutcomeException(
+        'The server accepted the order but returned an invalid confirmation. Verify its status before retrying.',
+      );
     }
   }
 
@@ -190,9 +217,7 @@ class LabsRadiologyApis {
 
     try {
       final raw = await buildHttpResponse('${APIEndPoints.testOrders}$params');
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] getTestOrders status=${raw.statusCode} body=${raw.body}');
+      _logStatus('getTestOrders', raw.statusCode);
       final handled = await handleResponse(raw);
       return TestOrderListResponse.fromJson(handled);
     } catch (e, st) {
@@ -204,9 +229,7 @@ class LabsRadiologyApis {
   static Future<TestOrderModel> getTestOrderById(int id) async {
     try {
       final raw = await buildHttpResponse('${APIEndPoints.testOrders}/$id');
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] getTestOrderById status=${raw.statusCode} body=${raw.body}');
+      _logStatus('getTestOrderById', raw.statusCode);
       final response = await handleResponse(raw);
       return TestOrderModel.fromJson(response['data']);
     } catch (e, st) {
@@ -216,7 +239,7 @@ class LabsRadiologyApis {
   }
 
   static Future<TestOrderModel> cancelTestOrder(int id,
-      {String? reason}) async {
+      {String? reason, required String idempotencyKey}) async {
     Map request = {};
     if (reason.validate().isNotEmpty) request['cancellation_reason'] = reason;
 
@@ -225,10 +248,12 @@ class LabsRadiologyApis {
         '${APIEndPoints.testOrders}/$id/cancel',
         method: HttpMethodType.POST,
         request: request,
+        header: {
+          ...buildHeaderTokens(),
+          ...criticalOperationHeaders(idempotencyKey),
+        },
       );
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] cancelTestOrder status=${raw.statusCode} body=${raw.body}');
+      _logStatus('cancelTestOrder', raw.statusCode);
       final response = await handleResponse(raw);
       return TestOrderModel.fromJson(response['data']);
     } catch (e, st) {
@@ -241,9 +266,7 @@ class LabsRadiologyApis {
     try {
       final raw = await buildHttpResponse(
           '${APIEndPoints.testOrders}/$orderId/report/download');
-      // ignore: avoid_print
-      print(
-          '[LabsRadiologyApis] getReportDownloadInfo status=${raw.statusCode} body=${raw.body}');
+      _logStatus('getReportDownloadInfo', raw.statusCode);
       return await handleResponse(raw);
     } catch (e, st) {
       _logError('getReportDownloadInfo($orderId)', e, st);

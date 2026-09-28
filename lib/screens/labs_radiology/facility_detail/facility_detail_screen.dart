@@ -136,7 +136,7 @@ class FacilityDetailScreen extends StatelessWidget {
                       2.width,
                       Text(test.currency,
                           style: secondaryTextStyle(
-                              size: 11, color: appColorSecondary)),
+                              size: 12, color: appColorSecondary)),
                     ],
                   ),
                 ],
@@ -149,12 +149,10 @@ class FacilityDetailScreen extends StatelessWidget {
               textStyle: boldTextStyle(color: Colors.white, size: 12),
               shapeBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              onTap: () {
-                Get.to(
-                    () => SlotSelectionScreen(facility: facility, test: test));
-              },
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              onTap: () => doIfLoggedIn(() => Get.to(
+                    () => SlotSelectionScreen(facility: facility, test: test),
+                  )),
             ),
           ],
         ),
@@ -170,7 +168,9 @@ class FacilityDetailScreen extends StatelessWidget {
       builder: (_) => TestDetailBottomSheet(
         test: test,
         onBook: () {
-          Get.to(() => SlotSelectionScreen(facility: facility, test: test));
+          doIfLoggedIn(() => Get.to(
+                () => SlotSelectionScreen(facility: facility, test: test),
+              ));
         },
       ),
     );

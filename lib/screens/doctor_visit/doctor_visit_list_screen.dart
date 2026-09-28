@@ -127,33 +127,48 @@ class _FilterChipsRow extends StatelessWidget {
         child: Row(
           children: filters.map((status) {
             final isSelected = controller.statusFilter.value == status;
-            return GestureDetector(
-              onTap: () => controller.setFilter(status),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                margin: const EdgeInsets.only(right: 8),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? gradientStart
-                      : (dark ? surfaceElevatedDark : surfaceSubtle),
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(
-                    color: isSelected
-                        ? gradientStart
-                        : (dark ? borderColorDark : whiteBorderColor),
-                  ),
-                ),
-                child: Text(
-                  labels[status] ?? locale.value.all,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight:
-                        isSelected ? FontWeight.w600 : FontWeight.w400,
-                    color: isSelected
-                        ? whiteTextColor
-                        : (dark ? textSecondaryDark : secondaryTextColor),
+            final label = labels[status] ?? locale.value.all;
+            return Semantics(
+              button: true,
+              selected: isSelected,
+              label: label,
+              child: Padding(
+                padding: const EdgeInsetsDirectional.only(end: 8),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(24),
+                    onTap: () => controller.setFilter(status),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      constraints: const BoxConstraints(minHeight: 48),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? gradientStart
+                            : (dark ? surfaceElevatedDark : surfaceSubtle),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: isSelected
+                              ? gradientStart
+                              : (dark ? borderColorDark : whiteBorderColor),
+                        ),
+                      ),
+                      child: Text(
+                        label,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w400,
+                          color: isSelected
+                              ? whiteTextColor
+                              : (dark
+                                  ? textSecondaryDark
+                                  : secondaryTextColor),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

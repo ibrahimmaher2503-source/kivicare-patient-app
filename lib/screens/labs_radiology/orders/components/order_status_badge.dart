@@ -40,7 +40,7 @@ class OrderStatusBadge extends StatelessWidget {
       child: Text(
         status.displayLabel(locale.value).toUpperCase(),
         style:
-            secondaryTextStyle(size: 10, color: color, weight: FontWeight.bold),
+            secondaryTextStyle(size: 12, color: color, weight: FontWeight.bold),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../main.dart';
 import '../../../utils/app_common.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/locale_formatters.dart';
 import '../models/visit_request_model.dart';
 import '../models/visit_status.dart';
 
@@ -130,7 +131,7 @@ class _TimelineRow extends StatelessWidget {
               child: step.reached
                   ? Icon(
                       step.cancelled ? Icons.close : Icons.check,
-                      size: 10,
+                      size: 12,
                       color: whiteTextColor,
                     )
                   : null,
@@ -156,9 +157,9 @@ class _TimelineRow extends StatelessWidget {
                 ),
                 if (step.time != null)
                   Text(
-                    DateFormat('d MMM yyyy, hh:mm a')
+                    DateFormat('d MMM yyyy, hh:mm a', activeIntlLocale)
                         .format(step.time!.toLocal()),
-                    style: secondaryTextStyle(size: 11),
+                    style: secondaryTextStyle(size: 12),
                   ),
               ],
             ),

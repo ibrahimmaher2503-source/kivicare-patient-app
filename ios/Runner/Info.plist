@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>KiviCare</string>
+	<string>Espitalia</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>KiviCare</string>
+	<string>Espitalia</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -24,17 +24,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.207755062367-b9r822nb8dn44ufs7f2sjph9ekraomb9</string>
-			</array>
-		</dict>
-	</array>
+	<key>GOOGLE_MAPS_API_KEY</key>
+	<string>$(GOOGLE_MAPS_API_KEY)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -67,17 +58,17 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>KiviCare - Patient App requires access to the Camera to upload your profile photo.</string>
+	<string>Espitalia needs camera access when you choose to upload a profile photo or medical document.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>KiviCare - Patient App requires address permission access to get the current location of the user instead of typing address manually. </string>
+	<string>Espitalia uses your location when you choose to find nearby healthcare services.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>KiviCare - Patient App requires address permission access to get the current location of the user instead of typing address manually. </string>
+	<string>Espitalia uses your location when you choose to find nearby healthcare services.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>KiviCare - Patient App requires address permission access to get the current location of the user instead of typing address manually. </string>
+	<string>Espitalia uses your location when you choose to find nearby healthcare services.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>KiviCare - Patient App requires access to the photo library to upload your profile photo.</string>
+	<string>Espitalia needs photo access when you choose to upload a profile photo or medical document.</string>
 	<key>Privacy-Location Usage Description</key>
-	<string>KiviCare - Patient App requires address permission access to get the current location of the user instead of typing address manually. </string>
+	<string>Espitalia uses your location when you choose to find nearby healthcare services.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 </dict>

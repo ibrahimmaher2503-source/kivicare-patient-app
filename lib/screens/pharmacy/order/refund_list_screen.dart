@@ -5,6 +5,7 @@ import '../../../api/pharmacy_apis.dart';
 import '../../../components/app_scaffold.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/price_widget.dart';
 import '../model/pharmacy_refund_model.dart';
 import '../utils/pharmacy_constants.dart';
 import '../utils/pharmacy_empty_state.dart';
@@ -114,9 +115,23 @@ class _RefundWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Container(
+                width: 40,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: statusColor.withValues(alpha: 0.20),
+                    width: 1,
+                  ),
+                ),
+                child: Icon(Icons.replay_rounded, color: statusColor, size: 20),
+              ),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   '${locale.value.orderNumber} #${refund.orderNumber}',
@@ -127,7 +142,10 @@ class _RefundWidget extends StatelessWidget {
               const SizedBox(width: 8),
               _RefundStatusPill(
                 color: statusColor,
-                label: refund.status.validate().capitalizeFirstLetter(),
+                label: PharmacyConstants.refundStatusLabel(
+                  locale.value,
+                  refund.status.validate(),
+                ),
               ),
             ],
           ),
@@ -171,9 +189,9 @@ class _RefundWidget extends StatelessWidget {
                     Text(locale.value.pharmacyRefundAmount,
                         style: secondaryTextStyle(size: 12)),
                     const SizedBox(height: 2),
-                    Text('${refund.refundAmount} LE',
-                        style: boldTextStyle(
-                            size: 15, color: appColorSecondary)),
+                    Text(formatCurrencyValue(refund.refundAmount),
+                        style:
+                            boldTextStyle(size: 15, color: appColorSecondary)),
                   ],
                 ),
             ],
@@ -207,7 +225,7 @@ class _RefundStatusPill extends StatelessWidget {
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 6),
-          Text(label, style: boldTextStyle(color: color, size: 11)),
+          Text(label, style: boldTextStyle(color: color, size: 12)),
         ],
       ),
     );

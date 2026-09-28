@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../../api/labs_radiology_apis.dart';
+import '../../../main.dart';
+import '../../../network/network_utils.dart';
 import '../models/lab_test_category_model.dart';
 
 class TestCategoriesController extends GetxController {
@@ -21,7 +23,7 @@ class TestCategoriesController extends GetxController {
     } catch (e, st) {
       // ignore: avoid_print
       print('[TestCategoriesController] fetchCategories ERROR: $e\n$st');
-      toast(e.toString());
+      toast(sanitizeBackendMessage(e, locale.value.somethingWentWrong));
     } finally {
       isLoading.value = false;
     }

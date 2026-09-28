@@ -4,6 +4,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../../components/cached_image_widget.dart';
 import '../../../main.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/common_base.dart';
 import '../components/department_chip.dart';
 import '../components/icu_empty_state.dart';
 import '../components/icu_shimmer.dart';
@@ -17,14 +18,16 @@ class HospitalDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(HospitalDetailController(hospitalId: hospitalId));
+    final controller =
+        Get.put(HospitalDetailController(hospitalId: hospitalId));
 
     return Scaffold(
       appBar: AppBar(title: Text(locale.value.hospitalDetail)),
       body: Stack(
         children: [
           Obx(() {
-            if (controller.isLoading.value && controller.hospital.value == null) {
+            if (controller.isLoading.value &&
+                controller.hospital.value == null) {
               return const IcuShimmer(itemCount: 1, height: 300);
             }
             if (controller.hospital.value == null) {
@@ -32,6 +35,7 @@ class HospitalDetailScreen extends StatelessWidget {
             }
 
             final h = controller.hospital.value!;
+            final location = h.formattedLocation;
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -49,9 +53,14 @@ class HospitalDetailScreen extends StatelessWidget {
                   8.height,
                   Row(
                     children: [
-                      const Icon(Icons.location_on_outlined, size: 16, color: secondaryTextColor),
+                      const Icon(Icons.location_on_outlined,
+                          size: 16, color: secondaryTextColor),
                       4.width,
-                      Text('${h.cityName.validate()}, ${h.governorateName.validate()}', style: secondaryTextStyle()),
+                      Text(
+                          location.isEmpty
+                              ? locale.value.locationUnavailable
+                              : location,
+                          style: secondaryTextStyle()),
                     ],
                   ),
                   24.height,
@@ -62,12 +71,15 @@ class HospitalDetailScreen extends StatelessWidget {
                   Text(locale.value.icuDepartments, style: boldTextStyle()),
                   8.height,
                   if (h.icuDepartments.isEmpty)
-                    Text(locale.value.noBedsAvailable, style: secondaryTextStyle())
+                    Text(locale.value.noBedsAvailable,
+                        style: secondaryTextStyle())
                   else
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: h.icuDepartments.map((e) => DepartmentChip(department: e)).toList(),
+                      children: h.icuDepartments
+                          .map((e) => DepartmentChip(department: e))
+                          .toList(),
                     ),
                   24.height,
                   Row(
@@ -100,9 +112,10 @@ class HospitalDetailScreen extends StatelessWidget {
                     text: locale.value.requestIcuAdmissionHere,
                     width: Get.width,
                     color: appColorAccent,
-                    onTap: () {
-                      Get.to(() => const AdmissionRequestFormScreen(), arguments: h);
-                    },
+                    onTap: () => doIfLoggedIn(() => Get.to(
+                          () => const AdmissionRequestFormScreen(),
+                          arguments: h,
+                        )),
                   ),
                   50.height,
                 ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:kivicare_patient/utils/locale_formatters.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:kivicare_patient/screens/labs_radiology/labs_radiology_common.dart';
 import '../../models/test_order_status_history_model.dart';
@@ -68,9 +68,11 @@ class StatusTimeline extends StatelessWidget {
                     ),
                     4.height,
                     Text(
-                      DateFormat('MMM d, yyyy - hh:mm a')
-                          .format(history.changedAt),
-                      style: secondaryTextStyle(size: 11),
+                      formatLocalizedDate(
+                        history.changedAt,
+                        'MMM d, yyyy - hh:mm a',
+                      ),
+                      style: secondaryTextStyle(size: 12),
                     ),
                     if (history.note.validate().isNotEmpty) ...[
                       4.height,

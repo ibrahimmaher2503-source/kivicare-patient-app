@@ -91,7 +91,7 @@ enum PaymentStatus {
   String displayLabel(BaseLanguage l) {
     switch (this) {
       case PaymentStatus.unpaid:
-        return 'Unpaid';
+        return l.paymentStatusUnpaid;
       case PaymentStatus.paid:
         return l.paid;
       case PaymentStatus.refunded:

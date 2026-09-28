@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../models/base_response_model.dart';
 import '../network/network_utils.dart';
+import '../network/critical_operation.dart';
+import '../screens/pharmacy/model/pharmacy_prescription_model.dart';
+import '../screens/pharmacy/utils/pharmacy_constants.dart';
 import '../utils/api_end_points.dart';
+import '../utils/constants.dart';
 
 class PharmacyApis {
   // Categories
@@ -22,7 +28,7 @@ class PharmacyApis {
     String search = '',
     int? categoryId,
     int? brandId,
-    String? productType,
+    int? productTypeId,
     String? priceMin,
     String? priceMax,
     bool? prescriptionRequired,
@@ -35,7 +41,9 @@ class PharmacyApis {
     if (search.isNotEmpty) params['search'] = search;
     if (categoryId != null) params['category_id'] = categoryId.toString();
     if (brandId != null) params['brand_id'] = brandId.toString();
-    if (productType != null) params['product_type'] = productType;
+    if (productTypeId != null) {
+      params['product_type_id'] = productTypeId.toString();
+    }
     if (priceMin != null) params['price_min'] = priceMin;
     if (priceMax != null) params['price_max'] = priceMax;
     if (prescriptionRequired != null) {
@@ -127,25 +135,37 @@ class PharmacyApis {
     required String paymentMethod,
     String? couponCode,
     int? prescriptionId,
+    required String idempotencyKey,
   }) async {
     Map request = {
       'pharmacy_id': pharmacyId,
       'delivery_address': deliveryAddress,
-      'payment_method': paymentMethod,
+      'payment_method': paymentMethod == PaymentMethods.PAYMENT_METHOD_CASH
+          ? 'cash_on_delivery'
+          : paymentMethod,
     };
     if (couponCode != null) request['coupon_code'] = couponCode;
     if (prescriptionId != null) request['prescription_id'] = prescriptionId;
-    return await handleResponse(await buildHttpResponse(
-        APIEndPoints.pharmacyOrders,
-        request: request,
-        method: HttpMethodType.POST));
+    return await handleResponse(
+        await buildHttpResponse(APIEndPoints.pharmacyOrders,
+            request: request,
+            header: {
+              ...buildHeaderTokens(),
+              ...criticalOperationHeaders(idempotencyKey),
+            },
+            method: HttpMethodType.POST));
   }
 
-  static Future<BaseResponseModel> cancelOrder(int orderId) async {
+  static Future<BaseResponseModel> cancelOrder(int orderId,
+      {required String idempotencyKey}) async {
     return BaseResponseModel.fromJson(await handleResponse(
         await buildHttpResponse(
             '${APIEndPoints.pharmacyOrders}/$orderId/cancel',
-            method: HttpMethodType.POST)));
+            method: HttpMethodType.POST,
+            header: {
+          ...buildHeaderTokens(),
+          ...criticalOperationHeaders(idempotencyKey),
+        })));
   }
 
   // Prescriptions
@@ -164,10 +184,11 @@ class PharmacyApis {
   /// Deprecated callback-based upload. Use [uploadPrescriptionAsync] instead.
   /// Callers should migrate to the async version which is consistent with the
   /// rest of the API layer and supports try/await/catch error handling.
-  @Deprecated('Use uploadPrescriptionAsync which returns Future<dynamic>.')
+  @Deprecated('Use uploadPrescriptionAsync which returns a prescription.')
   static Future<void> uploadPrescription({
     required List<String> imagePaths,
     String? notes,
+    required String idempotencyKey,
     required VoidCallback onSuccess,
     required Function(dynamic) onError,
   }) async {
@@ -180,7 +201,10 @@ class PharmacyApis {
           .add(await MultipartFile.fromPath('prescriptions[]', path));
     }
 
-    multiPartRequest.headers.addAll(buildHeaderTokens());
+    multiPartRequest.headers.addAll({
+      ...buildHeaderTokens(),
+      ...criticalOperationHeaders(idempotencyKey),
+    });
 
     await sendMultiPartRequest(multiPartRequest, onSuccess: (data) async {
       onSuccess.call();
@@ -195,9 +219,10 @@ class PharmacyApis {
   ///   try {
   ///     final res = await PharmacyApis.uploadPrescriptionAsync(imagePaths: [...]);
   ///   } catch (e) { toast(e.toString()); }
-  static Future<dynamic> uploadPrescriptionAsync({
+  static Future<PharmacyPrescription> uploadPrescriptionAsync({
     required List<String> imagePaths,
     String? notes,
+    required String idempotencyKey,
   }) async {
     var multiPartRequest =
         await getMultiPartRequest(APIEndPoints.pharmacyPrescriptions);
@@ -208,7 +233,10 @@ class PharmacyApis {
           .add(await MultipartFile.fromPath('prescriptions[]', path));
     }
 
-    multiPartRequest.headers.addAll(buildHeaderTokens());
+    multiPartRequest.headers.addAll({
+      ...buildHeaderTokens(),
+      ...criticalOperationHeaders(idempotencyKey),
+    });
 
     dynamic result;
     dynamic uploadError;
@@ -220,7 +248,7 @@ class PharmacyApis {
     });
 
     if (uploadError != null) throw uploadError;
-    return result;
+    return parsePrescriptionUploadResponse(result);
   }
 
   // Coupons
@@ -277,4 +305,31 @@ class PharmacyApis {
         await buildHttpResponse(APIEndPoints.pharmacyReadAllNotifications,
             method: HttpMethodType.POST)));
   }
+}
+
+PharmacyPrescription parsePrescriptionUploadResponse(dynamic raw) {
+  final decoded = raw is String ? jsonDecode(raw) : raw;
+  if (decoded is! Map) {
+    throw const FormatException('Invalid prescription upload response');
+  }
+  final response = Map<String, dynamic>.from(decoded);
+  if (response['status'] != true) {
+    throw FormatException(
+      response['message']?.toString() ?? 'Prescription upload failed',
+    );
+  }
+  final rawData = response['data'];
+  if (rawData is! Map) {
+    throw const FormatException('Prescription data is missing');
+  }
+  final data = Map<String, dynamic>.from(rawData);
+  final nested = data['prescription'];
+  final prescription = PharmacyPrescription.fromJson(
+    nested is Map ? Map<String, dynamic>.from(nested) : data,
+  );
+  if ((prescription.id ?? 0) <= 0 ||
+      prescription.status == PharmacyConstants.prescriptionRejected) {
+    throw const FormatException('Prescription upload was not accepted');
+  }
+  return prescription;
 }

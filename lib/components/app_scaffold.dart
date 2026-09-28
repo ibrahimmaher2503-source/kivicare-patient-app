@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../utils/colors.dart';
 import '../utils/common_base.dart';
@@ -64,21 +64,31 @@ class AppScaffold extends StatelessWidget {
               child: AppBar(
                 elevation: appBarelevation,
                 automaticallyImplyLeading: automaticallyImplyLeading,
-                backgroundColor: appBarbackgroundColor ?? context.scaffoldBackgroundColor,
+                backgroundColor:
+                    appBarbackgroundColor ?? context.scaffoldBackgroundColor,
                 centerTitle: isCenterTitle,
                 titleSpacing: 2,
                 title: appBarTitle ??
-                    Text(
-                      appBartitleText ?? "",
-                      style: primaryTextStyle(size: 16),
-                    ).paddingLeft(hasLeadingWidget ? 0 : 16),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(
+                        start: hasLeadingWidget ? 0 : 16,
+                      ),
+                      child: Text(
+                        appBartitleText ?? "",
+                        style: primaryTextStyle(size: 16),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                 actions: actions,
-                leading: leadingWidget ?? (hasLeadingWidget ? backButton() : null),
+                leading:
+                    leadingWidget ?? (hasLeadingWidget ? backButton() : null),
               ).paddingTop(10),
             ),
-      backgroundColor: scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
+      backgroundColor:
+          scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
       body: Body(
-        isLoading: isLoading ?? false.obs,
+        isLoading: isLoading,
         child: body,
       ),
       bottomNavigationBar: bottomNavBar,
@@ -126,7 +136,21 @@ class AppScaffoldNew extends StatelessWidget {
     this.fabWidget,
   });
 
-  double get topBarHeight => hideAppBar ? 0 : appBarVerticalSize ?? Get.height * 0.15;
+  double get topBarHeight =>
+      hideAppBar ? 0 : appBarVerticalSize ?? Get.height * 0.15;
+
+  /// The status bar is transparent, so its icons must contrast with the
+  /// top-bar colour instead of the app's overall light/dark theme.
+  SystemUiOverlayStyle get systemUiOverlayStyle {
+    final hasDarkTopBar =
+        (topBarBgColor ?? appColorPrimary).computeLuminance() < 0.5;
+    return SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness:
+          hasDarkTopBar ? Brightness.light : Brightness.dark,
+      statusBarBrightness: hasDarkTopBar ? Brightness.dark : Brightness.light,
+    );
+  }
 
   Widget get topBarComponent =>
       appBarChild ??
@@ -146,24 +170,25 @@ class AppScaffoldNew extends StatelessWidget {
                       appBartitleText ?? "",
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
-                      style: primaryTextStyle(size: 18, fontFamily: GoogleFonts.interTight(fontWeight: FontWeight.w600).fontFamily, color: white),
+                      style: primaryTextStyle(
+                          size: 18, fontFamily: 'Outfit', color: white),
                     ).expand(),
                   ],
                 ).paddingSymmetric(horizontal: Get.width * 0.12),
-                Positioned(
-                  left: 0,
+                PositionedDirectional(
+                  start: 0,
                   child: leadingWidget ??
                       (hasLeadingWidget
-                          ? IconButton(
+                          ? BackButton(
                               onPressed: () {
                                 Get.back();
                               },
-                              icon: const Icon(Icons.arrow_back_ios_new_outlined, color: white, size: 20),
+                              color: white,
                             )
                           : const Offstage()),
                 ),
-                Positioned(
-                  right: 0,
+                PositionedDirectional(
+                  end: 0,
                   child: Row(
                     children: actions ?? [],
                   ),
@@ -176,44 +201,61 @@ class AppScaffoldNew extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: resizeToAvoidBottomPadding,
-      backgroundColor: scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
-      body: Stack(
-        children: [
-          Container(
-            width: Get.width,
-            height: Get.height,
-            decoration: BoxDecoration(color: topBarBgColor ?? appColorPrimary),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Positioned(
-                  height: topBarHeight,
-                  child: Container(
-                    child: topBarComponent.paddingTop(context.statusBarHeight),
-                  ),
-                ),
-                Container(
-                  clipBehavior: clipBehaviorSplitRegion,
-                  margin: EdgeInsets.only(top: topBarHeight),
-                  decoration: boxDecorationDefault(
-                    color: scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(defaultRadius * 2),
-                      topRight: Radius.circular(defaultRadius * 2),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: systemUiOverlayStyle,
+      child: Scaffold(
+        resizeToAvoidBottomInset: resizeToAvoidBottomPadding,
+        backgroundColor:
+            scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
+        body: SafeArea(
+          top: false,
+          child: Stack(
+            children: [
+              Container(
+                width: Get.width,
+                height: Get.height,
+                decoration:
+                    BoxDecoration(color: topBarBgColor ?? appColorPrimary),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Positioned(
+                      height: topBarHeight,
+                      child: Container(
+                        child:
+                            topBarComponent.paddingTop(context.statusBarHeight),
+                      ),
                     ),
-                  ),
-                  child: body,
+                    Container(
+                      clipBehavior: clipBehaviorSplitRegion,
+                      margin: EdgeInsets.only(top: topBarHeight),
+                      decoration: boxDecorationDefault(
+                        color: scaffoldBackgroundColor ??
+                            context.scaffoldBackgroundColor,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(defaultRadius * 2),
+                          topRight: Radius.circular(defaultRadius * 2),
+                        ),
+                      ),
+                      child: body,
+                    ),
+                    ...widgetsStackedOverBody,
+                  ],
                 ),
-                ...widgetsStackedOverBody,
-              ],
-            ),
+              ),
+              if (isLoading != null)
+                Obx(
+                  () => isLoading!.value
+                      ? BlockingLoaderWidget(
+                          isBlurBackground: isBlurBackgroundinLoader,
+                        )
+                      : const SizedBox.shrink(),
+                ),
+            ],
           ),
-          Obx(() => LoaderWidget(isBlurBackground: isBlurBackgroundinLoader).center().visible((isLoading ?? false.obs).value))
-        ],
+        ),
+        floatingActionButton: fabWidget,
       ),
-      floatingActionButton: fabWidget,
     );
   }
 }

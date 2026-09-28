@@ -23,7 +23,12 @@ bool pharmacyBool(dynamic value) {
 }
 
 List<String> pharmacyStringList(dynamic value) {
-  if (value is List) return value.map((item) => item.toString()).toList();
-  if (value is String && value.isNotEmpty) return [value];
+  if (value is List) {
+    return value
+        .map((item) => item.toString().trim())
+        .where((item) => item.isNotEmpty)
+        .toList();
+  }
+  if (value is String && value.trim().isNotEmpty) return [value.trim()];
   return [];
 }

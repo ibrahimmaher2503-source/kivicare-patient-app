@@ -56,13 +56,17 @@ class SignUpScreen extends StatelessWidget {
                       focus: signUpController.fisrtNameFocus,
                       nextFocus: signUpController.lastNameFocus,
                       textFieldType: TextFieldType.NAME,
+                      errorThisFieldRequired: locale.value.thisFieldIsRequired,
                       decoration: inputDecoration(
                         context,
                         fillColor: context.cardColor,
                         filled: true,
                         hintText: "${locale.value.eG} ${locale.value.merry}",
                       ),
-                      suffix: commonLeadingWid(imgPath: Assets.navigationIcUserOutlined, size: 14).paddingAll(14),
+                      suffix: commonLeadingWid(
+                              imgPath: Assets.navigationIcUserOutlined,
+                              size: 14)
+                          .paddingAll(14),
                     ),
                     16.height,
                     AppTextField(
@@ -72,13 +76,17 @@ class SignUpScreen extends StatelessWidget {
                       focus: signUpController.lastNameFocus,
                       nextFocus: signUpController.emailFocus,
                       textFieldType: TextFieldType.NAME,
+                      errorThisFieldRequired: locale.value.thisFieldIsRequired,
                       decoration: inputDecoration(
                         context,
                         fillColor: context.cardColor,
                         filled: true,
                         hintText: "${locale.value.eG}  ${locale.value.doe}",
                       ),
-                      suffix: commonLeadingWid(imgPath: Assets.navigationIcUserOutlined, size: 14).paddingAll(14),
+                      suffix: commonLeadingWid(
+                              imgPath: Assets.navigationIcUserOutlined,
+                              size: 14)
+                          .paddingAll(14),
                     ),
                     16.height,
                     AppTextField(
@@ -88,13 +96,16 @@ class SignUpScreen extends StatelessWidget {
                       focus: signUpController.emailFocus,
                       nextFocus: signUpController.passwordFocus,
                       textFieldType: TextFieldType.EMAIL_ENHANCED,
+                      errorThisFieldRequired: locale.value.thisFieldIsRequired,
                       decoration: inputDecoration(
                         context,
                         fillColor: context.cardColor,
                         filled: true,
                         hintText: "${locale.value.eG} merry_456@gmail.com",
                       ),
-                      suffix: commonLeadingWid(imgPath: Assets.iconsIcMail, size: 14).paddingAll(14),
+                      suffix: commonLeadingWid(
+                              imgPath: Assets.iconsIcMail, size: 14)
+                          .paddingAll(14),
                     ),
                     16.height,
                     Focus(
@@ -108,7 +119,8 @@ class SignUpScreen extends StatelessWidget {
                         focus: signUpController.passwordFocus,
                         textFieldType: TextFieldType.PASSWORD,
                         obscureText: true,
-                        onChanged: (val) => signUpController.checkPasswordRules(val),
+                        onChanged: (val) =>
+                            signUpController.checkPasswordRules(val),
                         decoration: inputDecoration(
                           context,
                           fillColor: context.cardColor,
@@ -120,13 +132,20 @@ class SignUpScreen extends StatelessWidget {
                             return locale.value.passwordIsRequired;
                           } else if (value.length < 8) {
                             return locale.value.passwordTooShort;
-                          } else if (!signUpController.hasSpecial.value || !signUpController.hasNumber.value || !signUpController.hasUppercase.value || !signUpController.hasLetter.value) {
+                          } else if (!signUpController.hasSpecial.value ||
+                              !signUpController.hasNumber.value ||
+                              !signUpController.hasUppercase.value ||
+                              !signUpController.hasLetter.value) {
                             return locale.value.passwordDoesNotMeetRequirements;
                           }
                           return null;
                         },
-                        suffixPasswordVisibleWidget: commonLeadingWid(imgPath: Assets.iconsIcEye, size: 14).paddingAll(12),
-                        suffixPasswordInvisibleWidget: commonLeadingWid(imgPath: Assets.iconsIcEyeSlash, size: 14).paddingAll(12),
+                        suffixPasswordVisibleWidget: commonLeadingWid(
+                                imgPath: Assets.iconsIcEye, size: 14)
+                            .paddingAll(12),
+                        suffixPasswordInvisibleWidget: commonLeadingWid(
+                                imgPath: Assets.iconsIcEyeSlash, size: 14)
+                            .paddingAll(12),
                       ),
                     ),
                     6.height,
@@ -136,19 +155,23 @@ class SignUpScreen extends StatelessWidget {
                         children: [
                           PasswordRuleItem(
                             isValid: signUpController.hasUppercase.value,
-                            text: locale.value.passwordMustIncludeAtLeastOneCapitalCharacter,
+                            text: locale.value
+                                .passwordMustIncludeAtLeastOneCapitalCharacter,
                           ),
                           PasswordRuleItem(
                             isValid: signUpController.hasLetter.value,
-                            text: locale.value.passwordMustIncludeAtLeastOneLowercaseCharacter,
+                            text: locale.value
+                                .passwordMustIncludeAtLeastOneLowercaseCharacter,
                           ),
                           PasswordRuleItem(
                             isValid: signUpController.hasNumber.value,
-                            text: locale.value.passwordMustIncludeAtLeastOneNumber,
+                            text: locale
+                                .value.passwordMustIncludeAtLeastOneNumber,
                           ),
                           PasswordRuleItem(
                             isValid: signUpController.hasSpecial.value,
-                            text: locale.value.passwordMustIncludeSpacialCharacter,
+                            text: locale
+                                .value.passwordMustIncludeSpacialCharacter,
                           ),
                         ],
                       ).visible(signUpController.passContHasFocus.value),
@@ -165,33 +188,53 @@ class SignUpScreen extends StatelessWidget {
                                 value: signUpController.isAcceptedTc.value,
                                 activeColor: appColorPrimary,
                                 visualDensity: VisualDensity.compact,
-                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
                                 splashRadius: 0,
-                                shape: RoundedRectangleBorder(borderRadius: radius(0)),
-                                side: const BorderSide(color: secondaryTextColor, width: 1.5),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: radius(0)),
+                                side: const BorderSide(
+                                    color: secondaryTextColor, width: 1.5),
                                 onChanged: (val) async {
-                                  signUpController.isAcceptedTc.value = !signUpController.isAcceptedTc.value;
+                                  signUpController.isAcceptedTc.value =
+                                      !signUpController.isAcceptedTc.value;
                                 },
                               ),
                               8.width,
                               RichTextWidget(
                                 list: [
-                                  TextSpan(text: "${locale.value.iAgreeToThe} ", style: secondaryTextStyle()),
+                                  TextSpan(
+                                      text: "${locale.value.iAgreeToThe} ",
+                                      style: secondaryTextStyle()),
                                   TextSpan(
                                     text: locale.value.termsConditions,
-                                    style: primaryTextStyle(color: appColorPrimary, size: 12, decoration: TextDecoration.underline, decorationColor: appColorPrimary),
+                                    style: primaryTextStyle(
+                                        color: appColorPrimary,
+                                        size: 12,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: appColorPrimary),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        commonLaunchUrl(TERMS_CONDITION_URL, launchMode: LaunchMode.externalApplication);
+                                        commonLaunchUrl(TERMS_CONDITION_URL,
+                                            launchMode:
+                                                LaunchMode.externalApplication);
                                       },
                                   ),
-                                  TextSpan(text: " ${locale.value.and} ", style: secondaryTextStyle()),
+                                  TextSpan(
+                                      text: " ${locale.value.and} ",
+                                      style: secondaryTextStyle()),
                                   TextSpan(
                                     text: locale.value.privacyPolicy,
-                                    style: primaryTextStyle(color: appColorPrimary, size: 12, decoration: TextDecoration.underline, decorationColor: appColorPrimary),
+                                    style: primaryTextStyle(
+                                        color: appColorPrimary,
+                                        size: 12,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: appColorPrimary),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        commonLaunchUrl(PRIVACY_POLICY_URL, launchMode: LaunchMode.externalApplication);
+                                        commonLaunchUrl(PRIVACY_POLICY_URL,
+                                            launchMode:
+                                                LaunchMode.externalApplication);
                                       },
                                   ),
                                 ],
@@ -202,26 +245,31 @@ class SignUpScreen extends StatelessWidget {
                       ],
                     ),
                     16.height,
-                    AppButton(
-                      width: Get.width,
-                      text: locale.value.signUp,
-                      color: appColorSecondary,
-                      textStyle: appButtonTextStyleWhite,
-                      shapeBorder: RoundedRectangleBorder(borderRadius: radius(defaultAppButtonRadius / 2)),
-                      onTap: () {
-                        if (signUpController.signUpformKey.currentState!.validate()) {
-                          signUpController.signUpformKey.currentState!.save();
-                          signUpController.saveForm();
-                        }
-                      },
-                    ),
+                    Obx(() => AppButton(
+                          width: Get.width,
+                          text: locale.value.signUp,
+                          enabled: !signUpController.isLoading.value,
+                          color: appColorSecondary,
+                          textStyle: appButtonTextStyleWhite,
+                          shapeBorder: RoundedRectangleBorder(
+                              borderRadius: radius(defaultAppButtonRadius / 2)),
+                          onTap: () {
+                            if (signUpController.signUpformKey.currentState!
+                                .validate()) {
+                              signUpController.signUpformKey.currentState!
+                                  .save();
+                              signUpController.saveForm();
+                            }
+                          },
+                        )),
                   ],
                 ),
               ).paddingSymmetric(horizontal: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(locale.value.alreadyHaveAnAccount, style: secondaryTextStyle()),
+                  Text(locale.value.alreadyHaveAnAccount,
+                      style: secondaryTextStyle()),
                   4.width,
                   InkWell(
                       onTap: () {

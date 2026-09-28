@@ -19,7 +19,7 @@ class DistanceBadge extends StatelessWidget {
         2.width,
         Text(
           '${distanceKm!.toStringAsFixed(1)} km',
-          style: secondaryTextStyle(size: 11),
+          style: secondaryTextStyle(size: 12),
         ),
       ],
     );

@@ -1,24 +1,19 @@
-// ignore_for_file: body_might_complete_normally_catch_error
-
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:nb_utils/nb_utils.dart';
 
-import '../../../utils/constants.dart';
 import '../main.dart';
-import '../utils/local_storage.dart';
 
 Future<Position> getUserLocationPosition() async {
-  bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  LocationPermission permission = await Geolocator.checkPermission();
+  final serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    //
+    await Geolocator.openLocationSettings();
+    throw locale.value.enableLocation;
   }
 
+  var permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      await Geolocator.openAppSettings();
       throw locale.value.locationPermissionDenied;
     }
   }
@@ -27,23 +22,18 @@ Future<Position> getUserLocationPosition() async {
     throw '${locale.value.location} ${locale.value.permissionDeniedPermanently}';
   }
 
-  return await Geolocator.getCurrentPosition(
-    locationSettings: LocationSettings(
-      accuracy: LocationAccuracy.high,
-    ),
-  ).then((value) {
-    return value;
-  }).catchError((e) async {
-    return await Geolocator.getLastKnownPosition().then((value) async {
-      if (value != null) {
-        return value;
-      } else {
-        throw locale.value.enableLocation;
-      }
-    }).catchError((e) {
-      toast(e.toString());
-    });
-  });
+  try {
+    return await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 20),
+      ),
+    );
+  } catch (_) {
+    final lastKnown = await Geolocator.getLastKnownPosition();
+    if (lastKnown != null) return lastKnown;
+    throw locale.value.enableLocation;
+  }
 }
 
 Future<String> getUserLocation() async {
@@ -51,33 +41,36 @@ Future<String> getUserLocation() async {
     throw e.toString();
   });
 
-  return await buildFullAddressFromLatLong(position.latitude, position.longitude);
+  return await buildFullAddressFromLatLong(
+      position.latitude, position.longitude);
 }
 
-Future<String> buildFullAddressFromLatLong(double latitude, double longitude) async {
-  List<Placemark> placeMark = await placemarkFromCoordinates(latitude, longitude).catchError((e) async {
-    log(e);
-    throw errorSomethingWentWrong;
-  });
+Future<String> buildFullAddressFromLatLong(
+    double latitude, double longitude) async {
+  final placeMarks = await placemarkFromCoordinates(latitude, longitude);
+  if (placeMarks.isEmpty) {
+    throw locale.value.location;
+  }
 
-  setValueToLocal(LocatinKeys.LATITUDE, latitude);
-  setValueToLocal(LocatinKeys.LONGITUDE, longitude);
-
-  Placemark place = placeMark[0];
-
-  log(place.toJson());
-
+  final place = placeMarks.first;
   String address = '';
+  final name = place.name ?? '';
+  final street = place.street ?? '';
+  final locality = place.locality ?? '';
+  final administrativeArea = place.administrativeArea ?? '';
+  final postalCode = place.postalCode ?? '';
+  final country = place.country ?? '';
 
-  if (!place.name.isEmptyOrNull && !place.street.isEmptyOrNull && place.name != place.street) address = '${place.name.validate()}, ';
-  if (!place.street.isEmptyOrNull) address = '$address${place.street.validate()}';
-  if (!place.locality.isEmptyOrNull) address = '$address, ${place.locality.validate()}';
-  if (!place.administrativeArea.isEmptyOrNull) address = '$address, ${place.administrativeArea.validate()}';
-  if (!place.postalCode.isEmptyOrNull) address = '$address, ${place.postalCode.validate()}';
-  if (!place.country.isEmptyOrNull) address = '$address, ${place.country.validate()}';
-
-  setValueToLocal(LocatinKeys.CURRENT_ADDRESS, address);
-  setValueToLocal(LocatinKeys.ZIP_CODE, place.postalCode.validate());
+  if (name.isNotEmpty && street.isNotEmpty && name != street) {
+    address = '$name, ';
+  }
+  if (street.isNotEmpty) address = '$address$street';
+  if (locality.isNotEmpty) address = '$address, $locality';
+  if (administrativeArea.isNotEmpty) {
+    address = '$address, $administrativeArea';
+  }
+  if (postalCode.isNotEmpty) address = '$address, $postalCode';
+  if (country.isNotEmpty) address = '$address, $country';
 
   return address;
 }

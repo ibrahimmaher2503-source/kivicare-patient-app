@@ -12,6 +12,8 @@ import 'package:kivicare_patient/utils/constants.dart';
 import 'package:kivicare_patient/utils/price_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../../network/network_utils.dart';
+
 class CancellationsBookingChargeDialog extends StatelessWidget {
   final AppointmentData appointmentData;
   final bool isDurationMode;
@@ -30,7 +32,7 @@ class CancellationsBookingChargeDialog extends StatelessWidget {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final TextEditingController textFieldReason = TextEditingController();
+  final RxString cancellationReason = ''.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,9 @@ class CancellationsBookingChargeDialog extends StatelessWidget {
             child: Container(
               decoration: boxDecorationDefault(
                 color: context.scaffoldBackgroundColor,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,22 +60,33 @@ class CancellationsBookingChargeDialog extends StatelessWidget {
                   Text(locale.value.cancelAppointment, style: boldTextStyle()),
                   8.height,
                   Text(
-                    locale.value.cancellationFeesWillBeAppliedIfYouCancelWithinHoursOfScheduledTime(appConfigs.value.cancellationChargeHours.toString(), appConfigs.value.isCancellationChargeEnabled),
+                    locale.value
+                        .cancellationFeesWillBeAppliedIfYouCancelWithinHoursOfScheduledTime(
+                            appConfigs.value.cancellationChargeHours.toString(),
+                            appConfigs.value.isCancellationChargeEnabled),
                     textAlign: TextAlign.center,
                     style: primaryTextStyle(size: 12),
                   ),
                   32.height,
-                  if (appConfigs.value.isCancellationChargeEnabled && appointmentData.cancellationChargeAmount > 0) ...[
+                  if (appConfigs.value.isCancellationChargeEnabled &&
+                      appointmentData.cancellationChargeAmount > 0) ...[
                     Container(
                       padding: EdgeInsets.all(14),
-                      decoration: boxDecorationDefault(color: context.cardColor, borderRadius: BorderRadius.circular(4)),
+                      decoration: boxDecorationDefault(
+                          color: context.cardColor,
+                          borderRadius: BorderRadius.circular(4)),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(locale.value.cancellationFee.suffixText(value: ": "), style: boldTextStyle()).expand(),
+                          Text(
+                                  locale.value.cancellationFee
+                                      .suffixText(value: ": "),
+                                  style: boldTextStyle())
+                              .expand(),
                           10.width,
-                          PriceWidget(price: appointmentData.cancellationChargeAmount),
+                          PriceWidget(
+                              price: appointmentData.cancellationChargeAmount),
                         ],
                       ),
                     ),
@@ -87,11 +102,15 @@ class CancellationsBookingChargeDialog extends StatelessWidget {
                           children: [
                             TextSpan(
                               text: locale.value.reason,
-                              style: boldTextStyle(size: 16, weight: FontWeight.w600),
+                              style: boldTextStyle(
+                                  size: 16, weight: FontWeight.w600),
                             ),
                             TextSpan(
                               text: "*",
-                              style: boldTextStyle(color: redColor, size: 12, weight: FontWeight.w600),
+                              style: boldTextStyle(
+                                  color: redColor,
+                                  size: 12,
+                                  weight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -101,7 +120,8 @@ class CancellationsBookingChargeDialog extends StatelessWidget {
                         key: formKey,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: AppTextField(
-                          controller: textFieldReason,
+                          onChanged: (value) =>
+                              cancellationReason.value = value,
                           textFieldType: TextFieldType.MULTILINE,
                           minLines: 1,
                           maxLines: 10,
@@ -126,8 +146,10 @@ class CancellationsBookingChargeDialog extends StatelessWidget {
                         color: context.cardColor,
                         height: 40,
                         text: locale.value.goBack,
-                        textStyle: boldTextStyle(weight: FontWeight.w600, size: 12),
-                        width: MediaQuery.of(context).size.width - context.navigationBarHeight,
+                        textStyle:
+                            boldTextStyle(weight: FontWeight.w600, size: 12),
+                        width: MediaQuery.of(context).size.width -
+                            context.navigationBarHeight,
                         onTap: () {
                           finish(context);
                         },
@@ -137,8 +159,12 @@ class CancellationsBookingChargeDialog extends StatelessWidget {
                         color: appColorPrimary,
                         height: 40,
                         text: locale.value.cancelAppointment,
-                        textStyle: boldTextStyle(color: Colors.white, weight: FontWeight.w600, size: 12),
-                        width: MediaQuery.of(context).size.width - context.navigationBarHeight,
+                        textStyle: boldTextStyle(
+                            color: Colors.white,
+                            weight: FontWeight.w600,
+                            size: 12),
+                        width: MediaQuery.of(context).size.width -
+                            context.navigationBarHeight,
                         onTap: () {
                           handleClick();
                         },
@@ -155,27 +181,40 @@ class CancellationsBookingChargeDialog extends StatelessWidget {
     );
   }
 
-  Future<void> updateStatus({required int appointmentId, required String status}) async {
+  Future<void> updateStatus(
+      {required int appointmentId, required String status}) async {
     loaderOnOFF.call(true);
     Map<String, dynamic> req = {
       CancellationStatusKeys.status: appointmentData.status,
       BookingUpdateKeys.startAt: appointmentData.startDateTime,
-      BookingUpdateKeys.endAt: formatBookingDate(DateTime.now().toString(), format: DateFormatConst.BOOKING_SAVE_FORMAT, isLanguageNeeded: false),
+      BookingUpdateKeys.endAt: formatBookingDate(DateTime.now().toString(),
+          format: DateFormatConst.BOOKING_SAVE_FORMAT, isLanguageNeeded: false),
       BookingUpdateKeys.durationDiff: appointmentData.duration.validate(),
-      CancellationStatusKeys.reason: textFieldReason.text,
+      CancellationStatusKeys.reason: cancellationReason.value.trim(),
       CancellationStatusKeys.status: BookingStatusConst.CANCELLED,
-      CancellationStatusKeys.advancePaidAmount: appointmentData.advancePaidAmount,
-      CancellationStatusKeys.cancellationCharge: appointmentData.cancellationCharges,
-      CancellationStatusKeys.cancellationChargeAmount: appointmentData.cancellationChargeAmount,
+      CancellationStatusKeys.advancePaidAmount:
+          appointmentData.advancePaidAmount,
+      CancellationStatusKeys.cancellationCharge:
+          appointmentData.cancellationCharges,
+      CancellationStatusKeys.cancellationChargeAmount:
+          appointmentData.cancellationChargeAmount,
       CancellationStatusKeys.cancellationType: appointmentData.cancellationType,
-      BookingUpdateKeys.paymentStatus: appointmentData.isAdvancePaymentDone ? SERVICE_PAYMENT_STATUS_ADVANCE_PAID : appointmentData.paymentStatus.validate(),
+      BookingUpdateKeys.paymentStatus: appointmentData.isAdvancePaymentDone
+          ? SERVICE_PAYMENT_STATUS_ADVANCE_PAID
+          : appointmentData.paymentStatus.validate(),
     };
 
-    await CoreServiceApis.updateStatus(request: req, appointmentId: appointmentId).then((value) async {
+    await CoreServiceApis.updateStatus(
+            request: req, appointmentId: appointmentId)
+        .then((value) async {
       await handleBookingCancelledBottomSheet();
       onCancelBooking.call();
     }).catchError((e) {
-      toast(e.toString(), print: true);
+      toast(
+        sanitizeBackendMessage(
+            e, locale.value.somethingWentWrongPleaseTryAgainLater),
+        print: true,
+      );
     }).whenComplete(
       () {
         loaderOnOFF.call(false);
@@ -197,7 +236,9 @@ class CancellationsBookingChargeDialog extends StatelessWidget {
   Future<void> handleClick() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      if (appointmentData.status == StatusConst.pending || appointmentData.status == StatusConst.hold || appointmentData.status == StatusConst.accepted) {
+      if (appointmentData.status == StatusConst.pending ||
+          appointmentData.status == StatusConst.hold ||
+          appointmentData.status == StatusConst.accepted) {
         Get.back();
         await updateStatus(
           appointmentId: appointmentData.id.validate(),

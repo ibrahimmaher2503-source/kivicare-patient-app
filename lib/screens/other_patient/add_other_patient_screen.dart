@@ -19,9 +19,11 @@ class AddOtherPatientScreen extends StatelessWidget {
   final UserData memberData;
   final String titleText;
 
-  AddOtherPatientScreen({super.key, required this.memberData, required this.titleText});
+  AddOtherPatientScreen(
+      {super.key, required this.memberData, required this.titleText});
 
-  final AddOtherPatientController addOtherPatientController = Get.put(AddOtherPatientController());
+  final AddOtherPatientController addOtherPatientController =
+      Get.put(AddOtherPatientController());
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +42,14 @@ class AddOtherPatientScreen extends StatelessWidget {
                   16.height,
                   Obx(
                     () => ProfilePicWidget(
-                      heroTag: addOtherPatientController.imageFile.value.path.isNotEmpty ? addOtherPatientController.imageFile.value.path : memberData.profileImage,
-                      profileImage: addOtherPatientController.imageFile.value.path.isNotEmpty ? addOtherPatientController.imageFile.value.path : memberData.profileImage,
+                      heroTag: addOtherPatientController
+                              .imageFile.value.path.isNotEmpty
+                          ? addOtherPatientController.imageFile.value.path
+                          : memberData.profileImage,
+                      profileImage: addOtherPatientController
+                              .imageFile.value.path.isNotEmpty
+                          ? addOtherPatientController.imageFile.value.path
+                          : memberData.profileImage,
                       firstName: memberData.firstName,
                       lastName: memberData.lastName,
                       picSize: 120,
@@ -68,7 +76,11 @@ class AddOtherPatientScreen extends StatelessWidget {
                       fillColor: context.cardColor,
                       filled: true,
                     ),
-                    suffix: commonLeadingWid(imgPath: Assets.navigationIcUserOutlined, color: secondaryTextColor, size: 12).paddingAll(16),
+                    suffix: commonLeadingWid(
+                            imgPath: Assets.navigationIcUserOutlined,
+                            color: secondaryTextColor,
+                            size: 12)
+                        .paddingAll(16),
                   ),
                   16.height,
                   AppTextField(
@@ -84,7 +96,11 @@ class AddOtherPatientScreen extends StatelessWidget {
                       fillColor: context.cardColor,
                       filled: true,
                     ),
-                    suffix: commonLeadingWid(imgPath: Assets.navigationIcUserOutlined, color: secondaryTextColor, size: 12).paddingAll(16),
+                    suffix: commonLeadingWid(
+                            imgPath: Assets.navigationIcUserOutlined,
+                            color: secondaryTextColor,
+                            size: 12)
+                        .paddingAll(16),
                   ),
                   16.height,
                   Row(
@@ -94,15 +110,19 @@ class AddOtherPatientScreen extends StatelessWidget {
                         () => AppTextField(
                           textStyle: primaryTextStyle(size: 12),
                           textFieldType: TextFieldType.OTHER,
-                          controller: TextEditingController(text: "  +${addOtherPatientController.pickedPhoneCode.value.phoneCode}"),
+                          controller: addOtherPatientController.phoneCodeCont,
                           focus: addOtherPatientController.phoneCodeFocus,
                           nextFocus: addOtherPatientController.mobileFocus,
-                          errorThisFieldRequired: locale.value.thisFieldIsRequired,
+                          errorThisFieldRequired:
+                              locale.value.thisFieldIsRequired,
                           readOnly: true,
                           onTap: () {
                             pickCountry(context, onSelect: (Country country) {
-                              addOtherPatientController.pickedPhoneCode(country);
-                              addOtherPatientController.phoneCodeCont.text = addOtherPatientController.pickedPhoneCode.value.phoneCode;
+                              addOtherPatientController
+                                  .pickedPhoneCode(country);
+                              addOtherPatientController.phoneCodeCont.text =
+                                  addOtherPatientController
+                                      .pickedPhoneCode.value.phoneCode;
                             });
                           },
                           textAlign: TextAlign.center,
@@ -110,15 +130,18 @@ class AddOtherPatientScreen extends StatelessWidget {
                             context,
                             hintText: "",
                             prefixIcon: Text(
-                              addOtherPatientController.pickedPhoneCode.value.flagEmoji,
+                              addOtherPatientController
+                                  .pickedPhoneCode.value.flagEmoji,
                             ).paddingOnly(top: 2, left: 8),
-                            prefixIconConstraints: BoxConstraints.tight(const Size(24, 24)),
+                            prefixIconConstraints:
+                                BoxConstraints.tight(const Size(24, 24)),
                             suffixIcon: const Icon(
                               Icons.keyboard_arrow_down_rounded,
                               color: dividerColor,
                               size: 22,
                             ).paddingOnly(right: 32),
-                            suffixIconConstraints: BoxConstraints.tight(const Size(32, 24)),
+                            suffixIconConstraints:
+                                BoxConstraints.tight(const Size(32, 24)),
                             fillColor: context.cardColor,
                             filled: true,
                           ),
@@ -130,7 +153,8 @@ class AddOtherPatientScreen extends StatelessWidget {
                         textFieldType: TextFieldType.PHONE,
                         controller: addOtherPatientController.mobileCont,
                         focus: addOtherPatientController.mobileFocus,
-                        errorThisFieldRequired: locale.value.thisFieldIsRequired,
+                        errorThisFieldRequired:
+                            locale.value.thisFieldIsRequired,
                         keyboardType: TextInputType.phone,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
@@ -141,7 +165,11 @@ class AddOtherPatientScreen extends StatelessWidget {
                           fillColor: context.cardColor,
                           filled: true,
                         ),
-                        suffix: commonLeadingWid(imgPath: Assets.iconsIcCall, color: secondaryTextColor, size: 12).paddingAll(16),
+                        suffix: commonLeadingWid(
+                                imgPath: Assets.iconsIcCall,
+                                color: secondaryTextColor,
+                                size: 12)
+                            .paddingAll(16),
                       ).expand(flex: 8),
                     ],
                   ),
@@ -156,9 +184,11 @@ class AddOtherPatientScreen extends StatelessWidget {
                         textStyle: primaryTextStyle(size: 12),
                         textFieldType: TextFieldType.OTHER,
                         isValidationRequired: true,
-                        errorThisFieldRequired: locale.value.birthdateIsRequired,
+                        errorThisFieldRequired:
+                            locale.value.birthdateIsRequired,
                         validator: (value) {
-                          if (addOtherPatientController.dateOfBirthCont.text.isEmpty) {
+                          if (addOtherPatientController
+                              .dateOfBirthCont.text.isEmpty) {
                             return locale.value.birthdateIsRequired;
                           } else {
                             return null;
@@ -197,19 +227,30 @@ class AddOtherPatientScreen extends StatelessWidget {
                             return Obx(
                               () => InkWell(
                                 onTap: () {
-                                  addOtherPatientController.selectedGender(genders[index]);
+                                  addOtherPatientController
+                                      .selectedGender(genders[index]);
                                 },
                                 borderRadius: radius(),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
                                   decoration: boxDecorationDefault(
                                     borderRadius: radius(24),
-                                    color: addOtherPatientController.selectedGender.value.id == genders[index].id ? appColorPrimary : context.cardColor,
+                                    color: addOtherPatientController
+                                                .selectedGender.value.id ==
+                                            genders[index].id
+                                        ? appColorPrimary
+                                        : context.cardColor,
                                   ),
                                   child: Text(
-                                    getOtherPatientGender(gender: genders[index].name),
+                                    getOtherPatientGender(
+                                        gender: genders[index].name),
                                     style: secondaryTextStyle(
-                                      color: addOtherPatientController.selectedGender.value.id == genders[index].id ? white : null,
+                                      color: addOtherPatientController
+                                                  .selectedGender.value.id ==
+                                              genders[index].id
+                                          ? white
+                                          : null,
                                     ),
                                   ),
                                 ),
@@ -235,19 +276,30 @@ class AddOtherPatientScreen extends StatelessWidget {
                             return Obx(
                               () => InkWell(
                                 onTap: () {
-                                  addOtherPatientController.selectedRelation(relation[index]);
+                                  addOtherPatientController
+                                      .selectedRelation(relation[index]);
                                 },
                                 borderRadius: radius(),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
                                   decoration: boxDecorationDefault(
                                     borderRadius: radius(24),
-                                    color: addOtherPatientController.selectedRelation.value.id == relation[index].id ? appColorPrimary : context.cardColor,
+                                    color: addOtherPatientController
+                                                .selectedRelation.value.id ==
+                                            relation[index].id
+                                        ? appColorPrimary
+                                        : context.cardColor,
                                   ),
                                   child: Text(
-                                    getOtherPatientRelation(relation: relation[index].name),
+                                    getOtherPatientRelation(
+                                        relation: relation[index].name),
                                     style: secondaryTextStyle(
-                                      color: addOtherPatientController.selectedRelation.value.id == relation[index].id ? white : null,
+                                      color: addOtherPatientController
+                                                  .selectedRelation.value.id ==
+                                              relation[index].id
+                                          ? white
+                                          : null,
                                     ),
                                   ),
                                 ),
@@ -259,21 +311,25 @@ class AddOtherPatientScreen extends StatelessWidget {
                     ],
                   ),
                   32.height,
-                  AppButton(
-                    width: Get.width,
-                    text: locale.value.save,
-                    textStyle: appButtonTextStyleWhite,
-                    onTap: () async {
-                      hideKeyboard(context);
-                      addOtherPatientController.handleAddOtherPatient();
-                    },
-                  ),
+                  Obx(() => AppButton(
+                        width: Get.width,
+                        text: locale.value.save,
+                        textStyle: appButtonTextStyleWhite,
+                        onTap: addOtherPatientController.isLoading.value
+                            ? null
+                            : () async {
+                                hideKeyboard(context);
+                                await addOtherPatientController
+                                    .handleAddOtherPatient();
+                              },
+                      )),
                   24.height,
                 ],
               ),
             ),
           ),
-          Obx(() => const LoaderWidget().visible(addOtherPatientController.isLoading.value)),
+          Obx(() => const LoaderWidget()
+              .visible(addOtherPatientController.isLoading.value)),
         ],
       ),
     );

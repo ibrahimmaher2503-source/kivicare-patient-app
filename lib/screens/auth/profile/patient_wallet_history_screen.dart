@@ -12,7 +12,8 @@ import 'patient_wallet_history_controller.dart';
 class PatientWalletHistory extends StatelessWidget {
   PatientWalletHistory({super.key});
 
-  final PatientWalletHistoryController walletHistoryCont = Get.put(PatientWalletHistoryController());
+  final PatientWalletHistoryController walletHistoryCont =
+      Get.put(PatientWalletHistoryController());
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +23,12 @@ class PatientWalletHistory extends StatelessWidget {
         isLoading: walletHistoryCont.isLoading,
         body: SnapHelperWidget(
           future: walletHistoryCont.walletHistoryFuture.value,
-          loadingWidget: walletHistoryCont.isLoading.value ? const Offstage() : const LoaderWidget(),
+          loadingWidget: walletHistoryCont.isLoading.value
+              ? const Offstage()
+              : const LoaderWidget(),
           errorBuilder: (error) {
             return NoDataWidget(
-              title: error,
+              title: locale.value.somethingWentWrongPleaseTryAgainLater,
               retryText: locale.value.reload,
               imageWidget: const ErrorStateWidget(),
               onRetry: () {
@@ -46,10 +49,13 @@ class PatientWalletHistory extends StatelessWidget {
                   title: locale.value.noWalletDataFound,
                   subTitle: locale.value.oppsNoWalletDataFoundAtAMoment,
                   imageWidget: const EmptyStateWidget(),
-                ).paddingSymmetric(horizontal: 32).visible(!walletHistoryCont.isLoading.value),
+                )
+                    .paddingSymmetric(horizontal: 32)
+                    .visible(!walletHistoryCont.isLoading.value),
                 onSwipeRefresh: () async {
                   walletHistoryCont.historyPage(1);
-                  return await walletHistoryCont.getWalletHistory(showloader: false);
+                  return await walletHistoryCont.getWalletHistory(
+                      showloader: false);
                 },
                 onNextPage: () async {
                   if (!walletHistoryCont.isPatientLastPage.value) {
@@ -58,7 +64,10 @@ class PatientWalletHistory extends StatelessWidget {
                   }
                 },
                 itemBuilder: (ctx, index) {
-                  return WalletHistoryCardWid(walletHistoryElement: walletHistoryCont.historyData[index]).paddingBottom(16);
+                  return WalletHistoryCardWid(
+                          walletHistoryElement:
+                              walletHistoryCont.historyData[index])
+                      .paddingBottom(16);
                 },
               ),
             );

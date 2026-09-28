@@ -1,26 +1,52 @@
 {
   "project_info": {
-    "project_number": "938056756759",
-    "project_id": "espitalia-d69b6",
-    "storage_bucket": "espitalia-d69b6.firebasestorage.app"
+    "project_number": "544365620844",
+    "project_id": "espitalia-patient-2026",
+    "storage_bucket": "espitalia-patient-2026.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:938056756759:android:c0aa1b24a9da05280b3652",
+        "mobilesdk_app_id": "1:544365620844:android:b93bc9d3da577950a8b249",
         "android_client_info": {
           "package_name": "com.espitalia.patient"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "544365620844-291giqfqnv3ghj8p50td5tshd1gn79rc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.espitalia.patient",
+            "certificate_hash": "268d68fc0090aed7b03e4a3e6c3dc9b54ea87887"
+          }
+        },
+        {
+          "client_id": "544365620844-3qsbal7o1hjjl2qfotsjmifqstqnet2f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.espitalia.patient",
+            "certificate_hash": "30be4f4195f69c572314b71f88d4544154d5da3b"
+          }
+        },
+        {
+          "client_id": "544365620844-7deh3u5qt9qr6mc779lt1gfsgmeva20g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAK98f5dxjkDlGILX8xaDxEpv2ylIZEsBE"
+          "current_key": "AIzaSyAc-AUl_jdOhXty_ikiSh2cHMHL9MJ-4yg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544365620844-7deh3u5qt9qr6mc779lt1gfsgmeva20g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
