@@ -1,0 +1,36 @@
+workflows:
+  android-debug:
+    name: Android debug test
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      flutter: 3.41.9
+      vars:
+        API_DOMAIN_URL: https://espitalia.net
+    scripts:
+      - name: Fetch dependencies
+        script: flutter pub get
+      - name: Build debug bundle
+        script: flutter build appbundle --debug --dart-define=API_DOMAIN_URL="$API_DOMAIN_URL"
+    artifacts:
+      - build/app/outputs/bundle/debug/app-debug.aab
+      - build/app/outputs/flutter-apk/app-debug.apk
+
+  android-release:
+    name: Android signed release
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      flutter: 3.41.9
+      android_signing:
+        - espitalia_android_keystore
+      vars:
+        API_DOMAIN_URL: https://espitalia.net
+    scripts:
+      - name: Fetch dependencies
+        script: flutter pub get
+      - name: Build signed release bundle
+        script: flutter build appbundle --release --dart-define=API_DOMAIN_URL="$API_DOMAIN_URL"
+    artifacts:
+      - build/app/outputs/bundle/release/app-release.aab
+      - build/app/outputs/flutter-apk/release/app-release.apk
