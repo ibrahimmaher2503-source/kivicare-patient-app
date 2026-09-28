@@ -11,7 +11,7 @@ const ENABLE_GOOGLE_SIGN_IN = true;
 const DOMAIN_URL = kDebugMode
     ? String.fromEnvironment(
         'API_DOMAIN_URL',
-        defaultValue: 'http://10.0.2.2:8000',
+        defaultValue: 'https://espitalia.net',
       )
     : 'https://espitalia.net';
 
