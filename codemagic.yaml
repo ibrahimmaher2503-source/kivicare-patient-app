@@ -16,6 +16,41 @@ workflows:
       - build/app/outputs/bundle/debug/app-debug.aab
       - build/app/outputs/flutter-apk/app-debug.apk
 
+  android-security-scan:
+    name: Android AppSweep security scan
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      flutter: 3.41.9
+      groups:
+        - appsweep_credentials
+      vars:
+        API_DOMAIN_URL: https://espitalia.net
+    scripts:
+      - name: Fetch dependencies
+        script: flutter pub get
+      - name: Build debug APK
+        script: flutter build apk --debug --dart-define=API_DOMAIN_URL="$API_DOMAIN_URL"
+      - name: Upload APK to AppSweep
+        script: |
+          if [ -z "$APPSWEEP_API_KEY" ]; then
+            echo "APPSWEEP_API_KEY is missing from the appsweep_credentials group"
+            exit 1
+          fi
+
+          APPSWEEP_CLI_DIR="$(mktemp -d)"
+          curl --retry 3 --retry-max-time 120 --retry-all-errors -sS \
+            https://platform.guardsquare.com/cli/install.sh \
+            | sh -s -- --yes --bin-dir "$APPSWEEP_CLI_DIR"
+
+          SCAN_URL=$("$APPSWEEP_CLI_DIR/guardsquare" scan \
+            build/app/outputs/flutter-apk/app-debug.apk \
+            --commit-hash "$CM_COMMIT" \
+            --format '{{.URL}}')
+          echo "AppSweep scan: $SCAN_URL"
+    artifacts:
+      - build/app/outputs/flutter-apk/app-debug.apk
+
   android-release:
     name: Android signed release
     max_build_duration: 60
